@@ -1,0 +1,64 @@
+INSTALL instructions for
+Java Radar data Analizing Tool
+  
+	j r a t
+
+Łukasz Wojtas
+Institute of Meteorology and Water Management, IMGW
+
+October 2011
+
+################################################################################
+jrat is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jrat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the jrat software.  If not, see http://www.gnu.org/licenses.
+################################################################################
+
+
+Installation of jrat software is performed by calling specified target within
+ant script. Typicall installation procedure is realized by issuing the following
+command:
+
+$ ant install
+
+In this case the software will be installed in the default directory /opt. 
+In order to override installation in default directory, you can provide 
+a paramater for the ant installation script:
+
+$ ant -Dprefix=/my/install/dir install
+
+The prefix denotes target installation directory.
+
+Dependencies: jrat requires some libraries from the HDF Java Object Package.
+The set of files includes the following shared libraries: 
+
+- libjhdf.so
+- libjhdf5.so
+
+Installation script will create a bash script called jrat.
+It will be placed in /usr/bin directory for easy access.
+After installetion you can run jrat by typing in a terminal:
+
+$ jrat
+
+To receive help type:
+
+$ jrat -h
+
+Documentation of jrat software is performed by calling specified target within
+ant script:
+
+$ ant doc
+
+
+
+ 

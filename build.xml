@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--
+Copyright (C) 2011 Institute of Meteorology and Water Management, IMGW
+
+This file is part of the Java Radar data Analizing Tool jRAT software.
+
+jRAT is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jRAT is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with the OdimH5 software.  If not, see http://www.gnu.org/licenses.
+-->
+<project name="jRAT" default="main" basedir=".">
+	<!-- Sets variables which can later be used. -->
+	<!-- The value of a property is accessed via ${} -->
+	<property name="app.name" value="jrat" />
+	<property name="main.class" value="pl.imgw.jrat.MainJRat" />
+	<property name="src.dir" location="src" />
+	<property name="lib.dir" location="lib" />
+	<property name="lib.native.dir" location="lib/linux64" />
+	<property name="build.dir" location="build" />
+	<property name="dist.dir" location="dist" />
+	<property name="doc.dir" location="doc" />
+
+	<property name="prefix" value="/opt" />
+
+	<!-- Library path -->
+	<path id="lib.path">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Deletes the existing build, doc and dist directory-->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${doc.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${doc.dir}" />
+	</target>
+
+	<!-- Compiles the java code (including the usage of library for JUnit -->
+	<target name="compile" depends="clean, init">
+		<javac encoding="UTF-8" deprecation="on" srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+			<include name="**/*.java" />
+			<classpath refid="lib.path" />
+		</javac>
+	</target>
+
+	<!-- Creates Javadoc -->
+	<target name="doc" depends="compile">
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${doc.dir}">
+			<!-- Define which files / directory should get included, we include all -->
+			<fileset dir="${src.dir}">
+				<include name="**" />
+			</fileset>
+			<classpath refid="lib.path" />
+		</javadoc>
+	</target>
+
+	<!--Creates the deployable jar file  -->
+	<target name="jar" depends="compile">
+		<jar destfile="${dist.dir}\${app.name}.jar" basedir="${build.dir}">
+			<zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+			<manifest>
+				<attribute name="Main-Class" value="${main.class}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="install" depends="jar">
+		<mkdir dir="${prefix}/${app.name}" />
+		<copy todir="${prefix}/${app.name}" flatten="true">
+			<fileset dir="${dist.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${prefix}/${app.name}/lib" flatten="true">
+			<fileset dir="${lib.native.dir}">
+				<include name="**/*.so" />
+			</fileset>
+		</copy>
+		<chmod file="${prefix}/${app.name}/${app.name}.jar" perm="755" />
+		<echo file="jrat">#!/bin/sh
+java -Djava.library.path=${prefix}/${app.name}/lib/ -jar ${prefix}/${app.name}/${app.name}.jar $@</echo>
+		<chmod file="jrat" perm="755" />
+		<copy file="jrat" todir="/usr/bin"/>
+		<chmod file="/usr/bin/jrat" perm="755" />
+		<echo message="=========================================================" />
+		<echo message="Installation completed" />
+		<echo message="run program by typing jrat" />
+	</target>
+
+	<target name="main" depends="compile, jar, doc">
+		<description>Main target</description>
+	</target>
+
+</project>
+
