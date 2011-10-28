@@ -24,7 +24,7 @@ along with the OdimH5 software.  If not, see http://www.gnu.org/licenses.
 	<property name="main.class" value="pl.imgw.jrat.MainJRat" />
 	<property name="src.dir" location="src" />
 	<property name="lib.dir" location="lib" />
-	<property name="lib.native.dir" location="lib/linux64" />
+	<property name="lib.native.dir" location="lib/linux32" />
 	<property name="build.dir" location="build" />
 	<property name="dist.dir" location="dist" />
 	<property name="doc.dir" location="doc" />
