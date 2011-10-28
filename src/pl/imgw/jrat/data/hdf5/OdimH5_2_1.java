@@ -13,6 +13,9 @@ package pl.imgw.jrat.data.hdf5;
  */
 public class OdimH5_2_1 {
 
+    public static final String CONVENTIONS = "Conventions";
+    public static final String ODIM_H5_V2_1 = "ODIM_H5/V2_1";
+    
     public static final String WHAT = "what";
     public static final String OBJECT = "object";
     public static final String VERSION = "version";

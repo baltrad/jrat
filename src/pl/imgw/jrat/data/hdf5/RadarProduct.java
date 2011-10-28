@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.data.hdf5;
 
-import java.io.File;
+import ncsa.hdf.object.h5.H5File;
 
 /**
  *
@@ -27,7 +27,7 @@ public class RadarProduct implements DataSource{
      * @see pl.imgw.jrat.data.hdf5.DataSource#initializeFromFile(java.io.File)
      */
     @Override
-    public boolean initializeFromFile(File f) {
+    public boolean initializeFromFile(H5File f) {
         return false;
         // TODO Auto-generated method stub
         

@@ -37,9 +37,10 @@ public class CommandLineArgsParser {
     private final static String START_COMMAND = "jrat [-h]";
 
     private final static String HELP_DESCRIPTION = "print this message";
-    private final static String DISPLAY_DESCRIPTION = "display all attributes";
+    private final static String DISPLAY_DESCRIPTION = "display all attributes of hdf5 file input";
+    
     private final static String PRINT_DESCRIPTION = "print image of data\n"
-            + "<arg> dataset number (e.g. elevation number in a volume file)";
+            + "<arg> dataset number (e.g. 'dataset1')";
     
     private final static String INPUT_DESCRIPTION = "input file option\n"
             + "<arg> input file's path";

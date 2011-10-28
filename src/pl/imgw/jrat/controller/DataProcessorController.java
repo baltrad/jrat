@@ -12,6 +12,9 @@ import static pl.imgw.jrat.data.hdf5.Constants.*;
 
 import java.io.File;
 
+import ncsa.hdf.object.h5.H5File;
+
+import pl.imgw.jrat.data.hdf5.H5_Wrapper;
 import pl.imgw.jrat.data.hdf5.RadarVolume;
 import pl.imgw.jrat.util.CommandLineArgsParser;
 import pl.imgw.jrat.util.LogsHandler;
@@ -24,8 +27,8 @@ import pl.imgw.jrat.view.PictureFromArray;
  * Controller class for data processing routines.
  * 
  * @author szewczenko
- * @version 1.0
- * @since 1.0
+ * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
+ * 
  */
 public class DataProcessorController {
 
@@ -33,7 +36,7 @@ public class DataProcessorController {
     private CommandLineArgsParser cmd;
     private MessageLogger msg;
     // Variables
-    boolean verbose;
+    boolean verbose = false;
 
     /**
      * Data processing control method
@@ -45,7 +48,6 @@ public class DataProcessorController {
     @SuppressWarnings("static-access")
     public void startProcessor(String[] args) throws Exception {
 
-        boolean verbose = false;
         // Parse command line arguments
         cmd.parseCommandLineArgs(args);
 
@@ -64,7 +66,11 @@ public class DataProcessorController {
 
                 RadarVolume vol = new RadarVolume(verbose);
                 File f = new File(fileName);
-                if (vol.initializeFromFile(f)) {
+                H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(), verbose);
+                
+                //validating conditions
+                
+                if (vol.initializeFromFile(file)) {
                     if (cmd.hasArgument(cmd.DISPLAY_OPTION))
                         vol.displayTree();
                     if (cmd.hasArgument(cmd.PRINT_OPTION)) {
@@ -87,17 +93,37 @@ public class DataProcessorController {
     private void printScan(RadarVolume vol) {
         
         try {
-            int i = Integer.parseInt(cmd
-                    .getArgumentValue(CommandLineArgsParser.PRINT_OPTION));
+            
+            int index = -1;
+            
+            String dsindex = cmd.getArgumentValue(CommandLineArgsParser.PRINT_OPTION);
+
+            for (int i = 0; i < vol.getDataset().length; i++) {
+                if (vol.getDataset()[i].getDatasetname().matches(dsindex)) {
+                    index = i;
+                    break;
+                }
+            }
+            
+            if (index == -1) {
+                MessageLogger.showMessage(dsindex + " does not exist in "
+                        + vol.getFile().getName(), true);
+                return;
+            }
+            
             PictureFromArray pic = new PictureFromArray(
-                    vol.getDataset()[i].getData()[0].getArray()
+                    vol.getDataset()[index].getData()[0].getArray()
                             .getData(),
                     ColorScales.getGray256Scale());
             ImageFrame frame = new ImageFrame(pic.getImg(), vol.getFullDate(),
-                    vol.getDataset()[i].getData()[0].getArray()
+                    vol.getDataset()[index].getData()[0].getArray()
                             .getSizeX(),
-                    vol.getDataset()[i].getData()[0].getArray()
+                    vol.getDataset()[index].getData()[0].getArray()
                             .getSizeY());
+            
+            String mes = "elevation=" + vol.getDataset()[index].getElangle();
+            
+            MessageLogger.showMessage("Printed " + mes, verbose);
             frame.displayImage();
         } catch (Exception e) {
             MessageLogger.showMessage("Couldn't print a map", true);

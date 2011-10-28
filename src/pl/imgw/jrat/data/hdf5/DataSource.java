@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.data.hdf5;
 
-import java.io.File;
+import ncsa.hdf.object.h5.H5File;
 
 /**
  *
@@ -25,6 +25,6 @@ public interface DataSource {
      * 
      * 
      */
-    public boolean initializeFromFile(File f);
+    public boolean initializeFromFile(H5File f);
     
 }

@@ -31,6 +31,7 @@ import ncsa.hdf.object.h5.H5Group;
 public class RadarVolume extends PolarVolumeContainer implements DataSource{
     
     private boolean v = false;
+    private File f;
     /**
      * 
      */
@@ -45,19 +46,24 @@ public class RadarVolume extends PolarVolumeContainer implements DataSource{
      */
     @SuppressWarnings("deprecation")
     @Override
-    public boolean initializeFromFile(File f) {
+    public boolean initializeFromFile(H5File f) {
 
         if (!f.canRead())
             return false;
-        H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(), v);
-        Group root = H5_Wrapper.getHDF5RootGroup(file, v);
+        
+        this.f = f;
+        
+        Group root = H5_Wrapper.getHDF5RootGroup(f, v);
+        
+        String conventions = H5_Wrapper.getHDF5StringValue(root, CONVENTIONS, v);
+        if(!conventions.matches(ODIM_H5_V2_1)) {
+            return false;
+        }
         Group what = null;
         Group where = null;
         Group how = null;
         
         List<Group> dataset = new ArrayList<Group>();
-        
-
         List<?> memberList = root.getMemberList();
         Iterator<?> itr = memberList.iterator();
         while (itr.hasNext()) {
@@ -244,10 +250,14 @@ public class RadarVolume extends PolarVolumeContainer implements DataSource{
         return true;
     }
     
-    public static void main(String[] args) {
-        RadarVolume vol = new RadarVolume(true);
-        File f = new File("/home/lwojtas/programy/OdimH5/T_PAGZ41_C_SOWR_20101022123044.h5");
-        vol.initializeFromFile(f);
+    
+    
+    /**
+     * @return volume file
+     */
+    public File getFile() {
+        return f;
     }
+
 
 }
