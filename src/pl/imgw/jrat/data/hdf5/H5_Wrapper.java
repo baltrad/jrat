@@ -3,19 +3,7 @@
  */
 package pl.imgw.jrat.data.hdf5;
 
-import static pl.imgw.jrat.data.hdf5.Constants.H5_CLASS;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_DATASET;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_DATA_CHUNK;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_DIMENSIONS;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_GROUP;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_GZIP_LEVEL;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_IM_VER;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_OBJECT_CLASS;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_OBJECT_NAME;
-import static pl.imgw.jrat.data.hdf5.Constants.H5_ROOT;
-import static pl.imgw.jrat.data.hdf5.Constants.XML_ATTR;
-import static pl.imgw.jrat.data.hdf5.Constants.XML_ENCODING;
-import static pl.imgw.jrat.data.hdf5.Constants.XML_VERSION;
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1210,7 +1198,7 @@ public class H5_Wrapper {
                     verbose);
         }
         if (ret == null)
-            return "";
+            return null;
         return (ret[0]);
     }
 

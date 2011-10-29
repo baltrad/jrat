@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import pl.imgw.jrat.data.hdf5.ArrayData;
-import pl.imgw.jrat.data.hdf5.RadarProduct;
+import pl.imgw.jrat.data.hdf5.OdimH5;
+import pl.imgw.jrat.data.hdf5.OdimH5File;
 
 /**
  * 
@@ -67,14 +68,13 @@ public class MVFactory {
      * @param allVectors
      *            all vectors that are check when calculating correlation
      */
-    public MVFactory(RadarProduct rp0, RadarProduct rp1, int dbzThreshold,
+    public MVFactory(ArrayData rp0, ArrayData rp1, int dbzThreshold,
             double corrthreshold, int gridsize, List<MV> allVectors) {
 
         prep0.setData(getData(rp0, dbzThreshold));
         prep0.setGridsize(gridsize);
         prep1.setData(getData(rp1, dbzThreshold));
         prep1.setGridsize(gridsize);
-        
 
         ArrayData dens0 = densityForGrid(prep0.getData(), gridsize, 20);
         ArrayData dens1 = densityForGrid(prep1.getData(), gridsize, 20);
@@ -150,16 +150,16 @@ public class MVFactory {
      * @param time
      * @return
      */
-    public ArrayData moveData(RadarProduct rp, double time) {
+    public ArrayData moveData(ArrayData rp, double time) {
 
-        int xmax = rp.getData().getSizeX();
-        int ymax = rp.getData().getSizeY();
+        int xmax = rp.getSizeX();
+        int ymax = rp.getSizeY();
         
         ArrayData data = new ArrayData(xmax, ymax);
 
         for (int y = 0; y < ymax; y++)
             for (int x = 0; x < xmax; x++)
-                    data.setPoint(x, y, rp.getData().getPoint(x, y));
+                    data.setPoint(x, y, rp.getPoint(x, y));
         
         if(!prep1.isValid())
             return null;
@@ -207,19 +207,19 @@ public class MVFactory {
      * @param threshold
      * @return
      */
-    private ArrayData getData(RadarProduct rp, int threshold) {
+    private ArrayData getData(ArrayData rp, int threshold) {
         ArrayData data;
         int ymax;
         int xmax;
-        ymax = rp.getData().getSizeX();
-        xmax = rp.getData().getSizeY();
+        ymax = rp.getSizeX();
+        xmax = rp.getSizeY();
         
         data = new ArrayData(xmax, ymax);
 
         for (int y = 0; y < ymax; y++)
             for (int x = 0; x < xmax; x++) {
-                if (rp.getData().getPoint(x, y) > dBZ2raw(threshold))
-                    data.setPoint(x, y, rp.getData().getPoint(x, y));
+                if (rp.getPoint(x, y) > dBZ2raw(threshold))
+                    data.setPoint(x, y, rp.getPoint(x, y));
                 else
                     data.setPoint(x, y, 0);
             }

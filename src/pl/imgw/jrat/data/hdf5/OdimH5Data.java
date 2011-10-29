@@ -13,7 +13,7 @@ import pl.imgw.jrat.util.HdfTreeUtil;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class PolarScanData {
+public class OdimH5Data {
     
     private String dataName;
     //what

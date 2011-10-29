@@ -5,16 +5,21 @@ package pl.imgw.jrat.data.hdf5;
 
 /**
  * 
- * /Class description/
+ * Attributes names used in ODIMH5/2_1 model
  * 
  * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class OdimH5_2_1 {
+public class OdimH5Constans {
 
+    // General constants
+    public static final String FILE_NAME_EXTENSION = ".hdf";
+    public static final String FILE_NAME_EXTENSION1 = ".h5";
+    
     public static final String CONVENTIONS = "Conventions";
     public static final String ODIM_H5_V2_1 = "ODIM_H5/V2_1";
+    public static final String ODIM_H5_V2_0 = "ODIM_H5/V2_0";
     
     public static final String WHAT = "what";
     public static final String OBJECT = "object";
@@ -97,5 +102,27 @@ public class OdimH5_2_1 {
 
     public static final String CLASS = "CLASS";
     public static final String IMAGE_VERSION = "IMAGE_VERSION";
+    
+    public static final String PVOL = "PVOL";
+    public static final String IMAGE = "IMAGE";
+    public static final String COMP = "COMP";
+    
+    // Inside file constants
+    public static final String XML_ATTR = "attribute";
 
+    public static final String H5_ROOT = "/";
+    public static final String H5_GROUP = "group";
+    public static final String H5_DATASET = "dataset";
+    public static final String H5_OBJECT_NAME = "name";
+    public static final String H5_OBJECT_CLASS = "class";
+    public static final String H5_GZIP_LEVEL = "gzip_level";
+    public static final String H5_DATA_CHUNK = "chunk";
+    public static final String H5_DIMENSIONS = "dimensions";
+
+    // XML settings
+    public static final String XML_VERSION = "1.0";
+    public static final String XML_ENCODING = "UTF-8";
+
+    public static final String H5_CLASS = "CLASS";
+    public static final String H5_IM_VER = "IMAGE_VERSION";
 }

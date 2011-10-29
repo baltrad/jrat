@@ -8,20 +8,19 @@
 
 package pl.imgw.jrat.controller;
 
-import static pl.imgw.jrat.data.hdf5.Constants.*;
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.*;
 
 import java.io.File;
 
+import ncsa.hdf.object.Group;
 import ncsa.hdf.object.h5.H5File;
-
 import pl.imgw.jrat.data.hdf5.H5_Wrapper;
-import pl.imgw.jrat.data.hdf5.RadarVolume;
+import pl.imgw.jrat.data.hdf5.OdimH5File;
+import pl.imgw.jrat.data.hdf5.RadarVolumeV2_0;
+import pl.imgw.jrat.data.hdf5.RadarVolumeV2_1;
 import pl.imgw.jrat.util.CommandLineArgsParser;
-import pl.imgw.jrat.util.LogsHandler;
 import pl.imgw.jrat.util.MessageLogger;
-import pl.imgw.jrat.view.ColorScales;
-import pl.imgw.jrat.view.ImageFrame;
-import pl.imgw.jrat.view.PictureFromArray;
+import pl.imgw.jrat.view.Printing;
 
 /**
  * Controller class for data processing routines.
@@ -55,7 +54,7 @@ public class DataProcessorController {
 
         if (cmd.hasArgument(cmd.VERBOSE_OPTION)) {
             verbose = true;
-//            System.out.println("verbose mode");
+            // System.out.println("verbose mode");
         }
         if (cmd.hasArgument(cmd.INPUT_OPTION)) {
             String fileName = cmd.getArgumentValue(cmd.INPUT_OPTION);
@@ -64,71 +63,50 @@ public class DataProcessorController {
             if (fileName.endsWith(FILE_NAME_EXTENSION)
                     || fileName.endsWith(FILE_NAME_EXTENSION1)) {
 
-                RadarVolume vol = new RadarVolume(verbose);
                 File f = new File(fileName);
-                H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(), verbose);
-                
-                //validating conditions
-                
-                if (vol.initializeFromFile(file)) {
-                    if (cmd.hasArgument(cmd.DISPLAY_OPTION))
-                        vol.displayTree();
-                    if (cmd.hasArgument(cmd.PRINT_OPTION)) {
-                        printScan(vol);
+                H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(),
+                        verbose);
+                Group root = H5_Wrapper.getHDF5RootGroup(file, verbose);
+                // validating conditions
+                String format = H5_Wrapper.getHDF5StringValue(root, WHAT,
+                        OBJECT, verbose);
+                String model = H5_Wrapper.getHDF5StringValue(root, CONVENTIONS,
+                        verbose);
+
+                OdimH5File vol = null;
+                if (format.matches(PVOL)) {
+
+                    if (model.matches(ODIM_H5_V2_0)) {
+                        vol = new RadarVolumeV2_0();
+                    } else if (model.matches(ODIM_H5_V2_1)) {
+                        vol = new RadarVolumeV2_1(verbose);
+                    } else {
+                        System.out
+                                .println("Model " + model + " not suppoerted");
+                        return;
                     }
+                    if (vol.initializeFromRoot(root)) {
+                        vol.printGeneralInfo(verbose);
+                        if (cmd.hasArgument(cmd.DISPLAY_OPTION))
+                            vol.displayTree();
+                        if (cmd.hasArgument(cmd.PRINT_OPTION)) {
+                            String dsName = cmd
+                                    .getArgumentValue(cmd.PRINT_OPTION);
+                            Printing.printScan(vol, dsName, verbose);
+                        }
 
-                } else
-                    msg.showMessage("Faild to read the file", true);
-
-            }
-        }
-
-    }
-
-    /**
-     * Print scan selected in command line argument in new frame
-     * 
-     * @param vol
-     */
-    private void printScan(RadarVolume vol) {
-        
-        try {
-            
-            int index = -1;
-            
-            String dsindex = cmd.getArgumentValue(CommandLineArgsParser.PRINT_OPTION);
-
-            for (int i = 0; i < vol.getDataset().length; i++) {
-                if (vol.getDataset()[i].getDatasetname().matches(dsindex)) {
-                    index = i;
-                    break;
+                    } else
+                        msg.showMessage("Faild to read the file", true);
+                } else if (format.matches(IMAGE)) {
+                    System.out.println("Reading IMAGE");
+                } else if (format.matches(COMP)) {
+                    System.out.println("Reading COMP");
+                } else {
+                    System.out.println("Format " + format + " not suppoerted");
                 }
             }
-            
-            if (index == -1) {
-                MessageLogger.showMessage(dsindex + " does not exist in "
-                        + vol.getFile().getName(), true);
-                return;
-            }
-            
-            PictureFromArray pic = new PictureFromArray(
-                    vol.getDataset()[index].getData()[0].getArray()
-                            .getData(),
-                    ColorScales.getGray256Scale());
-            ImageFrame frame = new ImageFrame(pic.getImg(), vol.getFullDate(),
-                    vol.getDataset()[index].getData()[0].getArray()
-                            .getSizeX(),
-                    vol.getDataset()[index].getData()[0].getArray()
-                            .getSizeY());
-            
-            String mes = "elevation=" + vol.getDataset()[index].getElangle();
-            
-            MessageLogger.showMessage("Printed " + mes, verbose);
-            frame.displayImage();
-        } catch (Exception e) {
-            MessageLogger.showMessage("Couldn't print a map", true);
-            LogsHandler.saveProgramLogs("DataProcessorController", e.getMessage());
         }
+
     }
 
     /**
