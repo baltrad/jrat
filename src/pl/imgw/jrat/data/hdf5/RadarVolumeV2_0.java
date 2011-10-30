@@ -24,14 +24,6 @@ public class RadarVolumeV2_0 extends RadarVolume implements OdimH5File{
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.data.hdf5.OdimH5File#getArrayData(java.lang.String)
-     */
-    @Override
-    public OdimH5Dataset getDataset(String path) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     /* (non-Javadoc)
      * @see pl.imgw.jrat.data.hdf5.OdimH5File#displayTree()

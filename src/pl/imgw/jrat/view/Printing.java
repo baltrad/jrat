@@ -3,6 +3,11 @@
  */
 package pl.imgw.jrat.view;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import pl.imgw.jrat.data.hdf5.ArrayData;
 import pl.imgw.jrat.data.hdf5.OdimH5Dataset;
 import pl.imgw.jrat.data.hdf5.OdimH5File;
@@ -50,21 +55,33 @@ public class Printing {
                         data = dataset.getData()[i].getArray();
             }
             
-            MessageLogger.showMessage("data ready to print", verbose);
+//            MessageLogger.showMessage("data ready to print", verbose);
 
             PictureFromArray pic = new PictureFromArray(data.getData(),
                     ColorScales.getGray256Scale());
-            ImageFrame frame = new ImageFrame(pic.getImg(), dataset.getProduct(),
-                    data.getSizeX(), data.getSizeY());
+            
+            try {
+
+                String folder = "/home/vrolok/Pulpit/";
+
+                File file = new File(folder + "printed.png");
+                ImageIO.write(pic.getImg(), "png", file);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
+//            ImageFrame frame = new ImageFrame(pic.getImg(), dataset.getProduct(),
+//                    data.getSizeX(), data.getSizeY());
 
             String mes = "";
             mes += dataset.getDatasetname() + " printed:\n";
-            mes += "Elevation\t" + dataset.getElangle() +"\n";
+//            mes += "Elevation\t" + dataset.getElangle() +"\n";
             mes += "Scan start\t" + dataset.getFullStartDate() +"\n";
             mes += "Scan end\t" + dataset.getFullEndDate() +"\n";
 
             MessageLogger.showMessage(mes, verbose);
-            frame.displayImage();
+//            frame.displayImage();
         } catch (Exception e) {
             MessageLogger.showMessage("Couldn't print a map", true);
             LogsHandler.saveProgramLogs("DataProcessorController",

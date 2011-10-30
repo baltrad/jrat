@@ -15,6 +15,7 @@ import java.io.File;
 import ncsa.hdf.object.Group;
 import ncsa.hdf.object.h5.H5File;
 import pl.imgw.jrat.data.hdf5.H5_Wrapper;
+import pl.imgw.jrat.data.hdf5.OdimCompo;
 import pl.imgw.jrat.data.hdf5.OdimH5File;
 import pl.imgw.jrat.data.hdf5.RadarVolumeV2_0;
 import pl.imgw.jrat.data.hdf5.RadarVolumeV2_1;
@@ -56,6 +57,8 @@ public class DataProcessorController {
             verbose = true;
             // System.out.println("verbose mode");
         }
+        
+        //=========== input file processing =================
         if (cmd.hasArgument(cmd.INPUT_OPTION)) {
             String fileName = cmd.getArgumentValue(cmd.INPUT_OPTION);
             msg.showMessage("processing: " + fileName, verbose);
@@ -73,36 +76,37 @@ public class DataProcessorController {
                 String model = H5_Wrapper.getHDF5StringValue(root, CONVENTIONS,
                         verbose);
 
-                OdimH5File vol = null;
+                OdimH5File odim = null;
                 if (format.matches(PVOL)) {
-
                     if (model.matches(ODIM_H5_V2_0)) {
-                        vol = new RadarVolumeV2_0();
+                        odim = new RadarVolumeV2_0();
                     } else if (model.matches(ODIM_H5_V2_1)) {
-                        vol = new RadarVolumeV2_1(verbose);
+                        odim = new RadarVolumeV2_1(verbose);
                     } else {
                         System.out
-                                .println("Model " + model + " not suppoerted");
+                                .println("Model " + model + " not supported");
                         return;
                     }
-                    if (vol.initializeFromRoot(root)) {
-                        vol.printGeneralInfo(verbose);
-                        if (cmd.hasArgument(cmd.DISPLAY_OPTION))
-                            vol.displayTree();
-                        if (cmd.hasArgument(cmd.PRINT_OPTION)) {
-                            String dsName = cmd
-                                    .getArgumentValue(cmd.PRINT_OPTION);
-                            Printing.printScan(vol, dsName, verbose);
-                        }
-
-                    } else
-                        msg.showMessage("Faild to read the file", true);
+                    
                 } else if (format.matches(IMAGE)) {
                     System.out.println("Reading IMAGE");
                 } else if (format.matches(COMP)) {
                     System.out.println("Reading COMP");
+                    odim = new OdimCompo(verbose);
                 } else {
                     System.out.println("Format " + format + " not suppoerted");
+                }
+                if (odim.initializeFromRoot(root)) {
+                    odim.printGeneralInfo(verbose);
+                } else
+                    msg.showMessage("Faild to read the file", true);
+                
+                if (odim != null && cmd.hasArgument(cmd.DISPLAY_OPTION))
+                    odim.displayTree();
+                if (odim != null && cmd.hasArgument(cmd.PRINT_OPTION)) {
+                    String dsName = cmd
+                            .getArgumentValue(cmd.PRINT_OPTION);
+                    Printing.printScan(odim, dsName, verbose);
                 }
             }
         }

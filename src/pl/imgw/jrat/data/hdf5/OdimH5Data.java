@@ -2,7 +2,7 @@
  * (C) 2011 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
 package pl.imgw.jrat.data.hdf5;
-
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.*;
 import pl.imgw.jrat.util.HdfTreeUtil;
 
 /**
@@ -138,7 +138,7 @@ public class OdimH5Data {
     }
     
     public void displayAll(int number) {
-        System.out.println("data"+number + " attributes:");
+        System.out.println(DATA+number + " attributes:");
         System.out.println("dclass "+this.dclass);
         System.out.println("gain "+this.gain);
         System.out.println("image_version "+this.image_version);
@@ -154,16 +154,16 @@ public class OdimH5Data {
      * @param space
      */
     public void displayTree(int level) {
-        String p1 = HdfTreeUtil.makeParent(level, "what");
+        String p1 = HdfTreeUtil.makeParent(level, WHAT);
         System.out.println(p1);
         int space = p1.length() - 1;
-        HdfTreeUtil.makeAttribe(space, "quantity", this.quantity);
-        HdfTreeUtil.makeAttribe(space, "gain", this.gain);
-        HdfTreeUtil.makeAttribe(space, "offset", this.offset);
-        HdfTreeUtil.makeAttribe(space, "nodata", this.nodata);
-        HdfTreeUtil.makeAttribe(space, "undetected", this.undetect);
+        HdfTreeUtil.makeAttribe(space, QUANTITY, this.quantity);
+        HdfTreeUtil.makeAttribe(space, GAIN, this.gain);
+        HdfTreeUtil.makeAttribe(space, OFFSET, this.offset);
+        HdfTreeUtil.makeAttribe(space, NODATA, this.nodata);
+        HdfTreeUtil.makeAttribe(space, UNDETECT, this.undetect);
         
-        String p2 = HdfTreeUtil.makeParent(level, "data");
+        String p2 = HdfTreeUtil.makeParent(level, DATA);
         System.out.println(p2);
         space = p2.length() - 1;
         HdfTreeUtil.makeAttribe(space, "dclass", this.dclass);

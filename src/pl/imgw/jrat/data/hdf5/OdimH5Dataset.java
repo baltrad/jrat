@@ -2,7 +2,7 @@
  * (C) 2011 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
 package pl.imgw.jrat.data.hdf5;
-
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,14 +31,6 @@ public class OdimH5Dataset {
     protected SimpleDateFormat sdfTime = new SimpleDateFormat("HHmmss");
     protected SimpleDateFormat sdfDateTime = new SimpleDateFormat("YYYYMMddHHmmss");
     protected DateFormat sdfGMT = new SimpleDateFormat("YYYY-MM-dd HH:mm z");
-
-    // where
-    protected Double elangle;
-    protected Integer a1gate;
-    protected Integer nbins;
-    protected Double rstart;
-    protected Double rscale;
-    protected Integer nrays;
 
     // data
     protected OdimH5Data[] data;
@@ -163,95 +155,7 @@ public class OdimH5Dataset {
         this.startdate = startdate;
     }
 
-    /**
-     * @return the elangle
-     */
-    public Double getElangle() {
-        return elangle;
-    }
 
-    /**
-     * @param elangle
-     *            the elangle to set
-     */
-    public void setElangle(Double elangle) {
-        this.elangle = elangle;
-    }
-
-    /**
-     * @return the a1gate
-     */
-    public Integer getA1gate() {
-        return a1gate;
-    }
-
-    /**
-     * @param a1gate
-     *            the a1gate to set
-     */
-    public void setA1gate(Integer a1gate) {
-        this.a1gate = a1gate;
-    }
-
-    /**
-     * @return the nbins
-     */
-    public Integer getNbins() {
-        return nbins;
-    }
-
-    /**
-     * @param nbins
-     *            the nbins to set
-     */
-    public void setNbins(Integer nbins) {
-        this.nbins = nbins;
-    }
-
-    /**
-     * @return the rstart
-     */
-    public Double getRstart() {
-        return rstart;
-    }
-
-    /**
-     * @param rstart
-     *            the rstart to set
-     */
-    public void setRstart(Double rstart) {
-        this.rstart = rstart;
-    }
-
-    /**
-     * @return the rscale
-     */
-    public Double getRscale() {
-        return rscale;
-    }
-
-    /**
-     * @param rscale
-     *            the rscale to set
-     */
-    public void setRscale(Double rscale) {
-        this.rscale = rscale;
-    }
-
-    /**
-     * @return the nrays
-     */
-    public Integer getNrays() {
-        return nrays;
-    }
-
-    /**
-     * @param nrays
-     *            the nrays to set
-     */
-    public void setNrays(Integer nrays) {
-        this.nrays = nrays;
-    }
 
 
 
@@ -342,24 +246,14 @@ public class OdimH5Dataset {
     public void displayTree(int level) {
         
         
-        String p1 = HdfTreeUtil.makeParent(level, "what");
+        String p1 = HdfTreeUtil.makeParent(level, WHAT);
         System.out.println(p1);
         int space = p1.length() - 1;
-        HdfTreeUtil.makeAttribe(space, "product", this.product);
-        HdfTreeUtil.makeAttribe(space, "startdate", getStartdate());
-        HdfTreeUtil.makeAttribe(space, "starttime", getStarttime());
-        HdfTreeUtil.makeAttribe(space, "enddate", getEnddate());
-        HdfTreeUtil.makeAttribe(space, "endtime", getEndtime());
-        
-        String p2 = HdfTreeUtil.makeParent(level, "where");
-        System.out.println(p2);
-        space = p2.length() - 1;
-        HdfTreeUtil.makeAttribe(space, "elangle", this.elangle);
-        HdfTreeUtil.makeAttribe(space, "a1gate", this.a1gate);
-        HdfTreeUtil.makeAttribe(space, "nbins", this.nbins);
-        HdfTreeUtil.makeAttribe(space, "rstart", this.rstart);
-        HdfTreeUtil.makeAttribe(space, "rscale", this.rscale);
-        HdfTreeUtil.makeAttribe(space, "nrays", this.nrays);
+        HdfTreeUtil.makeAttribe(space, PRODUCT, this.product);
+        HdfTreeUtil.makeAttribe(space, STARTDATE, getStartdate());
+        HdfTreeUtil.makeAttribe(space, STARTTIME, getStarttime());
+        HdfTreeUtil.makeAttribe(space, ENDDATE, getEnddate());
+        HdfTreeUtil.makeAttribe(space, ENDTIME, getEndtime());
         
         for(int i = 0; i < data.length; i++) {
             String pn = HdfTreeUtil.makeParent(level, data[i].getDataName());

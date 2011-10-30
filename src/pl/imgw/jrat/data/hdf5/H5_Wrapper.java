@@ -1222,6 +1222,36 @@ public class H5_Wrapper {
                 }
             }
         } catch (Exception e) {
+            System.out.println(attrName);
+            e.printStackTrace();
+            
+        }
+        if (ret == null)
+            return null;
+        return (ret[0]);
+    }
+
+    /**
+     * 
+     * @param grp
+     * @param attrName
+     * @param verbose
+     * @return
+     */
+    public static Long getHDF5LongValue(Group grp, String attrName,
+            boolean verbose) {
+        long[] ret = null;
+        
+        try {
+            List<?> attrsList = grp.getMetadata();
+            for (int i = 0; i < attrsList.size(); i++) {
+                Attribute attr = (Attribute) attrsList.get(i);
+                if (attr.getName().matches(attrName)) {
+                    ret = (long[]) attr.getValue();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(attrName);
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -1250,6 +1280,7 @@ public class H5_Wrapper {
                 }
             }
         } catch (Exception e) {
+            System.out.println(attrName);
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

@@ -45,6 +45,20 @@ public class OdimH5Constans {
     public static final String BEAMWV = "beamwV";
     public static final String GASSATTN = "gassattn";
 
+    public static final String PROJDEF = "projdef";
+    public static final String XSIZE = "xsize";
+    public static final String YSIZE = "ysize";
+    public static final String XSCALE = "xscale";
+    public static final String YSCALE = "yscale";
+    public static final String LL_LON = "LL_lon";
+    public static final String LL_LAT = "LL_lat";
+    public static final String UL_LON = "UL_lon";
+    public static final String UL_LAT = "UL_lat";
+    public static final String UR_LON = "UR_lon";
+    public static final String UR_LAT = "UR_lat";
+    public static final String LR_LON = "LR_lon";
+    public static final String LR_LAT = "LR_lat";
+    
     public static final String DATASET = "dataset";
     public static final String PRODUCT = "product";
     public static final String STARTDATE = "startdate";

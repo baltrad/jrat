@@ -15,6 +15,14 @@ import pl.imgw.jrat.util.HdfTreeUtil;
  */
 public class OdimH5DatasetV2_1 extends OdimH5Dataset {
 
+    // where
+    protected Double elangle;
+    protected Integer a1gate;
+    protected Integer nbins;
+    protected Double rstart;
+    protected Double rscale;
+    protected Integer nrays;
+    
     // how
     private String task;
     private boolean simulated;
@@ -52,11 +60,100 @@ public class OdimH5DatasetV2_1 extends OdimH5Dataset {
 
     
     /**
+     * @return the elangle
+     */
+    public Double getElangle() {
+        return elangle;
+    }
+
+    /**
+     * @param elangle
+     *            the elangle to set
+     */
+    public void setElangle(Double elangle) {
+        this.elangle = elangle;
+    }
+
+    /**
+     * @return the a1gate
+     */
+    public Integer getA1gate() {
+        return a1gate;
+    }
+
+    /**
+     * @param a1gate
+     *            the a1gate to set
+     */
+    public void setA1gate(Integer a1gate) {
+        this.a1gate = a1gate;
+    }
+
+    /**
+     * @return the nbins
+     */
+    public Integer getNbins() {
+        return nbins;
+    }
+
+    /**
+     * @param nbins
+     *            the nbins to set
+     */
+    public void setNbins(Integer nbins) {
+        this.nbins = nbins;
+    }
+
+    /**
+     * @return the rstart
+     */
+    public Double getRstart() {
+        return rstart;
+    }
+
+    /**
+     * @param rstart
+     *            the rstart to set
+     */
+    public void setRstart(Double rstart) {
+        this.rstart = rstart;
+    }
+
+    /**
+     * @return the rscale
+     */
+    public Double getRscale() {
+        return rscale;
+    }
+
+    /**
+     * @param rscale
+     *            the rscale to set
+     */
+    public void setRscale(Double rscale) {
+        this.rscale = rscale;
+    }
+
+    /**
+     * @return the nrays
+     */
+    public Integer getNrays() {
+        return nrays;
+    }
+
+    /**
+     * @param nrays
+     *            the nrays to set
+     */
+    public void setNrays(Integer nrays) {
+        this.nrays = nrays;
+    }
+    
+    /**
      * @param i
      * @param j
      */
     public void displayTree(int level) {
-        
         
         String p1 = HdfTreeUtil.makeParent(level, "what");
         System.out.println(p1);

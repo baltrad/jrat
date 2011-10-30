@@ -47,6 +47,22 @@ public class OdimH5 {
         
     }
     
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.hdf5.OdimH5File#getArrayData(java.lang.String)
+     */
+    public OdimH5Dataset getDataset(String path) {
+        String[] groups = path.split("/");
+        String dataset = "";
+        for(int i = 0; i < groups.length; i++)
+            if(groups[i].contains("dataset"))
+                dataset = groups[i];
+        for (int i = 0; i < getDatasetSize(); i++) {
+            if (getDataset()[i].datasetname.matches(dataset))
+                return getDataset()[i];
+        }
+        return null;
+    }
+    
     /**
      * @return the object
      */
