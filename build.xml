@@ -20,11 +20,12 @@ along with the OdimH5 software.  If not, see http://www.gnu.org/licenses.
 <project name="jrat" default="main" basedir=".">
 	<!-- Sets variables which can later be used. -->
 	<!-- The value of a property is accessed via ${} -->
+	<property name="version" value="64" />
 	<property name="app.name" value="jrat" />
 	<property name="main.class" value="pl.imgw.jrat.MainJRat" />
 	<property name="src.dir" location="src" />
-	<property name="lib.dir" location="lib" />
-	<property name="lib.native.dir" location="lib/linux32" />
+	<property name="lib.dir" location="lib${version}" />
+	<property name="lib.native.dir" location="lib${version}/native" />
 	<property name="build.dir" location="build" />
 	<property name="dist.dir" location="dist" />
 	<property name="doc.dir" location="doc" />
