@@ -57,8 +57,8 @@ public class DataProcessorController {
             verbose = true;
             // System.out.println("verbose mode");
         }
-        
-        //=========== input file processing =================
+
+        // =========== input file processing =================
         if (cmd.hasArgument(cmd.INPUT_OPTION)) {
             String fileName = cmd.getArgumentValue(cmd.INPUT_OPTION);
             msg.showMessage("processing: " + fileName, verbose);
@@ -66,47 +66,53 @@ public class DataProcessorController {
             if (fileName.endsWith(FILE_NAME_EXTENSION)
                     || fileName.endsWith(FILE_NAME_EXTENSION1)) {
 
+                System.out.println("przed h5");
                 File f = new File(fileName);
+                
                 H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(),
                         verbose);
-                Group root = H5_Wrapper.getHDF5RootGroup(file, verbose);
-                // validating conditions
-                String format = H5_Wrapper.getHDF5StringValue(root, WHAT,
-                        OBJECT, verbose);
-                String model = H5_Wrapper.getHDF5StringValue(root, CONVENTIONS,
-                        verbose);
+                System.out.println("po h5 file");
+                if (file != null && file.canRead()) {
 
-                OdimH5File odim = null;
-                if (format.matches(PVOL)) {
-                    if (model.matches(ODIM_H5_V2_0)) {
-                        odim = new RadarVolumeV2_0();
-                    } else if (model.matches(ODIM_H5_V2_1)) {
-                        odim = new RadarVolumeV2_1(verbose);
+                    Group root = H5_Wrapper.getHDF5RootGroup(file, verbose);
+                    // validating conditions
+                    String format = H5_Wrapper.getHDF5StringValue(root, WHAT,
+                            OBJECT, verbose);
+                    String model = H5_Wrapper.getHDF5StringValue(root,
+                            CONVENTIONS, verbose);
+
+                    OdimH5File odim = null;
+                    if (format.matches(PVOL)) {
+                        if (model.matches(ODIM_H5_V2_0)) {
+                            odim = new RadarVolumeV2_0();
+                        } else if (model.matches(ODIM_H5_V2_1)) {
+                            odim = new RadarVolumeV2_1(verbose);
+                        } else {
+                            System.out.println("Model " + model
+                                    + " not supported");
+                            return;
+                        }
+
+                    } else if (format.matches(IMAGE)) {
+                        System.out.println("Reading IMAGE");
+                    } else if (format.matches(COMP)) {
+                        System.out.println("Reading COMP");
+                        odim = new OdimCompo(verbose);
                     } else {
-                        System.out
-                                .println("Model " + model + " not supported");
-                        return;
+                        System.out.println("Format " + format
+                                + " not suppoerted");
                     }
-                    
-                } else if (format.matches(IMAGE)) {
-                    System.out.println("Reading IMAGE");
-                } else if (format.matches(COMP)) {
-                    System.out.println("Reading COMP");
-                    odim = new OdimCompo(verbose);
-                } else {
-                    System.out.println("Format " + format + " not suppoerted");
-                }
-                if (odim.initializeFromRoot(root)) {
-                    odim.printGeneralInfo(verbose);
-                } else
-                    msg.showMessage("Faild to read the file", true);
-                
-                if (odim != null && cmd.hasArgument(cmd.DISPLAY_OPTION))
-                    odim.displayTree();
-                if (odim != null && cmd.hasArgument(cmd.PRINT_OPTION)) {
-                    String dsName = cmd
-                            .getArgumentValue(cmd.PRINT_OPTION);
-                    Printing.printScan(odim, dsName, verbose);
+                    if (odim.initializeFromRoot(root)) {
+                        odim.printGeneralInfo(verbose);
+                    } else
+                        msg.showMessage("Faild to read the file", true);
+
+                    if (odim != null && cmd.hasArgument(cmd.DISPLAY_OPTION))
+                        odim.displayTree();
+                    if (odim != null && cmd.hasArgument(cmd.PRINT_OPTION)) {
+                        String dsName = cmd.getArgumentValue(cmd.PRINT_OPTION);
+                        Printing.printScan(odim, dsName, verbose);
+                    }
                 }
             }
         }

@@ -99,7 +99,7 @@ java -Djava.library.path=${prefix}/${app.name}/lib/ -jar ${prefix}/${app.name}/$
 		<chmod file="jrat" perm="755" />
 		<copy file="jrat" todir="/usr/bin"/>
 		<chmod file="/usr/bin/jrat" perm="755" />
-		<echo message="=========================================================" />
+		<echo message="==========================" />
 		<echo message="Installation completed" />
 		<echo message="run program by typing jrat" />
 	</target>

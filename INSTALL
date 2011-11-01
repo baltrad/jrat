@@ -30,7 +30,19 @@ command:
 
 $ ant install
 
-In this case the software will be installed in the default directory /opt. 
+In this case the software will be installed with 64-bit Unix libraries in 
+the default directory /opt.
+For other operating systems use one of the following parameter:
+
+* 32-bit Unix
+$ ant -Dversion=32 install
+
+* 32-bit Windows
+$ ant -Dversion=win32 install
+
+* 64-bit Windows
+$ ant -Dversion=win64 install 
+ 
 In order to override installation in default directory, you can provide 
 a paramater for the ant installation script:
 
