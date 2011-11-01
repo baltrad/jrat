@@ -1112,18 +1112,16 @@ public class H5_Wrapper {
      */
     @SuppressWarnings("deprecation")
     public static H5File openHDF5File(String fileName, boolean verbose) {
-        Object inputFile = null;
-        try {
         FileFormat fileFormat = FileFormat
                 .getFileFormat(FileFormat.FILE_TYPE_HDF5);
-//        H5File inputFile = null;
+        H5File inputFile = null;
+        try {
             inputFile = (H5File) fileFormat.open(fileName, FileFormat.READ);
-            ((H5File) inputFile).open();
+            inputFile.open();
         } catch (Exception e) {
-            System.out.println("zlapany blad");
             MessageLogger.showMessage(e.getMessage(), verbose);
         }
-        return (H5File) inputFile;
+        return inputFile;
     }
 
     /**

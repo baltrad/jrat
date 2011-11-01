@@ -66,12 +66,9 @@ public class DataProcessorController {
             if (fileName.endsWith(FILE_NAME_EXTENSION)
                     || fileName.endsWith(FILE_NAME_EXTENSION1)) {
 
-                System.out.println("przed h5");
                 File f = new File(fileName);
-                
                 H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(),
                         verbose);
-                System.out.println("po h5 file");
                 if (file != null && file.canRead()) {
 
                     Group root = H5_Wrapper.getHDF5RootGroup(file, verbose);
