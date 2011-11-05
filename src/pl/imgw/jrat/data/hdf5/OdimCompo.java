@@ -100,17 +100,17 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
         }
         if (how.hasAttribute()) {
             String[] node = H5_Wrapper.getHDF5StringValue(how, NODES, v).split(",");
-            HashMap<String, String> nodes = new HashMap<>();
+            HashMap<String, String> newNodes = new HashMap<>();
             
             for(int i = 0; i < node.length; i++) {
                 String key = node[i].substring(4, 6);
                 String value = node[i].substring(6, 9);
-                if(nodes.containsKey(key))
-                    nodes.put(key, nodes.get(key) + "," + value);
+                if(newNodes.containsKey(key))
+                    newNodes.put(key, newNodes.get(key) + "," + value);
                 else
-                    nodes.put(key, value);
+                    newNodes.put(key, value);
             }
-            setNodes(nodes);
+            setNodes(newNodes);
             setNumberOfNodes(node.length);
 //            setNodesNames(nodes.split(","));
         }
@@ -257,6 +257,7 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
     public void displayGeneralObjectInfo(boolean verbose) {
         String msg = "Odim composite loaded\n";
         msg += "Data source:\t" + getSource() + "\n";
+        msg += "Data time:\t" + getFullDate() +"\n";
         msg += "No. of nodes:\t" + getNumberOfNodes() + "\n";
         msg += "Nodes names:\n";
         for (Map.Entry<String, String> entry : getNodes().entrySet()) {
