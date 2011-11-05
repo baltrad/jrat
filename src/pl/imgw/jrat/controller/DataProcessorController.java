@@ -93,14 +93,14 @@ public class DataProcessorController {
                     } else if (format.matches(IMAGE)) {
                         System.out.println("Reading IMAGE");
                     } else if (format.matches(COMP)) {
-                        System.out.println("Reading COMP");
                         odim = new OdimCompo(verbose);
                     } else {
                         System.out.println("Format " + format
                                 + " not suppoerted");
                     }
                     if (odim.initializeFromRoot(root)) {
-                        odim.printGeneralInfo(verbose);
+                        odim.displayGeneralOdimInfo();
+                        odim.displayGeneralObjectInfo(verbose);
                     } else
                         msg.showMessage("Faild to read the file", true);
 

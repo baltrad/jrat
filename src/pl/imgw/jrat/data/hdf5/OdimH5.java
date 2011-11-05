@@ -38,12 +38,10 @@ public class OdimH5 {
     /**
      * 
      */
-    public void displayGeneralInfo() {
+    public void displayGeneralOdimInfo() {
         System.out.println("This is OdimH5 file");
         System.out.println("Model version:\t" + version);
-        System.out.println("Object:\t" + object);
-        sdfGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
-        System.out.println("Date:\t" + sdfGMT.format(date));
+        System.out.println("Object:\t\t" + object);
         
     }
     

@@ -8,11 +8,14 @@ import static pl.imgw.jrat.data.hdf5.OdimH5Constans.*;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import pl.imgw.jrat.util.HdfTreeUtil;
 import pl.imgw.jrat.util.LogsHandler;
+import pl.imgw.jrat.util.MessageLogger;
 
 import ncsa.hdf.object.Dataset;
 import ncsa.hdf.object.Group;
@@ -31,6 +34,8 @@ import ncsa.hdf.object.h5.H5Group;
 public class OdimCompo extends RadarProduct implements OdimH5File {
 
     private boolean v = false;
+    protected int numberOfNodes;
+    protected HashMap<String, String> nodes;
 
     public OdimCompo(boolean verbose) {
         this.v = verbose;
@@ -48,6 +53,7 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
 
         Group what = null;
         Group where = null;
+        Group how = null;
 
         List<Group> dataset = new ArrayList<Group>();
         List<?> memberList = root.getMemberList();
@@ -59,6 +65,8 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
                 what = group;
             else if (group.getName().matches(WHERE))
                 where = group;
+            else if (group.getName().matches(HOW))
+                how = group;
             else if (group.getName().startsWith(DATASET))
                 dataset.add(group);
             
@@ -89,6 +97,22 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
             setUR_lat(H5_Wrapper.getHDF5DoubleValue(where, UR_LAT, v));
             setLR_lon(H5_Wrapper.getHDF5DoubleValue(where, LR_LON, v));
             setLR_lat(H5_Wrapper.getHDF5DoubleValue(where, LR_LAT, v));
+        }
+        if (how.hasAttribute()) {
+            String[] node = H5_Wrapper.getHDF5StringValue(how, NODES, v).split(",");
+            HashMap<String, String> nodes = new HashMap<>();
+            
+            for(int i = 0; i < node.length; i++) {
+                String key = node[i].substring(4, 6);
+                String value = node[i].substring(6, 9);
+                if(nodes.containsKey(key))
+                    nodes.put(key, nodes.get(key) + "," + value);
+                else
+                    nodes.put(key, value);
+            }
+            setNodes(nodes);
+            setNumberOfNodes(node.length);
+//            setNodesNames(nodes.split(","));
         }
         OdimH5Dataset[] dsCollection = new OdimH5Dataset[dataset.size()];
         for (int i = 0; i < dataset.size(); i++) {
@@ -230,10 +254,44 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
      * @see pl.imgw.jrat.data.hdf5.OdimH5File#printGeneralInfo(boolean)
      */
     @Override
-    public void printGeneralInfo(boolean verbose) {
-        System.out.println("Odim COMPO loaded");
+    public void displayGeneralObjectInfo(boolean verbose) {
+        String msg = "Odim composite loaded\n";
+        msg += "Data source:\t" + getSource() + "\n";
+        msg += "No. of nodes:\t" + getNumberOfNodes() + "\n";
+        msg += "Nodes names:\n";
+        for (Map.Entry<String, String> entry : getNodes().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            msg += "\t" + key + ": " + value + "\n";
+        }
+        MessageLogger.showMessage(msg, verbose);
     }
     
+    /**
+     * @return the nodes
+     */
+    public HashMap<String, String> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * @param nodes the nodes to set
+     */
+    public void setNodes(HashMap<String, String> nodes) {
+        this.nodes = nodes;
+    }
+
+    /**
+     * @return the numberOfNodes
+     */
+    public int getNumberOfNodes() {
+        return numberOfNodes;
+    }
+    
+    public void setNumberOfNodes(int nodes) {
+        this.numberOfNodes = nodes;
+    }
+
     public static void main(String[] args) {
         boolean verbose = true;
         String fileName = "/home/vrolok/poligon/T_PAAH21_C_EUOC_20110930061500.hdf";

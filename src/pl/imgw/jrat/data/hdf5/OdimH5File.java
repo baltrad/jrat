@@ -39,5 +39,11 @@ public interface OdimH5File {
      * 
      * @param verbose
      */
-    public void printGeneralInfo(boolean verbose);
+    public void displayGeneralObjectInfo(boolean verbose);
+    
+    /**
+     * 
+     */
+    public void displayGeneralOdimInfo();
+    
 }

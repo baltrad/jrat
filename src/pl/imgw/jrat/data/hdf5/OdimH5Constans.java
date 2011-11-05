@@ -59,6 +59,8 @@ public class OdimH5Constans {
     public static final String LR_LON = "LR_lon";
     public static final String LR_LAT = "LR_lat";
     
+    public static final String NODES = "nodes";
+    
     public static final String DATASET = "dataset";
     public static final String PRODUCT = "product";
     public static final String STARTDATE = "startdate";

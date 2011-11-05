@@ -34,11 +34,11 @@ public class RadarVolume extends OdimH5{
      * 
      * @param verbose
      */
-    public void printGeneralInfo(boolean verbose) {
+    public void displayGeneralObjectInfo(boolean verbose) {
         String message = "Volume file loaded:\n";
+        message += "Data source:\t" + getSource() + "\n";
         message += "System:\t\t" + getSystem() + "\n";
         message += "Software:\t" + getSoftware() + " " + getSw_version() + "\n";
-        message += "Data source:\t" + getSource() + "\n";
         message += "Scan time:\t" + getFullDate() + "\n";
         MessageLogger.showMessage(message, verbose);
     }
