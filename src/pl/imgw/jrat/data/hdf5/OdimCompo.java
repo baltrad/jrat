@@ -100,17 +100,17 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
         }
         if (how.hasAttribute()) {
             String[] node = H5_Wrapper.getHDF5StringValue(how, NODES, v).split(",");
-            HashMap<String, String> newNodes = new HashMap<>();
+            HashMap<String, String> nodes = new HashMap<String, String>();
             
             for(int i = 0; i < node.length; i++) {
                 String key = node[i].substring(4, 6);
                 String value = node[i].substring(6, 9);
-                if(newNodes.containsKey(key))
-                    newNodes.put(key, newNodes.get(key) + "," + value);
+                if(nodes.containsKey(key))
+                    nodes.put(key, nodes.get(key) + "," + value);
                 else
-                    newNodes.put(key, value);
+                    nodes.put(key, value);
             }
-            setNodes(newNodes);
+            setNodes(nodes);
             setNumberOfNodes(node.length);
 //            setNodesNames(nodes.split(","));
         }
