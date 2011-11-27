@@ -102,14 +102,14 @@ public class OdimH5 {
     }
 
     /**
-     * @return the date
+     * @return the date YYYYMMdd
      */
     public String getDate() {
         return sdfDate.format(date);
     }
 
     /**
-     * @return the date
+     * @return the time HHmmss
      */
     public String getTime() {
         return sdfTime.format(date);
@@ -125,7 +125,7 @@ public class OdimH5 {
 
     /**
      * @param date
-     *            the date to set
+     *            the date to set YYYYMMdd and HHmmss
      * @throws ParseException
      */
     public void setDate(String date, String time) throws ParseException {

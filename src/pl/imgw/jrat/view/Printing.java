@@ -43,7 +43,7 @@ public class Printing {
             ArrayData data = null;
             if(dataset.getData().length == 1)
                 data = dataset.getData()[0].getArray();
-            else if (dataset.getData().length>1){
+            else if (dataset.getData().length > 1){
                 String[] groups = dsName.split("/");
                 if (groups.length < 2) {
                     System.out
@@ -71,8 +71,8 @@ public class Printing {
                 e.printStackTrace();
             }
             
-//            ImageFrame frame = new ImageFrame(pic.getImg(), dataset.getProduct(),
-//                    data.getSizeX(), data.getSizeY());
+            ImageFrame frame = new ImageFrame(pic.getImg(), dataset.getProduct(),
+                    data.getSizeX(), data.getSizeY());
 
             String mes = "";
             mes += dataset.getDatasetname() + " printed:\n";
@@ -81,7 +81,7 @@ public class Printing {
             mes += "Scan end\t" + dataset.getFullEndDate() +"\n";
 
             MessageLogger.showMessage(mes, verbose);
-//            frame.displayImage();
+            frame.displayImage();
         } catch (Exception e) {
             MessageLogger.showMessage("Couldn't print a map", true);
             LogsHandler.saveProgramLogs("DataProcessorController",

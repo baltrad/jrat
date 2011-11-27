@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 /* Vincenty Direct and Inverse Solution of Geodesics on the Ellipsoid                             */
-/* Translated form Java Script functions by Chris Veness                                          */
+/* Translated form Chris Veness's Java Script functions                                          */
 /* http://www.movable-type.co.uk/scripts/latlong-vincenty-direct.html                             */
 /* from: Vincenty direct formula - T Vincenty, "Direct and Inverse Solutions of Geodesics on the  */
 /*       Ellipsoid with application of nested equations", Survey Review, vol XXII no 176, 1975    */
@@ -56,15 +56,18 @@ public class VincentyFormulas {
         double lambda = L, lambdaP = 2 * Math.PI;
         double iterLimit = 20;
 
-        double cosSqAlpha = 0, sinSigma = 0, cos2SigmaM = 0, cosSigma = 0, sigma = 0;
+        double cosSqAlpha = 0, sinSigma = 0, cos2SigmaM = 0;
+        double cosSigma = 0, sigma = 0, sinLambda = 0, cosLambda = 0;
 
         while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0) {
-            double sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
+            sinLambda = Math.sin(lambda);
+            cosLambda = Math.cos(lambda);
             sinSigma = Math.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda)
                     + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda)
                     * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
-            if (sinSigma == 0)
+            if (sinSigma == 0) {
                 return new Double(-1); // co-incident points
+            }
             cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
             sigma = Math.atan2(sinSigma, cosSigma);
             double sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;
@@ -100,22 +103,20 @@ public class VincentyFormulas {
                                 / 6 * cos2SigmaM
                                 * (-3 + 4 * sinSigma * sinSigma)
                                 * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
-        double s = ELIPSE_B * A * (sigma - deltaSigma);
-
-        return s;
+        return (ELIPSE_B * A * (sigma - deltaSigma));
     }
-
+    
     /**
      * 
      * Calculates destination point given start point lat/long, bearing &
      * distance, using Vincenty inverse formula for ellipsoids
      * 
      * @param p1
-     *            first point in decimal degrees
+     *            first point coordinates (Point2D.Double) in decimal degrees
      * @param brng
-     *            initial bearing in decimal degrees
+     *            initial bearing in decimal degrees (0 points due North) and clockwise order
      * @param dist
-     *            distance along bearing in metres
+     *            distance along bearing in meters
      * @return
      */
     public static Point2D.Double dest(Point2D.Double p1, double brng,
@@ -180,19 +181,48 @@ public class VincentyFormulas {
         // double revAz = Math.atan2(sinAlpha, -tmp); // final bearing, if
         // required
 
-        return new Point2D.Double(Math.toDegrees(lat2), Math.toDegrees(lon2));
+        return new Point2D.Double(Math.toDegrees(lon2), Math.toDegrees(lat2));
     }
 
+    /**
+     * 
+     * @param p1
+     * @param p2
+     * @return
+     */
+    public static Double getBearing (Point2D.Double p1, Point2D.Double p2) {
+
+        double lat1 = Math.toRadians(p1.y);
+        double lon1 = Math.toRadians(p1.x);
+        double lat2 = Math.toRadians(p2.y);
+        double lon2 = Math.toRadians(p2.x);
+//        double dLat = (lat2 - lat1);
+        double dLon = (lon2 - lon1);
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+                * Math.cos(lat2) * Math.cos(dLon);
+
+        return Math.toDegrees(Math.atan2(y, x));
+    
+    }
+    
     public static void main(String[] args) {
 
         double x = 17.3421;
         double y = 50.486873;
-        double b = 168;
+        double b = 45;
         double d = 141000;
 
         Point2D.Double r = dest(new Point2D.Double(x, y), b, d);
 
-        System.out.println("Wynik:\nx=" + r.x + "\ny=" + r.y);
+        double dist = dist(r, new Point2D.Double(x, y));
+        double kat = getBearing(new Point2D.Double(x, y), r);
+
+        System.out.println("Wynik:\nx=" + r.x + "\ny=" + r.y + "\ndist=" + dist
+                + "\nangle=" + kat);
+        //  double radar = 142;
+//        double dec = (450 - radar) % 360;
+//        System.out.println("dec = " + dec + ", rad = " + Math.toRadians(dec));
     }
 
 }

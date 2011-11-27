@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat;
 
+import java.io.File;
+
 import pl.imgw.jrat.controller.DataProcessorController;
 import pl.imgw.jrat.util.CommandLineArgsParser;
 import pl.imgw.jrat.util.MessageLogger;
@@ -16,9 +18,20 @@ import pl.imgw.jrat.util.MessageLogger;
  * 
  */
 public class MainJRat {
+   
+    public static final String HOME = System.getProperty("user.home");
+    public static final String JRAT = "jrat";
+    
+    public static String getProgPath() {
+        return new File(HOME, JRAT).getPath();
+    }
     
     public static void main(String[] args) {
         
+        File file = new File(HOME, JRAT);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         CommandLineArgsParser cmd = new CommandLineArgsParser();
         DataProcessorController cont = new DataProcessorController();
         MessageLogger msg = new MessageLogger();

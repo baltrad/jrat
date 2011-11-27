@@ -124,7 +124,7 @@ public class ArrayData {
     public int getPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return 0;
+            return -1;
         }
         return data[x][y];
     }
@@ -144,7 +144,7 @@ public class ArrayData {
 
         if (x + mv.getX() < 0 || y + mv.getY() < 0 || x + mv.getX() >= sizeX
                 || y + mv.getY() >= sizeY) {
-            return 0;
+            return -1;
         }
         return data[x + mv.getX()][y + mv.getY()];
 
@@ -168,7 +168,7 @@ public class ArrayData {
         y = (int) ((y + t * mv.getY()));
 
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
-            return 0;
+            return -1;
         }
         return data[x][y];
 

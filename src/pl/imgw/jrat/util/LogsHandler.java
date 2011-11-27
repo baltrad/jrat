@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import pl.imgw.jrat.MainJRat;
+
 /**
  * 
  * /Class description/
@@ -25,7 +27,11 @@ import java.util.TimeZone;
  */
 public class LogsHandler {
 
-    public static final String PROGRAM_LOGS_FILE = "jRat.log";
+    public static final String PROGRAM_LOGS_FILE = "jrat.log";
+    
+    private static String getLogPath() {
+        return new File(MainJRat.getProgPath(), PROGRAM_LOGS_FILE).getPath();
+    }
 
     /**
      * Make a note in log file.
@@ -40,7 +46,7 @@ public class LogsHandler {
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         Calendar cal = Calendar.getInstance();
         saveLine("[" + sdf.format(cal.getTime()) + "]: [" + className + "] " + text,
-                PROGRAM_LOGS_FILE, cal.getTimeZone().getID());
+                getLogPath(), cal.getTimeZone().getID());
     }
 
     /**
@@ -53,7 +59,7 @@ public class LogsHandler {
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         Calendar cal = Calendar.getInstance();
-        saveLine("[" + sdf.format(cal.getTime()) + "]: " + text, PROGRAM_LOGS_FILE,
+        saveLine("[" + sdf.format(cal.getTime()) + "]: " + text, getLogPath(),
                 cal.getTimeZone().getID());
     }
 

@@ -34,16 +34,22 @@ public class CommandLineArgsParser {
     public final static String DISPLAY_OPTION = "d";
     public final static String PRINT_OPTION = "p";
     public final static String VERBOSE_OPTION = "v";
+    public static final String COMPARE_OPTION = "c";
+    
     private final static String START_COMMAND = "jrat [-h]";
 
     private final static String HELP_DESCRIPTION = "print this message";
     private final static String DISPLAY_DESCRIPTION = "display all attributes of hdf5 file input";
+
+    private final static String COMPARE_DESCRIPTION = "compare two volumes in overlapping points\n"
+            + "<args> elevation in (deg)rees and maximum distans threshold in (m)eters, by default "
+            + "e.g. -c 0.5deg 500m";
     
     private final static String PRINT_DESCRIPTION = "print image of data\n"
             + "<arg> dataset number (e.g. 'dataset1')";
     
     private final static String INPUT_DESCRIPTION = "input file option\n"
-            + "<arg> input file's path";
+            + "<file> input file's path";
 
     private final static String VERBOSE_DESCRIPTION = "verbose mode option";
     
@@ -61,26 +67,32 @@ public class CommandLineArgsParser {
 //                .withDescription(OUTPUT_FILE_DESCRIPTION)
 //                .create(OUTPUT_FILE_OPTION);
 
-        Option help = OptionBuilder.withArgName(HELP_OPTION)
+        char sep = " ".charAt(0);
+        
+        Option help = OptionBuilder
                 .withDescription(HELP_DESCRIPTION).create(HELP_OPTION);
-        Option input = OptionBuilder.withArgName(INPUT_OPTION)
-                .withArgName("arg").hasArg().withDescription(INPUT_DESCRIPTION)
+        Option input = OptionBuilder.withArgName("file").hasArgs()
+                .withValueSeparator(sep).withDescription(INPUT_DESCRIPTION)
                 .create(INPUT_OPTION);
+
+        Option print = OptionBuilder.withArgName("arg").hasArg()
+                .withDescription(PRINT_DESCRIPTION).create(PRINT_OPTION);
+
+        Option diplay = OptionBuilder.withDescription(DISPLAY_DESCRIPTION)
+                .create(DISPLAY_OPTION);
+
+        Option compare = OptionBuilder.withArgName("args").hasArgs()
+                .withValueSeparator(sep).withDescription(COMPARE_DESCRIPTION)
+                .create(COMPARE_OPTION);
         
-        Option print = OptionBuilder.withArgName(PRINT_OPTION)
-                .withArgName("arg").hasArg().withDescription(PRINT_DESCRIPTION)
-                .create(PRINT_OPTION);
-        
-        Option diplay = OptionBuilder.withArgName(DISPLAY_OPTION)
-                .withDescription(DISPLAY_DESCRIPTION).create(DISPLAY_OPTION);
-        
-        Option verbose = OptionBuilder.withArgName(VERBOSE_OPTION)
+        Option verbose = OptionBuilder
                 .withDescription(VERBOSE_DESCRIPTION).create(VERBOSE_OPTION);
 
         options.addOption(help);
         options.addOption(input);
         options.addOption(diplay);
         options.addOption(print);
+        options.addOption(compare);
         options.addOption(verbose);
     }
 
@@ -134,6 +146,17 @@ public class CommandLineArgsParser {
      */
     public String getArgumentValue(String option) {
         return cmd.getOptionValue(option);
+    }
+    
+    /**
+     * Method returns command line argument value
+     * 
+     * @param option
+     *            Option name
+     * @return Command line argument value
+     */
+    public String[] getArgumentValues(String option) {
+        return cmd.getOptionValues(option);
     }
 
     /**
