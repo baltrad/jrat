@@ -85,7 +85,7 @@ public class DataProcessorController {
 
             List<File> list = FileListReader.getFileList(fileName);
 
-            List<OdimH5File> odims = new ArrayList<>();
+            List<OdimH5File> odims = new ArrayList<OdimH5File>();
             Iterator<File> itr = list.iterator();
             while (itr.hasNext()) {
                 String newfile = itr.next().getPath();
@@ -158,10 +158,10 @@ public class DataProcessorController {
                 String[] eldist = cmd.getArgumentValues(cmd.COMPARE_OPTION);
                 
                 /*
-                 *<date<source_name,volume_data>> 
+                 * <date<source_name,volume_data>>
                  */
-                TreeMap<String, HashMap<String, RadarVolume>> observations = new TreeMap<>();
-                HashSet<String> sources = new HashSet<>();
+                TreeMap<String, HashMap<String, RadarVolume>> observations = new TreeMap<String, HashMap<String, RadarVolume>>();
+                HashSet<String> sources = new HashSet<String>();
                 Iterator<OdimH5File> iterator = odims.iterator();
                 while(iterator.hasNext()) {
                     OdimH5File next = iterator.next();

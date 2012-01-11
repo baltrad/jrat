@@ -212,7 +212,7 @@ public class MatchingPoints {
      */
     public List<RayBinData> getDataFromVolumes(RadarVolume vol1, RadarVolume vol2) {
 
-        List<RayBinData> rayBinDatas = new ArrayList<>();
+        List<RayBinData> rayBinDatas = new ArrayList<RayBinData>();
         Iterator<RayBin> itr = rayBins.iterator();
         while (itr.hasNext()) {
             RayBin rb = itr.next();
