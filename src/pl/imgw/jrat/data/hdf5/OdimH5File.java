@@ -16,6 +16,12 @@ import ncsa.hdf.object.Group;
 public interface OdimH5File {
     
     /**
+     * Returns type of Odim File which is value of the object field e.g. PVOL or IMAGE
+     * @return
+     */
+    public String getType();
+    
+    /**
      * Set all attributes from root group
      * @param root
      * @return
@@ -44,6 +50,6 @@ public interface OdimH5File {
     /**
      * 
      */
-    public void displayGeneralOdimInfo();
+    public void displayGeneralOdimInfo(boolean verbose);
     
 }

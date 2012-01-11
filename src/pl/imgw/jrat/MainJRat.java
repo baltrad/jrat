@@ -21,6 +21,7 @@ public class MainJRat {
    
     public static final String HOME = System.getProperty("user.home");
     public static final String JRAT = "jrat";
+    public static final String VERSION = "v0.1.21";
     
     public static String getProgPath() {
         return new File(HOME, JRAT).getPath();

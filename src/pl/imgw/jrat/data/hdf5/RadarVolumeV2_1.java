@@ -45,7 +45,7 @@ public class RadarVolumeV2_1 extends RadarVolume implements OdimH5File {
 
     @Override
     public boolean initializeFromRoot(Group root) {
-
+        this.root = root;
         String conventions = H5_Wrapper.getHDF5StringValue(root, CONVENTIONS, v);
         if(!conventions.matches(ODIM_H5_V2_1)) {
             return false;
@@ -358,6 +358,15 @@ public class RadarVolumeV2_1 extends RadarVolume implements OdimH5File {
      */
     public void setGasattn(Double gasattn) {
         this.gasattn = gasattn;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.hdf5.OdimH5File#getType()
+     */
+    @Override
+    public String getType() {
+        // TODO Auto-generated method stub
+        return getObject();
     }
     
 }

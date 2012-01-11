@@ -1,11 +1,3 @@
-/*
- * OdimH5 :: Converter software for OPERA Data Information Model
- * Remote Sensing Department, Institute of Meteorology and Water Management
- * Maciej Szewczykowski, 2009
- *
- * maciej.szewczykowski@imgw.pl
- */
-
 package pl.imgw.jrat.util;
 
 import org.apache.commons.cli.CommandLine;
@@ -16,6 +8,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
 import org.apache.commons.cli.PosixParser;
+
+import pl.imgw.jrat.MainJRat;
 
 /**
  * 
@@ -35,14 +29,15 @@ public class CommandLineArgsParser {
     public final static String PRINT_OPTION = "p";
     public final static String VERBOSE_OPTION = "v";
     public static final String COMPARE_OPTION = "c";
-    
-    private final static String START_COMMAND = "jrat [-h]";
+
+    private final static String START_COMMAND = "jrat -i file ... " +
+    		"[options ...] [-h] [-v]"; 
 
     private final static String HELP_DESCRIPTION = "print this message";
     private final static String DISPLAY_DESCRIPTION = "display all attributes of hdf5 file input";
 
     private final static String COMPARE_DESCRIPTION = "compare two volumes in overlapping points\n"
-            + "<args> elevation in (deg)rees and maximum distans threshold in (m)eters, by default "
+            + "<args> elevation in (deg)rees and maximum distans threshold in (m)eters, "
             + "e.g. -c 0.5deg 500m";
     
     private final static String PRINT_DESCRIPTION = "print image of data\n"
@@ -114,13 +109,12 @@ public class CommandLineArgsParser {
         // Help mode is chosen
         if (cmd.hasOption(HELP_OPTION)) {
             printHelpAndExit(1, HELP_OPTION, options);
-        }
-        // Descriptor file generation mode (4 arguments) or conversion mode (2
-        // arguments )
-        // is chosen
-        if ((cmd.getOptions().length == 0)) {
+        } else if ((cmd.getOptions().length == 0)) {
+            printHelpAndExit(1, START_COMMAND, options);
+        } else if (!cmd.hasOption(INPUT_OPTION)) {
             printHelpAndExit(1, START_COMMAND, options);
         }
+        
     }
 
     /**
@@ -173,7 +167,10 @@ public class CommandLineArgsParser {
             Options options) {
         // Help formatter
         System.out
-                .println("Information about the application and how to receive help\n");
+                .println("Version: Java Radar data Analizing Tool " 
+                        + MainJRat.JRAT + " "+ MainJRat.VERSION
+                        + "\n2011-2012 Ground Based Remote Sensing Department, " +
+                        "Institute of Meteorology and Water Management\n");
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp(startCommand, options);
         System.exit(exitCode);

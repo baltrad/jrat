@@ -60,18 +60,19 @@ public class Printing {
             PictureFromArray pic = new PictureFromArray(data.getData(),
                     ColorScales.getGray256Scale());
             
-            try {
+//            try {
+//
+//                String folder = "/home/vrolok/Pulpit/";
+//
+//                File file = new File(folder + "printed.png");
+//                ImageIO.write(pic.getImg(), "png", file);
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
 
-                String folder = "/home/vrolok/Pulpit/";
-
-                File file = new File(folder + "printed.png");
-                ImageIO.write(pic.getImg(), "png", file);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            
-            ImageFrame frame = new ImageFrame(pic.getImg(), dataset.getProduct(),
+            ImageFrame frame = new ImageFrame(pic.getImg(),
+                    dataset.getProduct() + " " + dataset.getFullStartDate(),
                     data.getSizeX(), data.getSizeY());
 
             String mes = "";

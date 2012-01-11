@@ -83,6 +83,7 @@ along with the OdimH5 software.  If not, see http://www.gnu.org/licenses.
 	</target>
 
 	<target name="install" depends="jar">
+		<delete dir="${prefix}/${app.name}" />
 		<mkdir dir="${prefix}/${app.name}" />
 		<copy todir="${prefix}/${app.name}" flatten="true">
 			<fileset dir="${dist.dir}">

@@ -13,7 +13,7 @@ import pl.imgw.jrat.util.MessageLogger;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RadarVolume extends OdimH5 {
+public class RadarVolume extends OdimH5{
 
     // where
     protected Double lon;

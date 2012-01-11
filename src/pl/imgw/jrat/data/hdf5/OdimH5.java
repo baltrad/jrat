@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import ncsa.hdf.object.Group;
+
 /**
  * 
  * /Class description/
@@ -17,8 +19,10 @@ import java.util.TimeZone;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class OdimH5 {
+public class OdimH5 implements Comparable<OdimH5> {
 
+    
+    protected Group root;
     // what
     protected String object;
     protected String version;
@@ -28,7 +32,7 @@ public class OdimH5 {
     protected SimpleDateFormat sdfTime = new SimpleDateFormat("HHmmss");
     protected SimpleDateFormat sdfDateTime = new SimpleDateFormat(
             "YYYYMMddHHmmss");
-    protected DateFormat sdfGMT = new SimpleDateFormat("YYYY-MM-dd HH:mm z");
+    protected final static DateFormat sdfGMT = new SimpleDateFormat("YYYY-MM-dd HH:mm z");
     
 
  // dataset
@@ -38,11 +42,12 @@ public class OdimH5 {
     /**
      * 
      */
-    public void displayGeneralOdimInfo() {
-        System.out.println("This is OdimH5 file");
-        System.out.println("Model version:\t" + version);
-        System.out.println("Object:\t\t" + object);
-        
+    public void displayGeneralOdimInfo(boolean verbose) {
+        if (verbose) {
+            System.out.println("This is OdimH5 file");
+            System.out.println("Model version:\t" + version);
+            System.out.println("Object:\t\t" + object);
+        }
     }
     
     /* (non-Javadoc)
@@ -172,5 +177,34 @@ public class OdimH5 {
     public int getDatasetSize() {
         return datasetSize;
     }
+    
+    protected String getDataTree() {
+        
+        
+        return "";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(OdimH5 o) {
+        if(this.getFullDate().matches(o.getFullDate())) {
+            return 0;
+        }
+        if(this.date.after(o.date))
+            return 1;
+        return -1;
+    }
+
+    /**
+     * "YYYY-MM-dd HH:mm z"
+     * @return the sdfGMT
+     */
+    public static DateFormat getFullDateFormat() {
+        return sdfGMT;
+    }
+    
+    
     
 }
