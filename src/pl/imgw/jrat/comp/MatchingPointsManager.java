@@ -24,7 +24,7 @@ public class MatchingPointsManager {
     private static final String DEG = "deg";
     private static final String M = "m";
 
-    private HashMap<String, ResultPairs> results = new HashMap<>();
+    private HashMap<String, ResultPairs> results = new HashMap<String, ResultPairs>();
     private TreeMap<String, HashMap<String, RadarVolume>> obs;
     private HashSet<HashSet<String>> pairs;
     
