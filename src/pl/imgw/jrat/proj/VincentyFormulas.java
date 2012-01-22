@@ -38,7 +38,7 @@ public class VincentyFormulas {
      *            Coordinates of the first point
      * @param p2
      *            Coordinates of the second point
-     * @return Distance null if formula failed, -1 if no co-incident points
+     * @return Distance in meters, null if formula failed, -1 if no co-incident points
      */
     public static Double dist(Point2D.Double p1, Point2D.Double p2) {
 

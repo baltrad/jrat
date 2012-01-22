@@ -21,6 +21,7 @@ import static pl.imgw.jrat.data.hdf5.OdimH5Constans.WHAT;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -160,7 +161,7 @@ public class DataProcessorController {
                 /*
                  * <date<source_name,volume_data>>
                  */
-                TreeMap<String, HashMap<String, RadarVolume>> observations = new TreeMap<String, HashMap<String, RadarVolume>>();
+                TreeMap<Date, HashMap<String, RadarVolume>> observations = new TreeMap<Date, HashMap<String, RadarVolume>>();
                 HashSet<String> sources = new HashSet<String>();
                 Iterator<OdimH5File> iterator = odims.iterator();
                 while(iterator.hasNext()) {
@@ -169,7 +170,8 @@ public class DataProcessorController {
                         continue;
                     RadarVolume vol = (RadarVolume) next;
                     sources.add(vol.getSource());
-                    String date = vol.getFullDate();
+                    Date date = vol.getRoundedDate();
+                    
                     HashMap<String, RadarVolume> r = null;
                     if(observations.containsKey(date)) {
                         r = observations.get(date);
@@ -183,7 +185,7 @@ public class DataProcessorController {
                 MatchingPointsManager mp = new MatchingPointsManager(
                         observations, sources);
                 if (mp.initialize(eldist)) {
-                    ;
+                    mp.calculateAll();
                 } else
                     MessageLogger.showMessage(
                             "Comparison failed! Incorrect parameters", true);

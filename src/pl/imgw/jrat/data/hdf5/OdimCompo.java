@@ -216,7 +216,7 @@ public class OdimCompo extends RadarProduct implements OdimH5File {
         int space = p1.length() - 1;
         HdfTreeUtil.makeAttribe(space, OBJECT, object);
         HdfTreeUtil.makeAttribe(space, VERSION, version);
-        HdfTreeUtil.makeAttribe(space, DATE, getDate());
+        HdfTreeUtil.makeAttribe(space, DATE, getSimpleDate());
         HdfTreeUtil.makeAttribe(space, TIME, getTime());
         HdfTreeUtil.makeAttribe(space, SOURCE, source);
 

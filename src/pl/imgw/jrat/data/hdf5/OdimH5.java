@@ -6,6 +6,7 @@ package pl.imgw.jrat.data.hdf5;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -96,6 +97,17 @@ public class OdimH5 implements Comparable<OdimH5> {
         this.version = version;
     }
 
+    public Date getDate() {
+        return date;
+    }
+    
+    public Date getRoundedDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+    
     /**
      * YYYY-MM-dd HH:mm z eg. 2011-01-03 22:20 GMT
      * 
@@ -109,7 +121,7 @@ public class OdimH5 implements Comparable<OdimH5> {
     /**
      * @return the date YYYYMMdd
      */
-    public String getDate() {
+    public String getSimpleDate() {
         return sdfDate.format(date);
     }
 

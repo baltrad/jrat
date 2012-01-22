@@ -4,9 +4,11 @@
 package pl.imgw.jrat.comp;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 
 import pl.imgw.jrat.data.hdf5.RadarVolume;
@@ -25,8 +27,9 @@ public class MatchingPointsManager {
     private static final String M = "m";
 
     private HashMap<String, ResultPairs> results = new HashMap<String, ResultPairs>();
-    private TreeMap<String, HashMap<String, RadarVolume>> obs;
+    private TreeMap<Date, HashMap<String, RadarVolume>> obs;
     private HashSet<HashSet<String>> pairs;
+    private HashMap<String, MatchingPoints> mps = new HashMap<String, MatchingPoints>();
     
 
     private double elevation = 0;
@@ -42,7 +45,7 @@ public class MatchingPointsManager {
      * @param sources
      */
     public MatchingPointsManager(
-            TreeMap<String, HashMap<String, RadarVolume>> obs,
+            TreeMap<Date, HashMap<String, RadarVolume>> obs,
             HashSet<String> sources) {
 
         this.obs = obs;
@@ -52,13 +55,15 @@ public class MatchingPointsManager {
     
     public void calculateAll() {
         
+        long time = System.currentTimeMillis();
+        
         /*
          * iterate through dates
          */
-        Collection<String> dates = obs.keySet();
-        Iterator<String> datesItr = dates.iterator();
+        Collection<Date> dates = obs.keySet();
+        Iterator<Date> datesItr = dates.iterator();
         while(datesItr.hasNext()) {
-            String date = datesItr.next();
+            Date date = datesItr.next();
             
             /*
              * iterate through pairs
@@ -69,19 +74,53 @@ public class MatchingPointsManager {
                 if (pair.size() != 2)
                     continue;
                 Iterator<String> i = pair.iterator();
-                String s1 = i.next();
-                String s2 = i.next(); 
+                String[] sources = new String[2];
+                sources[0] = i.next();
+                sources[1] = i.next(); 
                 
-                RadarVolume vol1 = obs.get(date).get(s1);
-                RadarVolume vol2 = obs.get(date).get(s1);
+                RadarVolume vol1 = obs.get(date).get(getFirstFromPair(sources));
+                RadarVolume vol2 = obs.get(date).get(getSecondFromPair(sources));
                 
                 if(vol1 == null || vol2 == null)
                     continue;
                 
-                String key = getPairKey(s1, s2);
+                String key = getPairKey(sources);
                 System.out.println(key + " " + date);
-                MatchingPoints mp = new MatchingPoints();
-                mp.initialize(vol1, vol2, elevation, distance);
+                MatchingPoints mp = null;
+                if(!mps.containsKey(key)) {
+                    mp = new MatchingPoints(vol1, vol2, elevation, distance);
+                    mps.put(key, mp);
+                } else {
+                    mp = mps.get(key);
+                    if(!mp.validate(vol1, vol2, elevation, distance)) {
+                        mp = new MatchingPoints(vol1, vol2, elevation, distance);
+                        mps.remove(key);
+                        mps.put(key, mp);
+                    }
+                    System.out.println("seconds from start: " + (System.currentTimeMillis() - time)/1000);
+                    
+                }
+                
+                if(mp.valid) {
+                    List<RayBinData> rbd = mp.getMatchingPointsData(vol1, vol2);
+                    ResultPairs rp = null;
+                    if(results.containsKey(key)){
+                        System.out.println("juz jest");
+                        rp = results.get(key);
+                        results.remove(key);
+                    } else {
+                        System.out.println("pusty");
+                        rp = new ResultPairs();
+                    }
+                    if(rp == null) {
+                        System.out.println("rp null");
+                    }
+                    if(rbd == null) {
+                        System.out.println("rbd null");
+                    }
+                    rp.add(date, rbd);
+                    results.put(key, rp);
+                }
                 
             }
         }
@@ -98,11 +137,35 @@ public class MatchingPointsManager {
      *            name of the second source
      * @return null if two names are equal
      */
-    public static String getPairKey(String source1, String source2) {
+    public static String getPairKey(String[] sources) {
+        String source1 = sources[0];
+        String source2 = sources[1];
         if (source1.compareTo(source2) > 0)
-            return source1 + source2;
+            return source1 + "&" + source2;
         else if (source1.compareTo(source2) < 0)
             return source2 + source1;
+        else
+            return null;
+    }
+    
+    private String getFirstFromPair(String[] sources) {
+        String source1 = sources[0];
+        String source2 = sources[1];
+        if (source1.compareTo(source2) > 0)
+            return source1;
+        else if (source1.compareTo(source2) < 0)
+            return source2;
+        else
+            return null;
+    }
+    
+    private String getSecondFromPair(String[] sources) {
+        String source1 = sources[0];
+        String source2 = sources[1];
+        if (source1.compareTo(source2) > 0)
+            return source2;
+        else if (source1.compareTo(source2) < 0)
+            return source1;
         else
             return null;
     }

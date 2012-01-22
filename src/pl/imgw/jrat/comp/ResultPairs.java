@@ -19,7 +19,11 @@ import pl.imgw.jrat.data.hdf5.OdimH5;
  */
 public class ResultPairs {
     
-    HashMap<String, List<RayBinData>> data;
+    HashMap<Date, List<RayBinData>> data;
+    
+    public ResultPairs() {
+        data = new HashMap<Date, List<RayBinData>>();
+    }
     
     /**
      * @param date
@@ -27,11 +31,10 @@ public class ResultPairs {
      * @return
      */
     public boolean add(Date date, List<RayBinData> raybin) {
-        String fulldate = OdimH5.getFullDateFormat().format(date);
-        if (data.containsKey(fulldate)) {
+        if (data.containsKey(date)) {
             return false;
         }
-        data.put(fulldate, raybin);
+        data.put(date, raybin);
         return true;
     }
     
