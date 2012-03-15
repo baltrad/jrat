@@ -40,6 +40,12 @@ public class OdimH5 implements Comparable<OdimH5> {
     protected OdimH5Dataset[] dataset;
     protected int datasetSize;
     
+    public OdimH5() {
+        sdfGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdfTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdfDateTime.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+    
     /**
      * 
      */
@@ -114,7 +120,6 @@ public class OdimH5 implements Comparable<OdimH5> {
      * @return
      */
     public String getFullDate() {
-        sdfGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sdfGMT.format(date);
     }
 

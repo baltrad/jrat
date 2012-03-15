@@ -144,6 +144,15 @@ public class MatchingPoints {
         valid = true;
     }
     
+    /**
+     * Checking if given settings are compatible with settings of this object.
+     * 
+     * @param vol1
+     * @param vol2
+     * @param elevation
+     * @param distance
+     * @return
+     */
     public boolean validate(RadarVolume vol1, RadarVolume vol2, double elevation, int distance) {
         
         if (this.elevation != elevation)

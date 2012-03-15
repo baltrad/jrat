@@ -14,8 +14,8 @@ package pl.imgw.jrat.data.hdf5;
 public class OdimH5Constans {
 
     // General constants
-    public static final String FILE_NAME_EXTENSION = ".hdf";
-    public static final String FILE_NAME_EXTENSION1 = ".h5";
+    public static final String HDF_EXT = ".hdf";
+    public static final String H5_EXT = ".h5";
     
     public static final String CONVENTIONS = "Conventions";
     public static final String ODIM_H5_V2_1 = "ODIM_H5/V2_1";

@@ -10,8 +10,8 @@ package pl.imgw.jrat.controller;
 
 import static pl.imgw.jrat.data.hdf5.OdimH5Constans.COMP;
 import static pl.imgw.jrat.data.hdf5.OdimH5Constans.CONVENTIONS;
-import static pl.imgw.jrat.data.hdf5.OdimH5Constans.FILE_NAME_EXTENSION;
-import static pl.imgw.jrat.data.hdf5.OdimH5Constans.FILE_NAME_EXTENSION1;
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.HDF_EXT;
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.H5_EXT;
 import static pl.imgw.jrat.data.hdf5.OdimH5Constans.IMAGE;
 import static pl.imgw.jrat.data.hdf5.OdimH5Constans.OBJECT;
 import static pl.imgw.jrat.data.hdf5.OdimH5Constans.ODIM_H5_V2_0;
@@ -20,14 +20,18 @@ import static pl.imgw.jrat.data.hdf5.OdimH5Constans.PVOL;
 import static pl.imgw.jrat.data.hdf5.OdimH5Constans.WHAT;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 import ncsa.hdf.object.Group;
@@ -36,6 +40,7 @@ import pl.imgw.jrat.comp.MatchingPoints;
 import pl.imgw.jrat.comp.MatchingPointsManager;
 import pl.imgw.jrat.data.hdf5.H5_Wrapper;
 import pl.imgw.jrat.data.hdf5.OdimCompo;
+import pl.imgw.jrat.data.hdf5.OdimFilesManager;
 import pl.imgw.jrat.data.hdf5.OdimH5File;
 import pl.imgw.jrat.data.hdf5.RadarVolume;
 import pl.imgw.jrat.data.hdf5.RadarVolumeV2_0;
@@ -82,118 +87,60 @@ public class DataProcessorController {
 
         // =========== input file processing =================
         if (cmd.hasArgument(cmd.INPUT_OPTION)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             String[] fileName = cmd.getArgumentValues(cmd.INPUT_OPTION);
 
-            List<File> list = FileListReader.getFileList(fileName);
-
-            List<OdimH5File> odims = new ArrayList<OdimH5File>();
-            Iterator<File> itr = list.iterator();
-            while (itr.hasNext()) {
-                String newfile = itr.next().getPath();
-                msg.showMessage("Processing: " + newfile, verbose);
-                if (newfile.endsWith(FILE_NAME_EXTENSION)
-                        || newfile.endsWith(FILE_NAME_EXTENSION1)) {
-
-                    File f = new File(newfile);
-                    H5File file = H5_Wrapper.openHDF5File(f.getAbsolutePath(),
-                            verbose);
-                    if (file != null && file.canRead()) {
-
-                        Group root = H5_Wrapper.getHDF5RootGroup(file, verbose);
-                        // validating conditions
-                        String format = H5_Wrapper.getHDF5StringValue(root,
-                                WHAT, OBJECT, verbose);
-                        String model = H5_Wrapper.getHDF5StringValue(root,
-                                CONVENTIONS, verbose);
-
-                        OdimH5File odim = null;
-                        if (format.matches(PVOL)) {
-                            if (model.matches(ODIM_H5_V2_0)) {
-                                odim = new RadarVolumeV2_0();
-                            } else if (model.matches(ODIM_H5_V2_1)) {
-                                odim = new RadarVolumeV2_1(verbose);
-                            } else {
-                                System.out.println("Model " + model
-                                        + " not supported");
-                                break;
-                            }
-
-                        } else if (format.matches(IMAGE)) {
-                            System.out.println("Reading IMAGE");
-                        } else if (format.matches(COMP)) {
-                            odim = new OdimCompo(verbose);
-                        } else {
-                            System.out.println("Format " + format
-                                    + " not suppoerted");
-                        }
-                        if (odim.initializeFromRoot(root)) {
-                            odims.add(odim);
-                            odim.displayGeneralOdimInfo(verbose);
-                            odim.displayGeneralObjectInfo(verbose);
-                        } else
-                            msg.showMessage("Faild to read the file", true);
-
-                        if (odim != null && cmd.hasArgument(cmd.DISPLAY_OPTION))
-                            odim.displayTree();
-                        if (odim != null && cmd.hasArgument(cmd.PRINT_OPTION)) {
-                            String dsName = cmd
-                                    .getArgumentValue(cmd.PRINT_OPTION);
-                            Printing.printScan(odim, dsName, verbose);
-                        }
-                    } else {
-                        MessageLogger.showMessage("unable to read " + newfile,
-                                true);
-                    }
-                } else {
-                    MessageLogger.showMessage("type of " + newfile
-                            + " not supported", true);
-                }
-
-            }
-
-            if(cmd.hasArgument(cmd.COMPARE_OPTION)) {
-                
-                MessageLogger.showMessage(
-                        "Two radars comparison option choosen", verbose);
-
-                String[] eldist = cmd.getArgumentValues(cmd.COMPARE_OPTION);
-                
-                /*
-                 * <date<source_name,volume_data>>
-                 */
-                TreeMap<Date, HashMap<String, RadarVolume>> observations = new TreeMap<Date, HashMap<String, RadarVolume>>();
-                HashSet<String> sources = new HashSet<String>();
-                Iterator<OdimH5File> iterator = odims.iterator();
-                while(iterator.hasNext()) {
-                    OdimH5File next = iterator.next();
-                    if(!next.getType().matches(PVOL))
-                        continue;
-                    RadarVolume vol = (RadarVolume) next;
-                    sources.add(vol.getSource());
-                    Date date = vol.getRoundedDate();
-                    
-                    HashMap<String, RadarVolume> r = null;
-                    if(observations.containsKey(date)) {
-                        r = observations.get(date);
-                    } else {
-                        r = new HashMap<String,RadarVolume>();
-                    }
-                    r.put(vol.getSource(), vol);
-                    observations.put(date, r);
-                }
-
-                MatchingPointsManager mp = new MatchingPointsManager(
-                        observations, sources);
-                if (mp.initialize(eldist)) {
-                    mp.calculateAll();
-                } else
-                    MessageLogger.showMessage(
-                            "Comparison failed! Incorrect parameters", true);
-
-            }
+            FileListReader flr = new FileListReader();
             
-        }
+            HashMap<Date, Map<String, File>> map = flr.getFileList(fileName);
+            
+            Iterator<Date> itr = map.keySet().iterator();
+            while (itr.hasNext()) {
+                Date date = itr.next();
+//                Iterator<String> sources = map.get(date).keySet().iterator();
+                Collection<File> list =  map.get(date).values();
+                
+                msg.showMessage("Number of files " + sdf.format(date) + ": " + list.size(),
+                        true);
 
+                List<OdimH5File> odims = OdimFilesManager.makeList(list,
+                        verbose);
+
+                if (cmd.hasArgument(cmd.DISPLAY_OPTION)) {
+                    Iterator<OdimH5File> i = odims.iterator();
+                    if (i.hasNext()) {
+                        i.next().displayTree();
+                    }
+                }
+
+                if (cmd.hasArgument(cmd.PRINT_OPTION)) {
+                    String dsName = cmd.getArgumentValue(cmd.PRINT_OPTION);
+                    Iterator<OdimH5File> i = odims.iterator();
+                    if (i.hasNext()) {
+                        Printing.printScan(i.next(), dsName, verbose);
+                    }
+                }
+
+                if (cmd.hasArgument(cmd.COMPARE_OPTION)) {
+
+                    MessageLogger.showMessage(
+                            "Two radars comparison option choosen", verbose);
+
+                    MatchingPointsManager mp = new MatchingPointsManager(odims);
+
+                    String[] eldist = cmd.getArgumentValues(cmd.COMPARE_OPTION);
+                    if (mp.initialize(eldist)) {
+                        mp.calculateAll();
+                    } else
+                        MessageLogger
+                                .showMessage(
+                                        "Comparison failed! Incorrect parameters",
+                                        true);
+                }
+
+            }
+        }
     }
 
     /**

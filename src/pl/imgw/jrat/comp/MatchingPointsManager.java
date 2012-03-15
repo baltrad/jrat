@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat.comp;
 
+import static pl.imgw.jrat.data.hdf5.OdimH5Constans.PVOL;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
+import pl.imgw.jrat.data.hdf5.OdimH5File;
 import pl.imgw.jrat.data.hdf5.RadarVolume;
 
 /**
@@ -44,13 +47,32 @@ public class MatchingPointsManager {
      * 
      * @param sources
      */
-    public MatchingPointsManager(
-            TreeMap<Date, HashMap<String, RadarVolume>> obs,
-            HashSet<String> sources) {
+    public MatchingPointsManager(List<OdimH5File> odims) {
 
-        this.obs = obs;
-        this.pairs = combine(sources);
-
+        /*
+         * <date<source_name,volume_data>>
+         */
+        obs = new TreeMap<Date, HashMap<String, RadarVolume>>();
+        HashSet<String> sources = new HashSet<String>();
+        Iterator<OdimH5File> iterator = odims.iterator();
+        while(iterator.hasNext()) {
+            OdimH5File next = iterator.next();
+            if(!next.getType().matches(PVOL))
+                continue;
+            RadarVolume vol = (RadarVolume) next;
+            sources.add(vol.getSource());
+            Date date = vol.getRoundedDate();
+            
+            HashMap<String, RadarVolume> r = null;
+            if(obs.containsKey(date)) {
+                r = obs.get(date);
+            } else {
+                r = new HashMap<String,RadarVolume>();
+            }
+            r.put(vol.getSource(), vol);
+            obs.put(date, r);
+        }
+        pairs = combine(sources);
     }
     
     public void calculateAll() {

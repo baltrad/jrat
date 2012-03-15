@@ -5,9 +5,15 @@ package pl.imgw.jrat.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * 
@@ -18,7 +24,14 @@ import java.util.List;
  * 
  */
 public class FileListReader {
+    
+    private SimpleDateFormat sdf;
+    HashMap<Date, Map<String, File>> map;
 
+    public FileListReader() {
+        sdf  = new SimpleDateFormat("yyyyMMddHHmm");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
     /**
      * Returns all files pointed by path. If path ended with '*' all files that
      * matches the pattern before '*' are added.
@@ -26,8 +39,10 @@ public class FileListReader {
      * @param path
      * @return
      */
-    public static List<File> getFileList(String[] path) {
+    public HashMap<Date, Map<String,File>> getFileList(String[] path) {
 
+        map = new HashMap<Date, Map<String,File>>();
+        
         List<File> list = new ArrayList<File>();
 
         for (int i = 0; i < path.length; i++) {
@@ -57,6 +72,7 @@ public class FileListReader {
                     if (files != null && files.length > 0) {
                         for (int j = 0; j < files.length; j++) {
                             if (files[j].isFile()) {
+                                putSourceFile(files[j]);
                                 list.add(files[j]);
                             }
                         }
@@ -66,25 +82,68 @@ public class FileListReader {
             } else {
                 File file = new File(path[i]);
                 if (file.isFile()) {
+                    putSourceFile(file);
                     list.add(file);
                 }
             }
         }
 
-        return list;
+        return map;
     }
 
+    private void putSourceFile(File file){
+        String name = file.getName();
+        Map<String, File> sources;
+        String[] nameParts = name.split("_");
+        Date date = getDateFromFile(nameParts[nameParts.length - 1]);
+        if(date == null)
+            return;
+        String key = name
+                .substring(
+                        0,
+                        name.indexOf(nameParts[nameParts.length - 1]) -1);
+        if(map.containsKey(date)) {
+            sources = map.get(date);
+            map.remove(date);
+        } else {
+            sources = new HashMap<String, File>();
+        }
+        sources.put(key, file);
+        map.put(date, sources);
+    }
+    
+    private Date getDateFromFile(String fileName) {
+        
+        try {
+            return sdf.parse(fileName.substring(0, 12));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public static void main(String[] args) {
-        String[] a = new String[3];
-        a[0] = "*.xml";
-        a[1] = "/home/vrolok/poligon/hs*";
-        a[2] = "/home/vrolok/workspace/*";
+        
+        String[] a = new String[1];
+        
+        a[0] = "/home/vrolok/poligon/T*";
         
         
-        List<File> list = getFileList(a);
-        Iterator<File> itr = list.iterator();
+        FileListReader flr = new FileListReader();
+        
+        HashMap<Date, Map<String, File>> map = flr.getFileList(a);
+        Iterator<Date> itr = map.keySet().iterator();
         while (itr.hasNext()) {
-            System.out.println(itr.next().getPath());
+            Date date = itr.next();
+            System.out.println("date: " + flr.sdf.format(date));
+            Iterator<String> sources = map.get(date).keySet().iterator();
+            while(sources.hasNext()) {
+                String key = sources.next();
+                System.out.println("sources: " + key + " plik: " + map.get(date).get(key).getName());
+            }
+                
         }
     }
 
