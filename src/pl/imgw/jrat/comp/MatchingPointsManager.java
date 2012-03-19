@@ -29,7 +29,7 @@ public class MatchingPointsManager {
     private static final String DEG = "deg";
     private static final String M = "m";
 
-    private HashMap<String, ResultPairs> results = new HashMap<String, ResultPairs>();
+    private HashMap<String, ResultsManager> results = new HashMap<String, ResultsManager>();
     private TreeMap<Date, HashMap<String, RadarVolume>> obs;
     private HashSet<HashSet<String>> pairs;
     private HashMap<String, MatchingPoints> mps = new HashMap<String, MatchingPoints>();
@@ -47,7 +47,7 @@ public class MatchingPointsManager {
      * 
      * @param sources
      */
-    public MatchingPointsManager(List<OdimH5File> odims) {
+    public void setData (List<OdimH5File> odims) {
 
         /*
          * <date<source_name,volume_data>>
@@ -78,7 +78,7 @@ public class MatchingPointsManager {
     public void calculateAll() {
         
         long time = System.currentTimeMillis();
-        
+        ResultsManager rm = new ResultsManager();
         /*
          * iterate through dates
          */
@@ -112,36 +112,16 @@ public class MatchingPointsManager {
                 if(!mps.containsKey(key)) {
                     mp = new MatchingPoints(vol1, vol2, elevation, distance);
                     mps.put(key, mp);
-                } else {
+                } else
                     mp = mps.get(key);
-                    if(!mp.validate(vol1, vol2, elevation, distance)) {
-                        mp = new MatchingPoints(vol1, vol2, elevation, distance);
-                        mps.remove(key);
-                        mps.put(key, mp);
-                    }
-                    System.out.println("seconds from start: " + (System.currentTimeMillis() - time)/1000);
-                    
-                }
                 
-                if(mp.valid) {
-                    List<RayBinData> rbd = mp.getMatchingPointsData(vol1, vol2);
-                    ResultPairs rp = null;
-                    if(results.containsKey(key)){
-                        System.out.println("juz jest");
-                        rp = results.get(key);
-                        results.remove(key);
+                if (mp.valid) {
+                    if (!rm.hasResult(mp.getId(), key, date)) {
+                        int[] result = mp.getMatchingPointsData(vol1, vol2);
+                        rm.saveResults(mp.getId(), key, date, result);
                     } else {
-                        System.out.println("pusty");
-                        rp = new ResultPairs();
+                        System.out.println("juz bylo policzone");
                     }
-                    if(rp == null) {
-                        System.out.println("rp null");
-                    }
-                    if(rbd == null) {
-                        System.out.println("rbd null");
-                    }
-                    rp.add(date, rbd);
-                    results.put(key, rp);
                 }
                 
             }
@@ -159,13 +139,14 @@ public class MatchingPointsManager {
      *            name of the second source
      * @return null if two names are equal
      */
-    public static String getPairKey(String[] sources) {
-        String source1 = sources[0];
-        String source2 = sources[1];
+    public String getPairKey(String[] sources) {
+        String source1 = sources[0].replaceAll("[^\\p{L}\\p{N}]", "");
+        String source2 = sources[1].replaceAll("[^\\p{L}\\p{N}]", "");
+        
         if (source1.compareTo(source2) > 0)
-            return source1 + "&" + source2;
+            return source1 + "_" + source2;
         else if (source1.compareTo(source2) < 0)
-            return source2 + source1;
+            return source2 + "_" +source1;
         else
             return null;
     }
@@ -235,7 +216,7 @@ public class MatchingPointsManager {
      * @param set
      * @return
      */
-    public static HashSet<HashSet<String>> combine(HashSet<String> set) {
+    public HashSet<HashSet<String>> combine(HashSet<String> set) {
         if (set.size() < 2) {
             {
                 HashSet<HashSet<String>> c = new HashSet<HashSet<String>>();
@@ -264,7 +245,7 @@ public class MatchingPointsManager {
      * @param set
      * @return
      */
-    private static HashSet<HashSet<String>> shuffle(String s,
+    private HashSet<HashSet<String>> shuffle(String s,
             HashSet<String> set) {
         HashSet<HashSet<String>> newList = new HashSet<HashSet<String>>();
         for (String o : set) {

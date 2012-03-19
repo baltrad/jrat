@@ -85,6 +85,18 @@ public class DataProcessorController {
             // System.out.println("verbose mode");
         }
 
+        MatchingPointsManager mp = null;
+        boolean compare = false;
+        if (cmd.hasArgument(cmd.COMPARE_OPTION)) {
+            MessageLogger.showMessage(
+                    "Two radars comparison option choosen", verbose);
+            String[] eldist = cmd.getArgumentValues(cmd.COMPARE_OPTION);
+            mp = new MatchingPointsManager();
+            if (mp.initialize(eldist)) {
+                compare = true;
+            }
+        }
+
         // =========== input file processing =================
         if (cmd.hasArgument(cmd.INPUT_OPTION)) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -92,17 +104,17 @@ public class DataProcessorController {
             String[] fileName = cmd.getArgumentValues(cmd.INPUT_OPTION);
 
             FileListReader flr = new FileListReader();
-            
+
             HashMap<Date, Map<String, File>> map = flr.getFileList(fileName);
-            
+
             Iterator<Date> itr = map.keySet().iterator();
             while (itr.hasNext()) {
                 Date date = itr.next();
-//                Iterator<String> sources = map.get(date).keySet().iterator();
-                Collection<File> list =  map.get(date).values();
-                
-                msg.showMessage("Number of files " + sdf.format(date) + ": " + list.size(),
-                        true);
+                // Iterator<String> sources = map.get(date).keySet().iterator();
+                Collection<File> list = map.get(date).values();
+
+                msg.showMessage("Number of files " + sdf.format(date) + ": "
+                        + list.size(), true);
 
                 List<OdimH5File> odims = OdimFilesManager.makeList(list,
                         verbose);
@@ -122,21 +134,11 @@ public class DataProcessorController {
                     }
                 }
 
-                if (cmd.hasArgument(cmd.COMPARE_OPTION)) {
+                if (compare) {
 
-                    MessageLogger.showMessage(
-                            "Two radars comparison option choosen", verbose);
+                    mp.setData(odims);
 
-                    MatchingPointsManager mp = new MatchingPointsManager(odims);
-
-                    String[] eldist = cmd.getArgumentValues(cmd.COMPARE_OPTION);
-                    if (mp.initialize(eldist)) {
-                        mp.calculateAll();
-                    } else
-                        MessageLogger
-                                .showMessage(
-                                        "Comparison failed! Incorrect parameters",
-                                        true);
+                    mp.calculateAll();
                 }
 
             }

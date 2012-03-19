@@ -6,6 +6,7 @@ package pl.imgw.jrat.comp;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -58,11 +59,13 @@ public class MatchingPoints {
     private static final String R1RAY = "r1ray";
     private static final String R2BIN = "r2bin";
     private static final String R2RAY = "r2ray";
-
+    private static final String ID = "id";
+    
     private Point2D.Double r1coords = null;
     private Point2D.Double r2coords = null;
 
     private List<RayBin> rayBins = new ArrayList<RayBin>();
+    private int id = -1;
 
     private double elevation = 0;
     private int distance = 0;
@@ -104,8 +107,8 @@ public class MatchingPoints {
 
         if (Math.abs(r1height - r2height) > distance) {
             MessageLogger.showMessage(
-                    "Warning! Vertical level difference bigger then "
-                            + distance, true);
+                    "Warning! Radars height difference bigger then distance between points ("
+                            + distance + "m )", true);
         }
 
         if (dataset1 == null || dataset2 == null)
@@ -264,25 +267,26 @@ public class MatchingPoints {
     /**
      * helping method
      */
-    public List<RayBinData> getMatchingPointsData(RadarVolume vol1, RadarVolume vol2) {
+    public int[] getMatchingPointsData(RadarVolume vol1, RadarVolume vol2) {
 
+        int data[] = new int[rayBins.size()];
+        int i = 0;
         Iterator<RayBin> itr = rayBins.iterator();
-        List<RayBinData> rbdlist = new ArrayList<RayBinData>();
+//        List<RayBinData> rbdlist = new ArrayList<RayBinData>();
         while (itr.hasNext()) {
             RayBinData rbd = (RayBinData) itr.next();
             int r1 = rbd.getRay1();
             int r2 = rbd.getRay2();
             int b1 = rbd.getBin1();
             int b2 = rbd.getBin2();
-            double data1 = vol1.getDataset(elevation).getValue(0, r1, b1);
-            double data2 = vol2.getDataset(elevation).getValue(0, r2, b2);
-            if (data1 > -32 || data2 > -32) {
-                rbd.setData1(data1);
-                rbd.setData2(data2);
-                rbdlist.add(rbd);
+            int data1 = vol1.getDataset(elevation).getRawValue(0, r1, b1);
+            int data2 = vol2.getDataset(elevation).getRawValue(0, r2, b2);
+            if (data1 > 80 || data2 > 80) {
+                data[i] = data1 - data2;
             }
+            i++;
         }
-        return rbdlist;
+        return data;
     }
 
     /**
@@ -306,7 +310,32 @@ public class MatchingPoints {
                             + e.getMessage());
         }
         Element root = doc.createElement(ROOT);
+        
+        HashSet<Integer> ids = new HashSet<Integer>();
+        Document oldDoc = XMLHandler.loadXML(getXMLPath());
+        if (oldDoc != null && oldDoc.hasChildNodes()) {
+            NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
+            for (int i = 0; i < list.getLength(); i++) {
+                if (list.item(i).getNodeName().matches(PAIR)) {
+                    Node oldPair = doc.importNode(list.item(i), true);
+                    String id = XMLHandler.getAttributeValue(oldPair, ID);
+                    
+                    try {
+                        ids.add(Integer.parseInt(id));
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    
+                    root.appendChild(oldPair);
+                }
+            }
+        }        
+        
         Element pair = doc.createElement(PAIR);
+        int id = getNewId(ids);
+        
+        pair.setAttribute(ID, String.valueOf(id));
+        
         pair.setAttribute(ELEVATION, String.valueOf(elevation));
         pair.setAttribute(DISTANCE, String.valueOf(distance));
 
@@ -336,19 +365,23 @@ public class MatchingPoints {
         }
 
         root.appendChild(pair);
-        Document oldDoc = XMLHandler.loadXML(getXMLPath());
-        if (oldDoc != null && oldDoc.hasChildNodes()) {
-            NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
-            for (int i = 0; i < list.getLength(); i++) {
-                if (list.item(i).getNodeName().matches(PAIR)) {
-                    Node oldPair = doc.importNode(list.item(i), true);
-                    root.appendChild(oldPair);
-                }
-            }
-        }
+
         doc.appendChild(root);
 
         XMLHandler.saveXMLFile(doc, getXMLPath());
+    }
+
+    /**
+     * @param ids
+     * @return
+     */
+    private int getNewId(HashSet<Integer> ids) {
+        int i = 0;
+        while(ids.contains(i)) {
+            i++;
+        }
+            
+        return i;
     }
 
     /**
@@ -390,6 +423,8 @@ public class MatchingPoints {
                                 node, ELEVATION));
                         dist = (int) Double.parseDouble(XMLHandler
                                 .getAttributeValue(node, DISTANCE));
+                        id = Integer.parseInt(XMLHandler
+                                .getAttributeValue(node, ID));
                     } catch (NumberFormatException e) {
                         continue;
                     }
@@ -494,6 +529,10 @@ public class MatchingPoints {
         return found;
     }
 
+    public int getId() {
+        return id;
+    }
+    
     public static void main(String[] args) {
 
     }
