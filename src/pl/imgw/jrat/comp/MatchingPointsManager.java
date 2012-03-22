@@ -29,7 +29,7 @@ public class MatchingPointsManager {
     private static final String DEG = "deg";
     private static final String M = "m";
 
-    private HashMap<String, ResultsManager> results = new HashMap<String, ResultsManager>();
+//    private HashMap<String, ResultsManager> results = new HashMap<String, ResultsManager>();
     private TreeMap<Date, HashMap<String, RadarVolume>> obs;
     private HashSet<HashSet<String>> pairs;
     private HashMap<String, MatchingPoints> mps = new HashMap<String, MatchingPoints>();
@@ -102,7 +102,6 @@ public class MatchingPointsManager {
                 
                 RadarVolume vol1 = obs.get(date).get(getFirstFromPair(sources));
                 RadarVolume vol2 = obs.get(date).get(getSecondFromPair(sources));
-                
                 if(vol1 == null || vol2 == null)
                     continue;
                 

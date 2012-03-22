@@ -41,6 +41,7 @@ public class OdimFilesManager {
         Iterator<File> itr = list.iterator();
         while (itr.hasNext()) {
             String newfile = itr.next().getPath();
+            System.out.println(newfile);
             if (newfile.endsWith(HDF_EXT)
                     || newfile.endsWith(H5_EXT)) {
 

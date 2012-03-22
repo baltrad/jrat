@@ -105,7 +105,7 @@ public class DataProcessorController {
 
             FileListReader flr = new FileListReader();
 
-            HashMap<Date, Map<String, File>> map = flr.getFileList(fileName);
+            TreeMap<Date, Map<String, File>> map = flr.getFileList(fileName);
 
             Iterator<Date> itr = map.keySet().iterator();
             while (itr.hasNext()) {
@@ -135,7 +135,6 @@ public class DataProcessorController {
                 }
 
                 if (compare) {
-
                     mp.setData(odims);
 
                     mp.calculateAll();

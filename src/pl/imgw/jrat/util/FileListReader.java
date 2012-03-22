@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.TreeMap;
 
 /**
  * 
@@ -26,7 +27,7 @@ import java.util.TimeZone;
 public class FileListReader {
     
     private SimpleDateFormat sdf;
-    HashMap<Date, Map<String, File>> map;
+    TreeMap<Date, Map<String, File>> map;
 
     public FileListReader() {
         sdf  = new SimpleDateFormat("yyyyMMddHHmm");
@@ -39,9 +40,9 @@ public class FileListReader {
      * @param path
      * @return
      */
-    public HashMap<Date, Map<String,File>> getFileList(String[] path) {
+    public TreeMap<Date, Map<String,File>> getFileList(String[] path) {
 
-        map = new HashMap<Date, Map<String,File>>();
+        map = new TreeMap<Date, Map<String,File>>();
         
         List<File> list = new ArrayList<File>();
 
@@ -132,8 +133,8 @@ public class FileListReader {
         
         
         FileListReader flr = new FileListReader();
-        
-        HashMap<Date, Map<String, File>> map = flr.getFileList(a);
+
+        TreeMap<Date, Map<String, File>> map = flr.getFileList(a);
         Iterator<Date> itr = map.keySet().iterator();
         while (itr.hasNext()) {
             Date date = itr.next();
