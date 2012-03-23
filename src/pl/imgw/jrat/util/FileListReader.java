@@ -65,7 +65,7 @@ public class FileListReader {
                     filter = path[i].substring(0, star);
                 }
                 suffix = path[i].substring(star + 1);
-                System.out.println(parent + " fi: " + filter + " suf: " + suffix);
+//                System.out.println(parent + " fi: " + filter + " suf: " + suffix);
                 File folder = new File(parent);
 
                 if (folder.isDirectory()) {

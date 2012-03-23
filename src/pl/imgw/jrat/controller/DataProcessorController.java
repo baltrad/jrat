@@ -114,7 +114,7 @@ public class DataProcessorController {
                 Collection<File> list = map.get(date).values();
 
                 msg.showMessage("Number of files " + sdf.format(date) + ": "
-                        + list.size(), true);
+                        + list.size(), verbose);
 
                 List<OdimH5File> odims = OdimFilesManager.makeList(list,
                         verbose);

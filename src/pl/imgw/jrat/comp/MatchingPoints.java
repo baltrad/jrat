@@ -137,12 +137,13 @@ public class MatchingPoints {
             calculateMatchingPoints();
         }
         if (rayBins.isEmpty()) {
-            MessageLogger.showMessage("No overlapping points found, "
+            MessageLogger.showMessage(vol1.getSource() + " " + vol2.getSource()
+                    + ": No overlapping points found, "
                     + "try different parameters.", true);
             return;
         }
 
-        System.out.println("pasujacych punktow: " + rayBins.size());
+//        System.out.println("pasujacych punktow: " + rayBins.size());
 
         valid = true;
     }
@@ -260,7 +261,7 @@ public class MatchingPoints {
                 }
             }
         }
-        System.out.println("pasujacych: " + rayBins.size());
+//        System.out.println("pasujacych: " + rayBins.size());
         saveToFile();
     }
 

@@ -77,7 +77,7 @@ public class MatchingPointsManager {
     
     public void calculateAll() {
         
-        long time = System.currentTimeMillis();
+//        long time = System.currentTimeMillis();
         ResultsManager rm = new ResultsManager();
         /*
          * iterate through dates
@@ -106,7 +106,7 @@ public class MatchingPointsManager {
                     continue;
                 
                 String key = getPairKey(sources);
-                System.out.println(key + " " + date);
+//                System.out.println(key + " " + date);
                 MatchingPoints mp = null;
                 if(!mps.containsKey(key)) {
                     mp = new MatchingPoints(vol1, vol2, elevation, distance);
@@ -119,7 +119,7 @@ public class MatchingPointsManager {
                         int[] result = mp.getMatchingPointsData(vol1, vol2);
                         rm.saveResults(mp.getId(), key, date, result);
                     } else {
-                        System.out.println("juz bylo policzone");
+//                        System.out.println("juz bylo policzone");
                     }
                 }
                 
@@ -204,8 +204,8 @@ public class MatchingPointsManager {
             return false;
         }
 
-        System.out.println("distance = " + distance + ", elevation = "
-                + elevation);
+//        System.out.println("distance = " + distance + ", elevation = "
+//                + elevation);
         return true;
     }
 
