@@ -29,11 +29,11 @@ public class OdimH5 implements Comparable<OdimH5> {
     protected String version;
     protected Date date;
     protected String source;
-    protected SimpleDateFormat sdfDate = new SimpleDateFormat("YYYYMMdd");
+    protected SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMdd");
     protected SimpleDateFormat sdfTime = new SimpleDateFormat("HHmmss");
     protected SimpleDateFormat sdfDateTime = new SimpleDateFormat(
-            "YYYYMMddHHmmss");
-    protected final static DateFormat sdfGMT = new SimpleDateFormat("YYYY-MM-dd HH:mm z");
+            "yyyyMMddHHmmss");
+    protected final static DateFormat sdfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm z");
     
 
  // dataset
@@ -115,7 +115,7 @@ public class OdimH5 implements Comparable<OdimH5> {
     }
     
     /**
-     * YYYY-MM-dd HH:mm z eg. 2011-01-03 22:20 GMT
+     * yyyy-MM-dd HH:mm z eg. 2011-01-03 22:20 GMT
      * 
      * @return
      */
@@ -124,7 +124,7 @@ public class OdimH5 implements Comparable<OdimH5> {
     }
 
     /**
-     * @return the date YYYYMMdd
+     * @return the date yyyyMMdd
      */
     public String getSimpleDate() {
         return sdfDate.format(date);
@@ -147,11 +147,13 @@ public class OdimH5 implements Comparable<OdimH5> {
 
     /**
      * @param date
-     *            the date to set YYYYMMdd and HHmmss
+     *            the date to set yyyyMMdd and HHmmss
      * @throws ParseException
      */
     public void setDate(String date, String time) throws ParseException {
+//        System.out.println(date + time);
         this.date = sdfDateTime.parse(date + time);
+//        System.out.println("tutaj: " + this.date);
     }
     
     /**
@@ -215,7 +217,7 @@ public class OdimH5 implements Comparable<OdimH5> {
     }
 
     /**
-     * "YYYY-MM-dd HH:mm z"
+     * "yyyy-MM-dd HH:mm z"
      * @return the sdfGMT
      */
     public static DateFormat getFullDateFormat() {

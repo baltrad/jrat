@@ -27,11 +27,11 @@ public class OdimH5Dataset {
     protected String product;
     protected Date startdate;
     protected Date enddate;
-    protected SimpleDateFormat sdfDate = new SimpleDateFormat("YYYYMMdd");
+    protected SimpleDateFormat sdfDate = new SimpleDateFormat("yyyyMMdd");
     protected SimpleDateFormat sdfTime = new SimpleDateFormat("HHmmss");
     protected SimpleDateFormat sdfDateTime = new SimpleDateFormat(
-            "YYYYMMddHHmmss");
-    protected DateFormat sdfGMT = new SimpleDateFormat("YYYY-MM-dd HH:mm z");
+            "yyyyMMddHHmmss");
+    protected DateFormat sdfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm z");
 
     // where
     protected Double elangle;
@@ -227,7 +227,7 @@ public class OdimH5Dataset {
     /**
      * 
      * @param date
-     *            YYYYMMdd
+     *            yyyyMMdd
      * @param time
      *            HHmmss
      * @throws ParseException
@@ -241,7 +241,7 @@ public class OdimH5Dataset {
     /**
      * 
      * @param date
-     *            YYYYMMdd
+     *            yyyyMMdd
      * @param time
      *            HHmmss
      * @throws ParseException
