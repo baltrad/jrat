@@ -9,6 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import pl.imgw.jrat.data.test.ByteDataContainerTest;
 import pl.imgw.jrat.data.test.DoubleDataContainerTest;
+import pl.imgw.jrat.data.test.FloatDataContainerTest;
 import pl.imgw.jrat.output.test.LogHandlerTest;
 import pl.imgw.jrat.parsers.test.HDF5ParserTest;
 import pl.imgw.jrat.parsers.test.RainbowImageParserTest;
@@ -23,7 +24,7 @@ import pl.imgw.jrat.parsers.test.RainbowImageParserTest;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ ByteDataContainerTest.class, LogHandlerTest.class,
-        HDF5ParserTest.class, RainbowImageParserTest.class, DoubleDataContainerTest.class })
+        HDF5ParserTest.class, RainbowImageParserTest.class, DoubleDataContainerTest.class, FloatDataContainerTest.class })
 public class AllTests {
 
 }

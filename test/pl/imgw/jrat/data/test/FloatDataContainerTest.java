@@ -10,6 +10,10 @@ import org.junit.Test;
 
 import pl.imgw.jrat.data.FloatDataContainer;
 
+
+
+
+
 /**
  *
  *  /Class description/
@@ -18,7 +22,7 @@ import pl.imgw.jrat.data.FloatDataContainer;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class FloatDataContainerTestSkip {
+public class FloatDataContainerTest {
 
     private FloatDataContainer dc;
     private int x = 100;
@@ -31,7 +35,7 @@ public class FloatDataContainerTestSkip {
     @Before
     public void setUp() throws Exception {
         dc = new FloatDataContainer(data);
-        dc.initialize(x, y);
+//        dc.initialize(x, y);
     }
 
     /**
@@ -76,5 +80,7 @@ public class FloatDataContainerTestSkip {
         assertEquals("Cloning error", 1, dcClone.getBytePoint(0, 1));
         assertEquals("Cloning error", -56, dcClone.getBytePoint(1, 1));
     }
+
+
 
 }

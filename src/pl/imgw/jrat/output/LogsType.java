@@ -14,7 +14,7 @@ package pl.imgw.jrat.output;
 public class LogsType {
     
 
-    public static final int ERROR = 3;
+    public static final int ERROR = 3; 
 
     public static final int INITIATION = 2;
 
