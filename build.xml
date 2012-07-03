@@ -1,114 +1,94 @@
-<?xml version="1.0"?>
-<!--
-Copyright (C) 2011 Institute of Meteorology and Water Management, IMGW
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jRAT" default="dist" basedir=".">
+    <description>Builds, tests, and runs the project jRAT.</description>
+    <property name="app.name" value="jrat" />
+    <property name="root.dir" value="${basedir}"/>
+    <property name="src.dir" value="src"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.test.dir" value="${build.dir}/test"/>
+    <property name="build.classes.dir" value="${build.dir}/classes"/>
+    <property name="compile.debug" value="true"/>
+    <property name="compile.includeAntRuntime" value="no"/>
+    <property name="compile.optimize" value="true"/>
+    <property name="javadocs.dir" value="docs"/>
+    <property name="javadocs.src.dir" value="${src.dir}/pl/imgw/jrat"/>
+    <property name="test.dir" value="test"/>
+    <property name="build.test.dir" value="${build.dir}/test"/>
 
-This file is part of the Java Radar data Analizing Tool jrat software.
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
 
-jRAT is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+    
+    <target name="compile" depends="init">
+      <javac srcdir="${src.dir}" deprecation="on"
+             destdir="${build.classes.dir}" classpathref="classpath"/>
+    </target>
 
-jrat is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
+    <target name="dist" depends="compile">
+        <jar jarfile="${dist.dir}/${app.name}.jar"
+            basedir="${build.classes.dir}">
+            <!--zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/-->    
+        </jar>
+    </target>
 
-You should have received a copy of the GNU Lesser General Public License
-along with the OdimH5 software.  If not, see http://www.gnu.org/licenses.
--->
-<project name="jrat" default="main" basedir=".">
-	<!-- Sets variables which can later be used. -->
-	<!-- The value of a property is accessed via ${} -->
-	<property name="version" value="64" />
-	<property name="app.name" value="jrat" />
-	<property name="main.class" value="pl.imgw.jrat.MainJRat" />
-	<property name="src.dir" location="src" />
-	<property name="lib.dir" location="lib" />
-	<property name="lib.version.dir" location="lib${version}" />
-	<property name="lib.native.dir" location="lib${version}/native" />
-	<property name="build.dir" location="build" />
-	<property name="dist.dir" location="dist" />
-	<property name="doc.dir" location="doc" />
+    <!-- Compiles tests -->
+    <target name="compile.test" depends="init,compile">
+        <mkdir dir="${build.dir}/test"/>
+        <javac srcdir="${root.dir}/${test.dir}"
+            encoding="8859_1"
+            deprecation="on"
+            debug="${compile.debug}"
+            includeAntRuntime="${compile.includeAntRuntime}"
+            optimize="${compile.optimize}"
+            destdir="${build.test.dir}" classpathref="classpath">
+            <classpath location="${build.classes.dir}"/>
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+    <!-- Executes tests -->
+    <target name="execute.test">
+        <mkdir dir="${dist.dir}/junit-reports" />
+        <junit showoutput="true" forkmode="perBatch" printsummary="no" >
+            <jvmarg line="-Dnative.libpath=${lib.dir}/cisd-jhdf5/lib/native -Xmx512m -XX:MaxPermSize=512m"/>
+            <formatter type="xml"/>
+	    <formatter type="brief" usefile="false" />
+            <classpath location="${build.classes.dir}"/>
+            <classpath refid="classpath"/>
+            <classpath location="${build.test.dir}"/>
+            <batchtest fork="yes" todir="${dist.dir}/junit-reports">
+                <fileset dir="${build.test.dir}" includes="**/*Test.class"/>
+            </batchtest>
+        </junit>
+    </target>
+    <!-- Runs actual tests -->
+    <target name="test" depends="compile.test,execute.test"/>
 
-	<property name="prefix" value="/opt" />
 
-	<!-- Library path -->
-	<path id="lib.path">
-		<fileset dir="${lib.dir}" includes="**/*.jar"/>
-		<fileset dir="${lib.version.dir}" includes="**/*.jar" />
-	</path>
-
-	<!-- Deletes the existing build, doc and dist directory-->
-	<target name="clean">
-		<delete dir="${build.dir}" />
-		<delete dir="${doc.dir}" />
-		<delete dir="${dist.dir}" />
-	</target>
-
-	<target name="init">
-		<mkdir dir="${build.dir}" />
-		<mkdir dir="${dist.dir}" />
-		<mkdir dir="${doc.dir}" />
-	</target>
-
-	<!-- Compiles the java code (including the usage of library for JUnit -->
-	<target name="compile" depends="clean, init">
-		<javac encoding="UTF-8" deprecation="on" srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
-			<include name="**/*.java" />
-			<classpath refid="lib.path" />
-		</javac>
-	</target>
-
-	<!-- Creates Javadoc -->
-	<target name="doc" depends="compile">
-		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${doc.dir}">
-			<!-- Define which files / directory should get included, we include all -->
-			<fileset dir="${src.dir}">
-				<include name="**" />
-			</fileset>
-			<classpath refid="lib.path" />
-		</javadoc>
-	</target>
-
-	<!--Creates the deployable jar file  -->
-	<target name="jar" depends="compile">
-		<jar destfile="${dist.dir}\${app.name}.jar" basedir="${build.dir}">
-			<zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
-			<zipgroupfileset dir="${lib.version.dir}" includes="**/*.jar" />
-			<manifest>
-				<attribute name="Main-Class" value="${main.class}" />
-			</manifest>
-		</jar>
-	</target>
-
-	<target name="install" depends="jar">
-		<delete dir="${prefix}/${app.name}" />
-		<mkdir dir="${prefix}/${app.name}" />
-		<copy todir="${prefix}/${app.name}" flatten="true">
-			<fileset dir="${dist.dir}">
-				<include name="**/*.jar" />
-			</fileset>
-		</copy>
-		<copy todir="${prefix}/${app.name}/lib" flatten="true">
-			<fileset dir="${lib.native.dir}">
-				<include name="**/*.so" />
-			</fileset>
-		</copy>
-		<chmod file="${prefix}/${app.name}/${app.name}.jar" perm="755" />
-		<echo file="jrat">#!/bin/sh
-java -Djava.library.path=${prefix}/${app.name}/lib/ -jar ${prefix}/${app.name}/${app.name}.jar $@</echo>
-		<chmod file="jrat" perm="755" />
-		<copy file="jrat" todir="/usr/bin"/>
-		<chmod file="/usr/bin/jrat" perm="755" />
-		<echo message="==========================" />
-		<echo message="Installation completed" />
-		<echo message="run program by typing jrat" />
-	</target>
-
-	<target name="main" depends="compile, jar, doc">
-		<description>Main target</description>
-	</target>
-
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${javadocs.dir}"/>
+    </target>
+    <!-- Generate source code documentation -->
+    <target name="javadocs">
+        <mkdir dir="${javadocs.dir}"/>
+        <javadoc sourcepath="${src.dir}" destdir="${javadocs.dir}"
+            classpath="${src.dir}" author="true" version="true"
+            use="true" windowtitle="${app.name} API"
+            doctitle="&lt;h1&gt;${app.name}&lt;/h1&gt;">
+            <fileset dir="${javadocs.src.dir}">
+                <include name="**/*.java"/>
+            </fileset>
+         </javadoc>
+    </target>
 </project>
+
 
