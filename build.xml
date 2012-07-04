@@ -8,6 +8,8 @@
     <property name="dist.dir" value="dist"/>
     <property name="build.dir" value="build"/>
     <property name="build.test.dir" value="${build.dir}/test"/>
+    <property name="build.coverage.dir" value="${build.dir}/coverage"/>
+    <property name="build.instrument.dir" value="${build.dir}/instrument"/>
     <property name="build.classes.dir" value="${build.dir}/classes"/>
     <property name="compile.debug" value="true"/>
     <property name="compile.includeAntRuntime" value="no"/>
@@ -59,7 +61,7 @@
         <junit showoutput="true" forkmode="perBatch" printsummary="no" >
             <jvmarg line="-Dnative.libpath=${lib.dir}/cisd-jhdf5/lib/native -Xmx512m -XX:MaxPermSize=512m"/>
             <formatter type="xml"/>
-	    <formatter type="brief" usefile="false" />
+	   		<formatter type="brief" usefile="false" />
             <classpath location="${build.classes.dir}"/>
             <classpath refid="classpath"/>
             <classpath location="${build.test.dir}"/>
@@ -72,6 +74,88 @@
     <target name="test" depends="compile.test,execute.test"/>
 
 
+	<!-- CODE COVERAGE -->
+	<target name="instrument.coverage">
+		<delete dir="${build.instrument.dir}" />
+    	<delete file="${build.coverage.dir}/coverage.ec" />
+    	<delete file="${build.coverage.dir}/metadata.emma" />
+    	<mkdir dir="${build.instrument.dir}" />
+    	<mkdir dir="${build.coverage.dir}" />
+
+		<emma enabled="true">
+		<instr instrpath="${build.classes.dir}/"
+             destdir="${build.instrument.dir}/"	
+             metadatafile="${build.coverage.dir}/metadata.emma"
+             merge="true"/>
+    	</emma>
+  	</target>
+  
+  	<target name="unittest.coverage" depends="instrument.coverage">
+    	<mkdir dir="${dist.dir}/coverage-reports" />
+    	<junit dir="${build.test.dir}" showoutput="true" forkmode="perBatch" printsummary="no" >
+      		<jvmarg line="-Dnative.libpath=${lib.dir}/cisd-jhdf5/lib/native -Xmx512m -XX:MaxPermSize=512m"/>
+      		<sysproperty key="emma.coverage.out.file" file="${build.coverage.dir}/coverage.ec" /> <!-- So I know where ec file is placed -->
+      		<formatter type="xml"/> 
+      		<classpath location="${build.instrument.dir}" /> <!-- For instrumentation -->
+      		<classpath refid="test.lib.path"/>
+      		<classpath location="${build.classes.dir}"/>
+      		<classpath refid="lib.path"/>
+      		<classpath location="${build.test.dir}" />
+      		<classpath refid="emma.classpath" />
+   
+      		<batchtest fork="yes" todir="${dist.dir}/junit-reports">
+        		<fileset dir="${build.test.dir}" includes="**/*Test.class"/>
+      		</batchtest>
+    	</junit>
+
+  		<emma enabled="true">
+      		<report sourcepath="${source.dir}" >
+        		<fileset dir="${build.coverage.dir}" >
+          			<include name="*.emma" />
+          			<include name="*.ec" />
+        		</fileset>
+      			<xml outfile="${dist.dir}/coverage-reports/coverage.xml" depth="method"/>
+      		</report>
+    	</emma>
+  	</target>
+
+  	<!-- performs coverage from running all tests (unit tests, integration tests-->
+  	<target name="test.coverage" >
+    	<mkdir dir="${dist.dir}/junit-reports" />
+    	<mkdir dir="${dist.dir}/coverage-reports" />
+
+		<junit dir="${build.test.dir}" showoutput="true" forkmode="perBatch" printsummary="no" >
+    		<jvmarg line="-d64 -Djava.awt.headless=true -Xmx512m -XX:MaxPermSize=512m"/>
+     		<sysproperty key="emma.coverage.out.file" file="${build.coverage.dir}/coverage.ec" /> <!-- So I know where ec file is placed -->
+      		<formatter type="xml"/> 
+      		<classpath location="${build.instrument.dir}" /> <!-- For instrumentation -->
+      		<classpath refid="test.lib.path"/>
+      		<classpath location="${build.classes.dir}"/>
+      		<classpath refid="lib.path"/>
+      		<classpath location="${build.test.dir}" />
+      		<classpath location="${build.itest.dir}" />
+      		<classpath refid="emma.classpath" />
+   
+			<batchtest fork="true" todir="${dist.dir}/junit-reports">
+        		<fileset dir="${build.test.dir}" includes="**/*Test.class"/>
+        		<fileset dir="${build.itest.dir}" includes="**/*Test.class"
+               		excludes="eu/baltrad/beast/net/FileUploaderITest.class"/>
+    	  	</batchtest>
+    	</junit>
+
+    	<!-- antcall target="stop-baltrad-bdb-server" / -->
+
+  		<emma enabled="true">
+      		<report sourcepath="${source.dir}" >
+        		<fileset dir="${build.coverage.dir}" >
+        			<include name="*.emma" />
+        			<include name="*.ec" />
+        		</fileset>
+      			<xml outfile="${dist.dir}/coverage-reports/coverage.xml" depth="method"/>
+      		</report>
+    	</emma>
+  	</target>
+  	
     <target name="clean">
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>
