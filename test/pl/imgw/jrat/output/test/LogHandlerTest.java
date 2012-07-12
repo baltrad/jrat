@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.output.LogHandler;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  *
@@ -29,7 +29,7 @@ public class LogHandlerTest {
     private SimpleDateFormat fileDate = new SimpleDateFormat(fileFormat);
 
     /**
-     * Test method for {@link pl.imgw.jrat.output.LogHandler#getLogs()}.
+     * Test method for {@link pl.imgw.jrat.tools.out.LogHandler#getLogs()}.
      */
     @Test
     public void getLogsTest() {

@@ -3,9 +3,6 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-
-
-
 /**
  *
  *  /Class description/
@@ -14,10 +11,10 @@ package pl.imgw.jrat.data.parsers;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RainbowImageParser extends RainbowParser {
+public class RainbowVolumeParser extends RainbowParser {
 
-    public RainbowImageParser() {
-        super(new RainbowImageFieldsName());
+    public RainbowVolumeParser() {
+        super(new RainbowVolumeFieldsName());
     }
     
 }

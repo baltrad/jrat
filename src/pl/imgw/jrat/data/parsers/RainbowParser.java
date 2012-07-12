@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.output.LogsType.ERROR;
+import static pl.imgw.jrat.tools.out.LogsType.ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +22,7 @@ import javax.xml.stream.XMLStreamReader;
 import pl.imgw.jrat.data.ByteDataContainer;
 import pl.imgw.jrat.data.ProductDataContainer;
 import pl.imgw.jrat.data.RainbowImage;
-import pl.imgw.jrat.output.LogHandler;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 

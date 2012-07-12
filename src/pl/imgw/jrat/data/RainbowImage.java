@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.data;
 
-import static pl.imgw.jrat.output.LogsType.*;
+import static pl.imgw.jrat.tools.out.LogsType.*;
 
 import java.util.HashMap;
 
@@ -11,7 +11,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import pl.imgw.jrat.output.LogHandler;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 

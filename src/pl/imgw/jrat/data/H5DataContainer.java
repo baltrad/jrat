@@ -8,8 +8,10 @@ import static pl.imgw.jrat.data.ProductDataTypes.*;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import pl.imgw.jrat.output.LogHandler;
-import pl.imgw.jrat.output.LogsType;
+import ncsa.hdf.hdf5lib.exceptions.HDF5AttributeException;
+
+import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.LogsType;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 
 /**
@@ -60,24 +62,29 @@ public class H5DataContainer implements ProductDataContainer {
     @Override
     public Object getAttributeValue(String path, String name) {
 
-        String type = reader.getAttributeInformation(path, name).toString()
-                .toUpperCase();
+        try {
+            String type = reader.getAttributeInformation(path, name).toString()
+                    .toUpperCase();
+            if (type.contains(DOUBLE)) {
+                return reader.getDoubleAttribute(path, name);
+            } else if (type.contains(FLOAT)) {
+                return reader.getDoubleAttribute(path, name);
+            } else if (type.contains(INT)) {
+                return reader.getIntAttribute(path, name);
+            } else if (type.contains(LONG)) {
+                return reader.getLongAttribute(path, name);
+            } else if (type.contains(STRING)) {
+                return reader.getStringAttribute(path, name);
+            }
 
-        if (type.contains(DOUBLE)) {
-            return reader.getDoubleAttribute(path, name);
-        } else if (type.contains(FLOAT)) {
-            return reader.getDoubleAttribute(path, name);
-        } else if (type.contains(INT)) {
-            return reader.getIntAttribute(path, name);
-        } else if (type.contains(LONG)) {
-            return reader.getLongAttribute(path, name);
-        } else if (type.contains(STRING)) {
-            return reader.getStringAttribute(path, name);
+            LogHandler.getLogs().displayMsg(
+                    "Attribute '" + name + "' in '" + path
+                            + "' has unknown format: " + type, LogsType.ERROR);
+        } catch (HDF5AttributeException e) {
+            LogHandler.getLogs().displayMsg(
+                    "Attribute '" + name + "' in '" + path
+                            + "' does not exist", LogsType.ERROR);
         }
-
-        LogHandler.getLogs().displayMsg(
-                "Attribute " + name + " in " + path + " has unknown format: " + type,
-                LogsType.ERROR);
         return null;
     }
 

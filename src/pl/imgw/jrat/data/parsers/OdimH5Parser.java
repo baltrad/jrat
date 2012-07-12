@@ -3,8 +3,8 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.output.LogsType.ERROR;
-import static pl.imgw.jrat.output.LogsType.INITIATION;
+import static pl.imgw.jrat.tools.out.LogsType.ERROR;
+import static pl.imgw.jrat.tools.out.LogsType.INITIATION;
 
 import java.io.File;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import pl.imgw.jrat.data.ByteDataContainer;
 import pl.imgw.jrat.data.FloatDataContainer;
 import pl.imgw.jrat.data.H5DataContainer;
 import pl.imgw.jrat.data.ProductDataContainer;
-import pl.imgw.jrat.output.LogHandler;
+import pl.imgw.jrat.tools.out.LogHandler;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 
@@ -79,6 +79,7 @@ public class OdimH5Parser implements FileParser {
 //            System.out.println(type);
             if(type.contains(FLOAT_SYMBOL)) {
                 ArrayDataContainer adc = new FloatDataContainer(reader.readFloatMatrix(path));
+                ((FloatDataContainer) adc).transpose();
                 arrayList.put(path, adc);
                 index++;
             } else if(type.contains(INT_SYMBOL)) {

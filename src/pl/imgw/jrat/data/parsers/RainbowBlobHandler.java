@@ -3,7 +3,8 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.output.LogsType.*;
+import static pl.imgw.jrat.tools.out.LogsType.*;
+
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import pl.imgw.jrat.output.LogHandler;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZStream;

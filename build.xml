@@ -37,7 +37,7 @@
     <target name="dist" depends="compile">
         <jar jarfile="${dist.dir}/${app.name}.jar"
             basedir="${build.classes.dir}">
-            <!--zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/-->    
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/>    
         </jar>
     </target>
 

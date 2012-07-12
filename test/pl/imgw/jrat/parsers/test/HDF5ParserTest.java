@@ -43,9 +43,9 @@ public class HDF5ParserTest {
         pm.initialize(file2);
         pdc2 = pm.getProduct();
         
-        x = 900;
-        y = 1169;
-        value = 11.9;
+        x = 1190;
+        y = 677;
+        value = 18.5;
     }
     
     @Test
@@ -54,7 +54,7 @@ public class HDF5ParserTest {
         assertNotNull("Initialization failed", pdc1);
         assertTrue("Initializationf of arrays failed", pdc1.getArrayList().size() > 0);
         
-        assertEquals(2200, pdc1.getArray(1).getSizeX());
+        assertEquals(1900, pdc1.getArray(1).getSizeX());
         
         assertNotNull("Initialization failed", pdc2);
         assertTrue("Initializationf of arrays failed", pdc2.getArrayList().size() > 0);

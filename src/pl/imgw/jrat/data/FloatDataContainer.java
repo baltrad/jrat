@@ -151,5 +151,16 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
 
         return dc;
     }
+    
+    public void transpose() {
+        float[][] array = new float[sizeY][sizeX];
+        for(int x = 0; x < sizeX; x++)
+            for(int y = 0; y < sizeY; y++)
+                array[y][x] = data[x][y];
+        
+        data = array;
+        this.sizeX = data.length;
+        this.sizeY = data[0].length;
+    }
 
 }

@@ -1,10 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data.parsers;
-
-
-
+package pl.imgw.jrat.controller;
 
 /**
  *
@@ -14,10 +11,8 @@ package pl.imgw.jrat.data.parsers;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RainbowImageParser extends RainbowParser {
+public interface Process {
 
-    public RainbowImageParser() {
-        super(new RainbowImageFieldsName());
-    }
+    public void start();
     
 }

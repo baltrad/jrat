@@ -13,6 +13,7 @@ import pl.imgw.jrat.data.test.FloatDataContainerTest;
 import pl.imgw.jrat.output.test.LogHandlerTest;
 import pl.imgw.jrat.parsers.test.HDF5ParserTest;
 import pl.imgw.jrat.parsers.test.RainbowImageParserTest;
+import pl.imgw.jrat.tools.in.FileFilterTest;
 
 /**
  * 
@@ -24,7 +25,8 @@ import pl.imgw.jrat.parsers.test.RainbowImageParserTest;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ ByteDataContainerTest.class, LogHandlerTest.class,
-        HDF5ParserTest.class, RainbowImageParserTest.class, DoubleDataContainerTest.class, FloatDataContainerTest.class })
+        HDF5ParserTest.class, RainbowImageParserTest.class,
+        DoubleDataContainerTest.class, FloatDataContainerTest.class, FileFilterTest.class })
 public class AllTests {
 
 }

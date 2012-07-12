@@ -119,5 +119,4 @@ public abstract class ArrayDataContainer {
         return (int) b & 0xFF;
     }
 
-    
 }

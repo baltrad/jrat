@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.output;
+package pl.imgw.jrat.tools.out;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.FileHandler;
+import static pl.imgw.jrat.AplicationConstans.*;
 
 /**
  * 
@@ -24,7 +24,7 @@ import java.util.logging.FileHandler;
 public class LogHandler implements Logging {
 
     private static LogHandler logs = new LogHandler();
-    private int verbose = 3;
+    private int verbose = 1;
 
     private String msgFormat = "[dd/MM/yy HH:mm:ss] ";
     private SimpleDateFormat msgDate = new SimpleDateFormat(msgFormat);
@@ -53,6 +53,12 @@ public class LogHandler implements Logging {
         return logs;
     }
 
+    
+    public void printVersion() {
+        displayMsg(APS_DESC + " version: " + VERSION,
+                LogsType.SILENT);
+    }
+    
     /*
      * type should be a 3-letter identification code e.g. for general: 'gen'
      * 

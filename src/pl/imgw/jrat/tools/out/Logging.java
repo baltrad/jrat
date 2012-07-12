@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.output;
+package pl.imgw.jrat.tools.out;
 
 import java.io.File;
 
@@ -66,9 +66,8 @@ public interface Logging {
      * console. See <code>LogsType</code>.
      * 
      * @param verbose
-     *            0 if for silent mode, 1 only creation logs are displayed, 2
-     *            initialization and creation logs, and 3 is for all logs
-     *            including errors.
+     *            0 if for silent mode, 1 initialization and creation logs, and
+     *            2 is for all logs including debugging information.
      */
     public void setLoggingVerbose(int verbose);
 

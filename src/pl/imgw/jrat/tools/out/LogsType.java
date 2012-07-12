@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.output;
+package pl.imgw.jrat.tools.out;
 
 /**
  *
@@ -14,11 +14,13 @@ package pl.imgw.jrat.output;
 public class LogsType {
     
 
-    public static final int ERROR = 3; 
+    public static final int ERROR = 2; 
 
-    public static final int INITIATION = 2;
+    public static final int INITIATION = 1;
 
     public static final int CREATION = 1;
+    
+    public static final int SILENT = 0;
     /* 0 (zero) is for silent mode */
     
 }
