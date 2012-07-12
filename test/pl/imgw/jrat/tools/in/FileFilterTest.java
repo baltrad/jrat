@@ -28,7 +28,7 @@ public class FileFilterTest {
     @Test
     public void getFileListFromRegexPatternTest() {
         
-        pattern = "/home/lwojtas/workspace/jrat/test-data/*.cmax";
+        pattern = "test-data/*.cmax";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
         assertEquals("number of files filtered is wrong", 2, list.size());
@@ -36,7 +36,7 @@ public class FileFilterTest {
     
     @Test
     public void getFileListWithDateInTheBegginingOfFileName() {
-        pattern = "/home/lwojtas/workspace/jrat/test-data/*dBZ.vol";
+        pattern = "test-data/*dBZ.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
         String dateFromFile = sdf.format(list.get(0).getDate());
@@ -47,7 +47,7 @@ public class FileFilterTest {
     
     @Test
     public void getFileListWithDateInTheMiddleOfFileName() {
-        pattern = "/home/lwojtas/workspace/jrat/test-data/*.h5";
+        pattern = "test-data/*.h5";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
         String dateFromFile = sdf.format(list.get(0).getDate());
