@@ -35,10 +35,10 @@ public class ProcessController {
             return;
         
         if (cmd.hasOption(QUIET)) {
-            System.out.println("ustawia quiet");
+//            System.out.println("ustawia quiet");
             LogHandler.getLogs().setLoggingVerbose(LogsType.SILENT);
         } else if (cmd.hasOption(VERBOSE)) {
-            System.out.println("ustawia verbose");
+//            System.out.println("ustawia verbose");
             LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
         } else
             LogHandler.getLogs().setLoggingVerbose(LogsType.INITIATION);
@@ -72,8 +72,6 @@ public class ProcessController {
         }
 
         if (cmd.hasOption(I)) {
-            if (output == null)
-                return false;
             for (int i = 0; i < cmd.getOptionValues(I).length; i++)
                 System.out.println(cmd.getOptionValues(I)[i]);
             // TO-DO

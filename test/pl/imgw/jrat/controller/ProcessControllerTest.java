@@ -28,12 +28,12 @@ public class ProcessControllerTest {
     @Test
     public void testStart() {
 
-        args = new String[] {"-i plik s -v -h"};
+        args = "-i plik s -v -h".split(" ");
         pc = new ProcessController(args);
         
         assertTrue(pc.start());
         
-        args = new String[] {"-a plik sdf"};
+        args = "-a plik sdf".split(" ");
         pc = new ProcessController(args);
         
         assertTrue(pc.start());
