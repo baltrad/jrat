@@ -42,7 +42,7 @@
     </target>
 
     <!-- Compiles tests -->
-    <target name="compile.test" depends="init,compile">
+    <target name="compile.test" depends="compile">
         <mkdir dir="${build.dir}/test"/>
         <javac srcdir="${root.dir}/${test.dir}"
             encoding="8859_1"
