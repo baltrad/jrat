@@ -13,18 +13,34 @@ package pl.imgw.jrat.data;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
+public class RawByteDataContainer extends ArrayData implements Cloneable {
 
     private byte[][] data = null;
+    private double offset = 0;
+    private double gain = 0;
     
-    public ByteDataContainer() {
+    /**
+     * @param offset the offset to set
+     */
+    public void setOffset(double offset) {
+        this.offset = offset;
+    }
+
+    /**
+     * @param gain the gain to set
+     */
+    public void setGain(double gain) {
+        this.gain = gain;
+    }
+
+    public RawByteDataContainer() {
         
     }
     
     /**
      * @param infDataBuff
      */
-    public ByteDataContainer(byte[][] data) {
+    public RawByteDataContainer(byte[][] data) {
         if (data != null) {
             this.sizeX = data.length;
             this.sizeY = data[0].length;
@@ -79,7 +95,7 @@ public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
      * @see pl.imgw.jrat.data.ArrayDataContainer#getPoint(int, int)
      */
     @Override
-    public short getIntPoint(int x, int y) {
+    public short getRawIntPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return -1;
@@ -91,7 +107,7 @@ public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
      * @see pl.imgw.jrat.data.ArrayDataContainer#setPoint(int, int, short)
      */
     @Override
-    public boolean setIntPoint(int x, int y, short value) {
+    public boolean setRawIntPoint(int x, int y, short value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
@@ -105,7 +121,7 @@ public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
      * @see pl.imgw.jrat.data.ArrayDataContainer#getBytePoint(int, int)
      */
     @Override
-    public byte getBytePoint(int x, int y) {
+    public byte getRawBytePoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return 0;
@@ -117,7 +133,7 @@ public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
      * @see pl.imgw.jrat.data.ArrayDataContainer#setBytePoint(int, int, byte)
      */
     @Override
-    public boolean setBytePoint(int x, int y, byte value) {
+    public boolean setRawBytePoint(int x, int y, byte value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             
             return false;
@@ -137,7 +153,7 @@ public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
         byte[][] array = new byte[sizeX][sizeY];
         multiArrayCopy(data, array);
         
-        ArrayDataContainer dc = new ByteDataContainer(array);
+        ArrayData dc = new RawByteDataContainer(array);
 
         return dc;
     }
@@ -146,24 +162,40 @@ public class ByteDataContainer extends ArrayDataContainer implements Cloneable {
      * @see pl.imgw.jrat.data.ArrayDataContainer#getDoublePoint(int, int)
      */
     @Override
-    public double getDoublePoint(int x, int y) {
+    public double getPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return -9999;
         }
-        return (short) unsignedByte2Int(data[x][y]);
+        short value = (short) unsignedByte2Int(data[x][y]);
+        if(gain == 0)
+            return value;
+        return raw2dBZ(value);
     }
 
     /* (non-Javadoc)
      * @see pl.imgw.jrat.data.ArrayDataContainer#setDoublePoint(int, int, double)
      */
     @Override
-    public boolean setDoublePoint(int x, int y, double value) {
+    public boolean setPoint(int x, int y, double value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
-        data[x][y] = int2byte((short)value);
+        if (gain == 0)
+            data[x][y] = int2byte((short) value);
+        else
+            data[x][y] = int2byte(dBZ2raw(value));
         return true;
     }
 
+    public short dBZ2raw(double x) {
+        if (gain == 0)
+            return 0;
+        return (short) ((1 / gain * (x - offset)) + 1);
+    }
+    
+    public double raw2dBZ(int x) {
+        return gain * x + offset;
+    }
+    
 }

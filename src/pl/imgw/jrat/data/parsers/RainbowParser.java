@@ -3,12 +3,15 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.LogsType.ERROR;
+import static pl.imgw.jrat.tools.out.LogsType.*;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,9 +22,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import pl.imgw.jrat.data.ByteDataContainer;
-import pl.imgw.jrat.data.ProductDataContainer;
-import pl.imgw.jrat.data.RainbowImage;
+import ch.systemsx.cisd.hdf5.HDF5Factory;
+
+import pl.imgw.jrat.data.RawByteDataContainer;
+import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -39,12 +44,36 @@ public class RainbowParser implements FileParser {
 
     private RainbowBlobHandler rp;
     private HashMap<Integer, DataBufferContainer> blobs;
-    private RainbowImage data = null;
+    private RainbowData data = null;
 
     public RainbowParser(RainbowFieldsNameForParser fields) {
         this.fields = fields;
     }
 
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.FileParser#isValid(java.io.File)
+     */
+    @Override
+    public boolean isValid(File file) {
+        try {
+            FileInputStream fstream = new FileInputStream(file);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine = br.readLine();
+            in.close();
+            if (!strLine.contains(fields.product)) {
+                return false;
+            }
+            if (strLine.contains("version=\"5.3"))
+                return true;
+            return false;
+        } catch (Exception e) {// Catch exception if any
+            return false;
+        }
+
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -52,11 +81,17 @@ public class RainbowParser implements FileParser {
      */
     @Override
     public boolean initialize(File file) {
-
+        
         if (file == null) {
             return false;
         }
-
+        if(!isValid(file)) {
+            LogHandler.getLogs().displayMsg("'" + file.getName()
+                    + "' is not a valid RAINBOW format", WARNING);   
+        
+            return false;
+        }
+        
         FileInputStream fileInputStream;
         try {
             fileInputStream = new FileInputStream(file);
@@ -157,7 +192,6 @@ public class RainbowParser implements FileParser {
                         }
                         
                         if (sizeX != 0 && sizeY != 0 && blobid != -1) {
-//                            System.out.println("3: ustawiam parametry");
                             Param param = new Param();
                             param.depth=depth;
                             param.sizeX=sizeX;
@@ -189,13 +223,20 @@ public class RainbowParser implements FileParser {
                 return false;
             }
             
-            data = new RainbowImage();
+            data = new RainbowData();
             Iterator<Param> itr = params.iterator();
             while(itr.hasNext()) {
                 Param p = itr.next();
                 byte[][] infDataBuff = rp.inflateDataSection(
                         blobs.get(p.blobid), p.sizeX, p.sizeY, p.depth);
-                data.getArrayList().put(p.type, new ByteDataContainer(infDataBuff));
+                RawByteDataContainer array = new RawByteDataContainer(infDataBuff);
+                array.setGain(0.5);
+                array.setOffset(-31.5);
+                data.getArrayList().put(p.type, array);
+            }
+            
+            if (data != null && rp != null) {
+                data.setAttribues(rp.parseXML());
             }
             
         } catch (FileNotFoundException e) {
@@ -228,17 +269,9 @@ public class RainbowParser implements FileParser {
             return false;
         }
 
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean initiazlizeRainbowAttributes() {
-        if (data != null && rp != null) {
-            data.setAttribues(rp.parseXML());
-            return true;
-        }
-        return false;
-
+//        System.out.println("ilosc blobow: " + getProduct().getArrayList().size());
+        
+        return true;
     }
     
     /*
@@ -247,7 +280,7 @@ public class RainbowParser implements FileParser {
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public ProductDataContainer getProduct() {
+    public ProductContainer getProduct() {
         // TODO Auto-generated method stub
         return data;
     }
@@ -259,5 +292,4 @@ public class RainbowParser implements FileParser {
         int blobid;
         String type;
     }
-    
 }

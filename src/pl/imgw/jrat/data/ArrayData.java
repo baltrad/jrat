@@ -11,7 +11,7 @@ package pl.imgw.jrat.data;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public abstract class ArrayDataContainer {
+public abstract class ArrayData {
     
     public final static int BYTE = 0;
     public final static int SHORT = 1;
@@ -44,7 +44,7 @@ public abstract class ArrayDataContainer {
      * @return returns integer from 0 to 255, if x or y is out of bounds returns
      *         -1
      */
-    public abstract short getIntPoint(int x, int y);
+    public abstract short getRawIntPoint(int x, int y);
 
     /**
      * Setting value in the array in point (x, y). If x or y is out of bounds it
@@ -55,7 +55,7 @@ public abstract class ArrayDataContainer {
      * @param value
      * @return true if successful, false if x or y is out of bounds
      */
-    public abstract boolean setIntPoint(int x, int y, short value);
+    public abstract boolean setRawIntPoint(int x, int y, short value);
 
     /**
      * Receiving value from the array in point (x, y). If x or y is out of
@@ -65,7 +65,7 @@ public abstract class ArrayDataContainer {
      * @param y
      * @return unsigned byte, if x or y is out of bounds returns 0
      */
-    public abstract byte getBytePoint(int x, int y);
+    public abstract byte getRawBytePoint(int x, int y);
 
     /**
      * Setting value in the array in point (x, y).The value must be an unsigned
@@ -77,7 +77,7 @@ public abstract class ArrayDataContainer {
      * @param value
      * @return true if successful, false if x or y is out of bounds
      */
-    public abstract boolean setBytePoint(int x, int y, byte value);
+    public abstract boolean setRawBytePoint(int x, int y, byte value);
 
     /**
      * Receiving value from the array in point (x, y). If x or y is out of
@@ -87,7 +87,7 @@ public abstract class ArrayDataContainer {
      * @param y
      * @return unsigned byte, if x or y is out of bounds returns 0
      */
-    public abstract double getDoublePoint(int x, int y);
+    public abstract double getPoint(int x, int y);
 
     /**
      * Setting value in the array in point (x, y). If x or y is out of bounds it
@@ -98,7 +98,7 @@ public abstract class ArrayDataContainer {
      * @param value
      * @return true if successful, false if x or y is out of bounds
      */
-    public abstract boolean setDoublePoint(int x, int y, double value);
+    public abstract boolean setPoint(int x, int y, double value);
 
     public int getSizeX() {
         return sizeX;

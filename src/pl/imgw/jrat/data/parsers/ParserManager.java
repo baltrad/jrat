@@ -5,7 +5,7 @@ package pl.imgw.jrat.data.parsers;
 
 import java.io.File;
 
-import pl.imgw.jrat.data.ProductDataContainer;
+import pl.imgw.jrat.data.ProductContainer;
 
 /**
  *
@@ -17,17 +17,34 @@ import pl.imgw.jrat.data.ProductDataContainer;
  */
 public class ParserManager {
     
-    FileParser parser;
+    FileParser parser = null;
     
     public void setParser(FileParser parser) {
         this.parser = parser;
     }
     
-    public void initialize(File file) {
-        parser.initialize(file);
+    public boolean initialize(File file) {
+        if(!isSet())
+            return false;
+        return parser.initialize(file);
     }
 
-    public ProductDataContainer getProduct() {
+    /**
+     * 
+     * @return null if parser is not set
+     */
+    public ProductContainer getProduct() {
+        if(!isSet()) {
+            return null;
+        }
         return parser.getProduct();
+    }
+    
+    public boolean isValid(File file) {
+        return parser.initialize(file);
+    }
+    
+    public boolean isSet() {
+        return (parser == null) ? false : true;
     }
 }

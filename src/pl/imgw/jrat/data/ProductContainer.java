@@ -1,0 +1,53 @@
+/**
+ * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
+ */
+package pl.imgw.jrat.data;
+
+import java.util.HashMap;
+
+/**
+ * 
+ * Simple container for products that has array data and ability to print all
+ * attributes as an original tree
+ * 
+ * 
+ * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
+ * 
+ */
+public interface ProductContainer {
+
+    /**
+     * Receiving list of arrays available in the product.
+     * 
+     * @return
+     */
+    public HashMap<String, ArrayData> getArrayList();
+
+    /**
+     * Setting list of arrays, should be done while initializing the container.
+     * Key must reflect the name of dataset in original file with full path if
+     * available
+     * 
+     * @param arrayList
+     */
+    public void setArrayList(HashMap<String, ArrayData> arrayList);
+
+    public Object getAttributeValue(String path, String name);
+    
+    /**
+     * Receiving list of arrays, where key reflects the name of dataset in
+     * original file with full path if available and value is an object of
+     * <code>ArrayData</code>
+     * 
+     * @param name
+     *            path or name of an array in original file
+     * @return null if array matching given name not find
+     */
+    public ArrayData getArray(String name);
+
+    /**
+     * Print all attributes to console as a tree
+     */
+    public void printAllAttributes();
+
+}

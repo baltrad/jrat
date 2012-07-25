@@ -38,5 +38,4 @@ public abstract class RainbowFieldsNameForParser {
     public String getProduct() {
         return product;
     }
-
 }

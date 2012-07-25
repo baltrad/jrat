@@ -7,8 +7,8 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ByteDataContainer;
-import pl.imgw.jrat.data.ProductDataContainer;
+import pl.imgw.jrat.data.RawByteDataContainer;
+import pl.imgw.jrat.data.ProductContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowParser;
 import pl.imgw.jrat.data.parsers.RainbowVolumeFieldsName;
@@ -23,25 +23,31 @@ import static org.junit.Assert.*;
  */
 public class RainbowVolumeParserTest {
 
-    ByteDataContainer dc;
+    RawByteDataContainer dc;
     File file;
     RainbowParser rip;
-    ProductDataContainer pdc;
+    ProductContainer pdc;
+    ParserManager pm;
     
     @Before
     public void setUp() {
         file = new File("test-data", "1.vol");
         
-        ParserManager pm = new ParserManager();
+        pm = new ParserManager();
         rip = new RainbowParser(new RainbowVolumeFieldsName());
         pm.setParser(rip);
-        pm.initialize(file);
-        pdc = pm.getProduct();
+        
+    }
+    
+    @Test
+    public void isValidFileTest() {
+        assertTrue("this is not a rainbow file", pm.isValid(file));
     }
     
     @Test
     public void initializeTest() {
-        
+        assertTrue(pm.initialize(file));
+        pdc = pm.getProduct();
         assertNotNull("Initialization failed", pdc);
         
     }

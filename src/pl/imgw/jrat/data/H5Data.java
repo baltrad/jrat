@@ -3,13 +3,10 @@
  */
 package pl.imgw.jrat.data;
 
-import static pl.imgw.jrat.data.ProductDataTypes.*;
-
 import java.util.HashMap;
 import java.util.Iterator;
 
 import ncsa.hdf.hdf5lib.exceptions.HDF5AttributeException;
-
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.LogsType;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
@@ -22,10 +19,16 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class H5DataContainer implements ProductDataContainer {
+public class H5Data implements ProductContainer {
 
-    private IHDF5Reader reader;
-    private HashMap<String, ArrayDataContainer> arrayList;
+    public static final String INT = "INTEGER";
+    public static final String LONG = "LONG";
+    public static final String FLOAT = "FLOAT";
+    public static final String DOUBLE = "DOUBLE";
+    public static final String STRING = "STRING";
+    
+    protected IHDF5Reader reader;
+    protected HashMap<String, ArrayData> arrayList;
 
     /**
      * @param reader
@@ -41,23 +44,26 @@ public class H5DataContainer implements ProductDataContainer {
      * @see pl.imgw.jrat.data.ProductDataContainer#getArray(int)
      */
     @Override
-    public ArrayDataContainer getArray(int index) {
-        String s = "dataset" + index;
+    public ArrayData getArray(String name) {
+        
         Iterator<String> itr = arrayList.keySet().iterator();
         while(itr.hasNext()) {
             String key = itr.next();
-            if(key.contains(s))
+            if(key.contains(name))
                 return arrayList.get(key);
         }
         return null;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * 
-     * @see
-     * pl.imgw.jrat.data.ProductDataContainer#getAttributeValue(java.lang.String
-     * , java.lang.String)
+     * Receiving attribute value from product in given path and given name.
+     * 
+     * @param path
+     *            e.g. /book/author
+     * @param name
+     *            use empty string if not needed
+     * @return null if attribute not find
      */
     @Override
     public Object getAttributeValue(String path, String name) {
@@ -94,13 +100,28 @@ public class H5DataContainer implements ProductDataContainer {
      * @see pl.imgw.jrat.data.ProductDataContainer#getArrayList()
      */
     @Override
-    public HashMap<String, ArrayDataContainer> getArrayList() {
+    public HashMap<String, ArrayData> getArrayList() {
         return arrayList;
     }
 
-    public void setArrayList(HashMap<String, ArrayDataContainer> arrayList) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see pl.imgw.jrat.data.ProductDataContainer#getArrayList()
+     */
+    @Override
+    public void setArrayList(HashMap<String, ArrayData> arrayList) {
         this.arrayList = arrayList;
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.SimpleContainer#printAllAttributes()
+     */
+    @Override
+    public void printAllAttributes() {
+        // TODO Auto-generated method stub
+        LogHandler.getLogs().displayMsg("Not implemented yet", LogsType.SILENT);
+        
+    }
 
 }

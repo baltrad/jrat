@@ -5,7 +5,7 @@ package pl.imgw.jrat.data.parsers;
 
 import java.io.File;
 
-import pl.imgw.jrat.data.ProductDataContainer;
+import pl.imgw.jrat.data.ProductContainer;
 
 /**
  *
@@ -17,8 +17,25 @@ import pl.imgw.jrat.data.ProductDataContainer;
  */
 public interface FileParser {
 
+    /**
+     * Checking if it is a valid file for this parser
+     * 
+     * @param file 
+     * @return false if file is invalid
+     */
+    public boolean isValid(File file);
+    
+    /**
+     * Initializing file, loading attributes and datasets to memory
+     * @param file
+     * @return
+     */
     public boolean initialize(File file);
         
-    public ProductDataContainer getProduct();
+    /**
+     * Receiving datase
+     * @return
+     */
+    public ProductContainer getProduct();
 
 }

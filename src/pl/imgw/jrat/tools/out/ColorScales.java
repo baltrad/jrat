@@ -44,6 +44,38 @@ public class ColorScales {
 
     }
 
+    public static Set<MapColor> getRBScale() {
+
+        Set<MapColor> scale = new TreeSet<MapColor>();
+
+        double x = 1.5;
+        double step = 3.5;
+        // scale.add(new MapColor(-1, new Color(125, 125, 125)));
+        // scale.add(new MapColor(0, new Color(0, 0, 0)));
+//        scale.add(new MapColor(-9999900, new Color(150, 150, 200)));
+        scale.add(new MapColor(x, new Color(75, 75, 225)));
+        scale.add(new MapColor(x += step, new Color(0, 0, 255)));
+        scale.add(new MapColor(x += step, new Color(0, 50, 255)));
+        scale.add(new MapColor(x += step, new Color(0, 120, 255)));
+        scale.add(new MapColor(x += step, new Color(25, 160, 255)));
+        scale.add(new MapColor(x += step, new Color(81, 210, 255)));
+        scale.add(new MapColor(x += step, new Color(135, 240, 255)));
+        scale.add(new MapColor(x += step, new Color(255, 255, 255)));
+        scale.add(new MapColor(x += step, new Color(255, 245, 190)));
+        scale.add(new MapColor(x += step, new Color(255, 230, 0)));
+        scale.add(new MapColor(x += step, new Color(255, 190, 0)));
+        scale.add(new MapColor(x += step, new Color(255, 110, 0)));
+        scale.add(new MapColor(x += step, new Color(255, 60, 0)));
+        scale.add(new MapColor(x += step, new Color(200, 0, 0)));
+        scale.add(new MapColor(x += step, new Color(160, 0, 0)));
+        scale.add(new MapColor(x += step, new Color(125, 0, 0)));
+
+        // no data
+        // scale.add(new MapColor(255, new Color(127, 127, 127)));
+
+        return scale;
+    }
+    
     public static Set<MapColor> getRainbowScale() {
 
         Set<MapColor> scale = new TreeSet<MapColor>();
@@ -108,20 +140,45 @@ public class ColorScales {
     }
 
     /**
+     * Scale is adjusted to maximum value, maximum different colors is 256, and
+     * depends on given maximum value
      * 
-     * @param min
      * @param max
-     * @param step
      * @return
      */
-    public static Set<MapColor> getGrayScale(int min, int max, int step) {
+    public static Set<MapColor> getGrayScale(int max) {
+        return getGrayScale(max, 0);
+    }
+    
+    /**
+     * Number of gray colors is vary depends on given maximum value. If max
+     * value is bigger then 256 then scale is adjusted. The first value is given
+     * and step is calculated based on max value.
+     * 
+     * @param start
+     *            starting value
+     * @param max
+     *            heighest value
+     * @return
+     */
+    public static Set<MapColor> getGrayScale(int start, int max) {
         Set<MapColor> scale = new TreeSet<MapColor>();
 
-        int spec = (max - min) / step;
+        max = max - start;
+        
+        if(max == 0)
+            return null;
+        
+        int step = max / 255 + 1;
+        int spec = max / step;
 
-        for (int i = 0; i < spec; i++) {
-            scale.add(new MapColor(i * step, new Color((1 + i) * 255 / spec,
-                    (1 + i) * 255 / spec, (1 + i) * 255 / spec)));
+        // if(max < 256)
+        // return getGray256Scale();
+
+        for (int i = 0; i < spec + 1; i++) {
+            
+            scale.add(new MapColor((i + start) * step, new Color(i * 255 / spec, i * 255
+                    / spec, i * 255 / spec)));
         }
         return scale;
     }

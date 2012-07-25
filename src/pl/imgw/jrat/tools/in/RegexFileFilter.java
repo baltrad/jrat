@@ -15,8 +15,18 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 /**
  * 
- * /Class description/
+ * Filtering files from given path using regular expression as a pattern for
+ * file names. For example:
  * 
+ * <blockquote>
+ * 
+ * String expression = "/home/user/archive/*.doc" <br>
+ * new RegexFileFilter().getFileList(expression);
+ * 
+ * </blockquote>
+ * 
+ * Will include all files from "/home/user/archive" directory that end with
+ * ".doc"
  * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
@@ -33,21 +43,24 @@ public class RegexFileFilter implements FilePatternFilter {
      * pl.imgw.jrat.tools.in.FilePatternFilter#getFileList(java.lang.String)
      */
     @Override
-    public List<FileDate> getFileList(String expression) {
-        String pattern = expression.split("/")[expression.split("/").length - 1];
-        String parent = expression.substring(0, expression.indexOf(pattern));
-        if (parent.isEmpty())
-            parent = ".";
-        File dir = new File(parent);
-        FileFilter fileFilter = new WildcardFileFilter(pattern);
-        File[] files = dir.listFiles(fileFilter);
-        if (files == null) {
-            return null;
-        }
-        for (int i = 0; i < files.length; i++) {
-
-            FileDate fd = new FileDate(files[i], getDate(files[i]));
-            list.add(fd);
+    public List<FileDate> getFileList(String exp) {
+        String[] parts = exp.split(" ");
+        for (int p = 0; p < parts.length; p++) {
+            String part = parts[p];
+            String pattern = part.split("/")[part.split("/").length - 1];
+            String parent = part.substring(0, part.indexOf(pattern));
+            File dir = new File(parent);
+            FileFilter fileFilter = new WildcardFileFilter(pattern);
+            File[] files = dir.listFiles(fileFilter);
+            if (files == null) {
+                return list;
+            }
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isFile()) {
+                    FileDate fd = new FileDate(files[i], getDate(files[i]));
+                    list.add(fd);
+                }
+            }
         }
         Collections.sort(list);
         return list;
@@ -55,8 +68,8 @@ public class RegexFileFilter implements FilePatternFilter {
 
     /**
      * 
-     * Helping method. Receives date from file name, or if not available, returns
-     * date of last file modification.
+     * Helping method. Receives date from file name, or if not available,
+     * returns date of last file modification.
      * 
      * @param file
      * @return
@@ -91,7 +104,7 @@ public class RegexFileFilter implements FilePatternFilter {
         String expression = "/home/lwojtas/poligon/vol/brz/vol/BRZ_250_Z.vol/*";
         List<FileDate> list = filter.getFileList(expression);
         System.out.println("time=" + (System.currentTimeMillis() - time));
-        
+
     }
 
 }

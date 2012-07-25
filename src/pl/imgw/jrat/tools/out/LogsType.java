@@ -16,10 +16,8 @@ public class LogsType {
 
     public static final int ERROR = 2; 
 
-    public static final int INITIATION = 1;
+    public static final int WARNING = 1;
 
-    public static final int CREATION = 1;
-    
     public static final int SILENT = 0;
     /* 0 (zero) is for silent mode */
     

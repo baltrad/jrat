@@ -12,7 +12,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import pl.imgw.jrat.data.ArrayDataContainer;
+import pl.imgw.jrat.data.ArrayData;
 
 /**
  * 
@@ -29,8 +29,8 @@ public class ImageTools {
     private BufferedImage background;
     private BufferedImage foreground;
     private int transparency;
-    private ArrayDataContainer data;
-    private ArrayDataContainer mask;
+    private ArrayData data;
+    private ArrayData mask;
     private BufferedImage img;
     private int ySize = 640;
     private int xSize = 480;
@@ -105,7 +105,7 @@ public class ImageTools {
     /**
      * @param data
      */
-    public void setData(ArrayDataContainer data) {
+    public void setData(ArrayData data) {
         if (data != null) {
             this.xSize = data.getSizeX();
             this.ySize = data.getSizeY();
@@ -113,7 +113,7 @@ public class ImageTools {
         }
     }
 
-    public void setMask(ArrayDataContainer mask) {
+    public void setMask(ArrayData mask) {
         this.mask = mask;
     }
 
@@ -152,8 +152,8 @@ public class ImageTools {
         for (int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
                 int rgb = 0;
-                double value = data.getDoublePoint(x, y);
-                if (value == nodata || mask != null && mask.getIntPoint(x, y) == 1)
+                double value = data.getPoint(x, y);
+                if (value == nodata || mask != null && mask.getRawIntPoint(x, y) == 1)
                     rgb = maskColor;
                 else {
                     for (MapColor color : scale) {

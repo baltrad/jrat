@@ -11,7 +11,7 @@ package pl.imgw.jrat.data;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class FloatDataContainer extends ArrayDataContainer implements Cloneable {
+public class FloatDataContainer extends ArrayData implements Cloneable {
 
     private float[][] data;
 
@@ -49,7 +49,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
      * @see pl.imgw.jrat.data.ArrayDataContainer#getPoint(int, int)
      */
     @Override
-    public short getIntPoint(int x, int y) {
+    public short getRawIntPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return -1;
@@ -71,7 +71,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setPoint(int, int, short)
      */
     @Override
-    public boolean setIntPoint(int x, int y, short value) {
+    public boolean setRawIntPoint(int x, int y, short value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
@@ -85,7 +85,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
      * @see pl.imgw.jrat.data.ArrayDataContainer#getBytePoint(int, int)
      */
     @Override
-    public byte getBytePoint(int x, int y) {
+    public byte getRawBytePoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return 0;
@@ -99,7 +99,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setBytePoint(int, int, byte)
      */
     @Override
-    public boolean setBytePoint(int x, int y, byte value) {
+    public boolean setRawBytePoint(int x, int y, byte value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
@@ -113,7 +113,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
      * @see pl.imgw.jrat.data.ArrayDataContainer#getDoublePoint(int, int)
      */
     @Override
-    public double getDoublePoint(int x, int y) {
+    public double getPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return -9999;
@@ -128,7 +128,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
      * double)
      */
     @Override
-    public boolean setDoublePoint(int x, int y, double value) {
+    public boolean setPoint(int x, int y, double value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
@@ -147,7 +147,7 @@ public class FloatDataContainer extends ArrayDataContainer implements Cloneable 
         float[][] array = new float[sizeX][sizeY];
         multiArrayCopy(data, array);
 
-        ArrayDataContainer dc = new FloatDataContainer(array);
+        ArrayData dc = new FloatDataContainer(array);
 
         return dc;
     }

@@ -10,8 +10,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import pl.imgw.jrat.data.ArrayDataContainer;
-import pl.imgw.jrat.data.RainbowImage;
+import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowImageParser;
@@ -32,15 +32,34 @@ public class ImageBuilder {
     private File foreground = null;
     private int transparency = 255;
     private boolean darker = false;
-    private ArrayDataContainer mask = null;
-    private ArrayDataContainer data = null;
+    private ArrayData mask = null;
+    private ArrayData data = null;
     private int xSize = 0;
     private int ySize = 0;
     private double nodata = 999999;
+    private String format = "PNG";
 
-
-    public ImageBuilder(ArrayDataContainer data) {
+    public void saveToFile(File file) {
+        try {
+            ImageIO.write(create(), format, file);
+            LogHandler.getLogs().displayMsg(
+                    "Saving image to file: '" + file.getCanonicalFile() + "' complete",
+                    LogsType.WARNING);
+        } catch (Exception e) {
+            LogHandler.getLogs().displayMsg(
+                    "Saving image to file: '" + file + "' failed",
+                    LogsType.WARNING);
+        }
+    }
+    
+    public ImageBuilder setData(ArrayData data) {
         this.data = data;
+        return this;
+    }
+    
+    public ImageBuilder setFormat(String format) {
+        this.format = format;
+        return this;
     }
 
     public ImageBuilder setDescription(String description) {
@@ -63,7 +82,7 @@ public class ImageBuilder {
         return this;
     }
 
-    public ImageBuilder setNoData(double nodata) {
+    public ImageBuilder setNoDataValue(double nodata) {
         this.nodata = nodata;
         return this;
     }
@@ -79,7 +98,7 @@ public class ImageBuilder {
         return this;
     }
 
-    public ImageBuilder setMask(ArrayDataContainer mask) {
+    public ImageBuilder setMask(ArrayData mask) {
         this.mask = mask;
         return this;
     }
@@ -117,9 +136,10 @@ public class ImageBuilder {
      * @return
      */
     public BufferedImage create() throws IllegalArgumentException {
-
         if (data == null) {
-            throw new IllegalArgumentException("must specify data");
+            LogHandler.getLogs()
+                    .displayMsg("Must specify data", LogsType.ERROR);
+            throw new IllegalArgumentException("No data to create image.");
         }
 
         ImageTools img = new ImageTools();
@@ -140,16 +160,20 @@ public class ImageBuilder {
 
     public static void main(String[] args) {
         
+        ParserManager pm = new ParserManager();
+        BufferedImage img;
+        ArrayData data;
+        /*
         LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
         File file = new File("test-data", "1img.hdf");
         File bg = new File("test-data", "bg.png");
         File fg = new File("test-data", "fg.png");
-        ParserManager pm = new ParserManager();
         pm.setParser(new OdimH5Parser());
         pm.initialize(file);
-        double nodata = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "nodata");
-        ArrayDataContainer data = pm.getProduct().getArray(1);
-        BufferedImage img = new ImageBuilder(data)
+//        double nodata = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "nodata");
+        double nodata = 0;
+        data = pm.getProduct().getArray("dataset1");
+        img = new ImageBuilder(data)
 //                .setBackground(bg)
 //                .setForeground(fg)
 //                .setDarker(true)
@@ -163,14 +187,15 @@ public class ImageBuilder {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-        File rfile = new File("test-data", "1.cmax");
+        */
+        File rfile = new File("test-data", "2012032609103300dBZ.cmax");
         pm.setParser(new RainbowImageParser());
         pm.initialize(rfile);
-        data = pm.getProduct().getArray(RainbowImage.DATA);
-        ArrayDataContainer mask = pm.getProduct().getArray(RainbowImage.FLAGS);
-        img = new ImageBuilder(data)
+        data = pm.getProduct().getArray("datamap");
+        ArrayData mask = pm.getProduct().getArray("flagmap");
+        img = new ImageBuilder()
                 // .setDarker(true)
+                .setData(data)
                 .setMask(mask)
                 .setTransparency(128).setScale(ColorScales.getRainbowScale())
                 .create();

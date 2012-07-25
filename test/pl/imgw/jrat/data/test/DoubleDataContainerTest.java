@@ -40,27 +40,27 @@ public class DoubleDataContainerTest {
     @Test
     public void testInitialize() {
         dc.initialize(x, y);
-        assertEquals("Container is not empty", 0, dc.getIntPoint(20, 20));
-        assertEquals("Out of bounds should return -1", -1, dc.getIntPoint(x+1, 80));
-        assertEquals("Out of bounds should return 0", 0, dc.getBytePoint(x+1, 80));
+        assertEquals("Container is not empty", 0, dc.getRawIntPoint(20, 20));
+        assertEquals("Out of bounds should return -1", -1, dc.getRawIntPoint(x+1, 80));
+        assertEquals("Out of bounds should return 0", 0, dc.getRawBytePoint(x+1, 80));
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#getIntPoint(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#getRawIntPoint(int, int)}.
      */
     @Test
     public void testGetIntPoint() {
-        assertEquals("Converting from float to int error", 20, dc.getIntPoint(0, 0));
+        assertEquals("Converting from float to int error", 20, dc.getRawIntPoint(0, 0));
     }
 
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#getBytePoint(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#getRawBytePoint(int, int)}.
      */
     @Test
     public void testGetBytePoint() {
-        assertEquals("Converting from int to byte error", 1, dc.getBytePoint(0, 1));
-        assertEquals("Converting from int to byte error", -56, dc.getBytePoint(1, 1));
+        assertEquals("Converting from int to byte error", 1, dc.getRawBytePoint(0, 1));
+        assertEquals("Converting from int to byte error", -56, dc.getRawBytePoint(1, 1));
     }
 
     /**
@@ -70,10 +70,10 @@ public class DoubleDataContainerTest {
     public void testClone() {
         dc = new DoubleDataContainer(data);
         DoubleDataContainer dcClone = (DoubleDataContainer) dc.clone();
-        assertEquals("Cloning error", 1, dcClone.getIntPoint(0, 1));
-        assertEquals("Cloning error", 20, dcClone.getIntPoint(0, 0));
-        assertEquals("Cloning error", 1, dcClone.getBytePoint(0, 1));
-        assertEquals("Cloning error", -56, dcClone.getBytePoint(1, 1));
+        assertEquals("Cloning error", 1, dcClone.getRawIntPoint(0, 1));
+        assertEquals("Cloning error", 20, dcClone.getRawIntPoint(0, 0));
+        assertEquals("Cloning error", 1, dcClone.getRawBytePoint(0, 1));
+        assertEquals("Cloning error", -56, dcClone.getRawBytePoint(1, 1));
     }
 
 }
