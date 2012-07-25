@@ -28,8 +28,14 @@
         <mkdir dir="${build.classes.dir}"/>
         <mkdir dir="${dist.dir}"/>
     </target>
+
+    <!-- Deletes the existing build and dist directory-->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete dir="${dist.dir}" />
+    </target>
     
-    <target name="compile" depends="init">
+    <target name="compile" depends="clean, init">
       <javac srcdir="${src.dir}" deprecation="on"
              destdir="${build.classes.dir}" classpathref="classpath"/>
     </target>
