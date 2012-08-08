@@ -43,7 +43,7 @@ public class ImagesController {
         
         for (String arg : args) {
             if(arg.contains(FORMAT)) {
-                format = arg.replace(FORMAT, "").toUpperCase();
+                format = arg.replace(FORMAT, "").toLowerCase();
             } else if(arg.contains(SCALE)) {
                 scale = arg.replace(SCALE, "").toLowerCase();
             } else if(arg.contains(DATASET)) {
@@ -152,8 +152,8 @@ public class ImagesController {
 //        pc = new ProcessController(args);
 //        pc.start();
 
-        args = ("-i test-data/1img.hdf --verbose "
-                + "--print-image format=gif dataset=dataset1 scale=rb nodata=0 "
+        args = ("-i test-data/2vol.h5 --verbose "
+                + "--print-image format=gif dataset=dataset1 scale=rb nodata=0"
                 ).split(" ");
         pc = new ProcessController(args);
         pc.start();

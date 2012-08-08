@@ -17,7 +17,7 @@ import eu.baltrad.beast.pgfwk.IGeneratorPlugin;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class PrintElevation implements IGeneratorPlugin {
+public class BeastPluginHandler implements IGeneratorPlugin {
 
     /* (non-Javadoc)
      * @see eu.baltrad.beast.pgfwk.IGeneratorPlugin#generate(java.lang.String, java.lang.String[], java.lang.Object[])
@@ -37,7 +37,6 @@ public class PrintElevation implements IGeneratorPlugin {
                 argList.add(s);
             }
         }
-        
         
         ProcessController proc = new ProcessController(argList.toArray(new String[argList.size()]));
         proc.start();

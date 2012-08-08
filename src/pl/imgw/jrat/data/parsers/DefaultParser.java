@@ -21,12 +21,12 @@ public class DefaultParser implements FileParser {
             new RainbowVolumeFieldsName());
     private RainbowParser rbimg = new RainbowParser(
             new RainbowImageFieldsName());
-//    private OdimH5Parser odim = new OdimH5Parser();
+    private OdimH5Parser odim = new OdimH5Parser();
     private WZFileParser wz = new WZFileParser();
     private WZStatsParser wzstat = new WZStatsParser();
     private File file = null;
 
-//    private final int HDF = 0;
+    private final int HDF = 0;
     private final int RBI = 1;
     private final int RBV = 2;
     private final int WZ = 3;
@@ -41,10 +41,10 @@ public class DefaultParser implements FileParser {
     @Override
     public boolean isValid(File file) {
         this.file = file;
-//        if (odim.isValid(file)) {
-//            format = HDF;
-//            return true;
-//        }
+        if (odim.isValid(file)) {
+            format = HDF;
+            return true;
+        }
         if (rbvol.isValid(file)) {
             format = RBV;
             return true;
@@ -73,10 +73,10 @@ public class DefaultParser implements FileParser {
     @Override
     public boolean initialize(File file) {
 
-//        if (odim.isValid(file)) {
-//            format = HDF;
-//            return odim.initialize(file);
-//        }
+        if (odim.isValid(file)) {
+            format = HDF;
+            return odim.initialize(file);
+        }
         if (rbvol.isValid(file)) {
             format = RBV;
             return rbvol.initialize(file);
@@ -104,8 +104,8 @@ public class DefaultParser implements FileParser {
      */
     @Override
     public DataContainer getProduct() {
-//        if (format == HDF)
-//            return odim.getProduct();
+        if (format == HDF)
+            return odim.getProduct();
         if (format == RBV)
             return rbvol.getProduct();
         if (format == RBI)
