@@ -1,9 +1,9 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.controller;
+package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.controller.CommandLineArgsParser.*;
+import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 
 import java.io.File;
 import java.util.HashMap;

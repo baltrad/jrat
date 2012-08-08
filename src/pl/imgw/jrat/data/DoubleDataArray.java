@@ -11,19 +11,19 @@ package pl.imgw.jrat.data;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class DoubleDataContainer extends ArrayData implements
+public class DoubleDataArray extends ArrayData implements
         Cloneable {
 
     private double[][] data;
 
-    public DoubleDataContainer() {
+    public DoubleDataArray() {
 
     }
 
     /**
      * @param array
      */
-    public DoubleDataContainer(double[][] data) {
+    public DoubleDataArray(double[][] data) {
         if (data != null) {
             this.sizeX = data.length;
             this.sizeY = data[0].length;
@@ -117,7 +117,7 @@ public class DoubleDataContainer extends ArrayData implements
         double[][] array = new double[sizeX][sizeY];
         multiArrayCopy(data, array);
 
-        ArrayData dc = new DoubleDataContainer(array);
+        ArrayData dc = new DoubleDataArray(array);
 
         return dc;
     }

@@ -3,8 +3,8 @@
  */
 package pl.imgw.jrat.data;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import ncsa.hdf.hdf5lib.exceptions.HDF5AttributeException;
 import pl.imgw.jrat.tools.out.LogHandler;
@@ -19,7 +19,7 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class H5Data implements ProductContainer {
+public class H5Data implements DataContainer {
 
     public static final String INT = "INTEGER";
     public static final String LONG = "LONG";
@@ -28,7 +28,7 @@ public class H5Data implements ProductContainer {
     public static final String STRING = "STRING";
     
     protected IHDF5Reader reader;
-    protected HashMap<String, ArrayData> arrayList;
+    protected Map<String, ArrayData> arrayList;
 
     /**
      * @param reader
@@ -100,7 +100,7 @@ public class H5Data implements ProductContainer {
      * @see pl.imgw.jrat.data.ProductDataContainer#getArrayList()
      */
     @Override
-    public HashMap<String, ArrayData> getArrayList() {
+    public Map<String, ArrayData> getArrayList() {
         return arrayList;
     }
 
@@ -110,7 +110,7 @@ public class H5Data implements ProductContainer {
      * @see pl.imgw.jrat.data.ProductDataContainer#getArrayList()
      */
     @Override
-    public void setArrayList(HashMap<String, ArrayData> arrayList) {
+    public void setArrayList(Map<String, ArrayData> arrayList) {
         this.arrayList = arrayList;
     }
 
@@ -124,4 +124,8 @@ public class H5Data implements ProductContainer {
         
     }
 
+    protected void finalize() {
+        reader.close();
+    }
+    
 }

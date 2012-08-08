@@ -22,8 +22,8 @@ public class RainbowCMAX implements ImageContainer {
     private RainbowData data;
 
     public RainbowCMAX(RainbowData data) {
-        ((RawByteDataContainer)data.arrayList.get("datamap")).setGain(0.5);
-        ((RawByteDataContainer)data.arrayList.get("datamap")).setOffset(-31.5);
+        ((RawByteDataArray)data.arrayList.get("datamap")).setGain(0.5);
+        ((RawByteDataArray)data.arrayList.get("datamap")).setOffset(-31.5);
         this.data = data;
     }
 

@@ -5,7 +5,7 @@ package pl.imgw.jrat.data.parsers;
 
 import java.io.File;
 
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.DataContainer;
 
 /**
  *
@@ -36,6 +36,6 @@ public interface FileParser {
      * Receiving datase
      * @return
      */
-    public ProductContainer getProduct();
+    public DataContainer getProduct();
 
 }

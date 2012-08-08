@@ -3,7 +3,8 @@
  */
 package pl.imgw.jrat.data;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 
@@ -14,14 +15,14 @@ import java.util.HashMap;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public interface ProductContainer {
+public interface DataContainer {
 
     /**
      * Receiving list of arrays available in the product.
      * 
      * @return
      */
-    public HashMap<String, ArrayData> getArrayList();
+    public Map<String, ArrayData> getArrayList();
 
     /**
      * Setting list of arrays, should be done while initializing the container.
@@ -30,7 +31,7 @@ public interface ProductContainer {
      * 
      * @param arrayList
      */
-    public void setArrayList(HashMap<String, ArrayData> arrayList);
+    public void setArrayList(Map<String, ArrayData> arrayList);
 
     public Object getAttributeValue(String path, String name);
     

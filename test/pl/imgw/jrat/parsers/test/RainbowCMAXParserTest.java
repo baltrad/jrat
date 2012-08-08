@@ -10,10 +10,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataContainer;
+import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.RainbowCMAX;
 import pl.imgw.jrat.data.RainbowData;
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowImageFieldsName;
 import pl.imgw.jrat.data.parsers.RainbowParser;
@@ -28,7 +28,7 @@ import pl.imgw.jrat.data.parsers.RainbowParser;
  */
 public class RainbowCMAXParserTest {
 
-    RawByteDataContainer dc;
+    RawByteDataArray dc;
     File file;
     RainbowParser rip;
     RainbowCMAX pdc;

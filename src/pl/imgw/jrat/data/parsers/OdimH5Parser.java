@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Set;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataContainer;
-import pl.imgw.jrat.data.FloatDataContainer;
+import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.FloatDataArray;
 import pl.imgw.jrat.data.H5Data;
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
@@ -93,12 +93,12 @@ public class OdimH5Parser implements FileParser {
             String type = reader.getDataSetInformation(path).toString();
             if(type.contains(FLOAT_SYMBOL)) {
 //                System.out.println(path);
-                FloatDataContainer adc = new FloatDataContainer(reader.readFloatMatrix(path));
+                FloatDataArray adc = new FloatDataArray(reader.readFloatMatrix(path));
                 adc.transpose();
                 arrayList.put(path, adc);
                 index++;
             } else if(type.contains(INT_SYMBOL)) {
-                RawByteDataContainer adc = new RawByteDataContainer();
+                RawByteDataArray adc = new RawByteDataArray();
                 adc.setIntData(reader.readIntMatrix(path));
                 arrayList.put(path, adc);
                 index++;
@@ -109,7 +109,6 @@ public class OdimH5Parser implements FileParser {
         
     }
 
-    
     private Set<String> getDataPathSet(Set<String> paths) {
         Iterator<String> itr = paths.iterator();
         while (itr.hasNext()) {
@@ -138,7 +137,7 @@ public class OdimH5Parser implements FileParser {
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public ProductContainer getProduct() {
+    public DataContainer getProduct() {
         return h5data;
     }
 

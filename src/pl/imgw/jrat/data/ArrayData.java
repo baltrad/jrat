@@ -13,13 +13,6 @@ package pl.imgw.jrat.data;
  */
 public abstract class ArrayData {
     
-    public final static int BYTE = 0;
-    public final static int SHORT = 1;
-    public final static int INTEGER = 2;
-    public final static int LONG = 3;
-    public final static int FLOAT = 4;
-    public final static int DOUBLE = 5;
-
     protected int sizeX;
     protected int sizeY;
     
@@ -85,7 +78,7 @@ public abstract class ArrayData {
      * 
      * @param x
      * @param y
-     * @return unsigned byte, if x or y is out of bounds returns 0
+     * @return if x or y is out of bounds returns 0
      */
     public abstract double getPoint(int x, int y);
 

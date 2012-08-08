@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.imgw.jrat.process.ProcessController;
+
 /**
  *
  *  /Class description/
@@ -23,7 +25,7 @@ public class ProcessControllerTest {
 
 
     /**
-     * Test method for {@link pl.imgw.jrat.controller.ProcessController#start()}.
+     * Test method for {@link pl.imgw.jrat.process.ProcessController#start()}.
      */
     @Test
     public void testStart() {

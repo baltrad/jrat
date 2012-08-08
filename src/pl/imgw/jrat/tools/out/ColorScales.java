@@ -76,6 +76,24 @@ public class ColorScales {
         return scale;
     }
     
+    public static Set<MapColor> getRedScale(double min, double step) {
+
+        Set<MapColor> scale = new TreeSet<MapColor>();
+
+        scale.add(new MapColor(min, new Color(255, 255, 255)));
+//        scale.add(new MapColor(min += step, new Color(255, 245, 190)));
+        scale.add(new MapColor(min += step, new Color(255, 230, 0)));
+//        scale.add(new MapColor(min += step, new Color(255, 190, 0)));
+        scale.add(new MapColor(min += step, new Color(255, 110, 0)));
+        scale.add(new MapColor(min += step, new Color(255, 60, 0)));
+        scale.add(new MapColor(min += step, new Color(200, 0, 0)));
+        scale.add(new MapColor(min += step, new Color(160, 0, 0)));
+        scale.add(new MapColor(min += step, new Color(125, 0, 0)));
+
+        return scale;
+    }
+    
+    
     public static Set<MapColor> getRainbowScale() {
 
         Set<MapColor> scale = new TreeSet<MapColor>();
@@ -147,7 +165,18 @@ public class ColorScales {
      * @return
      */
     public static Set<MapColor> getGrayScale(int max) {
-        return getGrayScale(max, 0);
+        return getGrayScale(0, max, 1);
+    }
+    
+    /**
+     * Scale is adjusted to maximum value, maximum different colors is 256, and
+     * depends on given maximum value
+     * @param start
+     * @param max
+     * @return
+     */
+    public static Set<MapColor> getGrayScale(int start, int max) {
+        return getGrayScale(0, max, 1);
     }
     
     /**
@@ -161,7 +190,7 @@ public class ColorScales {
      *            heighest value
      * @return
      */
-    public static Set<MapColor> getGrayScale(int start, int max) {
+    public static Set<MapColor> getGrayScale(int start, int max, int step) {
         Set<MapColor> scale = new TreeSet<MapColor>();
 
         max = max - start;
@@ -169,15 +198,17 @@ public class ColorScales {
         if(max == 0)
             return null;
         
-        int step = max / 255 + 1;
-        int spec = max / step;
+        int stepParam = (max / 255 + 1) * step;
+        int spec = max / stepParam;
 
+//        System.out.println("Step: " + step);
+        
         // if(max < 256)
         // return getGray256Scale();
 
         for (int i = 0; i < spec + 1; i++) {
             
-            scale.add(new MapColor((i + start) * step, new Color(i * 255 / spec, i * 255
+            scale.add(new MapColor((i + start) * stepParam, new Color(i * 255 / spec, i * 255
                     / spec, i * 255 / spec)));
         }
         return scale;
@@ -232,6 +263,27 @@ public class ColorScales {
 
         return scale;
     }
+    
+    public static Set<MapColor> getWZScale() {
+
+        Set<MapColor> scale = new TreeSet<MapColor>();
+
+        // min value
+        scale.add(new MapColor(0, new Color(0, 0, 0)));
+        scale.add(new MapColor(1, new Color(20, 20, 20)));
+        scale.add(new MapColor(2, new Color(129, 255, 182)));
+        scale.add(new MapColor(3, new Color(255, 255, 0)));
+        scale.add(new MapColor(4, new Color(255, 153, 46)));
+        scale.add(new MapColor(5, new Color(255, 90, 174)));
+        scale.add(new MapColor(6, new Color(255, 0, 0)));
+        
+        
+
+        // no data
+        // scale.add(new MapColor(255, new Color(127, 127, 127)));
+
+        return scale;
+    }
 
     /**
      * @return the scale
@@ -254,19 +306,19 @@ public class ColorScales {
 
     public static void main(String[] args) {
 
-        Set<MapColor> set = ColorScales.getRainbowScale();
+        Set<MapColor> set = ColorScales.getODCScale();
+
+//        for (MapColor color : set) {
+//            System.out.println((raw2dbz(color.getValue())) + " "
+//                    + color.getColor().toString());
+//        }
+
+//        set = ColorScales.getODCScale();
 
         for (MapColor color : set) {
-            System.out.println((raw2dbz(color.getValue())) + " "
+            System.out.println(color.getValue() + " "
                     + color.getColor().toString());
         }
-
-        // set = ColorScales.getODCScale();
-        //
-        // for (MapColor color : set) {
-        // System.out.println(color.getValue() + " "
-        // + color.getColor().toString());
-        // }
 
     }
 

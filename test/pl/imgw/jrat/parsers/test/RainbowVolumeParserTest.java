@@ -7,8 +7,8 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.RawByteDataContainer;
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowParser;
 import pl.imgw.jrat.data.parsers.RainbowVolumeFieldsName;
@@ -23,10 +23,10 @@ import static org.junit.Assert.*;
  */
 public class RainbowVolumeParserTest {
 
-    RawByteDataContainer dc;
+    RawByteDataArray dc;
     File file;
     RainbowParser rip;
-    ProductContainer pdc;
+    DataContainer pdc;
     ParserManager pm;
     
     @Before

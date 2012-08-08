@@ -13,11 +13,11 @@ package pl.imgw.jrat.data;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RawByteDataContainer extends ArrayData implements Cloneable {
+public class RawByteDataArray extends ArrayData implements Cloneable {
 
-    private byte[][] data = null;
-    private double offset = 0;
-    private double gain = 0;
+    protected byte[][] data = null;
+    protected double offset = 0;
+    protected double gain = 0;
     
     /**
      * @param offset the offset to set
@@ -33,14 +33,29 @@ public class RawByteDataContainer extends ArrayData implements Cloneable {
         this.gain = gain;
     }
 
-    public RawByteDataContainer() {
+    
+    /**
+     * @return the offset
+     */
+    public double getOffset() {
+        return offset;
+    }
+
+    /**
+     * @return the gain
+     */
+    public double getGain() {
+        return gain;
+    }
+
+    public RawByteDataArray() {
         
     }
     
     /**
      * @param infDataBuff
      */
-    public RawByteDataContainer(byte[][] data) {
+    public RawByteDataArray(byte[][] data) {
         if (data != null) {
             this.sizeX = data.length;
             this.sizeY = data[0].length;
@@ -153,7 +168,7 @@ public class RawByteDataContainer extends ArrayData implements Cloneable {
         byte[][] array = new byte[sizeX][sizeY];
         multiArrayCopy(data, array);
         
-        ArrayData dc = new RawByteDataContainer(array);
+        ArrayData dc = new RawByteDataArray(array);
 
         return dc;
     }
@@ -170,7 +185,7 @@ public class RawByteDataContainer extends ArrayData implements Cloneable {
         short value = (short) unsignedByte2Int(data[x][y]);
         if(gain == 0)
             return value;
-        return raw2dBZ(value);
+        return raw2real(value);
     }
 
     /* (non-Javadoc)
@@ -184,17 +199,17 @@ public class RawByteDataContainer extends ArrayData implements Cloneable {
         if (gain == 0)
             data[x][y] = int2byte((short) value);
         else
-            data[x][y] = int2byte(dBZ2raw(value));
+            data[x][y] = int2byte(real2raw(value));
         return true;
     }
 
-    public short dBZ2raw(double x) {
+    public short real2raw(double x) {
         if (gain == 0)
             return 0;
         return (short) ((1 / gain * (x - offset)) + 1);
     }
     
-    public double raw2dBZ(int x) {
+    public double raw2real(int x) {
         return gain * x + offset;
     }
     

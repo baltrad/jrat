@@ -11,7 +11,7 @@ import org.junit.Test;
 import pl.imgw.jrat.data.H5Data;
 import pl.imgw.jrat.data.OdimH5Image;
 import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;

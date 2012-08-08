@@ -5,83 +5,115 @@ package pl.imgw.jrat.data.parsers;
 
 import java.io.File;
 
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.DataContainer;
 
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
 public class DefaultParser implements FileParser {
 
-    private RainbowParser rbvol = new RainbowParser(new RainbowVolumeFieldsName());
-    private RainbowParser rbimg = new RainbowParser(new RainbowImageFieldsName());
-    private OdimH5Parser odim = new OdimH5Parser();
+    private RainbowParser rbvol = new RainbowParser(
+            new RainbowVolumeFieldsName());
+    private RainbowParser rbimg = new RainbowParser(
+            new RainbowImageFieldsName());
+//    private OdimH5Parser odim = new OdimH5Parser();
+    private WZFileParser wz = new WZFileParser();
+    private WZStatsParser wzstat = new WZStatsParser();
     private File file = null;
-    
-    private final int HDF = 0;
+
+//    private final int HDF = 0;
     private final int RBI = 1;
     private final int RBV = 2;
+    private final int WZ = 3;
+    private final int WZSTAT = 4;
     private int format = -1;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.parsers.FileParser#isValid(java.io.File)
      */
     @Override
     public boolean isValid(File file) {
         this.file = file;
-        if(odim.isValid(file)) {
-            format = HDF;
-            return true;
-        }
-        if(rbvol.isValid(file)) {
+//        if (odim.isValid(file)) {
+//            format = HDF;
+//            return true;
+//        }
+        if (rbvol.isValid(file)) {
             format = RBV;
             return true;
         }
-        if(rbimg.isValid(file)) {
+        if (rbimg.isValid(file)) {
             format = RBI;
             return true;
         }
-        
+        if (wz.isValid(file)) {
+            format = WZ;
+            return true;
+        }
+        if (wzstat.isValid(file)) {
+            format = WZSTAT;
+            return true;
+        }
+
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.parsers.FileParser#initialize(java.io.File)
      */
     @Override
     public boolean initialize(File file) {
-        
-        if(odim.isValid(file)) {
-            format = HDF;
-            return odim.initialize(file);
-        }
-        if(rbvol.isValid(file)) {
+
+//        if (odim.isValid(file)) {
+//            format = HDF;
+//            return odim.initialize(file);
+//        }
+        if (rbvol.isValid(file)) {
             format = RBV;
             return rbvol.initialize(file);
         }
-        if(rbimg.isValid(file)) {
+        if (rbimg.isValid(file)) {
             format = RBI;
             return rbimg.initialize(file);
         }
-        
+        if (wz.isValid(file)) {
+            format = WZ;
+            return wz.initialize(file);
+        }
+        if (wzstat.isValid(file)) {
+            format = WZSTAT;
+            return wzstat.initialize(file);
+        }
+
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public ProductContainer getProduct() {
-        if(format == HDF)
-            return odim.getProduct();
-        if(format == RBV)
+    public DataContainer getProduct() {
+//        if (format == HDF)
+//            return odim.getProduct();
+        if (format == RBV)
             return rbvol.getProduct();
-        if(format == RBI)
+        if (format == RBI)
             return rbimg.getProduct();
+        if (format == WZ)
+            return wz.getProduct();
+        if (format == WZSTAT)
+            return wzstat.getProduct();
         return null;
     }
 

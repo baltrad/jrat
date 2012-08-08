@@ -4,42 +4,33 @@
 package pl.imgw.jrat.data;
 
 /**
- * 
- * /Class description/
- * 
- * 
+ *
+ *  /Class description/
+ *
+ *
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class FloatDataContainer extends ArrayData implements Cloneable {
+public class IntDataArray extends ArrayData {
 
-    private float[][] data;
-
-    public FloatDataContainer() {
-
-    }
-
-    /**
-     * @param array
-     */
-    public FloatDataContainer(float[][] data) {
+    protected int[][] data = null;
+    
+    public IntDataArray(int[][] data) {
         if (data != null) {
             this.sizeX = data.length;
             this.sizeY = data[0].length;
             this.data = data;
         }
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see pl.imgw.jrat.data.ArrayDataContainer#initialize(int, int)
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.ArrayData#initialize(int, int)
      */
     @Override
     public void initialize(int sizeX, int sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.data = new float[sizeX][sizeY];
+        this.data = new int[sizeX][sizeY];
 
     }
 
@@ -57,7 +48,7 @@ public class FloatDataContainer extends ArrayData implements Cloneable {
         return (short) data[x][y];
     }
 
-    public boolean setFloatPoint(int x, int y, float value) {
+    public boolean setFloatPoint(int x, int y, int value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
@@ -132,35 +123,8 @@ public class FloatDataContainer extends ArrayData implements Cloneable {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
-        data[x][y] = (float) value;
+        data[x][y] = (int) value;
         return true;
-    }
-
-    public void multiArrayCopy(float[][] source, float[][] destination) {
-        for (int a = 0; a < source.length; a++) {
-            System.arraycopy(source[a], 0, destination[a], 0, source[a].length);
-        }
-    }
-
-    public Object clone() {
-
-        float[][] array = new float[sizeX][sizeY];
-        multiArrayCopy(data, array);
-
-        ArrayData dc = new FloatDataContainer(array);
-
-        return dc;
-    }
-    
-    public void transpose() {
-        float[][] array = new float[sizeY][sizeX];
-        for(int x = 0; x < sizeX; x++)
-            for(int y = 0; y < sizeY; y++)
-                array[y][x] = data[x][y];
-        
-        data = array;
-        this.sizeX = data.length;
-        this.sizeY = data[0].length;
     }
 
 }

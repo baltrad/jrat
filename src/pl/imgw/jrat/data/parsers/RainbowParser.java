@@ -24,8 +24,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 
-import pl.imgw.jrat.data.RawByteDataContainer;
-import pl.imgw.jrat.data.ProductContainer;
+import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -229,7 +229,7 @@ public class RainbowParser implements FileParser {
                 Param p = itr.next();
                 byte[][] infDataBuff = rp.inflateDataSection(
                         blobs.get(p.blobid), p.sizeX, p.sizeY, p.depth);
-                RawByteDataContainer array = new RawByteDataContainer(infDataBuff);
+                RawByteDataArray array = new RawByteDataArray(infDataBuff);
                 array.setGain(0.5);
                 array.setOffset(-31.5);
                 data.getArrayList().put(p.type, array);
@@ -280,7 +280,7 @@ public class RainbowParser implements FileParser {
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public ProductContainer getProduct() {
+    public DataContainer getProduct() {
         // TODO Auto-generated method stub
         return data;
     }

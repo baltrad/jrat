@@ -32,11 +32,13 @@ public class ImageBuilder {
     private File foreground = null;
     private int transparency = 255;
     private boolean darker = false;
+    private boolean caption = false;
     private ArrayData mask = null;
     private ArrayData data = null;
     private int xSize = 0;
     private int ySize = 0;
     private double nodata = 999999;
+    private double nodetected = 999999;
     private String format = "PNG";
 
     public void saveToFile(File file) {
@@ -86,6 +88,11 @@ public class ImageBuilder {
         this.nodata = nodata;
         return this;
     }
+
+    public ImageBuilder setNoDetectedValue(double nodetected) {
+        this.nodetected = nodetected;
+        return this;
+    }
     
     /**
      * 0-256
@@ -108,6 +115,11 @@ public class ImageBuilder {
         return this;
     }
 
+    public ImageBuilder hasCaption(boolean caption) {
+        this.caption = caption;
+        return this;
+    }
+    
     public  ImageBuilder setSize(int x, int y) {
         this.xSize = x;
         this.ySize = y;
@@ -129,6 +141,7 @@ public class ImageBuilder {
         transparency = 255;
         darker = false;
         nodata = 999999;
+        nodetected = 999999;
     }
 
     /**
@@ -153,6 +166,8 @@ public class ImageBuilder {
         img.setDarker(darker);
         img.setTransparency(transparency);
         img.setNodata(nodata);
+        img.setNodetected(nodetected);
+        img.hasCaption(caption);
         img.paint();
         reset();
         return img.getImg();
@@ -163,31 +178,35 @@ public class ImageBuilder {
         ParserManager pm = new ParserManager();
         BufferedImage img;
         ArrayData data;
-        /*
+        
         LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
         File file = new File("test-data", "1img.hdf");
         File bg = new File("test-data", "bg.png");
         File fg = new File("test-data", "fg.png");
         pm.setParser(new OdimH5Parser());
         pm.initialize(file);
-//        double nodata = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "nodata");
-        double nodata = 0;
+        double nodata = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "nodata");
+        double undetect = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "undetect");
+//        double nodata = 0;
+        
         data = pm.getProduct().getArray("dataset1");
-        img = new ImageBuilder(data)
-//                .setBackground(bg)
-//                .setForeground(fg)
+        img = new ImageBuilder()
+                .setData(data)
+                .setBackground(bg)
+                .setForeground(fg)
 //                .setDarker(true)
 //                .setTransparency(0)
                 .setScale(ColorScales.getODCScale())
-                .setNoData(nodata)
+                .setNoDataValue(nodata)
+                .setNoDetectedValue(undetect)
                 .create();
         try {
-            ImageIO.write(img, "PNG", new File("test-data", "imagebuilder.png"));
+            ImageIO.write(img, "PNG", new File("test-data", "imagebuilder1.png"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        */
+        
         File rfile = new File("test-data", "2012032609103300dBZ.cmax");
         pm.setParser(new RainbowImageParser());
         pm.initialize(rfile);
@@ -197,7 +216,7 @@ public class ImageBuilder {
                 // .setDarker(true)
                 .setData(data)
                 .setMask(mask)
-                .setTransparency(128).setScale(ColorScales.getRainbowScale())
+                .setTransparency(128).setScale(ColorScales.getRBScale())
                 .create();
         try {
             ImageIO.write(img, "PNG", new File("test-data", "imagebuilder2.png"));

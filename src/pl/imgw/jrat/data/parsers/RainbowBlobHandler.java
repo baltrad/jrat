@@ -3,11 +3,12 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.LogsType.*;
+import static pl.imgw.jrat.tools.out.LogsType.ERROR;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.zip.Inflater;
 
 import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.Document;
@@ -58,8 +59,8 @@ public class RainbowBlobHandler {
         HashMap<Integer, DataBufferContainer> blobs = new HashMap<Integer, DataBufferContainer>();
 
         // Data section tags
-        final String START_BIN = "<BLOB";
-        final String END_BIN = "</BLOB>";
+        final String START_BIN = "<blob";
+        final String END_BIN = "</blob>";
         // Tag buffers
         byte[] start_bin_buf = new byte[6];
         byte[] end_bin_buf = new byte[8];
@@ -94,7 +95,7 @@ public class RainbowBlobHandler {
                     for (int i = 0; i < 5; i++) {
                         start_bin_seq += (char) start_bin_buf[i];
                     }
-                    if (start_bin_seq.matches(START_BIN)) {
+                    if (start_bin_seq.toLowerCase().matches(START_BIN)) {
                         if(blobsection == 0)
                             blobsection = offset - START_BIN.length();
                         while ((char) fileBuff[offset] != '>') {
@@ -113,7 +114,7 @@ public class RainbowBlobHandler {
                     for (int i = 0; i < 7; i++) {
                         end_bin_seq += (char) end_bin_buf[i];
                     }
-                    if (end_bin_seq.matches(END_BIN) && current == currentBlob) {
+                    if (end_bin_seq.toLowerCase().matches(END_BIN) && current == currentBlob) {
                         end_bin = offset;
                         break;
                     }
@@ -128,8 +129,8 @@ public class RainbowBlobHandler {
                 header = getHeader(xmlHeader);
                 xmlHeader = "";
                 int buffLen = 0;
+                
                 if (header.get(compression) == 1) {
-
                     // Read 4 bytes representing data length
                     // only when compression is set to "qt"
                     byte[] data_byte = new byte[4];
@@ -137,13 +138,14 @@ public class RainbowBlobHandler {
                         data_byte[i] = fileBuff[start_bin + i + 2];
                     }
                     buffLen = byteArray2Int(data_byte);
-                    start_bin += 4;
+                    start_bin += 6;
+                    end_bin -= 6;
 
                 } else {
                     buffLen = header.get(size);
+                    start_bin += 3;
+                    end_bin -= 8;
                 }
-                start_bin += 2;
-                end_bin -= 6;
                 // Read data into data array
                 int bin_count = 0;
                 data_buf = new byte[end_bin - start_bin];
@@ -183,7 +185,7 @@ public class RainbowBlobHandler {
      *            Output array height
      * @param verbose
      *            Verbose mode toggle
-     * @return Inflated data section as an array of integers
+     * @return Inflated data section as a byte array
      */
     public byte[][] inflateDataSection(DataBufferContainer dbc,
             int rays, int bins, int depth) {
@@ -223,13 +225,14 @@ public class RainbowBlobHandler {
             return null;
         }
 
-        // Convert byte array into integer array
+     
         int count = 0;
         for (int x = 0; x < rays; x++) {
             for (int y = 0; y < bins; y++) {
                 count = y * rays + x;
-                if (depth == 8)
+                if (depth == 8) {
                     output_buf[x][y] = byte_buf[count];
+                }
                 else if (depth == 1) {
                     if (isBitSet(byte_buf[count / 8], count % 8))
                         output_buf[x][y] = 1;
@@ -245,6 +248,55 @@ public class RainbowBlobHandler {
         return output_buf;
     }
 
+    
+    /**
+     * Decompress data; returned data is allocated in this method.
+     *
+     * 
+     * 
+     * 
+     * @param compressedData - data to be decompressed
+     * @param size - count of bytes that should be in decompressed data
+     * @return decompressed data
+     */
+    public byte[][] decompress(DataBufferContainer dbc, int rays, int bins) {
+        byte[] compressedData = dbc.getDataBuffer();
+        byte[][] output_buf = new byte[rays][bins];
+        int size = dbc.getDataBufferLength();
+        Inflater inflater;
+        byte[] decompressedData;
+
+        System.out.println("przed: " + compressedData.length + " po " + size);
+        
+        decompressedData = new byte[rays*bins];
+        inflater = new Inflater();
+
+        try {
+            while (inflater.needsInput()) {
+                inflater.setInput(compressedData);
+                inflater.inflate(decompressedData, 0, size);
+            }
+            inflater.end();
+        } catch (Exception e) {
+//            e.printStackTrace();
+            LogHandler.getLogs().displayMsg("Error while decompressing data",
+                    ERROR);
+            LogHandler.getLogs().saveErrorLogs(
+                    RainbowBlobHandler.class.getName(),
+                    "decompress: exception!!!\n" + e.getMessage());
+            return null;
+        }
+        int count = 0;
+        for (int x = 0; x < rays; x++) {
+            for (int y = 0; y < bins; y++) {
+                count = y * rays + x;
+                    output_buf[x][y] = decompressedData[count];
+            }
+        }
+        
+        return output_buf;
+    }
+    
     private Boolean isBitSet(byte b, int bit) {
         return (b & (1 << (8 - bit ))) != 0;
     }

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.FloatDataContainer;
+import pl.imgw.jrat.data.FloatDataArray;
 
 
 
@@ -24,7 +24,7 @@ import pl.imgw.jrat.data.FloatDataContainer;
  */
 public class FloatDataContainerTest {
 
-    private FloatDataContainer dc;
+    private FloatDataArray dc;
     private int x = 100;
     private int y = 100;
     private float[][] data = {{20.3f, 1.1f}, {11.2f, 200.1f}};
@@ -34,12 +34,12 @@ public class FloatDataContainerTest {
      */
     @Before
     public void setUp() throws Exception {
-        dc = new FloatDataContainer(data);
+        dc = new FloatDataArray(data);
 //        dc.initialize(x, y);
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#initialize(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.FloatDataArray#initialize(int, int)}.
      */
     @Test
     public void testInitialize() {
@@ -51,7 +51,7 @@ public class FloatDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#getRawIntPoint(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.FloatDataArray#getRawIntPoint(int, int)}.
      */
     @Test
     public void testGetIntPoint() {
@@ -60,7 +60,7 @@ public class FloatDataContainerTest {
 
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataContainer#getRawBytePoint(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.FloatDataArray#getRawBytePoint(int, int)}.
      */
     @Test
     public void testGetBytePoint() {
@@ -73,8 +73,8 @@ public class FloatDataContainerTest {
      */
     @Test
     public void testClone() {
-        dc = new FloatDataContainer(data);
-        FloatDataContainer dcClone = (FloatDataContainer) dc.clone();
+        dc = new FloatDataArray(data);
+        FloatDataArray dcClone = (FloatDataArray) dc.clone();
         assertEquals("Cloning error", 1, dcClone.getRawIntPoint(0, 1));
         assertEquals("Cloning error", 20, dcClone.getRawIntPoint(0, 0));
         assertEquals("Cloning error", 1, dcClone.getRawBytePoint(0, 1));

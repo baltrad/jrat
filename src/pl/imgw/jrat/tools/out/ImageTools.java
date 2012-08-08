@@ -5,9 +5,11 @@ package pl.imgw.jrat.tools.out;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -35,7 +37,9 @@ public class ImageTools {
     private int ySize = 640;
     private int xSize = 480;
     private boolean darker;
+    private boolean caption;
     private double nodata;
+    private double nodetected;
 
     /**
      * @param nodata the nodata to set
@@ -44,6 +48,13 @@ public class ImageTools {
         this.nodata = nodata;
     }
 
+    /**
+     * @param nodetected the nodetected to set
+     */
+    public void setNodetected(double nodetected) {
+        this.nodetected = nodetected;
+    }
+    
     /**
      * @param description
      *            the description to set
@@ -78,6 +89,13 @@ public class ImageTools {
 
     public void setDarker(boolean darker) {
         this.darker = darker;
+    }
+
+    /**
+     * @param caption the hasCaption to set
+     */
+    public void hasCaption(boolean caption) {
+        this.caption = caption;
     }
 
     /**
@@ -136,6 +154,7 @@ public class ImageTools {
 
     }
 
+    
     /**
      * 
      */
@@ -143,7 +162,10 @@ public class ImageTools {
         if (data == null) {
             throw new IllegalArgumentException("must specify data");
         }
-
+        if (scale == null) {
+            throw new IllegalArgumentException("must specify scale");
+        }
+        
         img = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_ARGB);
         BufferedImage map = new BufferedImage(xSize, ySize,
                 BufferedImage.TYPE_INT_ARGB);
@@ -153,11 +175,16 @@ public class ImageTools {
             for (int y = 0; y < ySize; y++) {
                 int rgb = 0;
                 double value = data.getPoint(x, y);
-                if (value == nodata || mask != null && mask.getRawIntPoint(x, y) == 1)
+                if(value == nodetected) {
+                    rgb = new Color(0, 0, 0, 0).getRGB();
+                }
+                else if (value == nodata || mask != null && mask.getRawIntPoint(x, y) == 1)
                     rgb = maskColor;
                 else {
                     for (MapColor color : scale) {
+                        
                         if (value >= color.getValue()) {
+//                            System.out.println(value + " a color: " + color.getValue());
 
                             int r = color.getColor().getRed();
                             int g = color.getColor().getGreen();
@@ -189,7 +216,34 @@ public class ImageTools {
         if (foreground != null) {
             g.drawImage(foreground, 0, 0, null);
         }
+        
+        if(caption) {
+            g.drawImage(paintCaption(), 0, 0, null);
+        }
 
     }
 
+    private BufferedImage paintCaption() {
+        
+        int lenght = scale.size();
+        int width = 12;
+        int height = 12;
+        int i = 0;
+        
+        BufferedImage caption = new BufferedImage(50, 16*lenght, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = caption.createGraphics();
+        Iterator<MapColor> itr = scale.iterator();
+        while (itr.hasNext()) {
+            MapColor map = itr.next();
+            g2d.setColor(map.getColor());
+            g2d.fillRect(2, i * (height+ 2) + 10, width, height);
+            g2d.setColor(Color.LIGHT_GRAY);
+            g2d.drawString(map.getValue() + "", width + 4, i * (height+ 2) + 20);
+            i++;
+        }
+        g2d.dispose();
+        
+        return caption;
+    }
+    
 }

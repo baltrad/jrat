@@ -3,9 +3,11 @@
  */
 package pl.imgw.jrat.data;
 
-import static pl.imgw.jrat.tools.out.LogsType.*;
+import static pl.imgw.jrat.tools.out.LogsType.ERROR;
+import static pl.imgw.jrat.tools.out.LogsType.WARNING;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -21,9 +23,9 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RainbowData implements ProductContainer {
+public class RainbowData implements DataContainer {
 
-    protected HashMap<String, ArrayData> arrayList = new HashMap<String, ArrayData>();
+    protected Map<String, ArrayData> arrayList = new HashMap<String, ArrayData>();
     protected Document attribues;
 
     /**
@@ -40,7 +42,7 @@ public class RainbowData implements ProductContainer {
      * @see pl.imgw.jrat.data.ProductDataContainer#setArrayList(java.util.List)
      */
     @Override
-    public void setArrayList(HashMap<String, ArrayData> arrayList) {
+    public void setArrayList(Map<String, ArrayData> arrayList) {
         this.arrayList = arrayList;
     }
 
@@ -50,7 +52,7 @@ public class RainbowData implements ProductContainer {
      * @see pl.imgw.jrat.data.ProductDataContainer#getArrayList()
      */
     @Override
-    public HashMap<String, ArrayData> getArrayList() {
+    public Map<String, ArrayData> getArrayList() {
         return arrayList;
     }
 
