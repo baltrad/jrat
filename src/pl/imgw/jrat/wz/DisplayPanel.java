@@ -58,7 +58,7 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
      * 
      */
     private static final long serialVersionUID = 1048505364299562402L;
-    private JComboBox<String> layers;
+    private JComboBox layers;
     private JLabel picture;
     private JTextField filename;
     private JTextField productValue;
@@ -90,7 +90,7 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         picture.setPreferredSize(new Dimension(760, 800));
         picture.addMouseListener(this);
 
-        layers = new JComboBox<String>();
+        layers = new JComboBox();
         layers.addActionListener(this);
         layers.addItem("No layers");
         
