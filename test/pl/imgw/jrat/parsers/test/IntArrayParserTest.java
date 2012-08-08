@@ -52,6 +52,7 @@ public class IntArrayParserTest {
     @Test
     public void initializeTest() {
         assertTrue(pm.initialize(f));
+        /*
         BufferedImage img;
         ArrayData data;
 
@@ -70,7 +71,7 @@ public class IntArrayParserTest {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+        */
     }
     
 }

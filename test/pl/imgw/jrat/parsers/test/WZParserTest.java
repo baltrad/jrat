@@ -53,6 +53,7 @@ public class WZParserTest {
     @Test
     public void initializeTest() {
         assertTrue(pm.initialize(f));
+        /*
         BufferedImage img;
         RawByteDataArray data;
         
@@ -75,7 +76,7 @@ public class WZParserTest {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+        */
     }
     
 }
