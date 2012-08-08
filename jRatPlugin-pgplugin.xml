@@ -4,5 +4,5 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
   <!-- The plugin for generating composites through rack -->
-  <bean id="pl.imgw.jrat.plugin" class="pl.imgw.jrat.BeastPluginHandler" />
+  <bean id="jratPlugin" class="pl.imgw.jrat.BeastPluginHandler" />
 </beans>
