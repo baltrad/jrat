@@ -36,6 +36,7 @@ import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.WZData;
 import pl.imgw.jrat.data.parsers.DefaultParser;
+import pl.imgw.jrat.data.parsers.IntArrayParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.tools.out.ClipboardHandler;
 import pl.imgw.jrat.tools.out.ColorScales;
@@ -217,7 +218,7 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         String par = selectedItem.substring(selectedItem.indexOf(":") + 1, selectedItem.length());
         
         loadedArray = data.getArray(selectedItem);
-        Set<MapColor> scale = ColorScales.getRedScale(0, 10);
+        Set<MapColor> scale = ColorScales.getRedScale(0, 5);
         if (data instanceof WZData) {
             nodata = ((WZData) data).getNodata()
                     * ((RawByteDataArray) loadedArray).getGain()
@@ -282,9 +283,9 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         DisplayPanel displayPane = new DisplayPanel();
         displayPane.setFrame(frame);
         
-        File f = new File("/home/lwojtas/workspace/jrat/test-data", "20120731083500cpx.wz");
+        File f = new File("/home/lwojtas/Desktop/tvp", "data45alt.txt");
         ParserManager pm = new ParserManager();
-        pm.setParser(new DefaultParser());
+        pm.setParser(new IntArrayParser());
         pm.initialize(f);
 
         displayPane.setData(pm.getProduct(), "deta");

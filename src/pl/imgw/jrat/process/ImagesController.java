@@ -28,12 +28,14 @@ public class ImagesController {
     private String format;
     
     /**
-     * Setting all require fields in <code>ImageBuilder</code>, if some fields
+     * Setting all require fields for <code>ImageBuilder</code>, if some fields
      * are not provided default value are set
      * 
      * @param args
      *            list of fields name and values for <code>ImageBuilder</code>,
-     *            names and values must be separated by '=' e.g. "format=png"
+     *            names and values must be separated by '=' e.g. "format=png".
+     *            </br>
+     *            Supported fields are: format, scale, dataset and nodata
      */
     public ImagesController(String args[]) {
         format = "png";

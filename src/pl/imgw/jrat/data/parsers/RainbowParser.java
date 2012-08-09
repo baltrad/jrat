@@ -87,7 +87,7 @@ public class RainbowParser implements FileParser {
         }
         if(!isValid(file)) {
             LogHandler.getLogs().displayMsg("'" + file.getName()
-                    + "' is not a valid RAINBOW format", WARNING);   
+                    + "' is not a valid RAINBOW 5.3 format", WARNING);   
         
             return false;
         }
