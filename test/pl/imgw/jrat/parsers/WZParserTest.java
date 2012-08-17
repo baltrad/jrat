@@ -1,28 +1,20 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers.test;
+package pl.imgw.jrat.parsers;
 
-import java.awt.image.BufferedImage;
+import static org.junit.Assert.assertTrue;
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+
 import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-
-import javax.imageio.ImageIO;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZData;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.WZFileParser;
-import pl.imgw.jrat.tools.out.ColorScales;
-import pl.imgw.jrat.tools.out.ImageBuilder;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
-import static org.junit.Assert.*;
+
 
 /**
  *
@@ -39,7 +31,7 @@ public class WZParserTest {
     
     @Before
     public void setUp() {
-        LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+        LogHandler.getLogs().setLoggingVerbose(ERROR);
         f = new File("test-data", "20120731083600cpx.wz");
         pm = new ParserManager();
         pm.setParser(new WZFileParser());

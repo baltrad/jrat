@@ -7,7 +7,7 @@ import java.io.File;
 
 import pl.imgw.jrat.process.FileWatcher;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class WZStats {
         File file = new File(args[0]);
         File dest = new File(args[1]);
         if (file.exists() && dest.exists()) {
-            LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+            LogHandler.getLogs().setLoggingVerbose(ERROR);
             WZStatsProcessor proc = new WZStatsProcessor();
             proc.setDest(dest);
             FileWatcher fw = new FileWatcher(proc, file);

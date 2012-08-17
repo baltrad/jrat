@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.LogsType.*;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -232,7 +232,7 @@ public class RainbowParser implements FileParser {
                 RawByteDataArray array = new RawByteDataArray(infDataBuff);
                 array.setGain(0.5);
                 array.setOffset(-31.5);
-                data.getArrayList().put(p.type, array);
+                data.getArrayList().put(p.blobid + "_" + p.type, array);
             }
             
             if (data != null && rp != null) {
@@ -270,7 +270,8 @@ public class RainbowParser implements FileParser {
         }
 
 //        System.out.println("ilosc blobow: " + getProduct().getArrayList().size());
-        
+        LogHandler.getLogs().displayMsg("File " + file.getName() + " initialized",
+                WARNING);
         return true;
     }
     
@@ -281,7 +282,6 @@ public class RainbowParser implements FileParser {
      */
     @Override
     public DataContainer getProduct() {
-        // TODO Auto-generated method stub
         return data;
     }
 

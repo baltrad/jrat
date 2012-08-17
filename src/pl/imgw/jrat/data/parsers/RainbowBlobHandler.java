@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.LogsType.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;

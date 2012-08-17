@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -14,6 +15,16 @@ import java.util.Date;
  * 
  */
 public interface VolumeContainer {
+
+    public SimpleDateFormat formatSecondPrecision = new SimpleDateFormat("yyyyMMddHHmmss");
+    public SimpleDateFormat formatMinutePrecision = new SimpleDateFormat("yyyyMMddHHmm");
+    
+    /**
+     * Check if the container was initialize with correct product
+     * 
+     * @return true if the product is valid volume
+     */
+    public boolean isValid();
 
     /**
      * Get longitude of site location
@@ -53,10 +64,17 @@ public interface VolumeContainer {
     public ScanContainer getScan(double elevation);
 
     /**
-     * Get time of this volume according to scan scheduler
+     * Get time of this volume according to scan scheduler with minute precision
      * 
      * @return null if not find
      */
     public Date getTime();
+    
+    /**
+     * Get time of this volume according to scan scheduler with second precision
+     * 
+     * @return null if not find
+     */
+    public Date getTimeSec();
 
 }

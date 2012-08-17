@@ -56,7 +56,7 @@ public class LogHandler implements Logging {
     
     public void printVersion() {
         displayMsg(APS_DESC + " version: " + VERSION,
-                LogsType.SILENT);
+                SILENT);
     }
     
     /*
@@ -122,7 +122,7 @@ public class LogHandler implements Logging {
     @Override
     public void displayMsg(String msg, int type) {
         if (type <= verbose) {
-            if (type == LogsType.ERROR) {
+            if (type == Logging.ERROR) {
                 msg += ".\nFor more details see log file.";
             }
             System.out.println(msgDate.format(new Date()) + msg);

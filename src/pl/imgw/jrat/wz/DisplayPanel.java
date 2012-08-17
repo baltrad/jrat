@@ -42,6 +42,7 @@ import pl.imgw.jrat.tools.out.ClipboardHandler;
 import pl.imgw.jrat.tools.out.ColorScales;
 import pl.imgw.jrat.tools.out.ImageBuilder;
 import pl.imgw.jrat.tools.out.LogHandler;
+import static pl.imgw.jrat.tools.out.Logging.*;
 import pl.imgw.jrat.tools.out.LogsType;
 import pl.imgw.jrat.tools.out.MapColor;
 
@@ -277,8 +278,8 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
     }
 
     public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(LogsType.WARNING);
-        JFrame frame = new JFrame("Display data");
+        LogHandler.getLogs().setLoggingVerbose(WARNING);
+        JFrame frame = new JFrame("Radar data viewer - beta version");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DisplayPanel displayPane = new DisplayPanel();
         displayPane.setFrame(frame);

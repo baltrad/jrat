@@ -15,6 +15,13 @@ import java.util.Date;
  */
 public interface ImageContainer {
 
+    /**
+     * Check if the container was initialize with correct product
+     * 
+     * @return true if the product is valid image
+     */
+    public boolean isValid();
+    
     public Date getTime();
 
     /**

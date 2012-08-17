@@ -6,7 +6,7 @@ package pl.imgw.jrat.process;
 import pl.imgw.jrat.tools.out.ColorScales;
 import pl.imgw.jrat.tools.out.ImageBuilder;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  *
@@ -64,7 +64,7 @@ public class ImagesController {
         } catch (NumberFormatException e) {
             LogHandler.getLogs().displayMsg(
                     "Value: '" + nodata + "' for " + NODATA + " is incorrect",
-                    LogsType.WARNING);
+                    WARNING);
             nodata = "";
         }
         /* receiving format */
@@ -92,7 +92,7 @@ public class ImagesController {
                                                     + "' for "
                                                     + SCALE
                                                     + " is incomplete, setting default gray scale",
-                                            LogsType.WARNING);
+                                            WARNING);
                         } else {
                             int start = Integer
                                     .parseInt(removeDigits(param[0]));
@@ -112,7 +112,7 @@ public class ImagesController {
                                                 + "' for "
                                                 + SCALE
                                                 + " is incorrect, setting default gray scale",
-                                        LogsType.WARNING);
+                                        WARNING);
                         scale = "";
                     }
                 } else {
@@ -148,7 +148,7 @@ public class ImagesController {
 
     
     public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+        LogHandler.getLogs().setLoggingVerbose(ERROR);
         ProcessController pc;
 //        args = "--print-image".split(" ");
 //        pc = new ProcessController(args);

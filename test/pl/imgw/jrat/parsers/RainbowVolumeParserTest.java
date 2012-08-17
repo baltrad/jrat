@@ -1,14 +1,19 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers.test;
+package pl.imgw.jrat.parsers;
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowParser;
 import pl.imgw.jrat.data.parsers.RainbowVolumeFieldsName;
@@ -36,6 +41,35 @@ public class RainbowVolumeParserTest {
         pm = new ParserManager();
         rip = new RainbowParser(new RainbowVolumeFieldsName());
         pm.setParser(rip);
+        
+    }
+    
+    @Test
+    public void isValidVolume() {
+        pm.initialize(file);
+        RainbowData data = (RainbowData) pm.getProduct();
+        RainbowVolume vol = new RainbowVolume(data);
+        assertTrue(vol.isValid());
+
+    }
+    
+    @Test
+    public void getAttributeTest() {
+        pm.initialize(file);
+        RainbowData data = (RainbowData) pm.getProduct();
+        RainbowVolume vol = new RainbowVolume(data);
+        assertTrue(((String) data.getAttributeValue(
+                "/volume/scan/slice:refid=0/posangle", "")).matches("0.5"));
+        
+        ScanContainer scan = vol.getScan(1.4);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(2011, 7, 1, 1, 40, 50);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date date = cal.getTime();
+        assertTrue(scan.getStartTime().equals(date));
+        assertEquals("rays", 361, scan.getNRays());
+        assertNotNull(scan.getArray());
         
     }
     

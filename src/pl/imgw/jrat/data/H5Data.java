@@ -4,10 +4,12 @@
 package pl.imgw.jrat.data;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import ncsa.hdf.hdf5lib.exceptions.HDF5AttributeException;
 import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.Logging;
 import pl.imgw.jrat.tools.out.LogsType;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 
@@ -85,11 +87,11 @@ public class H5Data implements DataContainer {
 
             LogHandler.getLogs().displayMsg(
                     "Attribute '" + name + "' in '" + path
-                            + "' has unknown format: " + type, LogsType.ERROR);
+                            + "' has unknown format: " + type, Logging.ERROR);
         } catch (HDF5AttributeException e) {
             LogHandler.getLogs().displayMsg(
                     "Attribute '" + name + "' in '" + path
-                            + "' does not exist", LogsType.ERROR);
+                            + "' does not exist", Logging.ERROR);
         }
         return null;
     }
@@ -120,8 +122,7 @@ public class H5Data implements DataContainer {
     @Override
     public void printAllAttributes() {
         // TODO Auto-generated method stub
-        LogHandler.getLogs().displayMsg("Not implemented yet", LogsType.SILENT);
-        
+        LogHandler.getLogs().displayMsg("Not implemented yet", Logging.SILENT);
     }
 
     protected void finalize() {

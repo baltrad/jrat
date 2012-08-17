@@ -82,9 +82,9 @@ public class ColorScales {
 
         scale.add(new MapColor(min, new Color(135, 240, 255)));
         scale.add(new MapColor(min += step, new Color(255, 255, 255)));
-//        scale.add(new MapColor(min += step, new Color(255, 245, 190)));
+        scale.add(new MapColor(min += step, new Color(255, 245, 190)));
         scale.add(new MapColor(min += step, new Color(255, 230, 0)));
-//        scale.add(new MapColor(min += step, new Color(255, 190, 0)));
+        scale.add(new MapColor(min += step, new Color(255, 190, 0)));
         scale.add(new MapColor(min += step, new Color(255, 110, 0)));
         scale.add(new MapColor(min += step, new Color(255, 60, 0)));
         scale.add(new MapColor(min += step, new Color(200, 0, 0)));

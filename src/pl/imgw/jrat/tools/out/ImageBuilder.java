@@ -11,10 +11,10 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowImageParser;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  * 
@@ -46,11 +46,11 @@ public class ImageBuilder {
             ImageIO.write(create(), format, file);
             LogHandler.getLogs().displayMsg(
                     "Saving image to file: '" + file.getCanonicalFile() + "' complete",
-                    LogsType.WARNING);
+                    WARNING);
         } catch (Exception e) {
             LogHandler.getLogs().displayMsg(
                     "Saving image to file: '" + file + "' failed",
-                    LogsType.WARNING);
+                    WARNING);
         }
     }
     
@@ -151,7 +151,7 @@ public class ImageBuilder {
     public BufferedImage create() throws IllegalArgumentException {
         if (data == null) {
             LogHandler.getLogs()
-                    .displayMsg("Must specify data", LogsType.ERROR);
+                    .displayMsg("Must specify data", ERROR);
             throw new IllegalArgumentException("No data to create image.");
         }
 
@@ -179,7 +179,7 @@ public class ImageBuilder {
         BufferedImage img;
         ArrayData data;
         
-        LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+        LogHandler.getLogs().setLoggingVerbose(ERROR);
         File file = new File("test-data", "1img.hdf");
         File bg = new File("test-data", "bg.png");
         File fg = new File("test-data", "fg.png");

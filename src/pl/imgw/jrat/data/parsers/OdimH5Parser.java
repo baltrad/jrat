@@ -3,8 +3,7 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.LogsType.ERROR;
-import static pl.imgw.jrat.tools.out.LogsType.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.util.HashMap;

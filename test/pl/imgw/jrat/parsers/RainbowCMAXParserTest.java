@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers.test;
+package pl.imgw.jrat.parsers;
 
 import java.io.File;
 
@@ -53,7 +53,7 @@ public class RainbowCMAXParserTest {
     public void initializeTest() {
         pm.initialize(file);
         pdc = new RainbowCMAX((RainbowData) pm.getProduct());
-        assertNotNull("Initialization failed", pdc);
+        assertTrue("Initialization failed", pdc.isValid());
 
     }
 
@@ -78,6 +78,8 @@ public class RainbowCMAXParserTest {
                 adc.getRawIntPoint(304, 192));
         assertEquals("dBZ value in DATA array failed:", 33.5, 
                 adc.getPoint(304, 192), 0.1);
+        assertEquals("dBZ value in DATA array failed:", -9999, 
+                adc.getPoint(1304, 2192), 0.1);
         
         assertTrue("byte value in DATA array failed:", 
                 adc.getRawBytePoint(304, 192) < 0);

@@ -1,17 +1,20 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers.test;
+package pl.imgw.jrat.parsers;
 
 import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.H5Data;
-import pl.imgw.jrat.data.OdimH5Image;
+import pl.imgw.jrat.data.OdimH5CompoImage;
 import pl.imgw.jrat.data.OdimH5Volume;
 import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.ScanContainer;
+import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
@@ -28,7 +31,7 @@ public class HDF5ParserTest {
     
     File file1;
     File file2;
-    OdimH5Image pdc1;
+    OdimH5CompoImage pdc1;
     OdimH5Volume pdc2;
     ParserManager pm;
     int x,y;
@@ -46,6 +49,24 @@ public class HDF5ParserTest {
         value = 18.5;
     }
     
+    
+    //------------ volumes tests ---------------------
+        
+    @Test
+    public void getScanTest() {
+        pm.initialize(file2);
+        H5Data data = (H5Data) pm.getProduct();
+        VolumeContainer vol = new OdimH5Volume(data);
+        ScanContainer scan = vol.getScan(10.6);
+        assertEquals("nbins is wrong", 250, scan.getNBins());
+        assertEquals("nrays is wrong", 360, scan.getNRays());
+        assertEquals("nbins is wrong", 1000.0, scan.getRScale(), 0.01);
+        ArrayData array = scan.getArray();
+        assertEquals("array value", 36, array.getRawIntPoint(138, 18));
+    }
+    
+    
+    //--------------- general tests ------------------------------
     @Test
     public void initializationTest() {
         
@@ -53,7 +74,7 @@ public class HDF5ParserTest {
         assertTrue("This is not a hdf5 file", pm.isValid(file2));
         
         pm.initialize(file1);
-        pdc1 = new OdimH5Image((H5Data) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((H5Data) pm.getProduct());
         
         pm.initialize(file2);
         pdc2 = new OdimH5Volume((H5Data) pm.getProduct());
@@ -71,7 +92,7 @@ public class HDF5ParserTest {
     @Test
     public void gettingAttributeTest() {
         pm.initialize(file1);
-        pdc1 = new OdimH5Image((H5Data) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((H5Data) pm.getProduct());
         
         pm.initialize(file2);
         pdc2 = new OdimH5Volume((H5Data) pm.getProduct());
@@ -87,7 +108,7 @@ public class HDF5ParserTest {
     @Test
     public void gettingDataValues() {
         pm.initialize(file1);
-        pdc1 = new OdimH5Image((H5Data) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((H5Data) pm.getProduct());
         
         pm.initialize(file2);
         pdc2 = new OdimH5Volume((H5Data) pm.getProduct());

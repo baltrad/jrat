@@ -1,27 +1,19 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers.test;
+package pl.imgw.jrat.parsers;
 
 import static org.junit.Assert.assertTrue;
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.parsers.IntArrayParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.tools.out.ColorScales;
-import pl.imgw.jrat.tools.out.ImageBuilder;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
 
 /**
  *
@@ -38,7 +30,7 @@ public class IntArrayParserTest {
     
     @Before
     public void setUp() {
-        LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+        LogHandler.getLogs().setLoggingVerbose(ERROR);
         f = new File("test-data", "data35alt_2011.txt");
         pm = new ParserManager();
         pm.setParser(new IntArrayParser());

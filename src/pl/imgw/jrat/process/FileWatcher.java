@@ -18,7 +18,7 @@ import name.pachler.nio.file.WatchEvent;
 import name.pachler.nio.file.WatchKey;
 import name.pachler.nio.file.WatchService;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  * 
@@ -51,13 +51,13 @@ public class FileWatcher implements Runnable {
             pathMap.put(key, watchedPath.getPath());
         } catch (UnsupportedOperationException uox) {
             LogHandler.getLogs().displayMsg("file watching not supported!",
-                    LogsType.ERROR);
+                    ERROR);
             LogHandler.getLogs().saveErrorLogs(FileWatcher.class.getName(),
                     uox.getMessage());
 
         } catch (IOException iox) {
             LogHandler.getLogs().displayMsg(
-                    "I/O errors while watching " + path, LogsType.ERROR);
+                    "I/O errors while watching " + path, ERROR);
             LogHandler.getLogs().saveErrorLogs(FileWatcher.class.getName(),
                     iox.getMessage());
 
@@ -77,7 +77,7 @@ public class FileWatcher implements Runnable {
         }
 
         LogHandler.getLogs().displayMsg(
-                "Start watching " + watchedPath.getPath(), LogsType.WARNING);
+                "Start watching " + watchedPath.getPath(), WARNING);
 
         while (true) {
 
@@ -92,7 +92,7 @@ public class FileWatcher implements Runnable {
             } catch (ClosedWatchServiceException cwse) {
                 // other thread closed watch service
                 LogHandler.getLogs().displayMsg(
-                        "watch service closed, terminating", LogsType.ERROR);
+                        "watch service closed, terminating", ERROR);
                 LogHandler.getLogs().saveErrorLogs(FileWatcher.class.getName(),
                         cwse.getMessage());
                 break;
@@ -113,7 +113,7 @@ public class FileWatcher implements Runnable {
 
                         LogHandler.getLogs().displayMsg(
                                 "New file: " + input.getName(),
-                                LogsType.WARNING);
+                                WARNING);
 
                         proc.processFile(new File[] {input});
                     }
@@ -124,12 +124,12 @@ public class FileWatcher implements Runnable {
                     } catch (ClosedWatchServiceException e1) {
                         LogHandler.getLogs().displayMsg(
                                 "watch service closed, terminating",
-                                LogsType.ERROR);
+                                ERROR);
                         LogHandler.getLogs().saveErrorLogs(
                                 FileWatcher.class.getName(), e1.getMessage());
                     } catch (InterruptedException e1) {
                         LogHandler.getLogs().displayMsg(
-                                "watch service interrupted", LogsType.ERROR);
+                                "watch service interrupted", ERROR);
                         LogHandler.getLogs().saveErrorLogs(
                                 FileWatcher.class.getName(), e1.getMessage());
                     }

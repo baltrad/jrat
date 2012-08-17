@@ -3,11 +3,22 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.*;
+import static pl.imgw.jrat.process.CommandLineArgsParser.AUTO;
+import static pl.imgw.jrat.process.CommandLineArgsParser.F;
+import static pl.imgw.jrat.process.CommandLineArgsParser.I;
+import static pl.imgw.jrat.process.CommandLineArgsParser.O;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.SILENT;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -22,7 +33,6 @@ import pl.imgw.jrat.tools.in.FileDate;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
 
 /**
  * 
@@ -36,11 +46,16 @@ public class ProcessController {
 
     private final int HDF = 0;
     private final int RBI = 1;
-    private final int RBV = 1;
+    private final int RBV = 2;
     private int format = -1;
     
     private CommandLine cmd;
+    private List<FileDate> files = new LinkedList<FileDate>();
 
+    public List<FileDate> getFiles(){
+        return files;
+    }
+    
     public ProcessController(String[] args) {
 
         CommandLineArgsParser parser = new CommandLineArgsParser();
@@ -52,12 +67,12 @@ public class ProcessController {
         
         if (cmd.hasOption(QUIET)) {
 //            System.out.println("ustawia quiet");
-            LogHandler.getLogs().setLoggingVerbose(LogsType.SILENT);
+            LogHandler.getLogs().setLoggingVerbose(SILENT);
         } else if (cmd.hasOption(VERBOSE)) {
 //            System.out.println("ustawia verbose");
-            LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+            LogHandler.getLogs().setLoggingVerbose(ERROR);
         } else
-            LogHandler.getLogs().setLoggingVerbose(LogsType.WARNING);
+            LogHandler.getLogs().setLoggingVerbose(WARNING);
 
     }
 
@@ -73,12 +88,10 @@ public class ProcessController {
         }
 
         /* Loading list of files to precess*/
-        HashMap<Integer, List<FileDate>> files = new HashMap<Integer, List<FileDate>>();
         if (cmd.hasOption(I)) {
             FilePatternFilter filter = new RegexFileFilter();
             for (int i = 0; i < cmd.getOptionValues(I).length; i++) {
-                files.put(i, filter.getFileList(cmd.getOptionValues(I)[i]));
-//                System.out.println(files.get(i).get(0));
+                files.addAll(filter.getFileList(cmd.getOptionValues(I)[i]));
             }
         }
         /*----------------------------------*/
@@ -120,25 +133,19 @@ public class ProcessController {
             } else {
                 pm.setParser(new DefaultParser());
             }
-
             
-            Iterator<Integer> itri = files.keySet().iterator();
-            while (itri.hasNext()) {
-                Iterator<FileDate> itrf = files.get(itri.next()).iterator();
-                while (itrf.hasNext()) {
-                    File file = itrf.next().getFile();
-                    if (pm.initialize(file)) {
-                        ic.getBuilder().setData(
-                                pm.getProduct().getArray(ic.getDatasetValue()));
+            Iterator<FileDate> itrf = files.iterator();
+            while (itrf.hasNext()) {
+                File file = itrf.next().getFile();
+                if (pm.initialize(file)) {
+                    ic.getBuilder().setData(
+                            pm.getProduct().getArray(ic.getDatasetValue()));
 
-                        File imgout = new File(output, file.getName() + "."
-                                + ic.getFormat());
-                        ic.getBuilder().saveToFile(imgout);
-                    } 
+                    File imgout = new File(output, file.getName() + "."
+                            + ic.getFormat());
+                    ic.getBuilder().saveToFile(imgout);
                 }
-
             }
-            
         }
 
         if (cmd.hasOption(AUTO)) {

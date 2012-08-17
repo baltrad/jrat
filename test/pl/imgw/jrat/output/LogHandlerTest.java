@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.output.test;
+package pl.imgw.jrat.output;
 
 import static org.junit.Assert.*;
 

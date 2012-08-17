@@ -36,7 +36,7 @@ import pl.imgw.jrat.process.SequentialProcess;
 import pl.imgw.jrat.tools.out.ColorScales;
 import pl.imgw.jrat.tools.out.ImageBuilder;
 import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.LogsType;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  *
@@ -176,7 +176,7 @@ public class WZStatsProcessor implements FilesProcessor {
      * @param args
      */
     public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(LogsType.ERROR);
+        LogHandler.getLogs().setLoggingVerbose(ERROR);
         WZStatsProcessor proc = new WZStatsProcessor();
         proc.setDest(new File("/home/lwojtas/Desktop"));
         FileWatcher fw = new FileWatcher(proc, new File("test-data/watched"));

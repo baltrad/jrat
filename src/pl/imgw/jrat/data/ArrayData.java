@@ -32,8 +32,8 @@ public abstract class ArrayData {
      * Receiving value from the array in point (x, y). If x or y is out of
      * bounds return value will be -1
      * 
-     * @param x
-     * @param y
+     * @param x ray number
+     * @param y bin number
      * @return returns integer from 0 to 255, if x or y is out of bounds returns
      *         -1
      */
@@ -43,8 +43,8 @@ public abstract class ArrayData {
      * Setting value in the array in point (x, y). If x or y is out of bounds it
      * returns false, otherwise it returns true.
      * 
-     * @param x
-     * @param y
+     * @param x ray number
+     * @param y bin number
      * @param value
      * @return true if successful, false if x or y is out of bounds
      */
@@ -54,8 +54,8 @@ public abstract class ArrayData {
      * Receiving value from the array in point (x, y). If x or y is out of
      * bounds return value will be 0.
      * 
-     * @param x
-     * @param y
+     * @param x ray number
+     * @param y bin number
      * @return unsigned byte, if x or y is out of bounds returns 0
      */
     public abstract byte getRawBytePoint(int x, int y);
@@ -65,20 +65,22 @@ public abstract class ArrayData {
      * byte. If x or y is out of bounds it returns false, otherwise it returns
      * true
      * 
-     * @param x
-     * @param y
+     * @param x ray number
+     * @param y bin number
      * @param value
      * @return true if successful, false if x or y is out of bounds
      */
     public abstract boolean setRawBytePoint(int x, int y, byte value);
 
     /**
-     * Receiving value from the array in point (x, y). If x or y is out of
+     * Receiving real value from the array in point (x, y). If x or y is out of
      * bounds return value will be -9999.
      * 
      * @param x
+     *            ray number
      * @param y
-     * @return if x or y is out of bounds returns 0
+     *            bin number
+     * @return if x or y is out of bounds returns -9999
      */
     public abstract double getPoint(int x, int y);
 

@@ -3,9 +3,10 @@
  */
 package pl.imgw.jrat.data;
 
-import static pl.imgw.jrat.tools.out.LogsType.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -22,9 +23,11 @@ public class RainbowCMAX implements ImageContainer {
     private RainbowData data;
 
     public RainbowCMAX(RainbowData data) {
-        ((RawByteDataArray)data.arrayList.get("datamap")).setGain(0.5);
-        ((RawByteDataArray)data.arrayList.get("datamap")).setOffset(-31.5);
-        this.data = data;
+        if (data.getRainbowAttributeValue("/product", "name").matches("CMAX")) {
+            this.data = data;
+            ((RawByteDataArray) getData()).setGain(0.5);
+            ((RawByteDataArray) getData()).setOffset(-31.5);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -178,8 +181,8 @@ public class RainbowCMAX implements ImageContainer {
      */
     @Override
     public String getSourceName() {
-        String value = data.getRainbowAttributeValue("/product/data/sensorinfo",
-                "name");
+        String value = data.getRainbowAttributeValue(
+                "/product/data/sensorinfo", "name");
         return (value != null) ? value : "";
     }
 
@@ -190,12 +193,37 @@ public class RainbowCMAX implements ImageContainer {
      */
     @Override
     public ArrayData getData() {
-        return data.arrayList.get("datamap");
+        Iterator<String> itr = data.arrayList.keySet().iterator();
+        while(itr.hasNext()) {
+            String name = itr.next();
+            if(name.contains("datamap")) {
+                return data.arrayList.get(name);
+            }
+        }
+        return null;
     }
 
     public ArrayData getFlag() {
-        // TODO Auto-generated method stub
-        return data.arrayList.get("flagmap");
+        Iterator<String> itr = data.arrayList.keySet().iterator();
+        while(itr.hasNext()) {
+            String name = itr.next();
+            if(name.contains("flagmap")) {
+                return data.arrayList.get(name);
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see pl.imgw.jrat.data.ImageContainer#isValid()
+     */
+    @Override
+    public boolean isValid() {
+        if (data != null)
+            return true;
+        return false;
     }
 
 }

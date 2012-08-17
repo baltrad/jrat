@@ -33,7 +33,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
  */
 public class RegexFileFilter implements FilePatternFilter {
 
-    private List<FileDate> list = new ArrayList<FileDate>();
+    private List<FileDate> list;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 
     /*
@@ -44,6 +44,7 @@ public class RegexFileFilter implements FilePatternFilter {
      */
     @Override
     public List<FileDate> getFileList(String exp) {
+        list = new ArrayList<FileDate>();
         String[] parts = exp.split(" ");
         for (int p = 0; p < parts.length; p++) {
             String part = parts[p];

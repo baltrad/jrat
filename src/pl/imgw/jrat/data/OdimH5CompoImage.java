@@ -6,22 +6,26 @@ package pl.imgw.jrat.data;
 import java.util.Date;
 
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class OdimH5Image implements ImageContainer {
-    
+public class OdimH5CompoImage implements ImageContainer {
+
     H5Data data;
 
-    public OdimH5Image(H5Data data) {
-        this.data = data;
+    public OdimH5CompoImage(H5Data data) {
+        if (((String) (data.getAttributeValue("/what", "object")))
+                .matches("COMP"))
+            this.data = data;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getTime()
      */
     @Override
@@ -30,7 +34,9 @@ public class OdimH5Image implements ImageContainer {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getXSize()
      */
     @Override
@@ -38,7 +44,9 @@ public class OdimH5Image implements ImageContainer {
         return (Integer) data.getAttributeValue("/where", "xsize");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getYSize()
      */
     @Override
@@ -46,7 +54,9 @@ public class OdimH5Image implements ImageContainer {
         return (Integer) data.getAttributeValue("/where", "ysize");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getProjDef()
      */
     @Override
@@ -54,7 +64,9 @@ public class OdimH5Image implements ImageContainer {
         return (String) data.getAttributeValue("/where", "projdef");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getXScale()
      */
     @Override
@@ -62,7 +74,9 @@ public class OdimH5Image implements ImageContainer {
         return (Double) data.getAttributeValue("/where", "xscale");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getYScale()
      */
     @Override
@@ -70,7 +84,9 @@ public class OdimH5Image implements ImageContainer {
         return (Double) data.getAttributeValue("/where", "yscale");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getSourceName()
      */
     @Override
@@ -78,12 +94,26 @@ public class OdimH5Image implements ImageContainer {
         return (String) data.getAttributeValue("/what", "source");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ImageContainer#getData()
      */
     @Override
     public ArrayData getData() {
         return data.getArray("/dataset1/data1/data/");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see pl.imgw.jrat.data.ImageContainer#isValid()
+     */
+    @Override
+    public boolean isValid() {
+        if (data != null)
+            return true;
+        return false;
     }
 
 }

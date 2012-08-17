@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.data;
 
+import java.awt.geom.Point2D;
 import java.util.Date;
 
 /**
@@ -20,7 +21,7 @@ public interface ScanContainer {
      * 
      * @return
      */
-    public Date getTime();
+    public Date getStartTime();
 
     /**
      * Elevation of this scan
@@ -46,7 +47,7 @@ public interface ScanContainer {
      * 
      * @return
      */
-    public int getRScale();
+    public double getRScale();
 
     /**
      * Data of this scan
@@ -55,4 +56,10 @@ public interface ScanContainer {
      */
     public ArrayData getArray();
 
+    /**
+     * Geographical coordinates of the site
+     * @return
+     */
+    public Point2D.Double getCoordinates();
+    
 }

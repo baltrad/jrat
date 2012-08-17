@@ -15,6 +15,10 @@ import java.io.File;
  */
 public interface Logging {
 
+    int ERROR = 2;
+    int WARNING = 1;
+    int SILENT = 0;
+    
     /**
      * Setting path for general logs. Name of the file will depend on frequency.
      * 
