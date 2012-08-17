@@ -44,6 +44,7 @@ public class ProcessControllerTest {
         pc = new ProcessController(args);
         
         assertTrue(pc.start());
+        
     }
 
 }
