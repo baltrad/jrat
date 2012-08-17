@@ -15,7 +15,7 @@ import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.RainbowParser;
+import pl.imgw.jrat.data.parsers.Rainbow53Parser;
 import pl.imgw.jrat.data.parsers.RainbowVolumeFieldsName;
 import static org.junit.Assert.*;
 /**
@@ -30,7 +30,7 @@ public class RainbowVolumeParserTest {
 
     RawByteDataArray dc;
     File file;
-    RainbowParser rip;
+    Rainbow53Parser rip;
     DataContainer pdc;
     ParserManager pm;
     
@@ -39,7 +39,7 @@ public class RainbowVolumeParserTest {
         file = new File("test-data", "1.vol");
         
         pm = new ParserManager();
-        rip = new RainbowParser(new RainbowVolumeFieldsName());
+        rip = new Rainbow53Parser(new RainbowVolumeFieldsName());
         pm.setParser(rip);
         
     }

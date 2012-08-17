@@ -27,7 +27,7 @@ import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowImageFieldsName;
-import pl.imgw.jrat.data.parsers.RainbowParser;
+import pl.imgw.jrat.data.parsers.Rainbow53Parser;
 import pl.imgw.jrat.data.parsers.RainbowVolumeFieldsName;
 import pl.imgw.jrat.tools.in.FileDate;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
@@ -127,9 +127,9 @@ public class ProcessController {
             if(format == HDF) {
                 pm.setParser(new OdimH5Parser());
             } else if (format == RBI) {
-                pm.setParser(new RainbowParser(new RainbowImageFieldsName()));
+                pm.setParser(new Rainbow53Parser(new RainbowImageFieldsName()));
             } else if (format == RBV) {
-                pm.setParser(new RainbowParser(new RainbowVolumeFieldsName()));
+                pm.setParser(new Rainbow53Parser(new RainbowVolumeFieldsName()));
             } else {
                 pm.setParser(new DefaultParser());
             }

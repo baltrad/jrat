@@ -19,7 +19,7 @@ import pl.imgw.jrat.process.ProcessController;
  */
 public class CalidManagerTest {
 
-    CalidManager manager = new CalidManager();
+    CalidManager manager;
     
     @Before
     public void setUp() {
@@ -32,15 +32,18 @@ public class CalidManagerTest {
                 "--calid a", "-v" };
         ProcessController proc = new ProcessController(args);
         proc.start();
-        manager.setFileList(proc.getFiles());
+        manager = new CalidManager(proc.getFiles());
+        
     }
     
     @Test
     public void initializeTest() {
         String[] args = new String[] { "0.5deg", "500m" };
-        assertTrue(manager.initialize(args));
+        manager.setParameters(args);
+        assertTrue(manager.start());
         args = new String[] { "0.1deg", "500m" };
-        assertTrue(!manager.initialize(args));
+        manager.setParameters(args);
+        assertTrue(!manager.start());
     }
     
 }

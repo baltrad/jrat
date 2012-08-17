@@ -16,7 +16,7 @@ import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.RainbowImageFieldsName;
-import pl.imgw.jrat.data.parsers.RainbowParser;
+import pl.imgw.jrat.data.parsers.Rainbow53Parser;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class RainbowCMAXParserTest {
 
     RawByteDataArray dc;
     File file;
-    RainbowParser rip;
+    Rainbow53Parser rip;
     RainbowCMAX pdc;
     ParserManager pm;
 
@@ -39,7 +39,7 @@ public class RainbowCMAXParserTest {
         file = new File("test-data", "2012032609103300dBZ.cmax");
 
         pm = new ParserManager();
-        rip = new RainbowParser(new RainbowImageFieldsName());
+        rip = new Rainbow53Parser(new RainbowImageFieldsName());
         pm.setParser(rip);
         
     }

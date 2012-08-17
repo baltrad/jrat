@@ -33,13 +33,47 @@ public class CalidManager {
     private double elevation = -1;
     private int distance = -1;
 
-    public void setFileList(List<FileDate> files) {
+    private String[] par = { "0.5deg", "500m" };
+
+    public CalidManager(List<FileDate> files) {
         PairsContainer pcont = new PairsContainer(files);
         this.pairs = pcont.getPairs();
     }
 
-    public boolean initialize(String[] args) {
-        if (args == null || args.length != 2) {
+    /**
+     * Setting some parameters for the algorithm, including:</br>
+     * 
+     * elevation of the scan, in degrees, the proper format for the argument
+     * should contain value and word 'deg' e.g. '0.5deg'</br>
+     * 
+     * distance (maximal) between overlapping pixels in meters, in other words
+     * the precision of finding overlapping pixels, the proper format for the
+     * argument should contain value and word 'm' e.g. '500m'
+     * 
+     * @param par
+     *            array of size 2
+     */
+    public void setParameters(String[] par) {
+        this.par = par;
+    }
+
+    /**
+     * @return true if parameters are valid and scans with given elevation was
+     *         found in the list of files that was set</br> If not set, default
+     *         parameters will be use: elevation=0.5deg and distance=500m
+     */
+    public boolean start() {
+        return initialize();
+        /*
+         * if(!initialize()) return false; return calculate();
+         */
+    }
+
+    /*
+     * parsing parameters, and looking for valid scans in the given files
+     */
+    private boolean initialize() {
+        if (par == null || par.length != 2) {
             LogHandler.getLogs().displayMsg(
                     "Arguments for CALID are incorrect", WARNING);
             return false;
@@ -48,12 +82,12 @@ public class CalidManager {
 
         try {
             for (int i = 0; i < 2; i++) {
-                if (args[i].endsWith(DEG)) {
-                    elevation = Double.parseDouble(args[i].substring(0,
-                            args[i].length() - 3));
-                } else if (args[i].endsWith(M)) {
-                    distance = Integer.parseInt(args[i].substring(0,
-                            args[i].length() - 1));
+                if (par[i].endsWith(DEG)) {
+                    elevation = Double.parseDouble(par[i].substring(0,
+                            par[i].length() - 3));
+                } else if (par[i].endsWith(M)) {
+                    distance = Integer.parseInt(par[i].substring(0,
+                            par[i].length() - 1));
                 }
             }
         } catch (NumberFormatException e) {
@@ -83,7 +117,14 @@ public class CalidManager {
         return true;
     }
 
-    public void calculate() {
+    private boolean calculate() {
+
+        if (pairs.isEmpty()) {
+            LogHandler.getLogs().displayMsg(
+                    "No pairs initialized for CALID. "
+                            + "Calculation cannot be performed", WARNING);
+            return false;
+        }
 
         // long time = System.currentTimeMillis();
         ResultsManager rm = new ResultsManager();
@@ -92,11 +133,12 @@ public class CalidManager {
             Pair pair = pairsItr.next();
             ScanContainer scan1 = pair.getVol1().getScan(elevation);
             ScanContainer scan2 = pair.getVol2().getScan(elevation);
-            if (scan1 != null && scan2 != null) {
-                MatchingPoints mp = null;
 
-            }
+            MatchingPoints mp = null;
+
         }
+
+        return true;
 
     }
 

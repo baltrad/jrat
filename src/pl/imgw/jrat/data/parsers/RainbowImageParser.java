@@ -14,7 +14,7 @@ package pl.imgw.jrat.data.parsers;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RainbowImageParser extends RainbowParser {
+public class RainbowImageParser extends Rainbow53Parser {
 
     public RainbowImageParser() {
         super(new RainbowImageFieldsName());

@@ -37,7 +37,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RainbowParser implements FileParser {
+public class Rainbow53Parser implements FileParser {
 
     private static final String BLOBID = "blobid";
     private RainbowFieldsNameForParser fields;
@@ -46,7 +46,7 @@ public class RainbowParser implements FileParser {
     private HashMap<Integer, DataBufferContainer> blobs;
     private RainbowData data = null;
 
-    public RainbowParser(RainbowFieldsNameForParser fields) {
+    public Rainbow53Parser(RainbowFieldsNameForParser fields) {
         this.fields = fields;
     }
 

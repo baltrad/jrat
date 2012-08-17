@@ -184,8 +184,10 @@ public class MatchingPoints {
 
         int raddist = (int) (VincentyFormulas.dist(r1coords, r2coords) / 2000);
         
-        if(raddist > bins1 || raddist > bins2) {
-            LogHandler.getLogs().displayMsg("Distance between radars is too big", Logging.WARNING);
+        if (raddist > bins1 || raddist > bins2) {
+            LogHandler.getLogs().displayMsg(
+                    "Radars are to far from each other"
+                            + " to find overlapping points", Logging.WARNING);
             return;
         }
         
