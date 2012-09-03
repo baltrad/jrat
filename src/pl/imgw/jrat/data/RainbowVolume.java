@@ -43,8 +43,14 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public Double getLon() {
-        // TODO Auto-generated method stub
-        return null;
+        String lon = data
+                .getRainbowAttributeValue("/volume/sensorinfo/lon", "");
+
+        try {
+            return Double.parseDouble(lon);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /*
@@ -54,8 +60,14 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public Double getLat() {
-        // TODO Auto-generated method stub
-        return null;
+        String lat = data
+                .getRainbowAttributeValue("/volume/sensorinfo/lat", "");
+
+        try {
+            return Double.parseDouble(lat);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /*
@@ -65,8 +77,14 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public int getHeight() {
-        // TODO Auto-generated method stub
-        return 0;
+        String alt = data
+                .getRainbowAttributeValue("/volume/sensorinfo/alt", "");
+
+        try {
+            return Integer.parseInt(alt);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     /*
@@ -106,8 +124,13 @@ public class RainbowVolume implements VolumeContainer {
             
             @Override
             public double getRScale() {
-                // TODO Auto-generated method stub
-                return 0;
+                String rscale = data.getRainbowAttributeValue("/volume/scan/pargroup/rangestep", "");
+                try {
+                    double range = Double.parseDouble(rscale);
+                    return range * 1000;
+                } catch (NumberFormatException e) {
+                    return 0;
+                }
             }
             
             @Override

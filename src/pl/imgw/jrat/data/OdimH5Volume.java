@@ -27,11 +27,6 @@ public class OdimH5Volume implements VolumeContainer {
             this.data = data;
     }
 
-    @SuppressWarnings("unused")
-    private OdimH5Volume() {
-        // hiding constructor
-    }
-
     /*
      * (non-Javadoc)
      * 

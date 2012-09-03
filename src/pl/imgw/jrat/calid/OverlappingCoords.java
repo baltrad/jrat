@@ -34,12 +34,9 @@ import pl.imgw.jrat.tools.out.XMLHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class MatchingPoints {
+public class OverlappingCoords {
 
-    private static final String MATCHFILE = "matching.xml";
-
-    private static final String DEG = "deg";
-    private static final String M = "m";
+    private static final String COORDSFILE = "coords.xml";
 
     private static final String ROOT = "pairs";
     private static final String PAIR = "pair";
@@ -59,120 +56,49 @@ public class MatchingPoints {
     private static final String R2BIN = "r2bin";
     private static final String R2RAY = "r2ray";
     private static final String ID = "id";
-    
-    private Point2D.Double r1coords = null;
-    private Point2D.Double r2coords = null;
 
     private List<RayBin> rayBins = new ArrayList<RayBin>();
     private int id = -1;
 
+    private Pair pair;
     private double elevation = 0;
     private int distance = 0;
-
-    private Integer bins1;
-    private Integer rays1;
-    private Integer scale1;
-    private Integer bins2;
-    private Integer rays2;
-    private Integer scale2;
 
     public boolean valid = false;
 
     private String getXMLPath() {
-        return new File("calid", MATCHFILE).getPath();
+
+        String pairsName = pair.getVol1().getSiteName()
+                + pair.getVol2().getSiteName();
+
+        String distele = distance + "_" + elevation;
+
+        String folder = "calid/overlapping/" + pairsName + "/" + distele;
+
+        return new File(folder, COORDSFILE).getPath();
     }
 
     /**
-     * Setting mandatory fields from volume data and receiving matching points
-     * coordinates
-     * 
-     * @param vol1
-     * @param vol2
-     * @param elevation
-     *            scan elevation in degrees
-     * @param threshold
-     *            distance between points in meters
-     * @return
-     */
-    public MatchingPoints(ScanContainer scan1, ScanContainer scan2, int distance) {
-
-        this.distance = distance;
-
-        if (scan1 == null || scan2 == null)
-            return;
-
-        bins1 = scan1.getNBins();
-        rays1 = scan1.getNRays();
-        if (rays1 != 360)
-            return;
-        scale1 = (int) scan1.getRScale();
-
-        bins2 = scan2.getNBins();
-        rays2 = scan2.getNRays();
-        if (rays2 != 360)
-            return;
-        scale2 = (int) scan2.getRScale();
-
-        r1coords = scan1.getCoordinates();
-        r2coords = scan2.getCoordinates();
-
-        if (!loadFromFile()) {
-            calculateMatchingPoints();
-        }
-        /*
-        if (rayBins.isEmpty()) {
-            LogHandler.getLogs().displayMsg(vol1.getSiteName() + " " + vol2.getSiteName()
-                    + ": No overlapping points found, "
-                    + "try different parameters.", Logging.WARNING);
-            return;
-        }
-         */
-//        System.out.println("pasujacych punktow: " + rayBins.size());
-
-        valid = true;
-    }
-    
-    /**
-     * Checking if given settings are compatible with settings of this object.
-     * 
-     * @param vol1
-     * @param vol2
+     * @param pair
      * @param elevation
      * @param distance
-     * @return
      */
-    public boolean validate(VolumeContainer vol1, VolumeContainer vol2, double elevation, int distance) {
-        
-        if (this.elevation != elevation)
-            return false;
-        if (this.distance != distance)
-            return false;
-        
-        ScanContainer scan1 = vol1.getScan(elevation);
-        ScanContainer scan2 = vol2.getScan(elevation);
-        
-        if(bins1 != scan1.getNBins()) {
-            return false;
-        }
-        if(rays1 != scan1.getNRays())
-            return false;
 
-        if(scale1 != scan1.getRScale())
-            return false;
+    public OverlappingCoords(Pair pair, double elevation, int distance) {
 
-        if(bins2 != scan2.getNBins())
-            return false;
-        if(rays2 != scan2.getNRays())
-            return false;
-        if(scale2 != scan2.getRScale())
-            return false;
+        if (pair.isValid()) {
+            this.pair = pair;
+        } else
+            return;
 
-        if(r1coords != new Point2D.Double(vol1.getLon(), vol1.getLat()))
-            return false;
-        if(r2coords != new Point2D.Double(vol2.getLon(), vol2.getLat()))
-            return false;
-        
-        return true;
+        if (elevation > 0 && distance > 0) {
+            this.distance = distance;
+            this.elevation = elevation;
+        } else
+            return;
+
+        valid = true;
+
     }
 
     /**
@@ -180,16 +106,36 @@ public class MatchingPoints {
      * 
      * @return
      */
-    private void calculateMatchingPoints() {
+    public boolean calculateMatchingPoints() {
+        if (!valid)
+            return false;
 
-        int raddist = (int) (VincentyFormulas.dist(r1coords, r2coords) / 2000);
+        Point2D.Double r1coords = new Point2D.Double(pair.getVol1().getLon(),
+                pair.getVol1().getLat());
+        Point2D.Double r2coords = new Point2D.Double(pair.getVol2().getLon(),
+                pair.getVol2().getLat());
+
+        int raddist = 0;
+        Double dist = VincentyFormulas.dist(r1coords, r2coords);
+        if(dist != null)
+            raddist = (int) (dist / 2);
+
+        int bins1 = pair.getVol1().getScan(elevation).getNBins();
+        int bins2 = pair.getVol2().getScan(elevation).getNBins();
         
-        if (raddist > bins1 || raddist > bins2) {
+//        System.out.println(pair.getVol1().getSiteName() + " " + pair.getVol2().getSiteName());
+//        System.out.println(raddist + "m, " + bins1 * pair.getVol1().getScan(elevation).getRScale());
+        
+        if (raddist > bins1 * pair.getVol1().getScan(elevation).getRScale()
+                || raddist > bins2
+                        * pair.getVol2().getScan(elevation).getRScale()) {
             LogHandler.getLogs().displayMsg(
                     "Radars are to far from each other"
                             + " to find overlapping points", Logging.WARNING);
-            return;
+            return false;
         }
+        
+        /*
         
         double rad1bearing = VincentyFormulas.getBearing(r1coords, r2coords);
         double rad2bearing = VincentyFormulas.getBearing(r2coords, r1coords);
@@ -234,9 +180,12 @@ public class MatchingPoints {
                                 calculatedDist2);
                         double calculatedDist = VincentyFormulas.dist(p1, p2);
                         if (calculatedDist < distance) {
-//                            System.out.println(r1coords + " " + r1 + " " + calculatedDist1);
-//                            System.out.println(r2coords + " " + r2 + " " + calculatedDist2);
-//                            System.out.println("Calculated dist=" + calculatedDist);
+                            // System.out.println(r1coords + " " + r1 + " " +
+                            // calculatedDist1);
+                            // System.out.println(r2coords + " " + r2 + " " +
+                            // calculatedDist2);
+                            // System.out.println("Calculated dist=" +
+                            // calculatedDist);
                             RayBinData rb = new RayBinData(r1, b1, r2, b2);
                             rb.setCoord1(p1);
                             rb.setCoord2(p2);
@@ -247,27 +196,32 @@ public class MatchingPoints {
                 }
             }
         }
-//        System.out.println("pasujacych: " + rayBins.size());
+        // System.out.println("pasujacych: " + rayBins.size());
         saveToFile();
+        */
+        return true;
     }
 
     /**
      * helping method
      */
-    public int[] getMatchingPointsData(VolumeContainer vol1, VolumeContainer vol2) {
+    public int[] getMatchingPointsData(VolumeContainer vol1,
+            VolumeContainer vol2) {
 
         int data[] = new int[rayBins.size()];
         int i = 0;
         Iterator<RayBin> itr = rayBins.iterator();
-//        List<RayBinData> rbdlist = new ArrayList<RayBinData>();
+        // List<RayBinData> rbdlist = new ArrayList<RayBinData>();
         while (itr.hasNext()) {
             RayBinData rbd = (RayBinData) itr.next();
             int r1 = rbd.getRay1();
             int r2 = rbd.getRay2();
             int b1 = rbd.getBin1();
             int b2 = rbd.getBin2();
-            int data1 = vol1.getScan(elevation).getArray().getRawIntPoint(r1, b1);
-            int data2 = vol2.getScan(elevation).getArray().getRawIntPoint(r2, b2);
+            int data1 = vol1.getScan(elevation).getArray()
+                    .getRawIntPoint(r1, b1);
+            int data2 = vol2.getScan(elevation).getArray()
+                    .getRawIntPoint(r2, b2);
             if (data1 > 80 || data2 > 80) {
                 data[i] = data1 - data2;
             }
@@ -280,10 +234,13 @@ public class MatchingPoints {
      * helping method
      */
     private void saveToFile() {
-//
-//        if (rayBins.isEmpty()) {
-//            return;
-//        }
+        //
+        // if (rayBins.isEmpty()) {
+        // return;
+        // }
+        
+        /*
+        
         Document doc = null;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -292,11 +249,11 @@ public class MatchingPoints {
             doc = builder.newDocument();
 
         } catch (ParserConfigurationException e) {
-            LogHandler.getLogs().displayMsg("Error while creating XML document object",
-                            Logging.ERROR);
+            LogHandler.getLogs().displayMsg(
+                    "Error while creating XML document object", Logging.ERROR);
         }
         Element root = doc.createElement(ROOT);
-        
+
         HashSet<Integer> ids = new HashSet<Integer>();
         Document oldDoc = XMLHandler.loadXML(getXMLPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
@@ -305,28 +262,29 @@ public class MatchingPoints {
                 if (list.item(i).getNodeName().matches(PAIR)) {
                     Node oldPair = doc.importNode(list.item(i), true);
                     String id = XMLHandler.getAttributeValue(oldPair, ID);
-                    
+
                     try {
                         ids.add(Integer.parseInt(id));
                     } catch (NumberFormatException e) {
                         continue;
                     }
-                    
+
                     root.appendChild(oldPair);
                 }
             }
-        }        
-        
+        }
+
         Element pair = doc.createElement(PAIR);
         int id = getNewId(ids);
-        
+
         pair.setAttribute(ID, String.valueOf(id));
-        
+
         pair.setAttribute(ELEVATION, String.valueOf(elevation));
         pair.setAttribute(DISTANCE, String.valueOf(distance));
 
         pair.setAttribute(R1LON, String.valueOf(r1coords.x));
         pair.setAttribute(R1LAT, String.valueOf(r1coords.y));
+        
         pair.setAttribute(R1BINS, String.valueOf(bins1));
         pair.setAttribute(R1SCALE, String.valueOf(scale1));
 
@@ -355,6 +313,7 @@ public class MatchingPoints {
         doc.appendChild(root);
 
         XMLHandler.saveXMLFile(doc, getXMLPath());
+        */
     }
 
     /**
@@ -363,10 +322,10 @@ public class MatchingPoints {
      */
     private int getNewId(HashSet<Integer> ids) {
         int i = 0;
-        while(ids.contains(i)) {
+        while (ids.contains(i)) {
             i++;
         }
-            
+
         return i;
     }
 
@@ -376,6 +335,8 @@ public class MatchingPoints {
      * @return
      */
     private boolean loadFromFile() {
+
+        /*
         
         boolean found = false;
 
@@ -409,8 +370,8 @@ public class MatchingPoints {
                                 node, ELEVATION));
                         dist = (int) Double.parseDouble(XMLHandler
                                 .getAttributeValue(node, DISTANCE));
-                        id = Integer.parseInt(XMLHandler
-                                .getAttributeValue(node, ID));
+                        id = Integer.parseInt(XMLHandler.getAttributeValue(
+                                node, ID));
                     } catch (NumberFormatException e) {
                         continue;
                     }
@@ -428,13 +389,19 @@ public class MatchingPoints {
                         for (int c = 0; c < coords.getLength(); c++) {
                             if (coords.item(c).getNodeName().matches(POINT)) {
                                 try {
-                                    x = XMLHandler.getAttributeValue(node, R1LON);
-                                    y = XMLHandler.getAttributeValue(node, R1LAT);
-                                    Point2D.Double r1p = new Point2D.Double(Double.parseDouble(x),
+                                    x = XMLHandler.getAttributeValue(node,
+                                            R1LON);
+                                    y = XMLHandler.getAttributeValue(node,
+                                            R1LAT);
+                                    Point2D.Double r1p = new Point2D.Double(
+                                            Double.parseDouble(x),
                                             Double.parseDouble(y));
-                                    x = XMLHandler.getAttributeValue(node, R2LON);
-                                    y = XMLHandler.getAttributeValue(node, R2LAT);
-                                    Point2D.Double r2p = new Point2D.Double(Double.parseDouble(x),
+                                    x = XMLHandler.getAttributeValue(node,
+                                            R2LON);
+                                    y = XMLHandler.getAttributeValue(node,
+                                            R2LAT);
+                                    Point2D.Double r2p = new Point2D.Double(
+                                            Double.parseDouble(x),
                                             Double.parseDouble(y));
                                     int r1bin = Integer.parseInt(XMLHandler
                                             .getAttributeValue(coords.item(c),
@@ -448,12 +415,12 @@ public class MatchingPoints {
                                     int r2ray = Integer.parseInt(XMLHandler
                                             .getAttributeValue(coords.item(c),
                                                     R2RAY));
-                                    RayBinData rbd = new RayBinData(r1ray, r1bin, r2ray,
-                                            r2bin);
+                                    RayBinData rbd = new RayBinData(r1ray,
+                                            r1bin, r2ray, r2bin);
                                     rbd.setCoord1(r1p);
                                     rbd.setCoord2(r2p);
                                     rayBins.add(rbd);
-                                    
+
                                 } catch (NumberFormatException e) {
                                     continue;
                                 }
@@ -473,15 +440,21 @@ public class MatchingPoints {
                         for (int c = 0; c < coords.getLength(); c++) {
                             if (coords.item(c).getNodeName().matches(POINT)) {
                                 try {
-                                    x = XMLHandler.getAttributeValue(node, R1LON);
-                                    y = XMLHandler.getAttributeValue(node, R1LAT);
-                                    Point2D.Double r1p = new Point2D.Double(Double.parseDouble(x),
+                                    x = XMLHandler.getAttributeValue(node,
+                                            R1LON);
+                                    y = XMLHandler.getAttributeValue(node,
+                                            R1LAT);
+                                    Point2D.Double r1p = new Point2D.Double(
+                                            Double.parseDouble(x),
                                             Double.parseDouble(y));
-                                    x = XMLHandler.getAttributeValue(node, R2LON);
-                                    y = XMLHandler.getAttributeValue(node, R2LAT);
-                                    Point2D.Double r2p = new Point2D.Double(Double.parseDouble(x),
+                                    x = XMLHandler.getAttributeValue(node,
+                                            R2LON);
+                                    y = XMLHandler.getAttributeValue(node,
+                                            R2LAT);
+                                    Point2D.Double r2p = new Point2D.Double(
+                                            Double.parseDouble(x),
                                             Double.parseDouble(y));
-                                    
+
                                     int r1bin = Integer.parseInt(XMLHandler
                                             .getAttributeValue(coords.item(c),
                                                     R1BIN));
@@ -494,8 +467,8 @@ public class MatchingPoints {
                                     int r2ray = Integer.parseInt(XMLHandler
                                             .getAttributeValue(coords.item(c),
                                                     R2RAY));
-                                    RayBinData rbd = new RayBinData(r1ray, r1bin, r2ray,
-                                            r2bin);
+                                    RayBinData rbd = new RayBinData(r1ray,
+                                            r1bin, r2ray, r2bin);
                                     rbd.setCoord1(r1p);
                                     rbd.setCoord2(r2p);
                                     rayBins.add(rbd);
@@ -513,12 +486,14 @@ public class MatchingPoints {
             }
         }
         return found;
+        */
+        return false;
     }
 
     public int getId() {
         return id;
     }
-    
+
     public static void main(String[] args) {
 
     }

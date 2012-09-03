@@ -24,6 +24,7 @@ public class DefaultParser implements FileParser {
     private OdimH5Parser odim = new OdimH5Parser();
     private WZFileParser wz = new WZFileParser();
     private WZStatsParser wzstat = new WZStatsParser();
+    private IntArrayParser intarray = new IntArrayParser();
     private File file = null;
 
     private final int HDF = 0;
@@ -31,6 +32,7 @@ public class DefaultParser implements FileParser {
     private final int RBV = 2;
     private final int WZ = 3;
     private final int WZSTAT = 4;
+    private final int INTARRAY = 5;
     private int format = -1;
 
     /*
@@ -59,6 +61,13 @@ public class DefaultParser implements FileParser {
         }
         if (wzstat.isValid(file)) {
             format = WZSTAT;
+            return true;
+        }
+        /*
+         * reading int array, additional
+         */
+        if (intarray.isValid(file)) {
+            format = INTARRAY;
             return true;
         }
 
@@ -93,6 +102,10 @@ public class DefaultParser implements FileParser {
             format = WZSTAT;
             return wzstat.initialize(file);
         }
+        if (intarray.isValid(file)) {
+            format = INTARRAY;
+            return intarray.initialize(file);
+        }
 
         return false;
     }
@@ -114,6 +127,8 @@ public class DefaultParser implements FileParser {
             return wz.getProduct();
         if (format == WZSTAT)
             return wzstat.getProduct();
+        if(format == INTARRAY)
+            return intarray.getProduct();
         return null;
     }
 

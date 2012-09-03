@@ -6,6 +6,7 @@ package pl.imgw.jrat.calid;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +17,16 @@ import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
- * /Class description/
+ * This class is responsible for receiving list of pairs and starting the
+ * calculations. To prepare the list it has to be initialized with list of
+ * available files containing radar volumes and list of parameters. Each volume
+ * must contain a scan from elevation pointed in one of the
+ * parameters.
+ * 
+ * <p>If files are not containing valid data the <code>initialize()</code> method
+ * will return false, otherwise the calculation will start and when finish with
+ * not empty results the method will return true.
+ * 
  * 
  * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
@@ -27,57 +37,47 @@ public class CalidManager {
     private static final String DEG = "deg";
     private static final String M = "m";
 
-    private HashMap<String, MatchingPoints> mps = new HashMap<String, MatchingPoints>();
-    private Set<Pair> pairs;
+    private HashMap<String, OverlappingCoords> mps = new HashMap<String, OverlappingCoords>();
+    private PairsContainer pcont;
+    private Set<Pair> pairs = new HashSet<Pair>();
 
     private double elevation = -1;
     private int distance = -1;
 
-    private String[] par = { "0.5deg", "500m" };
+    // private String[] par = { "0.5deg", "500m" };
 
+    /**
+     * 
+     * @param files
+     */
     public CalidManager(List<FileDate> files) {
-        PairsContainer pcont = new PairsContainer(files);
-        this.pairs = pcont.getPairs();
+        pcont = new PairsContainer(files);
     }
 
     /**
-     * Setting some parameters for the algorithm, including:</br>
      * 
-     * elevation of the scan, in degrees, the proper format for the argument
-     * should contain value and word 'deg' e.g. '0.5deg'</br>
+     * Setting some parameters for the algorithm, including:
      * 
-     * distance (maximal) between overlapping pixels in meters, in other words
+     * <p><tt>elevation</tt> of the scan, in degrees, the proper format for the argument
+     * should contain value and word 'deg' e.g. '0.5deg'</pre>
+     * 
+     * <p><tt>distance</tt> (maximal) between overlapping pixels in meters, in other words
      * the precision of finding overlapping pixels, the proper format for the
-     * argument should contain value and word 'm' e.g. '500m'
+     * argument should contain value and word 'm' e.g. '500m'</pre>
      * 
      * @param par
-     *            array of size 2
-     */
-    public void setParameters(String[] par) {
-        this.par = par;
-    }
-
-    /**
+     *            array of size 2 eg.
+     *            <code>String[] par = { "0.5deg", "500m" }</code>
+     * 
      * @return true if parameters are valid and scans with given elevation was
-     *         found in the list of files that was set</br> If not set, default
-     *         parameters will be use: elevation=0.5deg and distance=500m
+     *         found in the list of files that was set
      */
-    public boolean start() {
-        return initialize();
-        /*
-         * if(!initialize()) return false; return calculate();
-         */
-    }
-
-    /*
-     * parsing parameters, and looking for valid scans in the given files
-     */
-    private boolean initialize() {
+    public boolean initialize(String[] par) {
+        pairs = new HashSet<Pair>();
         if (par == null || par.length != 2) {
             LogHandler.getLogs().displayMsg(
                     "Arguments for CALID are incorrect", WARNING);
             return false;
-
         }
 
         try {
@@ -98,6 +98,10 @@ public class CalidManager {
             return false;
         }
 
+        if(pcont.getPairs().isEmpty())
+            return false;
+        pairs.addAll(pcont.getPairs());
+        
         Iterator<Pair> i = pairs.iterator();
         while (i.hasNext()) {
             Pair pair = i.next();
@@ -134,7 +138,7 @@ public class CalidManager {
             ScanContainer scan1 = pair.getVol1().getScan(elevation);
             ScanContainer scan2 = pair.getVol2().getScan(elevation);
 
-            MatchingPoints mp = null;
+            OverlappingCoords mp = null;
 
         }
 

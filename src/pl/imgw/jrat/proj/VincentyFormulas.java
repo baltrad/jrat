@@ -42,6 +42,9 @@ public class VincentyFormulas {
      */
     public static Double dist(Point2D.Double p1, Point2D.Double p2) {
 
+        if(p1 == null || p2 == null)
+            return null;
+        
         double lat1 = Math.toRadians(p1.y);
         double lon1 = Math.toRadians(p1.x);
         double lat2 = Math.toRadians(p2.y);

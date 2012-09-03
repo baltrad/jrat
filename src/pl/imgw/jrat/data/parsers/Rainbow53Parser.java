@@ -65,9 +65,9 @@ public class Rainbow53Parser implements FileParser {
             if (!strLine.contains(fields.product)) {
                 return false;
             }
-            if (strLine.contains("version=\"5.3"))
-                return true;
-            return false;
+//            if (strLine.contains("version=\"5.3"))
+//                return true;
+            return true;
         } catch (Exception e) {// Catch exception if any
             return false;
         }

@@ -219,7 +219,7 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         String par = selectedItem.substring(selectedItem.indexOf(":") + 1, selectedItem.length());
         
         loadedArray = data.getArray(selectedItem);
-        Set<MapColor> scale = ColorScales.getRedScale(0, 5);
+        Set<MapColor> scale = ColorScales.getRedScale(1, 3);
         if (data instanceof WZData) {
             nodata = ((WZData) data).getNodata()
                     * ((RawByteDataArray) loadedArray).getGain()

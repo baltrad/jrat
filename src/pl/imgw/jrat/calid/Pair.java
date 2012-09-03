@@ -22,14 +22,28 @@ public class Pair {
     private VolumeContainer vol1;
     private VolumeContainer vol2;
 
+    /**
+     * Volumes are sorted by site name in alphabetic order. Method
+     * <code>getVol1()</code> will return the first volume and
+     * <code>getVol1()</code> will return the other volume, and it will be
+     * always the same order for the same pair.
+     * 
+     * @param vol1
+     * @param vol2
+     */
     public Pair(VolumeContainer vol1, VolumeContainer vol2) {
         String source1 = vol1.getSiteName();
         String source2 = vol2.getSiteName();
         if (!source1.isEmpty() && !source1.matches(source2)) {
-            this.vol1 = vol1;
-            this.vol2 = vol2;
+            if (source1.compareTo(source2) > 1) {
+                this.vol1 = vol1;
+                this.vol2 = vol2;
+            } else {
+                this.vol1 = vol2;
+                this.vol2 = vol1;
+            }
         }
-        
+
         Date d1 = vol1.getTime();
         Date d2 = vol2.getTime();
         if (d1.equals(d2))
@@ -53,7 +67,7 @@ public class Pair {
         else
             return null;
     }
-    
+
     /**
      * @return the date
      */
@@ -62,6 +76,7 @@ public class Pair {
     }
 
     /**
+     * 
      * @return the vol1
      */
     public VolumeContainer getVol1() {
@@ -75,7 +90,9 @@ public class Pair {
         return vol2;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -97,5 +114,5 @@ public class Pair {
             return false;
         }
     }
-    
+
 }

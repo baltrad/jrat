@@ -128,13 +128,13 @@ public class PairsContainer {
         return null;
     }
 
-    /**
+    /*
      * returns 2-element combinations of given set
      * 
      * @param set
      * @return
      */
-    public Set<Set<String>> combine(Set<String> set) {
+    private Set<Set<String>> combine(Set<String> set) {
         Set<Set<String>> c = new HashSet<Set<String>>();
         if (set.size() < 2) {
             {

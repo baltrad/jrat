@@ -40,8 +40,10 @@ public class PairTest {
         pm.initialize(new File("test-data/calid", "T_PAGZ44_C_SOWR_20110922004021.h5"));
         VolumeContainer vol2 = new OdimH5Volume((H5Data) pm.getProduct());
         pair = new Pair(vol1, vol2);
+        Pair pair2 = new Pair(vol2, vol1);
+        assertTrue(pair.getVol1() == pair2.getVol1());
         assertTrue("validation is not working well with odim format", pair.isValid());
-        assertEquals(57, pair.getVol1().getScan(elevation).getArray().getRawIntPoint(116, 16));
+        assertEquals(57, pair.getVol2().getScan(elevation).getArray().getRawIntPoint(116, 16));
         
     }
     
@@ -55,8 +57,8 @@ public class PairTest {
         VolumeContainer vol2 = new RainbowVolume((RainbowData) pm.getProduct());
         pair = new Pair(vol1, vol2);
         assertTrue("validation is not working well with rainbow format", pair.isValid());
-        assertEquals(60, pair.getVol1().getScan(elevation).getArray().getRawIntPoint(301, 20));
-        assertEquals(-2d, pair.getVol1().getScan(elevation).getArray().getPoint(301, 20), 0.1);
+        assertEquals(60, pair.getVol2().getScan(elevation).getArray().getRawIntPoint(301, 20));
+        assertEquals(-2d, pair.getVol2().getScan(elevation).getArray().getPoint(301, 20), 0.1);
     }
     
 }

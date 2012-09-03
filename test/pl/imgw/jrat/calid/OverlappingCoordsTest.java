@@ -17,31 +17,42 @@ import pl.imgw.jrat.process.ProcessController;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidManagerTest {
+public class OverlappingCoordsTest {
 
-    CalidManager manager;
+    Pair pair;
     
     @Before
     public void setUp() {
         String[] args = new String[] { "-i",
                 "test-data/calid/2011082113400400dBZ.vol",
                 "test-data/calid/2011082113402900dBZ.vol",
-                "test-data/calid/2011082113402500dBZ.vol",
-                "test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5",
-                "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5",
                 "--calid a", "-v" };
         ProcessController proc = new ProcessController(args);
         proc.start();
-        manager = new CalidManager(proc.getFiles());
+        PairsContainer container = new PairsContainer(proc.getFiles());
+        pair = container.getPairs().iterator().next();
         
     }
     
     @Test
-    public void initializeTest() {
-        String[] args = new String[] { "0.2deg", "500m" };
-        assertTrue(!manager.initialize(args));
-        args = new String[] { "0.5deg", "500m" };
-        assertTrue(manager.initialize(args));
+    public void calculateCoordsTest() {
+        int dist = 500;
+        double ele = 0.5;
+        OverlappingCoords coords = new OverlappingCoords(pair, ele, dist);
+        assertTrue(coords.calculateMatchingPoints());
+    }
+    
+    @Test
+    public void writeCoordsTest() {
+        
+    }
+    
+    @Test
+    public void readCoordsTest() {
+        int dist = 500;
+        double ele = 0.5;
+        OverlappingCoords coords = new OverlappingCoords(pair, ele, dist);
+        
     }
     
 }
