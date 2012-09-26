@@ -73,7 +73,10 @@ public class CalidManager {
      *         found in the list of files that was set
      */
     public boolean initialize(String[] par) {
-        pairs = new HashSet<Pair>();
+        
+        if(pcont.getPairs().isEmpty())
+            return false;
+        
         if (par == null || par.length != 2) {
             LogHandler.getLogs().displayMsg(
                     "Arguments for CALID are incorrect", WARNING);
@@ -97,9 +100,8 @@ public class CalidManager {
         if (elevation < 0 || distance < 0) {
             return false;
         }
-
-        if(pcont.getPairs().isEmpty())
-            return false;
+        
+        pairs = new HashSet<Pair>();
         pairs.addAll(pcont.getPairs());
         
         Iterator<Pair> i = pairs.iterator();

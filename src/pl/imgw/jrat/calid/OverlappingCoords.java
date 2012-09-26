@@ -74,7 +74,9 @@ public class OverlappingCoords {
         String distele = distance + "_" + elevation;
 
         String folder = "calid/overlapping/" + pairsName + "/" + distele;
-
+        
+        new File(folder).mkdirs();
+        
         return new File(folder, COORDSFILE).getPath();
     }
 
@@ -115,27 +117,27 @@ public class OverlappingCoords {
         Point2D.Double r2coords = new Point2D.Double(pair.getVol2().getLon(),
                 pair.getVol2().getLat());
 
-        int raddist = 0;
+        int radHalfDist = 0;
         Double dist = VincentyFormulas.dist(r1coords, r2coords);
         if(dist != null)
-            raddist = (int) (dist / 2);
+            radHalfDist = (int) (dist / 2000);
 
-        int bins1 = pair.getVol1().getScan(elevation).getNBins();
-        int bins2 = pair.getVol2().getScan(elevation).getNBins();
+        double scale1 = pair.getVol1().getScan(elevation).getRScale();
+        double scale2 = pair.getVol2().getScan(elevation).getRScale();
+        
+        int radarRange1 = (int) (pair.getVol1().getScan(elevation).getNBins() * scale1 / 1000);
+        int radarRange2 = (int) (pair.getVol2().getScan(elevation).getNBins() * scale2 / 1000);
         
 //        System.out.println(pair.getVol1().getSiteName() + " " + pair.getVol2().getSiteName());
 //        System.out.println(raddist + "m, " + bins1 * pair.getVol1().getScan(elevation).getRScale());
         
-        if (raddist > bins1 * pair.getVol1().getScan(elevation).getRScale()
-                || raddist > bins2
-                        * pair.getVol2().getScan(elevation).getRScale()) {
+        
+        if (radHalfDist > radarRange1 || radHalfDist > radarRange2 ) {
             LogHandler.getLogs().displayMsg(
                     "Radars are to far from each other"
-                            + " to find overlapping points", Logging.WARNING);
+                            + " and have no overlapping points", Logging.WARNING);
             return false;
         }
-        
-        /*
         
         double rad1bearing = VincentyFormulas.getBearing(r1coords, r2coords);
         double rad2bearing = VincentyFormulas.getBearing(r2coords, r1coords);
@@ -147,10 +149,11 @@ public class OverlappingCoords {
             rad2bearing = 360 + rad2bearing;
         }
 
-        int rad1startray = (int) (rad1bearing - 90) - 1;
-        int rad1endray = (int) (rad1bearing + 90) + 1;
-        int rad2startray = (int) (rad2bearing - 90) - 1;
-        int rad2endray = (int) (rad2bearing + 90) + 1;
+        //limiting area to improve performance, with small buffer=2
+        int rad1startray = (int) (rad1bearing - getAngle(radHalfDist, radarRange1)) - 2;
+        int rad1endray = (int) (rad1bearing + getAngle(radHalfDist, radarRange1)) + 2;
+        int rad2startray = (int) (rad2bearing - getAngle(radHalfDist, radarRange2)) - 2;
+        int rad2endray = (int) (rad2bearing + getAngle(radHalfDist, radarRange2)) + 2;
 
         if (rad1startray < 0) {
             rad1startray = 360 + rad1startray;
@@ -164,8 +167,10 @@ public class OverlappingCoords {
         if (rad2endray > 360) {
             rad2endray = rad2endray - 360;
         }
-        for (int b1 = raddist; b1 < bins1; b1++) {
-            for (int b2 = raddist; b2 < bins2; b2++) {
+        
+        for (int b1 = radHalfDist; b1 < radarRange1; b1++) {
+            for (int b2 = radHalfDist; b2 < radarRange2; b2++) {
+//                System.out.println(b1 + " koniec: " + radarRange1);
                 if (b1 != b2)
                     continue;
                 for (int r1 = rad1startray; r1 != rad1endray; r1 = (r1 + 1) % 360) {
@@ -196,12 +201,18 @@ public class OverlappingCoords {
                 }
             }
         }
-        // System.out.println("pasujacych: " + rayBins.size());
+        
         saveToFile();
-        */
         return true;
     }
 
+    public static int getAngle(double a, double r) {
+        
+        double angle = Math.acos(a / r);
+        return (int) Math.toDegrees(angle);
+        
+    }
+    
     /**
      * helping method
      */
@@ -233,13 +244,11 @@ public class OverlappingCoords {
     /**
      * helping method
      */
-    private void saveToFile() {
-        //
-        // if (rayBins.isEmpty()) {
-        // return;
-        // }
+    public boolean saveToFile() {
         
-        /*
+        if (rayBins.isEmpty()) {
+            return false;
+        }
         
         Document doc = null;
         try {
@@ -251,6 +260,7 @@ public class OverlappingCoords {
         } catch (ParserConfigurationException e) {
             LogHandler.getLogs().displayMsg(
                     "Error while creating XML document object", Logging.ERROR);
+            return false;
         }
         Element root = doc.createElement(ROOT);
 
@@ -274,25 +284,35 @@ public class OverlappingCoords {
             }
         }
 
-        Element pair = doc.createElement(PAIR);
+        Element pairElement = doc.createElement(PAIR);
         int id = getNewId(ids);
 
-        pair.setAttribute(ID, String.valueOf(id));
+        /* pair header */
+        pairElement.setAttribute(ID, String.valueOf(id));
 
-        pair.setAttribute(ELEVATION, String.valueOf(elevation));
-        pair.setAttribute(DISTANCE, String.valueOf(distance));
+        pairElement.setAttribute(ELEVATION, String.valueOf(elevation));
+        pairElement.setAttribute(DISTANCE, String.valueOf(distance));
 
-        pair.setAttribute(R1LON, String.valueOf(r1coords.x));
-        pair.setAttribute(R1LAT, String.valueOf(r1coords.y));
+        pairElement
+                .setAttribute(R1LON, String.valueOf(pair.getVol1().getLon()));
+        pairElement
+                .setAttribute(R1LAT, String.valueOf(pair.getVol1().getLat()));
+
+        pairElement.setAttribute(R1BINS,
+                String.valueOf(pair.getVol1().getScan(elevation).getNBins()));
+        pairElement.setAttribute(R1SCALE,
+                String.valueOf(pair.getVol1().getScan(elevation).getRScale()));
+
+        pairElement
+                .setAttribute(R2LON, String.valueOf(pair.getVol2().getLon()));
+        pairElement
+                .setAttribute(R2LAT, String.valueOf(pair.getVol2().getLat()));
+        pairElement.setAttribute(R2BINS,
+                String.valueOf(pair.getVol2().getScan(elevation).getNBins()));
+        pairElement.setAttribute(R2SCALE,
+                String.valueOf(pair.getVol2().getScan(elevation).getRScale()));
+        /* ----------- */
         
-        pair.setAttribute(R1BINS, String.valueOf(bins1));
-        pair.setAttribute(R1SCALE, String.valueOf(scale1));
-
-        pair.setAttribute(R2LON, String.valueOf(r2coords.x));
-        pair.setAttribute(R2LAT, String.valueOf(r2coords.y));
-        pair.setAttribute(R2BINS, String.valueOf(bins2));
-        pair.setAttribute(R2SCALE, String.valueOf(scale2));
-
         Iterator<RayBin> itr = rayBins.iterator();
         while (itr.hasNext()) {
             RayBin rb = itr.next();
@@ -305,15 +325,15 @@ public class OverlappingCoords {
             raybin.setAttribute(R2LON, String.valueOf(rb.getCoord2().x));
             raybin.setAttribute(R2BIN, String.valueOf(rb.getBin2()));
             raybin.setAttribute(R2RAY, String.valueOf(rb.getRay2()));
-            pair.appendChild(raybin);
+            pairElement.appendChild(raybin);
         }
 
-        root.appendChild(pair);
+        root.appendChild(pairElement);
 
         doc.appendChild(root);
 
         XMLHandler.saveXMLFile(doc, getXMLPath());
-        */
+        return true;
     }
 
     /**
@@ -334,17 +354,14 @@ public class OverlappingCoords {
      * 
      * @return
      */
-    private boolean loadFromFile() {
-
-        /*
+    public boolean loadFromFile() {
         
-        boolean found = false;
-
         Document oldDoc = XMLHandler.loadXML(getXMLPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
             NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {
 
+                /* reading pair header */
                 if (list.item(i).getNodeName().matches(PAIR)) {
                     Node node = list.item(i);
                     String x = XMLHandler.getAttributeValue(node, R1LON);
@@ -379,13 +396,18 @@ public class OverlappingCoords {
                         continue;
                     if (dist != distance)
                         continue;
+                    Point2D.Double r1coords = new Point2D.Double(pair.getVol1().getLon(), pair.getVol1().getLat());
+                    Point2D.Double r2coords = new Point2D.Double(pair.getVol2().getLon(), pair.getVol2().getLat());
+                    double scale1 = pair.getVol1().getScan(elevation).getRScale();
+                    double scale2 = pair.getVol2().getScan(elevation).getRScale();
                     if (p1.equals(r1coords) && p2.equals(r2coords)) {
                         if (s1 != scale1)
                             continue;
                         if (s2 != scale2)
                             continue;
-                        found = true;
                         NodeList coords = list.item(i).getChildNodes();
+                        
+                        /* reading points coordinations */
                         for (int c = 0; c < coords.getLength(); c++) {
                             if (coords.item(c).getNodeName().matches(POINT)) {
                                 try {
@@ -430,6 +452,7 @@ public class OverlappingCoords {
                         if (!rayBins.isEmpty())
                             return true;
                     }
+                    /*
                     if (p1.equals(r2coords) && p2.equals(r1coords)) {
                         if (s1 != scale2)
                             continue;
@@ -481,12 +504,12 @@ public class OverlappingCoords {
                         if (!rayBins.isEmpty())
                             return true;
                     }
-
+                     */
                 }
             }
         }
-        return found;
-        */
+//        return found;
+        
         return false;
     }
 
@@ -495,7 +518,7 @@ public class OverlappingCoords {
     }
 
     public static void main(String[] args) {
-
+        System.out.println(OverlappingCoords.getAngle(125, 250));
     }
 
 }

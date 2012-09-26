@@ -4,55 +4,54 @@
 package pl.imgw.jrat.calid;
 
 import static org.junit.Assert.*;
+
+import java.io.File;
+
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.After;
 
 import pl.imgw.jrat.process.ProcessController;
 
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
 public class OverlappingCoordsTest {
 
-    Pair pair;
-    
-    @Before
-    public void setUp() {
+    @Test
+    public void calculateCoordsTest() {
         String[] args = new String[] { "-i",
                 "test-data/calid/2011082113400400dBZ.vol",
-                "test-data/calid/2011082113402900dBZ.vol",
-                "--calid a", "-v" };
+                "test-data/calid/2011082113402900dBZ.vol", "--calid", "500m",
+                "0.5deg", "-v" };
         ProcessController proc = new ProcessController(args);
         proc.start();
         PairsContainer container = new PairsContainer(proc.getFiles());
-        pair = container.getPairs().iterator().next();
-        
-    }
-    
-    @Test
-    public void calculateCoordsTest() {
+        Pair pair = container.getPairs().iterator().next();
         int dist = 500;
         double ele = 0.5;
         OverlappingCoords coords = new OverlappingCoords(pair, ele, dist);
         assertTrue(coords.calculateMatchingPoints());
+
+        assertTrue(coords.loadFromFile());
+
+        args = new String[] { "-i", "test-data/calid/2011082113400400dBZ.vol",
+                "test-data/calid/2011082113402900dBZ.vol", "--calid a", "-v" };
+
+        proc = new ProcessController(args);
+        proc.start();
+        container = new PairsContainer(proc.getFiles());
+        pair = container.getPairs().iterator().next();
+        coords = new OverlappingCoords(pair, ele, dist);
+        assertTrue(coords.loadFromFile());
+
+//        new File("calid/overlapping/RzeszowBrzuchania/500_0.5/coords.xml")
+//                .delete();
     }
-    
-    @Test
-    public void writeCoordsTest() {
-        
-    }
-    
-    @Test
-    public void readCoordsTest() {
-        int dist = 500;
-        double ele = 0.5;
-        OverlappingCoords coords = new OverlappingCoords(pair, ele, dist);
-        
-    }
-    
+
 }
