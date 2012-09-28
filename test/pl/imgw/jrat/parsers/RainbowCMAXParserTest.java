@@ -3,20 +3,20 @@
  */
 package pl.imgw.jrat.parsers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.RainbowCMAX;
 import pl.imgw.jrat.data.RainbowData;
-import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.RainbowImageFieldsName;
-import pl.imgw.jrat.data.parsers.Rainbow53Parser;
+import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class RainbowCMAXParserTest {
 
     RawByteDataArray dc;
     File file;
-    Rainbow53Parser rip;
+    Rainbow53ImageParser rip;
     RainbowCMAX pdc;
     ParserManager pm;
 
@@ -39,7 +39,7 @@ public class RainbowCMAXParserTest {
         file = new File("test-data", "2012032609103300dBZ.cmax");
 
         pm = new ParserManager();
-        rip = new Rainbow53Parser(new RainbowImageFieldsName());
+        rip = new Rainbow53ImageParser();
         pm.setParser(rip);
         
     }

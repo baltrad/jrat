@@ -56,7 +56,7 @@ public class CalidManager {
 
     /**
      * 
-     * Setting some parameters for the algorithm, including:
+     * Setting two parameters for the algorithm:
      * 
      * <p><tt>elevation</tt> of the scan, in degrees, the proper format for the argument
      * should contain value and word 'deg' e.g. '0.5deg'</pre>
@@ -137,10 +137,9 @@ public class CalidManager {
         Iterator<Pair> pairsItr = pairs.iterator();
         while (pairsItr.hasNext()) {
             Pair pair = pairsItr.next();
-            ScanContainer scan1 = pair.getVol1().getScan(elevation);
-            ScanContainer scan2 = pair.getVol2().getScan(elevation);
-
-            OverlappingCoords mp = null;
+            OverlappingCoords coords = new OverlappingCoords(pair, elevation, distance);
+            List<RayBin> rayBins = coords.getCoords();
+            
 
         }
 

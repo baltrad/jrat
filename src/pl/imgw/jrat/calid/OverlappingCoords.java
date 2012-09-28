@@ -64,7 +64,7 @@ public class OverlappingCoords {
     private double elevation = 0;
     private int distance = 0;
 
-    public boolean valid = false;
+    public boolean valid = true;
 
     private String getXMLPath() {
 
@@ -91,24 +91,30 @@ public class OverlappingCoords {
         if (pair.isValid()) {
             this.pair = pair;
         } else
-            return;
+            valid = false;
 
         if (elevation > 0 && distance > 0) {
             this.distance = distance;
             this.elevation = elevation;
         } else
-            return;
-
-        valid = true;
+            valid = false;
 
     }
 
+    public List<RayBin> getCoords(){
+
+        if(loadFromFile() || calculateMatchingPoints()) {
+            return rayBins;
+        }
+        return null;
+    }
+    
     /**
      * helping method, should be used when loading data from file fails
      * 
      * @return
      */
-    public boolean calculateMatchingPoints() {
+    private boolean calculateMatchingPoints() {
         if (!valid)
             return false;
 
@@ -244,7 +250,7 @@ public class OverlappingCoords {
     /**
      * helping method
      */
-    public boolean saveToFile() {
+    private boolean saveToFile() {
         
         if (rayBins.isEmpty()) {
             return false;
@@ -354,7 +360,7 @@ public class OverlappingCoords {
      * 
      * @return
      */
-    public boolean loadFromFile() {
+    private boolean loadFromFile() {
         
         Document oldDoc = XMLHandler.loadXML(getXMLPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
@@ -452,63 +458,10 @@ public class OverlappingCoords {
                         if (!rayBins.isEmpty())
                             return true;
                     }
-                    /*
-                    if (p1.equals(r2coords) && p2.equals(r1coords)) {
-                        if (s1 != scale2)
-                            continue;
-                        if (s2 != scale1)
-                            continue;
-                        found = true;
-                        NodeList coords = list.item(i).getChildNodes();
-                        for (int c = 0; c < coords.getLength(); c++) {
-                            if (coords.item(c).getNodeName().matches(POINT)) {
-                                try {
-                                    x = XMLHandler.getAttributeValue(node,
-                                            R1LON);
-                                    y = XMLHandler.getAttributeValue(node,
-                                            R1LAT);
-                                    Point2D.Double r1p = new Point2D.Double(
-                                            Double.parseDouble(x),
-                                            Double.parseDouble(y));
-                                    x = XMLHandler.getAttributeValue(node,
-                                            R2LON);
-                                    y = XMLHandler.getAttributeValue(node,
-                                            R2LAT);
-                                    Point2D.Double r2p = new Point2D.Double(
-                                            Double.parseDouble(x),
-                                            Double.parseDouble(y));
 
-                                    int r1bin = Integer.parseInt(XMLHandler
-                                            .getAttributeValue(coords.item(c),
-                                                    R1BIN));
-                                    int r1ray = Integer.parseInt(XMLHandler
-                                            .getAttributeValue(coords.item(c),
-                                                    R1RAY));
-                                    int r2bin = Integer.parseInt(XMLHandler
-                                            .getAttributeValue(coords.item(c),
-                                                    R2BIN));
-                                    int r2ray = Integer.parseInt(XMLHandler
-                                            .getAttributeValue(coords.item(c),
-                                                    R2RAY));
-                                    RayBinData rbd = new RayBinData(r1ray,
-                                            r1bin, r2ray, r2bin);
-                                    rbd.setCoord1(r1p);
-                                    rbd.setCoord2(r2p);
-                                    rayBins.add(rbd);
-                                } catch (NumberFormatException e) {
-                                    continue;
-                                }
-                            }
-
-                        }
-                        if (!rayBins.isEmpty())
-                            return true;
-                    }
-                     */
                 }
             }
         }
-//        return found;
         
         return false;
     }

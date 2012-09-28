@@ -2,6 +2,10 @@
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
 package pl.imgw.jrat.parsers;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,15 +13,13 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.RainbowData;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.Rainbow53Parser;
-import pl.imgw.jrat.data.parsers.RainbowVolumeFieldsName;
-import static org.junit.Assert.*;
+import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
 /**
  *
  *  /Class description/
@@ -30,7 +32,7 @@ public class RainbowVolumeParserTest {
 
     RawByteDataArray dc;
     File file;
-    Rainbow53Parser rip;
+    Rainbow53VolumeParser rip;
     DataContainer pdc;
     ParserManager pm;
     
@@ -39,7 +41,7 @@ public class RainbowVolumeParserTest {
         file = new File("test-data", "1.vol");
         
         pm = new ParserManager();
-        rip = new Rainbow53Parser(new RainbowVolumeFieldsName());
+        rip = new Rainbow53VolumeParser();
         pm.setParser(rip);
         
     }
@@ -48,6 +50,9 @@ public class RainbowVolumeParserTest {
     public void isValidVolume() {
         pm.initialize(file);
         RainbowData data = (RainbowData) pm.getProduct();
+        
+//        System.out.println(data.getArrayList().get("10_rayinfo").getPoint(10, 10));
+        
         RainbowVolume vol = new RainbowVolume(data);
         assertTrue(vol.isValid());
 

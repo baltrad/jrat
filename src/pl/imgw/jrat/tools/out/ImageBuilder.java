@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.RainbowImageParser;
+import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
 import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
@@ -208,7 +208,7 @@ public class ImageBuilder {
         }
         
         File rfile = new File("test-data", "2012032609103300dBZ.cmax");
-        pm.setParser(new RainbowImageParser());
+        pm.setParser(new Rainbow53ImageParser());
         pm.initialize(rfile);
         data = pm.getProduct().getArray("datamap");
         ArrayData mask = pm.getProduct().getArray("flagmap");

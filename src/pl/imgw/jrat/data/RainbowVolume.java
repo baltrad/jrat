@@ -5,6 +5,7 @@ package pl.imgw.jrat.data;
 
 import java.awt.geom.Point2D;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * 
@@ -22,6 +23,7 @@ public class RainbowVolume implements VolumeContainer {
         if (((String) data.getAttributeValue("/volume", "type"))
                 .matches("vol"))
             this.data = data;
+        
     }
 
     /*
@@ -166,8 +168,11 @@ public class RainbowVolume implements VolumeContainer {
                 if(blobid.isEmpty())
                     return null;
                 
+                System.out.println(blobid);
+                
                 RawByteDataArray array = (RawByteDataArray) data
-                        .getArray(blobid + "_rawdata");
+                        .getArray(blobid);
+
                 
                 String min = data.getRainbowAttributeValue(path + "/rawdata",
                         "min");

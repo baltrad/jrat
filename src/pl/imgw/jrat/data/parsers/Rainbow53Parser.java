@@ -243,28 +243,28 @@ public class Rainbow53Parser implements FileParser {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " was not found", ERROR);
             LogHandler.getLogs().saveErrorLogs(
-                    RainbowImageParser.class.getSimpleName(),
+                    Rainbow53ImageParser.class.getSimpleName(),
                     e.getLocalizedMessage());
             return false;
         } catch (XMLStreamException e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " is not a XML format", ERROR);
             LogHandler.getLogs().saveErrorLogs(
-                    RainbowImageParser.class.getSimpleName(),
+                    Rainbow53ImageParser.class.getSimpleName(),
                     e.getLocalizedMessage());
             return false;
         } catch (FactoryConfigurationError e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " cannot be initialized", ERROR);
             LogHandler.getLogs().saveErrorLogs(
-                    RainbowImageParser.class.getSimpleName(),
+                    Rainbow53ImageParser.class.getSimpleName(),
                     e.getLocalizedMessage());
             return false;
         } catch (IOException e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " cannot be initialized", ERROR);
             LogHandler.getLogs().saveErrorLogs(
-                    RainbowImageParser.class.getSimpleName(),
+                    Rainbow53ImageParser.class.getSimpleName(),
                     e.getLocalizedMessage());
             return false;
         }

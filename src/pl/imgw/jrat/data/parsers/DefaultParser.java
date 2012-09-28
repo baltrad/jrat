@@ -17,10 +17,8 @@ import pl.imgw.jrat.data.DataContainer;
  */
 public class DefaultParser implements FileParser {
 
-    private Rainbow53Parser rbvol = new Rainbow53Parser(
-            new RainbowVolumeFieldsName());
-    private Rainbow53Parser rbimg = new Rainbow53Parser(
-            new RainbowImageFieldsName());
+    private Rainbow53VolumeParser rbvol = new Rainbow53VolumeParser();
+    private Rainbow53ImageParser rbimg = new Rainbow53ImageParser();
     private OdimH5Parser odim = new OdimH5Parser();
     private WZFileParser wz = new WZFileParser();
     private WZStatsParser wzstat = new WZStatsParser();
