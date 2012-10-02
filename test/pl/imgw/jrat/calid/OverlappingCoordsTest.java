@@ -61,4 +61,9 @@ public class OverlappingCoordsTest {
 
     }
 
+    @Test
+    public void loadCoordsTest() {
+        
+    }
+    
 }

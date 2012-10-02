@@ -81,11 +81,17 @@ public class OverlappingCoords {
     }
 
     /**
+     * Create empty object
+     */
+    public static OverlappingCoords getOverlappingCoords() {
+        return null;
+    }
+    
+    /**
      * @param pair
      * @param elevation
      * @param distance
      */
-
     public OverlappingCoords(Pair pair, double elevation, int distance) {
 
         if (pair.isValid()) {
@@ -360,7 +366,7 @@ public class OverlappingCoords {
      * 
      * @return
      */
-    private boolean loadFromFile() {
+    public boolean loadFromFile() {
         
         Document oldDoc = XMLHandler.loadXML(getXMLPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {

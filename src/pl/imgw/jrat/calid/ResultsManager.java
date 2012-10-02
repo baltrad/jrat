@@ -15,7 +15,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * 
@@ -27,13 +26,11 @@ import java.util.TimeZone;
  */
 public class ResultsManager {
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static SimpleDateFormat sdf = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm");
 
-    public ResultsManager() {
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
-
-    public void saveResults(int id, String pairKey, Date date, int[] result) {
+    public static void saveResults(int id, String pairKey, Date date,
+            double[] result) {
 
         File file = new File(getResultPath(id, pairKey));
 
@@ -58,9 +55,9 @@ public class ResultsManager {
         }
     }
 
-    public int[] loadResults(int id, String pairKey, Date date) {
+    public static double[] loadResults(int id, String pairKey, Date date) {
 
-        int[] data = null;
+        double[] data = null;
 
         try {
             FileInputStream fstream = new FileInputStream(getResultPath(id,
@@ -72,7 +69,7 @@ public class ResultsManager {
                 String[] cut = strLine.split(";");
                 Date d = sdf.parse(cut[0]);
                 if (d.equals(date)) {
-                    data = new int[cut.length - 1];
+                    data = new double[cut.length - 1];
                     for (int i = 1; i < cut.length; i++) {
                         data[i - 1] = Integer.parseInt(cut[i]);
                     }
@@ -88,7 +85,7 @@ public class ResultsManager {
         return data;
     }
 
-    public boolean hasResult(int id, String pairKey, Date date) {
+    public static boolean hasResult(int id, String pairKey, Date date) {
 
         try {
             FileInputStream fstream = new FileInputStream(getResultPath(id,
@@ -111,9 +108,8 @@ public class ResultsManager {
         return false;
     }
 
-    private String getResultPath(int id, String pair) {
-        return new File(id + "_" + pair + ".res")
-                .getPath();
+    private static String getResultPath(int id, String pair) {
+        return new File(id + "_" + pair + ".res").getPath();
     }
 
 }

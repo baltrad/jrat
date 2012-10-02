@@ -20,10 +20,10 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * This class is responsible for receiving list of pairs and starting the
  * calculations. To prepare the list it has to be initialized with list of
  * available files containing radar volumes and list of parameters. Each volume
- * must contain a scan from elevation pointed in one of the
- * parameters.
+ * must contain a scan from elevation pointed in one of the parameters.
  * 
- * <p>If files are not containing valid data the <code>initialize()</code> method
+ * <p>
+ * If files are not containing valid data the <code>initialize()</code> method
  * will return false, otherwise the calculation will start and when finish with
  * not empty results the method will return true.
  * 
@@ -44,6 +44,8 @@ public class CalidManager {
     private double elevation = -1;
     private int distance = -1;
 
+    double[] results;
+
     // private String[] par = { "0.5deg", "500m" };
 
     /**
@@ -58,12 +60,15 @@ public class CalidManager {
      * 
      * Setting two parameters for the algorithm:
      * 
-     * <p><tt>elevation</tt> of the scan, in degrees, the proper format for the argument
-     * should contain value and word 'deg' e.g. '0.5deg'</pre>
+     * <p>
+     * <tt>elevation</tt> of the scan, in degrees, the proper format for the
+     * argument should contain value and word 'deg' e.g. '0.5deg'</pre>
      * 
-     * <p><tt>distance</tt> (maximal) between overlapping pixels in meters, in other words
-     * the precision of finding overlapping pixels, the proper format for the
-     * argument should contain value and word 'm' e.g. '500m'</pre>
+     * <p>
+     * <tt>distance</tt> (maximal) between overlapping pixels in meters, in
+     * other words the precision of finding overlapping pixels, the proper
+     * format for the argument should contain value and word 'm' e.g.
+     * '500m'</pre>
      * 
      * @param par
      *            array of size 2 eg.
@@ -73,10 +78,10 @@ public class CalidManager {
      *         found in the list of files that was set
      */
     public boolean initialize(String[] par) {
-        
-        if(pcont.getPairs().isEmpty())
+
+        if (pcont.getPairs().isEmpty())
             return false;
-        
+
         if (par == null || par.length != 2) {
             LogHandler.getLogs().displayMsg(
                     "Arguments for CALID are incorrect", WARNING);
@@ -100,10 +105,10 @@ public class CalidManager {
         if (elevation < 0 || distance < 0) {
             return false;
         }
-        
+
         pairs = new HashSet<Pair>();
         pairs.addAll(pcont.getPairs());
-        
+
         Iterator<Pair> i = pairs.iterator();
         while (i.hasNext()) {
             Pair pair = i.next();
@@ -123,7 +128,7 @@ public class CalidManager {
         return true;
     }
 
-    private boolean calculate() {
+    public boolean calculate() {
 
         if (pairs.isEmpty()) {
             LogHandler.getLogs().displayMsg(
@@ -133,18 +138,30 @@ public class CalidManager {
         }
 
         // long time = System.currentTimeMillis();
-        ResultsManager rm = new ResultsManager();
         Iterator<Pair> pairsItr = pairs.iterator();
         while (pairsItr.hasNext()) {
             Pair pair = pairsItr.next();
-            OverlappingCoords coords = new OverlappingCoords(pair, elevation, distance);
-            List<RayBin> rayBins = coords.getCoords();
-            
 
+            OverlappingCoords coords = new OverlappingCoords(pair, elevation,
+                    distance);
+
+            results = ResultsManager.loadResults(coords.getId(),
+                    pair.toString(), pair.getDate());
+
+            if (results == null) {
+
+                List<RayBin> rayBins = coords.getCoords();
+                Comparator comp = new Comparator(rayBins, pair.getVol1()
+                        .getScan(elevation), pair.getVol2().getScan(elevation));
+
+                results = comp.getResults();
+                comp.save(coords.getId(), pair.toString(), pair.getDate());
+
+            }
         }
-
-        return true;
-
+        if (results != null)
+            return true;
+        else
+            return false;
     }
-
 }

@@ -22,6 +22,24 @@ public class RayBin {
     private int ray2;
     private int bin2;
     private Point2D.Double coord2;
+    private Double difference = null;
+
+    
+    
+    /**
+     * @return the difference,
+     * null if not set
+     */
+    public Double getDifference() {
+        return difference;
+    }
+
+    /**
+     * @param difference the difference to set
+     */
+    public void setDifference(double difference) {
+        this.difference = difference;
+    }
 
     /**
      * @return the coord1
