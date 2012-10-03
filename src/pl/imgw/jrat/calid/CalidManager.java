@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.tools.in.FileDate;
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -154,8 +153,8 @@ public class CalidManager {
                 Comparator comp = new Comparator(rayBins, pair.getVol1()
                         .getScan(elevation), pair.getVol2().getScan(elevation));
 
-                results = comp.getResults();
-                comp.save(coords.getId(), pair.toString(), pair.getDate());
+//                results = comp.getResults();
+//                comp.save(coords.getId(), pair.toString(), pair.getDate());
 
             }
         }

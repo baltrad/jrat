@@ -38,7 +38,7 @@ public class Comparator {
 
     public void save(int id, String pair, Date date) {
             
-            ResultsManager.saveResults(id, pair, date, rayBins);
+//            ResultsManager.saveResults(id, pair, date, rayBins);
             
     }
     
