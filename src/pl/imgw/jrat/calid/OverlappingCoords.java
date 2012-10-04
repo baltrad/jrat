@@ -5,6 +5,7 @@ package pl.imgw.jrat.calid;
 
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -66,7 +67,7 @@ public class OverlappingCoords {
 
     public boolean valid = true;
 
-    private String getXMLPath() {
+    private String getCalidPath() {
 
         String pairsName = pair.getVol1().getSiteName()
                 + pair.getVol2().getSiteName();
@@ -80,12 +81,7 @@ public class OverlappingCoords {
         return new File(folder, COORDSFILE).getPath();
     }
 
-    /**
-     * Create empty object
-     */
-    public static OverlappingCoords getOverlappingCoords() {
-        return null;
-    }
+
     
     /**
      * @param pair
@@ -207,12 +203,12 @@ public class OverlappingCoords {
                             rb.setCoord1(p1);
                             rb.setCoord2(p2);
                             rayBins.add(rb);
-
                         }
                     }
                 }
             }
         }
+        RayBin[] rb = rayBins.toArray(new RayBin[0]);
         
         saveToFile();
         return true;
@@ -277,7 +273,7 @@ public class OverlappingCoords {
         Element root = doc.createElement(ROOT);
 
         HashSet<Integer> ids = new HashSet<Integer>();
-        Document oldDoc = XMLHandler.loadXML(getXMLPath());
+        Document oldDoc = XMLHandler.loadXML(getCalidPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
             NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {
@@ -344,7 +340,7 @@ public class OverlappingCoords {
 
         doc.appendChild(root);
 
-        XMLHandler.saveXMLFile(doc, getXMLPath());
+        XMLHandler.saveXMLFile(doc, getCalidPath());
         return true;
     }
 
@@ -368,7 +364,7 @@ public class OverlappingCoords {
      */
     public boolean loadFromFile() {
         
-        Document oldDoc = XMLHandler.loadXML(getXMLPath());
+        Document oldDoc = XMLHandler.loadXML(getCalidPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
             NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {

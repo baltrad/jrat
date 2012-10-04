@@ -61,4 +61,12 @@ public class PairTest {
         assertEquals(-2d, pair.getVol2().getScan(elevation).getArray().getPoint(301, 20), 0.1);
     }
     
+    @Test
+    public void emptyPairTest() {
+        String source1 = "Rzeszow";
+        String source2 = "Legionowo";
+        pair = new Pair(source1, source2);
+        assertFalse(pair.isValid());
+        assertTrue(pair.getSource2().matches(source1));
+    }
 }

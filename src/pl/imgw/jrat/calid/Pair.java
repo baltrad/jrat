@@ -21,11 +21,25 @@ public class Pair {
     private Date date;
     private VolumeContainer vol1;
     private VolumeContainer vol2;
+    private String source1;
+    private String source2;
 
+    public Pair(String source1, String source2) {
+        if (!source1.isEmpty() && !source1.matches(source2)) {
+            if (source1.compareTo(source2) > 1) {
+                this.source1 = source1;
+                this.source2 = source2;
+            } else {
+                this.source1 = source2;
+                this.source2 = source1;
+            }
+        }
+    }
+    
     /**
      * Volumes are sorted by site name in alphabetic order. Method
      * <code>getVol1()</code> will return the first volume and
-     * <code>getVol1()</code> will return the other volume, and it will be
+     * <code>getVol2()</code> will return the other volume, and it will be
      * always the same order for the same pair.
      * 
      * @param vol1
@@ -35,12 +49,16 @@ public class Pair {
         String source1 = vol1.getSiteName();
         String source2 = vol2.getSiteName();
         if (!source1.isEmpty() && !source1.matches(source2)) {
-            if (source1.compareTo(source2) > 1) {
+            if (source1.compareTo(source2) > -1) {
                 this.vol1 = vol1;
                 this.vol2 = vol2;
+                this.source1 = source1;
+                this.source2 = source2;
             } else {
                 this.vol1 = vol2;
                 this.vol2 = vol1;
+                this.source1 = source2;
+                this.source2 = source1;
             }
         }
 
@@ -56,17 +74,22 @@ public class Pair {
         return false;
     }
 
+    
     /**
-     * Returns 2-element array with site names
-     * 
-     * @return null if pair is not valid
+     * @return the source1
      */
-    public String[] getSiteNames() {
-        if (isValid())
-            return new String[] { vol1.getSiteName(), vol2.getSiteName() };
-        else
-            return null;
+    public String getSource1() {
+        return source1;
     }
+
+    /**
+     * @return the source2
+     */
+    public String getSource2() {
+        return source2;
+    }
+
+    
 
     /**
      * @return the date
@@ -99,10 +122,10 @@ public class Pair {
     public boolean equals(Object obj) {
         Pair pair = (Pair) obj;
         try {
-            String name11 = pair.getSiteNames()[0];
-            String name12 = pair.getSiteNames()[1];
-            String name21 = getSiteNames()[0];
-            String name22 = getSiteNames()[1];
+            String name11 = pair.getSource1();
+            String name12 = pair.getSource2();
+            String name21 = getSource1();
+            String name22 = getSource2();
             if (!pair.getDate().equals(getDate()))
                 return false;
             if (name11.matches(name21) && name12.matches(name22))
