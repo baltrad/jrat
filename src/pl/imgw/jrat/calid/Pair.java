@@ -27,11 +27,11 @@ public class Pair {
     public Pair(String source1, String source2) {
         if (!source1.isEmpty() && !source1.matches(source2)) {
             if (source1.compareTo(source2) > 1) {
-                this.source1 = source1;
-                this.source2 = source2;
-            } else {
                 this.source1 = source2;
                 this.source2 = source1;
+            } else {
+                this.source1 = source1;
+                this.source2 = source2;
             }
         }
     }
@@ -49,7 +49,7 @@ public class Pair {
         String source1 = vol1.getSiteName();
         String source2 = vol2.getSiteName();
         if (!source1.isEmpty() && !source1.matches(source2)) {
-            if (source1.compareTo(source2) > -1) {
+            if (source1.compareTo(source2) > 1) {
                 this.vol1 = vol1;
                 this.vol2 = vol2;
                 this.source1 = source1;

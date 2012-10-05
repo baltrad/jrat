@@ -68,5 +68,7 @@ public class PairTest {
         pair = new Pair(source1, source2);
         assertFalse(pair.isValid());
         assertTrue(pair.getSource2().matches(source1));
+        pair = new Pair(source2, source1);
+        assertTrue(pair.getSource2().matches(source1));
     }
 }

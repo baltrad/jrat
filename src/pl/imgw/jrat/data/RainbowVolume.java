@@ -4,8 +4,11 @@
 package pl.imgw.jrat.data;
 
 import java.awt.geom.Point2D;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -20,10 +23,9 @@ public class RainbowVolume implements VolumeContainer {
     RainbowData data = null;
 
     public RainbowVolume(RainbowData data) {
-        if (((String) data.getAttributeValue("/volume", "type"))
-                .matches("vol"))
+        if (((String) data.getAttributeValue("/volume", "type")).matches("vol"))
             this.data = data;
-        
+
     }
 
     /*
@@ -33,7 +35,7 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public boolean isValid() {
-        if(data != null)
+        if (data != null)
             return true;
         return false;
     }
@@ -106,10 +108,14 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public ScanContainer getScan(final double elevation) {
+
+        if (getSlicedataPath(elevation) == null) {
+            return null;
+        }
+
         ScanContainer scan = new ScanContainer() {
-            
             String path = getSlicedataPath(elevation);
-            
+
             @Override
             public Date getStartTime() {
                 try {
@@ -123,10 +129,11 @@ public class RainbowVolume implements VolumeContainer {
                     return null;
                 }
             }
-            
+
             @Override
             public double getRScale() {
-                String rscale = data.getRainbowAttributeValue("/volume/scan/pargroup/rangestep", "");
+                String rscale = data.getRainbowAttributeValue(
+                        "/volume/scan/pargroup/rangestep", "");
                 try {
                     double range = Double.parseDouble(rscale);
                     return range * 1000;
@@ -134,46 +141,47 @@ public class RainbowVolume implements VolumeContainer {
                     return 0;
                 }
             }
-            
+
             @Override
             public int getNRays() {
-                String rays = data.getRainbowAttributeValue(path + "/rawdata", "rays");
+                String rays = data.getRainbowAttributeValue(path + "/rawdata",
+                        "rays");
                 try {
                     return Integer.parseInt(rays);
                 } catch (NumberFormatException e) {
                     return 0;
                 }
             }
-            
+
             @Override
             public int getNBins() {
-                String bins = data.getRainbowAttributeValue(path + "/rawdata", "bins");
+                String bins = data.getRainbowAttributeValue(path + "/rawdata",
+                        "bins");
                 try {
                     return Integer.parseInt(bins);
                 } catch (NumberFormatException e) {
                     return 0;
                 }
             }
-            
+
             @Override
             public double getElevation() {
                 return elevation;
             }
-            
+
             @Override
             public ArrayData getArray() {
                 String blobid = data.getRainbowAttributeValue(
                         path + "/rawdata", "blobid");
-                
-                if(blobid.isEmpty())
+
+                if (blobid.isEmpty())
                     return null;
-                
+
                 System.out.println(blobid);
-                
+
                 RawByteDataArray array = (RawByteDataArray) data
                         .getArray(blobid);
 
-                
                 String min = data.getRainbowAttributeValue(path + "/rawdata",
                         "min");
                 String max = data.getRainbowAttributeValue(path + "/rawdata",
@@ -182,7 +190,7 @@ public class RainbowVolume implements VolumeContainer {
                     double mind = Double.parseDouble(min);
                     double maxd = Double.parseDouble(max);
                     array.setOffset(mind - 0.5);
-                    array.setGain((maxd - mind)/254);
+                    array.setGain((maxd - mind) / 254);
                 } catch (NumberFormatException e) {
 
                 }
@@ -194,6 +202,7 @@ public class RainbowVolume implements VolumeContainer {
             public Point2D.Double getCoordinates() {
                 return new Point2D.Double(getLon(), getLat());
             }
+
         };
         return scan;
     }
@@ -217,7 +226,9 @@ public class RainbowVolume implements VolumeContainer {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.VolumeContainer#getTimeSec()
      */
     @Override
@@ -250,7 +261,24 @@ public class RainbowVolume implements VolumeContainer {
             return "/volume/scan/slice:refid=" + refid + "/slicedata";
         }
 
-        return "";
+        LogHandler.getLogs().displayMsg(
+                "Elevation " + elevation + " not find in " + getVolId(),
+                LogHandler.WARNING);
+
+        return null;
     }
-    
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.VolumeContainer#getVolId()
+     */
+    @Override
+    public String getVolId() {
+        String id = "'Rb5 vol ";
+        id += getSiteName();
+        id += " ";
+        id += formatMinutePrecision.format(getTime());
+        id += "'";
+        return id;
+    }
+
 }

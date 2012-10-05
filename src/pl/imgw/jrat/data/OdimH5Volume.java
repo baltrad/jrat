@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import pl.imgw.jrat.tools.out.LogHandler;
+
 /**
  * 
  * /Class description/
@@ -77,6 +79,11 @@ public class OdimH5Volume implements VolumeContainer {
      */
     @Override
     public ScanContainer getScan(final double elevation) {
+        
+        if(getDatasetByElevation(elevation) == null) {
+            return null;
+        }
+        
         ScanContainer scan = new ScanContainer() {
 
             String dataset = "/" + getDatasetByElevation(elevation);
@@ -193,7 +200,24 @@ public class OdimH5Volume implements VolumeContainer {
                     return group;
             }
         }
-        return "";
+        LogHandler.getLogs().displayMsg(
+                "Elevation " + elevation + " not find in " + getVolId(),
+                LogHandler.WARNING);
+        
+        return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.VolumeContainer#getVolId()
+     */
+    @Override
+    public String getVolId() {
+        String id = "'HDF5 vol ";
+        id += getSiteName();
+        id += " ";
+        id += formatMinutePrecision.format(getTime());
+        id += "'";
+        return id;
     }
     
 }

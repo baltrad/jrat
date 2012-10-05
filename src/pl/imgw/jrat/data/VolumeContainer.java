@@ -20,6 +20,12 @@ public interface VolumeContainer {
     public SimpleDateFormat formatMinutePrecision = new SimpleDateFormat("yyyyMMddHHmm");
     
     /**
+     * 
+     * @return identification of the volume, should contain site name and date
+     */
+    public String getVolId();
+    
+    /**
      * Check if the container was initialize with correct product
      * 
      * @return true if the product is valid volume

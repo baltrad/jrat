@@ -111,8 +111,9 @@ public class CalidManager {
         Iterator<Pair> i = pairs.iterator();
         while (i.hasNext()) {
             Pair pair = i.next();
-            if (pair.getVol1().getScan(elevation).getArray() == null
-                    || pair.getVol2().getScan(elevation).getArray() == null) {
+            
+            if (pair.getVol1().getScan(elevation) == null
+                    || pair.getVol2().getScan(elevation) == null) {
                 i.remove();
             }
         }
