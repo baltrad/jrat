@@ -5,6 +5,7 @@ package pl.imgw.jrat.calid;
 
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,9 +37,10 @@ public class CalidManager {
     private static final String DEG = "deg";
     private static final String M = "m";
 
-    private HashMap<String, OverlappingCoords> mps = new HashMap<String, OverlappingCoords>();
-    private PairsContainer pcont;
-    private Set<Pair> pairs = new HashSet<Pair>();
+    // private HashMap<String, CoordsManager> mps = new HashMap<String,
+    // CoordsManager>();
+    // private PairsContainer pcont;
+    // private Set<Pair> pairs = new HashSet<Pair>();
 
     private double elevation = -1;
     private int distance = -1;
@@ -49,15 +51,8 @@ public class CalidManager {
 
     /**
      * 
-     * @param files
-     */
-    public CalidManager(List<FileDate> files) {
-        pcont = new PairsContainer(files);
-    }
-
-    /**
-     * 
-     * Setting two parameters for the algorithm:
+     * Creating pairs from list of files and setting two parameters for the
+     * algorithm:
      * 
      * <p>
      * <tt>elevation</tt> of the scan, in degrees, the proper format for the
@@ -72,19 +67,13 @@ public class CalidManager {
      * @param par
      *            array of size 2 eg.
      *            <code>String[] par = { "0.5deg", "500m" }</code>
-     * 
-     * @return true if parameters are valid and scans with given elevation was
-     *         found in the list of files that was set
      */
-    public boolean initialize(String[] par) {
-
-        if (pcont.getPairs().isEmpty())
-            return false;
+    public CalidManager(String[] par) {
 
         if (par == null || par.length != 2) {
             LogHandler.getLogs().displayMsg(
                     "Arguments for CALID are incorrect", WARNING);
-            return false;
+            return;
         }
 
         try {
@@ -98,70 +87,64 @@ public class CalidManager {
                 }
             }
         } catch (NumberFormatException e) {
-            return false;
+            return;
         }
 
         if (elevation < 0 || distance < 0) {
-            return false;
+            return;
         }
 
-        pairs = new HashSet<Pair>();
-        pairs.addAll(pcont.getPairs());
-
-        Iterator<Pair> i = pairs.iterator();
-        while (i.hasNext()) {
-            Pair pair = i.next();
-            
-            if (pair.getVol1().getScan(elevation) == null
-                    || pair.getVol2().getScan(elevation) == null) {
-                i.remove();
-            }
-        }
-
-        if (pairs.isEmpty()) {
-            LogHandler.getLogs().displayMsg(
-                    "No pairs initialized for CALID. "
-                            + "Check list of files and/or arguments values.",
-                    WARNING);
-            return false;
-        }
-        return true;
     }
 
-    public boolean calculate() {
+    /**
+     * 
+     * 
+     * @return 
+     */
+    public List<CalidCoords> calculate(Pair pair) {
+        if (pair.getVol1().getScan(elevation) == null
+                || pair.getVol2().getScan(elevation) == null) {
+            return null;
 
-        if (pairs.isEmpty()) {
+        }
+
+
+        List<CalidCoords> rayBins = null;
+        CoordsManager coords = new CoordsManager(pair, elevation, distance);
+
+        results = ResultsManager.loadResults(coords.getId(), pair.toString(),
+                pair.getDate());
+
+        if (results == null) {
+
             LogHandler.getLogs().displayMsg(
-                    "No pairs initialized for CALID. "
-                            + "Calculation cannot be performed", WARNING);
-            return false;
+                    "Calculating overlapping points for: " + pair.getSource1()
+                    + " and " + pair.getSource2(), LogHandler.WARNING);
+            rayBins = coords.getCoords();
+            Comparator comp = new Comparator(rayBins, pair.getVol1().getScan(
+                    elevation), pair.getVol2().getScan(elevation));
+
+            // results = comp.getResults();
+            // comp.save(coords.getId(), pair.toString(), pair.getDate());
+
         }
 
-        // long time = System.currentTimeMillis();
-        Iterator<Pair> pairsItr = pairs.iterator();
-        while (pairsItr.hasNext()) {
-            Pair pair = pairsItr.next();
-
-            OverlappingCoords coords = new OverlappingCoords(pair, elevation,
-                    distance);
-
-            results = ResultsManager.loadResults(coords.getId(),
-                    pair.toString(), pair.getDate());
-
-            if (results == null) {
-
-                List<RayBin> rayBins = coords.getCoords();
-                Comparator comp = new Comparator(rayBins, pair.getVol1()
-                        .getScan(elevation), pair.getVol2().getScan(elevation));
-
-//                results = comp.getResults();
-//                comp.save(coords.getId(), pair.toString(), pair.getDate());
-
-            }
-        }
-        if (results != null)
-            return true;
-        else
-            return false;
+        LogHandler.getLogs().displayMsg(
+                "Calculation completed for: " + pair.getSource1()
+                + " and " + pair.getSource2(), LogHandler.WARNING);
+        
+        
+        return rayBins;
     }
+
+    public List<CalidCoords> getResults(Pair pair, Date date, double elevation,
+            int distance) {
+        return null;
+    }
+
+    public void displayResults(Pair pair, Date date, double elevation,
+            int distance) {
+
+    }
+
 }

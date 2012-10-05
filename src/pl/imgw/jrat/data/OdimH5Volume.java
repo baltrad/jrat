@@ -201,7 +201,7 @@ public class OdimH5Volume implements VolumeContainer {
             }
         }
         LogHandler.getLogs().displayMsg(
-                "Elevation " + elevation + " not find in " + getVolId(),
+                "Elevation " + elevation + " not found in " + getVolId(),
                 LogHandler.WARNING);
         
         return null;

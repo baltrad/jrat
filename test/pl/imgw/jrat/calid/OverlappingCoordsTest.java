@@ -39,8 +39,8 @@ public class OverlappingCoordsTest {
         
         int dist = 500;
         double ele = 0.5;
+        CoordsManager coords = new CoordsManager(pair, ele, dist);
         /*
-        OverlappingCoords coords = new OverlappingCoords(pair, ele, dist);
         
         //calculating new coords.xml
         assertNotNull(coords.getCoords());

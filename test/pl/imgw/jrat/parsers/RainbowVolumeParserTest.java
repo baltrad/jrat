@@ -76,6 +76,7 @@ public class RainbowVolumeParserTest {
         assertEquals("rays", 361, scan.getNRays());
         assertNotNull(scan.getArray());
         
+        
     }
     
     @Test

@@ -20,16 +20,16 @@ import pl.imgw.jrat.data.VolumeContainer;
  */
 public class Comparator {
     
-    List<RayBin> rayBins;
+    List<CalidCoords> rayBins;
 
-    public Comparator(List<RayBin> rayBins, ScanContainer scan1, ScanContainer scan2) {
+    public Comparator(List<CalidCoords> rayBins, ScanContainer scan1, ScanContainer scan2) {
 
         this.rayBins = rayBins;
         
         int i = 0;
-        Iterator<RayBin> itr = rayBins.iterator();
+        Iterator<CalidCoords> itr = rayBins.iterator();
         while (itr.hasNext()) {
-            RayBin rb = itr.next();
+            CalidCoords rb = itr.next();
             double val1 = scan1.getArray().getPoint(rb.getRay1(), rb.getBin1());
             double val2 = scan2.getArray().getPoint(rb.getRay2(), rb.getBin2());
             rb.setDifference(val1 - val2);

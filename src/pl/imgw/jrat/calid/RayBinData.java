@@ -11,7 +11,7 @@ package pl.imgw.jrat.calid;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RayBinData extends RayBin {
+public class RayBinData extends CalidCoords {
     
     private Double data1;
     private Double data2;

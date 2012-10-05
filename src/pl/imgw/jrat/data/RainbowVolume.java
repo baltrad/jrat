@@ -177,8 +177,6 @@ public class RainbowVolume implements VolumeContainer {
                 if (blobid.isEmpty())
                     return null;
 
-                System.out.println(blobid);
-
                 RawByteDataArray array = (RawByteDataArray) data
                         .getArray(blobid);
 
@@ -262,7 +260,7 @@ public class RainbowVolume implements VolumeContainer {
         }
 
         LogHandler.getLogs().displayMsg(
-                "Elevation " + elevation + " not find in " + getVolId(),
+                "Elevation " + elevation + " not found in " + getVolId(),
                 LogHandler.WARNING);
 
         return null;
