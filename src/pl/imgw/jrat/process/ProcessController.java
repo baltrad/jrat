@@ -86,7 +86,12 @@ public class ProcessController {
             return true;
         }
 
-        /* Loading list of files to precess*/
+        /* Starting continues mode */
+        if(cmd.hasOption(AUTO)) {
+            return true;
+        }
+        
+        /* Loading list of files to process*/
         if (cmd.hasOption(I)) {
             FilePatternFilter filter = new RegexFileFilter();
             for (int i = 0; i < cmd.getOptionValues(I).length; i++) {
@@ -145,11 +150,6 @@ public class ProcessController {
                     ic.getBuilder().saveToFile(imgout);
                 }
             }
-        }
-
-        if (cmd.hasOption(AUTO)) {
-            // TO-DO
-            return true;
         }
 
         return false;
