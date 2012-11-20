@@ -9,12 +9,15 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
 import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.tools.out.ImageBuilder.PointText;
 
 /**
  * 
@@ -40,12 +43,20 @@ public class ImageTools {
     private boolean caption;
     private double nodata;
     private double nodetected;
+    private List<ImageBuilder.PointText> points = new ArrayList<ImageBuilder.PointText>();
 
     /**
      * @param nodata the nodata to set
      */
     public void setNodata(double nodata) {
         this.nodata = nodata;
+    }
+
+    /**
+     * @param points the points to set
+     */
+    public void setPoints(List<ImageBuilder.PointText> points) {
+        this.points = points;
     }
 
     /**
@@ -221,6 +232,11 @@ public class ImageTools {
             g.drawImage(paintCaption(), 0, 0, null);
         }
 
+        Iterator<PointText> i = points.iterator();
+        while(i.hasNext()) {
+            paintPointText(g, i.next());
+        }
+        
     }
 
     private BufferedImage paintCaption() {
@@ -245,5 +261,39 @@ public class ImageTools {
         
         return caption;
     }
+    
+    private void paintPointText(Graphics g, PointText pt) {
+        
+        int factor = 6;
+        int dist = 3;
+         
+        int x = pt.getX();
+        int y = pt.getY();
+        
+        int xText = x;
+        int yText = y;
+        
+        int width = pt.getText().length()*factor + dist;
+        int height = pt.getFont().getSize() + dist;
+        
+        if (x < xSize - width) {
+            xText = x + dist;
+        } else {
+            xText = x - width;
+        }
+
+        if (y > height) {
+            yText = y - dist;
+        } else {
+            yText = y + height;
+        }
+        
+        g.setColor(pt.clr);
+        g.fillOval(x - 1, y - 1, 3, 3);
+        
+        g.setFont(pt.getFont());
+        g.drawString(pt.getText(), xText, yText);
+        
+     }
     
 }

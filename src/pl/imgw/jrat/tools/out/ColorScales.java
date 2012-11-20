@@ -94,6 +94,28 @@ public class ColorScales {
         return scale;
     }
     
+    public static Set<MapColor> getColdWarmScale(double extrim, double step) {
+
+        double absEx = Math.abs(extrim);
+        int length = (int) (absEx / step);
+        Set<MapColor> scale = new TreeSet<MapColor>();
+        int colorStep = 255 / length;
+        
+        for (int i = 0; i < length; i++) {
+            scale.add(new MapColor(-absEx + i * step, new Color(255, colorStep * i,
+                    colorStep * i)));
+        }
+        
+        scale.add(new MapColor(0, Color.white));
+        
+        for (int i = length - 1; i >= 0; i--) {
+            scale.add(new MapColor(absEx - i * step, new Color(colorStep * i,
+                    colorStep * i, 255)));
+        }
+
+        return scale;
+    }
+    
     
     public static Set<MapColor> getRainbowScale() {
 
@@ -173,7 +195,9 @@ public class ColorScales {
      * Scale is adjusted to maximum value, maximum different colors is 256, and
      * depends on given maximum value
      * @param start
+     *            starting value
      * @param max
+     *            heighest value
      * @return
      */
     public static Set<MapColor> getGrayScale(int start, int max) {

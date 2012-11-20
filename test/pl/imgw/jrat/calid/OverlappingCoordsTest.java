@@ -3,13 +3,11 @@
  */
 package pl.imgw.jrat.calid;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
 
 import pl.imgw.jrat.process.ProcessController;
 
@@ -39,8 +37,9 @@ public class OverlappingCoordsTest {
         
         int dist = 500;
         double ele = 0.5;
-        CoordsManager coords = new CoordsManager(pair, ele, dist);
-        /*
+        double refl = 5.0;
+        CalidContainer coords = new CalidContainer(pair, ele, dist, refl);
+        
         
         //calculating new coords.xml
         assertNotNull(coords.getCoords());
@@ -54,11 +53,11 @@ public class OverlappingCoordsTest {
         proc.start();
         container = new PairsContainer(proc.getFiles());
         pair = container.getPairs().iterator().next();
-        coords = new OverlappingCoords(pair, ele, dist);
+        coords = new CalidContainer(pair, ele, dist, refl);
         
         //loading coords from coords.xml when radars are switched
         assertNotNull(coords.getCoords());
-         */
+         
 
     }
 

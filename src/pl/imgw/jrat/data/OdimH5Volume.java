@@ -79,11 +79,11 @@ public class OdimH5Volume implements VolumeContainer {
      */
     @Override
     public ScanContainer getScan(final double elevation) {
-        
-        if(getDatasetByElevation(elevation) == null) {
+
+        if (getDatasetByElevation(elevation) == null) {
             return null;
         }
-        
+
         ScanContainer scan = new ScanContainer() {
 
             String dataset = "/" + getDatasetByElevation(elevation);
@@ -126,7 +126,12 @@ public class OdimH5Volume implements VolumeContainer {
 
             @Override
             public ArrayData getArray() {
-                return data.getArray(dataset + "/data1/data");
+
+                RawByteDataArray array = (RawByteDataArray) data
+                        .getArray(dataset + "/data1/data");
+                array.setGain((Double) data.getAttributeValue(dataset + "/data1/what", "gain"));
+                array.setOffset((Double) data.getAttributeValue(dataset + "/data1/what", "offset"));
+                return array;
             }
 
             @Override
@@ -186,28 +191,32 @@ public class OdimH5Volume implements VolumeContainer {
      * 
      * Receive name of the group which contains data from given elevation
      * 
-     * @param elevation in degrees (e.g. 0.5, 3.4)
+     * @param elevation
+     *            in degrees (e.g. 0.5, 3.4)
      * @return empty string if not find
      */
     private String getDatasetByElevation(double elevation) {
         List<String> attrs = data.reader.getAllGroupMembers("/");
         Iterator<String> i = attrs.iterator();
-        while(i.hasNext()) {
+        while (i.hasNext()) {
             String group = i.next();
-            if(group.contains("dataset")) {
-                double ele = (Double) data.getAttributeValue("/" + group + "/where", "elangle");
-                if(ele == elevation)
+            if (group.contains("dataset")) {
+                double ele = (Double) data.getAttributeValue("/" + group
+                        + "/where", "elangle");
+                if (ele == elevation)
                     return group;
             }
         }
         LogHandler.getLogs().displayMsg(
                 "Elevation " + elevation + " not found in " + getVolId(),
                 LogHandler.WARNING);
-        
+
         return null;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.VolumeContainer#getVolId()
      */
     @Override
@@ -219,5 +228,5 @@ public class OdimH5Volume implements VolumeContainer {
         id += "'";
         return id;
     }
-    
+
 }

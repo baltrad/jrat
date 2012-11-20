@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.calid;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import pl.imgw.jrat.data.ScanContainer;
@@ -23,6 +24,8 @@ public class Pair {
     private VolumeContainer vol2;
     private String source1;
     private String source2;
+    
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
 
     public Pair(String source1, String source2) {
         if (!source1.isEmpty() && !source1.matches(source2)) {
@@ -113,6 +116,10 @@ public class Pair {
         return vol2;
     }
 
+    public String toString() {
+        return "[pair] " + sdf.format(date) + ": " + source1 + " " + source2;
+    }
+    
     /*
      * (non-Javadoc)
      * 

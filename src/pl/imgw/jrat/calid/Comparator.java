@@ -3,12 +3,12 @@
  */
 package pl.imgw.jrat.calid;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -20,26 +20,27 @@ import pl.imgw.jrat.data.VolumeContainer;
  */
 public class Comparator {
     
-    List<CalidCoords> rayBins;
+    public static void compare(List<PairedPoints> results, ScanContainer scan1,
+            ScanContainer scan2, double dbz) {
 
-    public Comparator(List<CalidCoords> rayBins, ScanContainer scan1, ScanContainer scan2) {
-
-        this.rayBins = rayBins;
-        
-        int i = 0;
-        Iterator<CalidCoords> itr = rayBins.iterator();
+        Iterator<PairedPoints> itr = results.iterator();
         while (itr.hasNext()) {
-            CalidCoords rb = itr.next();
-            double val1 = scan1.getArray().getPoint(rb.getRay1(), rb.getBin1());
-            double val2 = scan2.getArray().getPoint(rb.getRay2(), rb.getBin2());
-            rb.setDifference(val1 - val2);
+            PairedPoints coords = itr.next();
+            RawByteDataArray array1 = (RawByteDataArray) scan1.getArray();
+            RawByteDataArray array2 = (RawByteDataArray) scan2.getArray();
+            double val1 = array1.getPoint(coords.getRay1(), coords.getBin1());
+            double val2 = array2.getPoint(coords.getRay2(), coords.getBin2());
+            if(val1 >= dbz || val2 >= dbz) {
+//                val1 = array1.getPoint(coords.getRay1(), coords.getBin1());
+//                val2 = array2.getPoint(coords.getRay2(), coords.getBin2());
+//            System.out.println(val1 + " " + val2);
+                coords.setDifference(val1 - val2);
+                
+            }
         }
+        
+        LogHandler.getLogs().displayMsg("Comparison completed",
+                LogHandler.WARNING);
     }
 
-    public void save(int id, String pair, Date date) {
-            
-//            ResultsManager.saveResults(id, pair, date, rayBins);
-            
-    }
-    
 }

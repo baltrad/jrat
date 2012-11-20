@@ -3,9 +3,16 @@
  */
 package pl.imgw.jrat.tools.out;
 
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -14,7 +21,6 @@ import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
-import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  * 
@@ -40,6 +46,7 @@ public class ImageBuilder {
     private double nodata = 999999;
     private double nodetected = 999999;
     private String format = "PNG";
+    private List<PointText> points = new ArrayList<PointText>();
 
     public void saveToFile(File file) {
         try {
@@ -52,6 +59,16 @@ public class ImageBuilder {
                     "Saving image to file: '" + file + "' failed",
                     WARNING);
         }
+    }
+    
+    public ImageBuilder addPoint(int x, int y, String text, Color color) {
+        points.add(new PointText(x, y, text, color));
+        return this;
+    }
+
+    public ImageBuilder addPoint(int x, int y, String text, Color color, Font font) {
+        points.add(new PointText(x, y, text, color, font));
+        return this;
     }
     
     public ImageBuilder setData(ArrayData data) {
@@ -142,6 +159,7 @@ public class ImageBuilder {
         darker = false;
         nodata = 999999;
         nodetected = 999999;
+        points = new ArrayList<PointText>();
     }
 
     /**
@@ -168,6 +186,7 @@ public class ImageBuilder {
         img.setNodata(nodata);
         img.setNodetected(nodetected);
         img.hasCaption(caption);
+        img.setPoints(points);
         img.paint();
         reset();
         return img.getImg();
@@ -228,4 +247,65 @@ public class ImageBuilder {
     }    
     
 
+    class PointText{
+        
+        int x = 0, y = 0;
+        String text = "";
+        Color clr = Color.cyan;
+        Font font = new Font(Font.MONOSPACED, Font.PLAIN, 10);
+        
+        public PointText(int x, int y, String text, Color clr, Font font) {
+            this.x = x;
+            this.y = y;
+            this.text = text;
+            this.clr = clr;
+            this.font = font;
+        }
+        
+        public PointText(int x, int y, String text, Color clr) {
+            this.x = x;
+            this.y = y;
+            this.text = text;
+            this.clr = clr;
+        }
+
+        /**
+         * @return the x
+         */
+        public int getX() {
+            return x;
+        }
+
+        /**
+         * @return the y
+         */
+        public int getY() {
+            return y;
+        }
+
+        
+
+        /**
+         * @return the text
+         */
+        public String getText() {
+            return text;
+        }
+
+        /**
+         * @return the clr
+         */
+        public Color getClr() {
+            return clr;
+        }
+
+        /**
+         * @return the font
+         */
+        public Font getFont() {
+            return font;
+        }
+        
+    }
+    
 }

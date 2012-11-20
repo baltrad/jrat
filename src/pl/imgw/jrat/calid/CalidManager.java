@@ -5,6 +5,8 @@ package pl.imgw.jrat.calid;
 
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +38,7 @@ public class CalidManager {
 
     private static final String DEG = "deg";
     private static final String M = "m";
+    private static final String DBZ = "dBZ";
 
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
@@ -44,49 +47,80 @@ public class CalidManager {
 
     private double elevation = -1;
     private int distance = -1;
+    private double reflectivity = -31.5;
+    
+    private CalidContainer container;
 
-    double[] results;
 
+    public static String getCalidPath(Pair pair, int distance, double elevation) {
+
+        String pairsName = pair.getVol1().getSiteName()
+                + pair.getVol2().getSiteName();
+
+        String distele = distance + "_" + elevation;
+
+        String folder = "calid/overlapping/" + pairsName + "/" + distele;
+
+        new File(folder).mkdirs();
+
+        return new File(folder).getPath();
+    }
+    
     // private String[] par = { "0.5deg", "500m" };
 
     /**
      * 
-     * Creating pairs from list of files and setting two parameters for the
-     * algorithm:
+     * Initializes manager and setting two parameters for the algorithm:
      * 
      * <p>
      * <tt>elevation</tt> of the scan, in degrees, the proper format for the
-     * argument should contain value and word 'deg' e.g. '0.5deg'</pre>
+     * argument should contain numerical value and word 'deg' e.g. '0.5deg'</pre>
      * 
      * <p>
      * <tt>distance</tt> (maximal) between overlapping pixels in meters, in
      * other words the precision of finding overlapping pixels, the proper
-     * format for the argument should contain value and word 'm' e.g.
+     * format for the argument should contain numerical value and word 'm' e.g.
      * '500m'</pre>
      * 
+     * <p>
+     * <tt>reflectivity</tt> (minimal) that is taken to calculation, all points
+     * with reflectivity below this value are skipped (they are treated as no
+     * data). The proper format for the argument should contain numerical value
+     * and word 'dBZ' e.g. '500m'</pre>
+     * 
      * @param par
-     *            array of size 2 eg.
-     *            <code>String[] par = { "0.5deg", "500m" }</code>
+     *            array of size 2 or 3 eg.
+     *            <p>
+     *            <code>String[] par = { "0.5deg", "500m" }</code> - elevation
+     *            and distance
+     *            <p>
+     *            <code>String[] par = { "0.5deg", "500m", "3.5dBZ" }</code> -
+     *            elevation, distance and reflectivity
      */
     public CalidManager(String[] par) {
 
-        if (par == null || par.length != 2) {
+        if (par == null || par.length < 2) {
             LogHandler.getLogs().displayMsg(
                     "Arguments for CALID are incorrect", WARNING);
             return;
         }
 
         try {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < par.length; i++) {
                 if (par[i].endsWith(DEG)) {
                     elevation = Double.parseDouble(par[i].substring(0,
-                            par[i].length() - 3));
+                            par[i].length() - DEG.length()));
                 } else if (par[i].endsWith(M)) {
                     distance = Integer.parseInt(par[i].substring(0,
-                            par[i].length() - 1));
+                            par[i].length() - M.length()));
+                } else if (par[i].endsWith(DBZ)) {
+                    reflectivity = Double.parseDouble(par[i].substring(0,
+                            par[i].length() - DBZ.length()));
                 }
             }
         } catch (NumberFormatException e) {
+            LogHandler.getLogs().displayMsg(
+                    "Format of arguments for CALID is incorrect", WARNING);
             return;
         }
 
@@ -96,54 +130,65 @@ public class CalidManager {
 
     }
 
+   
     /**
+     * Compares two scans in 
      * 
-     * 
-     * @return 
+     * @return null if failed
      */
-    public List<CalidCoords> calculate(Pair pair) {
+    public ArrayList<PairedPoints> compare(Pair pair) {
+        //check if the volumes contain selected elevation
         if (pair.getVol1().getScan(elevation) == null
                 || pair.getVol2().getScan(elevation) == null) {
             return null;
-
         }
+        
+        ArrayList<PairedPoints> pairedPointsList = null;
 
+        
+//        LogHandler.getLogs().displayMsg(
+//                "Calculating overlapping points for: " + pair.getSource1()
+//                        + " and " + pair.getSource2(), LogHandler.WARNING);
 
-        List<CalidCoords> rayBins = null;
-        CoordsManager coords = new CoordsManager(pair, elevation, distance);
-
-        results = ResultsManager.loadResults(coords.getId(), pair.toString(),
-                pair.getDate());
-
-        if (results == null) {
-
+        container = new CalidContainer(pair, elevation, distance, reflectivity);
+        pairedPointsList = container.getCoords();
+        
+        if(!pairedPointsList.isEmpty()) {
             LogHandler.getLogs().displayMsg(
-                    "Calculating overlapping points for: " + pair.getSource1()
-                    + " and " + pair.getSource2(), LogHandler.WARNING);
-            rayBins = coords.getCoords();
-            Comparator comp = new Comparator(rayBins, pair.getVol1().getScan(
-                    elevation), pair.getVol2().getScan(elevation));
-
-            // results = comp.getResults();
-            // comp.save(coords.getId(), pair.toString(), pair.getDate());
-
+                    "Number of overlapping points: " + pairedPointsList.size(), LogHandler.WARNING);
+ 
+        } else {
+            LogHandler.getLogs().displayMsg(
+                    "No overlapping points.", LogHandler.WARNING);
+            return null;
         }
+        
+        if (!container.loadResults(pair.getDate())) {
+
+            Comparator.compare(pairedPointsList,
+                    pair.getVol1().getScan(elevation),
+                    pair.getVol2().getScan(elevation), reflectivity);
+
+            container.saveResults();
+        }
+        
+        // results = comp.getResults();
+        // comp.save(coords.getId(), pair.toString(), pair.getDate());
 
         LogHandler.getLogs().displayMsg(
-                "Calculation completed for: " + pair.getSource1()
+                "Comparison completed for: " + pair.getSource1()
                 + " and " + pair.getSource2(), LogHandler.WARNING);
         
-        
-        return rayBins;
+        return pairedPointsList;
     }
 
-    public List<CalidCoords> getResults(Pair pair, Date date, double elevation,
-            int distance) {
+    public List<PairedPoints> getResults(Pair pair, Date date) {
+        
         return null;
     }
 
-    public void displayResults(Pair pair, Date date, double elevation,
-            int distance) {
+    
+    public void displayResults(Pair pair, Date date) {
 
     }
 

@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidCoords {
+public class PairedPoints {
 
     private int ray1;
     private int bin1;
@@ -37,7 +37,7 @@ public class CalidCoords {
     /**
      * @param difference the difference to set
      */
-    public void setDifference(double difference) {
+    public void setDifference(Double difference) {
         this.difference = difference;
     }
 
@@ -72,7 +72,7 @@ public class CalidCoords {
     /**
      * 
      */
-    public CalidCoords(int ray1, int bin1, int ray2, int bin2) {
+    public PairedPoints(int ray1, int bin1, int ray2, int bin2) {
         this.ray1 = ray1;
         this.bin1 = bin1;
         this.ray2 = ray2;
@@ -90,6 +90,10 @@ public class CalidCoords {
             str += "\t(" + coord1.x + "," + coord1.y + ")\t(" + coord2.x + ","
                     + coord2.y + ")";
         }
+        if(difference != null) {
+            str += "\tdiff=" + difference; 
+        }
+        
         return str;
     }
     

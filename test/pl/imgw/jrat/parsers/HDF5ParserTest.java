@@ -119,6 +119,9 @@ public class HDF5ParserTest {
         assertEquals((int)value, i);
         double d = pdc1.getData().getPoint(x, y);
         assertEquals(value, d, 0.1);
+        
+        System.out.println(pdc2.getScan(0.5).getArray().getPoint(10, 10));
+        System.out.println(pdc2.getScan(0.5).getArray().getRawIntPoint(10, 10));
     }
     
 }

@@ -5,11 +5,19 @@ package pl.imgw.jrat.calid;
 
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,9 +43,10 @@ import pl.imgw.jrat.tools.out.XMLHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CoordsManager {
+public class CalidContainer {
 
     private static final String COORDSFILE = "coords.xml";
+    private static final String RESULTSFILE = "results";
 
     private static final String ROOT = "pairs";
     private static final String PAIR = "pair";
@@ -58,29 +67,28 @@ public class CoordsManager {
     private static final String R2RAY = "r2ray";
     private static final String ID = "id";
 
-    private List<CalidCoords> rayBins = new ArrayList<CalidCoords>();
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
+    private static final String NULL = "n";
+
+    private ArrayList<PairedPoints> pairedPointsList = new ArrayList<PairedPoints>();
     private int id = -1;
 
     private Pair pair;
     private double elevation = 0;
     private int distance = 0;
+    private double reflectivity = 0;
 
     public boolean valid = true;
 
-    private String getCalidPath() {
-
-        String pairsName = pair.getVol1().getSiteName()
-                + pair.getVol2().getSiteName();
-
-        String distele = distance + "_" + elevation;
-
-        String folder = "calid/overlapping/" + pairsName + "/" + distele;
-        
-        new File(folder).mkdirs();
-        
-        return new File(folder, COORDSFILE).getPath();
+    private String getCoordsPath() {
+        return new File(CalidManager.getCalidPath(pair, distance, elevation),
+                COORDSFILE).getPath();
     }
 
+    private String getResultsPath() {
+        return new File(CalidManager.getCalidPath(pair, distance, elevation),
+                RESULTSFILE + reflectivity).getPath();
+    }
 
     
     /**
@@ -88,7 +96,7 @@ public class CoordsManager {
      * @param elevation
      * @param distance
      */
-    public CoordsManager(Pair pair, double elevation, int distance) {
+    public CalidContainer(Pair pair, double elevation, int distance, double reflectity) {
 
         if (pair.isValid()) {
             this.pair = pair;
@@ -98,15 +106,15 @@ public class CoordsManager {
         if (elevation > 0 && distance > 0) {
             this.distance = distance;
             this.elevation = elevation;
+            this.reflectivity = reflectity;
         } else
             valid = false;
-
     }
 
-    public List<CalidCoords> getCoords(){
+    public ArrayList<PairedPoints> getCoords(){
 
-        if(loadFromFile() || calculateMatchingPoints()) {
-            return rayBins;
+        if(loadCoords() || calculateMatchingPoints()) {
+            return pairedPointsList;
         }
         return null;
     }
@@ -120,6 +128,8 @@ public class CoordsManager {
         if (!valid)
             return false;
 
+        LogHandler.getLogs().displayMsg("Calculating coordinates", LogHandler.WARNING);
+        
         Point2D.Double r1coords = new Point2D.Double(pair.getVol1().getLon(),
                 pair.getVol1().getLat());
         Point2D.Double r2coords = new Point2D.Double(pair.getVol2().getLon(),
@@ -202,15 +212,15 @@ public class CoordsManager {
                             RayBinData rb = new RayBinData(r1, b1, r2, b2);
                             rb.setCoord1(p1);
                             rb.setCoord2(p2);
-                            rayBins.add(rb);
+                            pairedPointsList.add(rb);
                         }
                     }
                 }
             }
         }
-        CalidCoords[] rb = rayBins.toArray(new CalidCoords[0]);
+//        CalidCoords[] rb = rayBins.toArray(new CalidCoords[0]);
         
-        saveToFile();
+        saveCoords();
         return true;
     }
 
@@ -227,9 +237,9 @@ public class CoordsManager {
     public int[] getMatchingPointsData(VolumeContainer vol1,
             VolumeContainer vol2) {
 
-        int data[] = new int[rayBins.size()];
+        int data[] = new int[pairedPointsList.size()];
         int i = 0;
-        Iterator<CalidCoords> itr = rayBins.iterator();
+        Iterator<PairedPoints> itr = pairedPointsList.iterator();
         // List<RayBinData> rbdlist = new ArrayList<RayBinData>();
         while (itr.hasNext()) {
             RayBinData rbd = (RayBinData) itr.next();
@@ -252,9 +262,9 @@ public class CoordsManager {
     /**
      * helping method
      */
-    private boolean saveToFile() {
+    private boolean saveCoords() {
         
-        if (rayBins.isEmpty()) {
+        if (pairedPointsList.isEmpty()) {
             return false;
         }
         
@@ -273,7 +283,7 @@ public class CoordsManager {
         Element root = doc.createElement(ROOT);
 
         HashSet<Integer> ids = new HashSet<Integer>();
-        Document oldDoc = XMLHandler.loadXML(getCalidPath());
+        Document oldDoc = XMLHandler.loadXML(getCoordsPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
             NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {
@@ -321,9 +331,9 @@ public class CoordsManager {
                 String.valueOf(pair.getVol2().getScan(elevation).getRScale()));
         /* ----------- */
         
-        Iterator<CalidCoords> itr = rayBins.iterator();
+        Iterator<PairedPoints> itr = pairedPointsList.iterator();
         while (itr.hasNext()) {
-            CalidCoords rb = itr.next();
+            PairedPoints rb = itr.next();
             Element raybin = doc.createElement(POINT);
             raybin.setAttribute(R1LON, String.valueOf(rb.getCoord1().x));
             raybin.setAttribute(R1LAT, String.valueOf(rb.getCoord1().y));
@@ -340,7 +350,7 @@ public class CoordsManager {
 
         doc.appendChild(root);
 
-        XMLHandler.saveXMLFile(doc, getCalidPath());
+        XMLHandler.saveXMLFile(doc, getCoordsPath());
         return true;
     }
 
@@ -362,10 +372,11 @@ public class CoordsManager {
      * 
      * @return
      */
-    public boolean loadFromFile() {
+    public boolean loadCoords() {
         
-        Document oldDoc = XMLHandler.loadXML(getCalidPath());
+        Document oldDoc = XMLHandler.loadXML(getCoordsPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
+            LogHandler.getLogs().displayMsg("Loading coordinates from file", LogHandler.WARNING);
             NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {
 
@@ -419,16 +430,17 @@ public class CoordsManager {
                         for (int c = 0; c < coords.getLength(); c++) {
                             if (coords.item(c).getNodeName().matches(POINT)) {
                                 try {
-                                    x = XMLHandler.getAttributeValue(node,
+                                    x = XMLHandler.getAttributeValue(coords.item(c),
                                             R1LON);
-                                    y = XMLHandler.getAttributeValue(node,
+                                    y = XMLHandler.getAttributeValue(coords.item(c),
                                             R1LAT);
+                                    
                                     Point2D.Double r1p = new Point2D.Double(
                                             Double.parseDouble(x),
                                             Double.parseDouble(y));
-                                    x = XMLHandler.getAttributeValue(node,
+                                    x = XMLHandler.getAttributeValue(coords.item(c),
                                             R2LON);
-                                    y = XMLHandler.getAttributeValue(node,
+                                    y = XMLHandler.getAttributeValue(coords.item(c),
                                             R2LAT);
                                     Point2D.Double r2p = new Point2D.Double(
                                             Double.parseDouble(x),
@@ -449,7 +461,7 @@ public class CoordsManager {
                                             r1bin, r2ray, r2bin);
                                     rbd.setCoord1(r1p);
                                     rbd.setCoord2(r2p);
-                                    rayBins.add(rbd);
+                                    pairedPointsList.add(rbd);
 
                                 } catch (NumberFormatException e) {
                                     continue;
@@ -457,7 +469,7 @@ public class CoordsManager {
                             }
 
                         }
-                        if (!rayBins.isEmpty())
+                        if (!pairedPointsList.isEmpty())
                             return true;
                     }
 
@@ -468,12 +480,87 @@ public class CoordsManager {
         return false;
     }
 
-    public int getId() {
-        return id;
+    public boolean loadResults(Date date){
+        
+        if (pairedPointsList.isEmpty())
+            return false;
+        
+        File file = new File(getResultsPath());
+        try {
+            Scanner scan = new Scanner(file);
+            while (scan.hasNext()) {
+                String line = scan.nextLine();
+                String[] words = line.split(" ");
+                if (words.length != pairedPointsList.size() + 1) {
+                    continue;
+                }
+                Date dateRead = sdf.parse(words[0]);
+                if (dateRead.equals(date)) {
+                    for (int i = 1; i < words.length; i++) {
+                        if (words[i].matches(NULL)) {
+                            pairedPointsList.get(i - 1).setDifference(null);
+                        } else
+                            pairedPointsList.get(i - 1).setDifference(
+                                    Double.parseDouble(words[i]));
+                    }
+                    return true;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+        } catch (NumberFormatException e) {
+            
+        }
+        return false;
+    }
+    
+    public void saveResults() {
+        if (pairedPointsList.isEmpty())
+            return;
+
+        File file = new File(getResultsPath());
+
+        PrintWriter pw = null;
+        try {
+            if (!file.exists())
+                file.createNewFile();
+            pw = new PrintWriter(new FileOutputStream(file, true), true);
+            pw.print(sdf.format(pair.getDate()));
+            
+            Iterator<PairedPoints> itr = pairedPointsList.iterator();
+            while (itr.hasNext()) {
+                pw.print(" ");
+                PairedPoints p = itr.next();
+                String v = ((p.getDifference() == null) ? NULL : Double
+                        .toString(p.getDifference()));
+                pw.print(v);
+            }
+            pw.print("\n");
+            LogHandler.getLogs().displayMsg("Saving results complete",
+                    LogHandler.WARNING);
+        } catch (FileNotFoundException e) {
+            LogHandler.getLogs()
+                    .displayMsg(
+                            "Cannot create result file in path "
+                                    + file.getAbsolutePath() + "\n"
+                                    + e.getMessage(), 3);
+        } catch (IOException e) {
+            LogHandler.getLogs()
+                    .displayMsg(
+                            "Cannot create result file in path "
+                                    + file.getAbsolutePath() + "\n"
+                                    + e.getMessage(), 3);
+
+        } finally {
+            if (pw != null)
+                pw.close();
+        }
     }
 
     public static void main(String[] args) {
-        System.out.println(CoordsManager.getAngle(125, 250));
+        System.out.println(CalidContainer.getAngle(125, 250));
     }
 
 }
