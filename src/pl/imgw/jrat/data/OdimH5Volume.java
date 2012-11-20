@@ -21,9 +21,9 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class OdimH5Volume implements VolumeContainer {
 
-    H5Data data = null;
+    H5DataContainer data = null;
 
-    public OdimH5Volume(H5Data data) {
+    public OdimH5Volume(H5DataContainer data) {
         if (((String) data.getAttributeValue("/what", "object"))
                 .matches("PVOL"))
             this.data = data;

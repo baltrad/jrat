@@ -15,9 +15,9 @@ import java.util.Date;
  */
 public class OdimH5CompoImage implements ImageContainer {
 
-    H5Data data;
+    H5DataContainer data;
 
-    public OdimH5CompoImage(H5Data data) {
+    public OdimH5CompoImage(H5DataContainer data) {
         if (((String) (data.getAttributeValue("/what", "object")))
                 .matches("COMP"))
             this.data = data;

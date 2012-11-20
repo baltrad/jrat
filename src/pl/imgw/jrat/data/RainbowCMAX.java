@@ -20,9 +20,9 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class RainbowCMAX implements ImageContainer {
 
-    private RainbowData data;
+    private RainbowDataContainer data;
 
-    public RainbowCMAX(RainbowData data) {
+    public RainbowCMAX(RainbowDataContainer data) {
         if (data.getRainbowAttributeValue("/product", "name").matches("CMAX")) {
             this.data = data;
             ((RawByteDataArray) getData()).setGain(0.5);

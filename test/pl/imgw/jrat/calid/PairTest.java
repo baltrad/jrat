@@ -10,9 +10,9 @@ import java.io.File;
 import org.junit.Test;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.H5Data;
+import pl.imgw.jrat.data.H5DataContainer;
 import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
@@ -36,9 +36,9 @@ public class PairTest {
         ParserManager pm = new ParserManager();
         pm.setParser(new DefaultParser());
         pm.initialize(new File("test-data/calid", "T_PAGZ41_C_SOWR_20110922004019.h5"));
-        VolumeContainer vol1 = new OdimH5Volume((H5Data) pm.getProduct());
+        VolumeContainer vol1 = new OdimH5Volume((H5DataContainer) pm.getProduct());
         pm.initialize(new File("test-data/calid", "T_PAGZ44_C_SOWR_20110922004021.h5"));
-        VolumeContainer vol2 = new OdimH5Volume((H5Data) pm.getProduct());
+        VolumeContainer vol2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
         pair = new Pair(vol1, vol2);
         Pair pair2 = new Pair(vol2, vol1);
         assertTrue(pair.getVol1() == pair2.getVol1());
@@ -52,9 +52,9 @@ public class PairTest {
         ParserManager pm = new ParserManager();
         pm.setParser(new DefaultParser());
         pm.initialize(new File("test-data/calid", "2011082113402900dBZ.vol"));
-        VolumeContainer vol1 = new RainbowVolume((RainbowData) pm.getProduct());
+        VolumeContainer vol1 = new RainbowVolume((RainbowDataContainer) pm.getProduct());
         pm.initialize(new File("test-data/calid", "2011082113400400dBZ.vol"));
-        VolumeContainer vol2 = new RainbowVolume((RainbowData) pm.getProduct());
+        VolumeContainer vol2 = new RainbowVolume((RainbowDataContainer) pm.getProduct());
         pair = new Pair(vol1, vol2);
         assertTrue("validation is not working well with rainbow format", pair.isValid());
         assertEquals(60, pair.getVol2().getScan(elevation).getArray().getRawIntPoint(301, 20));

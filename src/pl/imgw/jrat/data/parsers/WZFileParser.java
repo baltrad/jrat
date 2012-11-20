@@ -30,7 +30,7 @@ import javax.xml.stream.XMLStreamReader;
 import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZData;
+import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -50,7 +50,7 @@ public class WZFileParser implements FileParser {
     private final String XML_INFO_TAG = "info";
 
     private HashMap<Integer, DataBufferContainer> blobs;
-    private WZData data = null;
+    private WZDataContainer data = null;
     
     private final int CPX = 0;
     private final int SPE = 1;
@@ -242,7 +242,7 @@ public class WZFileParser implements FileParser {
                 rbdc.setByteData(infDataBuff);
                 arrays.put("WZ", rbdc);
             }
-            data = new WZData();
+            data = new WZDataContainer();
             data.setBelowth(belowth);
             data.setNodata(nodata);
             data.setArrayList(arrays);

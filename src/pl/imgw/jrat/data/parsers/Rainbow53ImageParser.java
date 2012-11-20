@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -45,7 +45,7 @@ public class Rainbow53ImageParser implements FileParser{
 
     private RainbowBlobHandler rp;
     private HashMap<Integer, DataBufferContainer> blobs;
-    private RainbowData data = null;
+    private RainbowDataContainer data = null;
     
     private static final String PRODUCT = "product";
     private static final String SIZE_X = "rows";
@@ -232,7 +232,7 @@ public class Rainbow53ImageParser implements FileParser{
                 return false;
             }
             
-            data = new RainbowData();
+            data = new RainbowDataContainer();
             Iterator<Param> itr = params.iterator();
             while(itr.hasNext()) {
                 Param p = itr.next();

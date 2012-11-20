@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.ScanContainer;
@@ -49,7 +49,7 @@ public class RainbowVolumeParserTest {
     @Test
     public void isValidVolume() {
         pm.initialize(file);
-        RainbowData data = (RainbowData) pm.getProduct();
+        RainbowDataContainer data = (RainbowDataContainer) pm.getProduct();
         
 //        System.out.println(data.getArrayList().get("10_rayinfo").getPoint(10, 10));
         
@@ -61,7 +61,7 @@ public class RainbowVolumeParserTest {
     @Test
     public void getAttributeTest() {
         pm.initialize(file);
-        RainbowData data = (RainbowData) pm.getProduct();
+        RainbowDataContainer data = (RainbowDataContainer) pm.getProduct();
         RainbowVolume vol = new RainbowVolume(data);
         assertTrue(((String) data.getAttributeValue(
                 "/volume/scan/slice:refid=0/posangle", "")).matches("0.5"));

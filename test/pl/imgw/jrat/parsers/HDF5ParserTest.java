@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.H5Data;
+import pl.imgw.jrat.data.H5DataContainer;
 import pl.imgw.jrat.data.OdimH5CompoImage;
 import pl.imgw.jrat.data.OdimH5Volume;
 import pl.imgw.jrat.data.DataContainer;
@@ -55,7 +55,7 @@ public class HDF5ParserTest {
     @Test
     public void getScanTest() {
         pm.initialize(file2);
-        H5Data data = (H5Data) pm.getProduct();
+        H5DataContainer data = (H5DataContainer) pm.getProduct();
         VolumeContainer vol = new OdimH5Volume(data);
         ScanContainer scan = vol.getScan(10.6);
         assertEquals("nbins is wrong", 250, scan.getNBins());
@@ -74,10 +74,10 @@ public class HDF5ParserTest {
         assertTrue("This is not a hdf5 file", pm.isValid(file2));
         
         pm.initialize(file1);
-        pdc1 = new OdimH5CompoImage((H5Data) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((H5DataContainer) pm.getProduct());
         
         pm.initialize(file2);
-        pdc2 = new OdimH5Volume((H5Data) pm.getProduct());
+        pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
         
         assertNotNull("Initialization failed", pdc1);
         assertNotNull("Initializationf of arrays failed", pdc1.getData());
@@ -92,10 +92,10 @@ public class HDF5ParserTest {
     @Test
     public void gettingAttributeTest() {
         pm.initialize(file1);
-        pdc1 = new OdimH5CompoImage((H5Data) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((H5DataContainer) pm.getProduct());
         
         pm.initialize(file2);
-        pdc2 = new OdimH5Volume((H5Data) pm.getProduct());
+        pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
         
         int i = pdc1.getXSize();
         assertEquals("xsize in where group is wrong:", 1900, i);
@@ -108,10 +108,10 @@ public class HDF5ParserTest {
     @Test
     public void gettingDataValues() {
         pm.initialize(file1);
-        pdc1 = new OdimH5CompoImage((H5Data) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((H5DataContainer) pm.getProduct());
         
         pm.initialize(file2);
-        pdc2 = new OdimH5Volume((H5Data) pm.getProduct());
+        pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
         
         byte b  = pdc1.getData().getRawBytePoint(x, y);
         assertEquals((byte)value, b);

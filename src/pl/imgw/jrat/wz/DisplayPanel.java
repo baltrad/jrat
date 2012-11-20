@@ -32,9 +32,9 @@ import javax.swing.JTextField;
 
 import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZData;
+import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.IntArrayParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
@@ -220,11 +220,11 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         
         loadedArray = data.getArray(selectedItem);
         Set<MapColor> scale = ColorScales.getRedScale(1, 3);
-        if (data instanceof WZData) {
-            nodata = ((WZData) data).getNodata()
+        if (data instanceof WZDataContainer) {
+            nodata = ((WZDataContainer) data).getNodata()
                     * ((RawByteDataArray) loadedArray).getGain()
                     + ((RawByteDataArray) loadedArray).getOffset();
-            undetected = ((WZData) data).getBelowth()
+            undetected = ((WZDataContainer) data).getBelowth()
                     * ((RawByteDataArray) loadedArray).getGain()
                     + ((RawByteDataArray) loadedArray).getOffset();
 
@@ -233,7 +233,7 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
             double step = 5 * ((RawByteDataArray) loadedArray).getGain();
             scale = ColorScales.getRedScale(min, step);
             fg = new File("overlay", "wz_fg.png");
-        } else if (data instanceof RainbowData) {
+        } else if (data instanceof RainbowDataContainer) {
             scale = ColorScales.getRBScale();
             if(par.contains("flag")) {
                 ((RawByteDataArray) loadedArray).setGain(0);

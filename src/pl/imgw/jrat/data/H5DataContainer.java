@@ -21,7 +21,7 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class H5Data implements DataContainer {
+public class H5DataContainer implements DataContainer {
 
     public static final String INT = "INTEGER";
     public static final String LONG = "LONG";

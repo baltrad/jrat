@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.RainbowCMAX;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
@@ -52,7 +52,7 @@ public class RainbowCMAXParserTest {
     @Test
     public void initializeTest() {
         pm.initialize(file);
-        pdc = new RainbowCMAX((RainbowData) pm.getProduct());
+        pdc = new RainbowCMAX((RainbowDataContainer) pm.getProduct());
         assertTrue("Initialization failed", pdc.isValid());
 
     }
@@ -60,7 +60,7 @@ public class RainbowCMAXParserTest {
     @Test
     public void attributeTest() {
         pm.initialize(file);
-        pdc = new RainbowCMAX((RainbowData) pm.getProduct());
+        pdc = new RainbowCMAX((RainbowDataContainer) pm.getProduct());
         
         assertEquals("Bad source name:", "Gdansk", pdc.getSourceName());
         assertEquals("Bad xscale vale:", 1000.0, pdc.getXScale(), 0.1);

@@ -24,7 +24,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class RainbowData implements DataContainer {
+public class RainbowDataContainer implements DataContainer {
 
     protected Map<String, ArrayData> arrayList = new HashMap<String, ArrayData>();
     protected Document attribues;

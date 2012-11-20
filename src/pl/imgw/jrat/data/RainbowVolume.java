@@ -20,9 +20,9 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class RainbowVolume implements VolumeContainer {
 
-    RainbowData data = null;
+    RainbowDataContainer data = null;
 
-    public RainbowVolume(RainbowData data) {
+    public RainbowVolume(RainbowDataContainer data) {
         if (((String) data.getAttributeValue("/volume", "type")).matches("vol"))
             this.data = data;
 

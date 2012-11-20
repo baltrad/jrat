@@ -15,7 +15,7 @@ import java.util.Set;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class WZData implements DataContainer {
+public class WZDataContainer implements DataContainer {
     
     private double nodata = -9999;
     private double belowth = -9999;

@@ -15,7 +15,7 @@ import java.util.Set;
 import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.FloatDataArray;
-import pl.imgw.jrat.data.H5Data;
+import pl.imgw.jrat.data.H5DataContainer;
 import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
@@ -34,7 +34,7 @@ public class OdimH5Parser implements FileParser {
     public final static String FLOAT_SYMBOL = "FLOAT";
     public final static String INT_SYMBOL = "INTEGER";
     
-    private H5Data h5data;
+    private H5DataContainer h5data;
     IHDF5Reader reader;
     private static final String ROOT = "/";
     private static final String DATA = "data";
@@ -63,7 +63,7 @@ public class OdimH5Parser implements FileParser {
         
         try {
             reader = HDF5Factory.openForReading(file);
-            h5data = new H5Data();
+            h5data = new H5DataContainer();
             h5data.setReader(reader);
             LogHandler.getLogs().displayMsg("File " + file.getName() + " initialized",
                     WARNING);

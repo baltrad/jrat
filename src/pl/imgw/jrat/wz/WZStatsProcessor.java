@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
 
 import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZData;
+import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.WZFileParser;
 import pl.imgw.jrat.process.FileWatcher;
@@ -49,7 +49,7 @@ import static pl.imgw.jrat.tools.out.Logging.*;
 public class WZStatsProcessor implements FilesProcessor {
 
     private int[][] newArray = null;
-    private WZData data = null;
+    private WZDataContainer data = null;
     private File dest = new File(".");
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_");
     private ParserManager pm = new ParserManager();
@@ -67,7 +67,7 @@ public class WZStatsProcessor implements FilesProcessor {
             if (pm.initialize(file[i])) {
                 System.out.println("processing WZ file: "
                         + file[i].getAbsolutePath());
-                data = (WZData) pm.getProduct();
+                data = (WZDataContainer) pm.getProduct();
                 updateResults();
                 data = null;
                 updateList(file[i].getName());

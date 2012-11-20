@@ -15,9 +15,9 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.Before;
 
-import pl.imgw.jrat.data.H5Data;
+import pl.imgw.jrat.data.H5DataContainer;
 import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
@@ -61,9 +61,9 @@ public class PairsContainerTest {
         File f1 = new File("test-data/calid/2011082113400400dBZ.vol");
         File f2 = new File("test-data/calid/2011082113402900dBZ.vol");
         manager.initialize(f1);
-        VolumeContainer vol1 = new RainbowVolume((RainbowData) manager.getProduct());
+        VolumeContainer vol1 = new RainbowVolume((RainbowDataContainer) manager.getProduct());
         manager.initialize(f2);
-        VolumeContainer vol2 = new RainbowVolume((RainbowData) manager.getProduct());
+        VolumeContainer vol2 = new RainbowVolume((RainbowDataContainer) manager.getProduct());
         Pair pair1 = new Pair(vol1, vol2);
         Pair pair2 = new Pair(vol2, vol1);
         assertTrue(pair1.equals(pair2));
@@ -71,9 +71,9 @@ public class PairsContainerTest {
         f1 = new File("test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5");
         f2 = new File("test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5");
         manager.initialize(f1);
-        vol1 = new OdimH5Volume((H5Data) manager.getProduct());
+        vol1 = new OdimH5Volume((H5DataContainer) manager.getProduct());
         manager.initialize(f2);
-        vol2 = new OdimH5Volume((H5Data) manager.getProduct());
+        vol2 = new OdimH5Volume((H5DataContainer) manager.getProduct());
         pair2 = new Pair(vol1, vol2);
         assertTrue(!pair1.equals(pair2));
     }

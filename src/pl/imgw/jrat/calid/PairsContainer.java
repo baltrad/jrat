@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.H5Data;
+import pl.imgw.jrat.data.H5DataContainer;
 import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowData;
+import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
@@ -52,10 +52,10 @@ public class PairsContainer {
                 DataContainer data = manager.getProduct();
                 VolumeContainer vol = null;
 
-                if (data instanceof H5Data) {
-                    vol = new OdimH5Volume((H5Data) data);
-                } else if (data instanceof RainbowData) {
-                    vol = new RainbowVolume((RainbowData) data);
+                if (data instanceof H5DataContainer) {
+                    vol = new OdimH5Volume((H5DataContainer) data);
+                } else if (data instanceof RainbowDataContainer) {
+                    vol = new RainbowVolume((RainbowDataContainer) data);
                 } else
                     continue;
 
