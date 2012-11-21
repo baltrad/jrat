@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.tools.in;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,16 +34,16 @@ public class FileSegregatorByDateAndSource {
 
     private Map<Date, HashMap<String, DataContainer>> seg = new HashMap<Date, HashMap<String, DataContainer>>();
 
-    public void setInputFiles(List<FileDate> files) {
+    public void setInputFiles(List<File> files) {
 
         ParserManager manager = new ParserManager();
         manager.setParser(new DefaultParser());
 
-        for (FileDate f : files) {
+        for (File f : files) {
 //            System.out.println(f);
-            if (manager.initialize(f.getFile())) {
+            if (manager.initialize(f)) {
                 DataContainer data = manager.getProduct();
-                Date date = f.getDate();
+                Date date = RegexFileFilter.getDate(f);
                 // System.out.println("1 " + date);
                 String source = "";
 

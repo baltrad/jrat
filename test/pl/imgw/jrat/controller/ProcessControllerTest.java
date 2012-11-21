@@ -30,11 +30,6 @@ public class ProcessControllerTest {
     @Test
     public void testStart() {
 
-        args = "-a arg".split(" ");
-        pc = new ProcessController(args);
-        
-        assertTrue(pc.start());
-        
         args = "--print".split(" ");
         pc = new ProcessController(args);
         
@@ -44,6 +39,20 @@ public class ProcessControllerTest {
         pc = new ProcessController(args);
         
         assertTrue(pc.start());
+        
+        args = "-h".split(" ");
+        pc = new ProcessController(args);
+        
+        assertTrue(!pc.start());
+        
+        /*
+        args = "-i test-data/watched --test --seq 1 -v".split(" ");
+        pc = new ProcessController(args);
+        pc.start();
+        args = "-i test-data/watched test-data/calid test-data --test --watch -v".split(" ");
+        pc = new ProcessController(args);
+        pc.start();
+         */
         
     }
 

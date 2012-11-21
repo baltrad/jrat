@@ -4,6 +4,8 @@
 package pl.imgw.jrat.wz;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import pl.imgw.jrat.process.FileWatcher;
 import pl.imgw.jrat.tools.out.LogHandler;
@@ -28,12 +30,14 @@ public class WZStats {
             return;
 
         File file = new File(args[0]);
+        List<File> files = new LinkedList<File>();
+        files.add(file);
         File dest = new File(args[1]);
         if (file.exists() && dest.exists()) {
             LogHandler.getLogs().setLoggingVerbose(ERROR);
             WZStatsProcessor proc = new WZStatsProcessor();
             proc.setDest(dest);
-            FileWatcher fw = new FileWatcher(proc, file);
+            FileWatcher fw = new FileWatcher(proc, files);
 
             // SequentialProcess sp = new SequentialProcess(proc, new
             // File("test-data/watched"), 1);

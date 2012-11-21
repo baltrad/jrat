@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.calid;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,16 +40,16 @@ public class PairsContainer {
      * 
      * @param files only valid volume files will be parsed and used to create pairs.
      */
-    public PairsContainer(List<FileDate> files) {
+    public PairsContainer(List<File> files) {
 
         ParserManager manager = new ParserManager();
         manager.setParser(new DefaultParser());
 
         Map<Date, Map<String, VolumeContainer>> segregated = new HashMap<Date, Map<String, VolumeContainer>>();
 
-        for (FileDate f : files) {
+        for (File f : files) {
             // System.out.println(f);
-            if (manager.initialize(f.getFile())) {
+            if (manager.initialize(f)) {
                 DataContainer data = manager.getProduct();
                 VolumeContainer vol = null;
 

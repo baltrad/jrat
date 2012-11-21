@@ -3,10 +3,14 @@
  */
 package pl.imgw.jrat.process;
 
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import name.pachler.nio.file.ClosedWatchServiceException;
@@ -18,7 +22,6 @@ import name.pachler.nio.file.WatchEvent;
 import name.pachler.nio.file.WatchKey;
 import name.pachler.nio.file.WatchService;
 import pl.imgw.jrat.tools.out.LogHandler;
-import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  * 
@@ -35,20 +38,26 @@ public class FileWatcher implements Runnable {
     private HashMap<WatchKey, String> pathMap = new HashMap<WatchKey, String>();
 
     private FilesProcessor proc = null;
-    private File watchedPath = null;
+    private List<File> files = new LinkedList<File>();
+//    private File[] watchedPath = null;
 
-    public FileWatcher(FilesProcessor proc, File watchedPath) {
-        if(watchedPath == null) {
+    public FileWatcher(FilesProcessor proc, List<File> watchedPath) {
+        if (watchedPath == null || watchedPath.isEmpty()) {
             return;
         }
         this.proc = proc;
-        this.watchedPath = watchedPath;
-        Path path = Paths.get(watchedPath.getPath());
+//        this.watchedPath = watchedPath;
+        Path path = null;
         try {
-            WatchKey key = path.register(watchSvc,
-                    StandardWatchEventKind.ENTRY_CREATE,
-                    StandardWatchEventKind.ENTRY_MODIFY);
-            pathMap.put(key, watchedPath.getPath());
+            for (File file : watchedPath) {
+                if(!file.isDirectory())
+                    continue;
+                path = Paths.get(file.getPath());
+                WatchKey key = path.register(watchSvc,
+                        StandardWatchEventKind.ENTRY_CREATE,
+                        StandardWatchEventKind.ENTRY_MODIFY);
+                pathMap.put(key, file.getPath());
+            }
         } catch (UnsupportedOperationException uox) {
             LogHandler.getLogs().displayMsg("file watching not supported!",
                     ERROR);
@@ -72,13 +81,12 @@ public class FileWatcher implements Runnable {
      */
     @Override
     public void run() {
-        if (proc == null || !watchedPath.exists()) {
+        if (proc == null || pathMap.isEmpty()) {
             return;
         }
-
-        LogHandler.getLogs().displayMsg(
-                "Start watching " + watchedPath.getPath(), WARNING);
-
+        for (String path : pathMap.values()) {
+            LogHandler.getLogs().displayMsg("Start watching " + path, WARNING);
+        }
         while (true) {
 
             // take() will block until a file has been created/deleted
@@ -114,8 +122,9 @@ public class FileWatcher implements Runnable {
                         LogHandler.getLogs().displayMsg(
                                 "New file: " + input.getName(),
                                 WARNING);
-
-                        proc.processFile(new File[] {input});
+                        files.clear();
+                        files.add(input);
+                        proc.processFile(files);
                     }
                 }
                 if (fileTimeMap.isEmpty()) {

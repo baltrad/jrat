@@ -27,8 +27,12 @@ public class CommandLineArgsParser {
 
     public final static String O = "o";
 
-    public final static String A = "a";
-    public final static String AUTO = "auto";
+    public final static String W = "w";
+    public final static String WATCH = "watch";
+    
+    public final static String SEQ = "seq";
+    
+    public final static String TEST = "test";
 
     public final static String P = "p";
     public final static String PRINT = "print";
@@ -51,7 +55,7 @@ public class CommandLineArgsParser {
     public final static String FILE_ARG = "file";
     public final static String FILES_ARG = "file(s)";
     public final static String VALUE_ARG = "value";
-    public final static String FORMAT_ARG = "FORMAT";
+//    public final static String FORMAT_ARG = "FORMAT";
     
     public final static String FORMAT = "format";
     public final static String F = "f";
@@ -63,6 +67,8 @@ public class CommandLineArgsParser {
     // + "[-v] [-h] [-d]";
 
     private final static String INPUT_DESCR = "input file(s)";
+    
+    private final static String TEST_DESCR = "testing processor";
 
     private final static String OUTPUT_DESCR = "output file";
 
@@ -82,9 +88,11 @@ public class CommandLineArgsParser {
     
     private final static String VERSION_DESCR = "print product version and exit";
     
+    private final static String SEQ_DESCR = "sequence mode to process files\n<arg> interval lenght in minutes";
+    
     private final static String CALID_DESCR = "calibration difference of two radars";
     
-    private final static String FORMAT_DESCR = "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
+//    private final static String FORMAT_DESCR = "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
 
     private static Options options = null;
     private static CommandLine cmd = null;
@@ -110,26 +118,33 @@ public class CommandLineArgsParser {
         
 //        options.addOption(output_file);
         
+        
+        options.addOption(null, TEST, false, TEST_DESCR);
+        
         options.addOption(input_file);
         options.addOption(output_file);
 
-        options.addOption(P, PRINT, true, PRINT_DESCR);
+        options.addOption(P, PRINT, false, PRINT_DESCR);
         
         Option print_img = OptionBuilder.withLongOpt(PRINTIMAGE)
                 .withDescription(IMAGE_DESCR).hasArgs()
                 .create();
+        
+        Option seq = OptionBuilder.withLongOpt(SEQ).hasArgs()
+                .withDescription(SEQ_DESCR).create();
+        options.addOption(seq);
         
         Option calid = OptionBuilder.withLongOpt(CALID).hasArgs()
                 .withDescription(CALID_DESCR).create();
         options.addOption(calid);
         
         options.addOption(print_img);
-        options.addOption(A, AUTO, true, AUTO_DESCR);
+        options.addOption(W, WATCH, false, AUTO_DESCR);
         
         options.addOption(Q, QUIET, false, QUIET_DESCR);
         options.addOption(V, VERBOSE,false, VERBOSE_DESCR);
         options.addOption(D, DEBUG, false, DEBUG_DESCR);
-        options.addOption(F, FORMAT, true, FORMAT_DESCR);
+//        options.addOption(F, FORMAT, true, FORMAT_DESCR);
         options.addOption(null, VERSION, false, VERSION_DESCR);
     }
 
@@ -143,6 +158,7 @@ public class CommandLineArgsParser {
             if(cmd.getOptions().length == 0 || cmd.hasOption(H))
                 printHelp();
         } catch (ParseException e) {
+//            System.out.println("ZLE");
             printHelp();
         }
     }

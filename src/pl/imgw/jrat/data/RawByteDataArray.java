@@ -164,7 +164,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         return true;
     }
 
-    public void multiArrayCopy(byte[][] source, byte[][] destination) {
+    private void multiArrayCopy(byte[][] source, byte[][] destination) {
         for (int a = 0; a < source.length; a++) {
             System.arraycopy(source[a], 0, destination[a], 0, source[a].length);
         }
@@ -210,13 +210,13 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         return true;
     }
 
-    public short real2raw(double x) {
+    private short real2raw(double x) {
         if (gain == 0)
             return 0;
         return (short) ((1 / gain * (x - offset)) + 1);
     }
     
-    public double raw2real(int x) {
+    private double raw2real(int x) {
         return gain * x + offset;
     }
     

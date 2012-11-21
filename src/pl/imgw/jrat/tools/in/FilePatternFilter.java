@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.tools.in;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -32,6 +33,6 @@ public interface FilePatternFilter {
      *         file name or if not exists date of last file modification. List
      *         should be sorted by date.
      */
-    public List<FileDate> getFileList(String expression);
+    public List<File> getFileList(String expression);
 
 }

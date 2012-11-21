@@ -5,6 +5,7 @@ package pl.imgw.jrat.tools.in;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -20,8 +21,8 @@ import org.junit.Test;
 public class FilePatternFilterTest {
 
     private String pattern;
-    private FilePatternFilter filter;
-    private List<FileDate> list;
+    private RegexFileFilter filter;
+    private List<File> list;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
     
     @Test
@@ -47,7 +48,7 @@ public class FilePatternFilterTest {
         pattern = "test-data/*dBZ.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
-        String dateFromFile = sdf.format(list.get(0).getDate());
+        String dateFromFile = sdf.format(filter.getDate(list.get(0)));
         String dateGiven = "201110312320";
         assertTrue("reading date failed", dateFromFile.matches(dateGiven));
         
@@ -58,7 +59,7 @@ public class FilePatternFilterTest {
         pattern = "test-data/*.h5";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
-        String dateFromFile = sdf.format(list.get(0).getDate());
+        String dateFromFile = sdf.format(filter.getDate(list.get(1)));
         String dateGiven = "201109111340";
         assertTrue("reading date failed", dateFromFile.matches(dateGiven));
         

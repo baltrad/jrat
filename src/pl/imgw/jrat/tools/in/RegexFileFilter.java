@@ -28,13 +28,15 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
  * Will include all files from "/home/user/archive" directory that end with
  * ".doc"
  * 
+ * Only files with date in file name will be included.
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
 public class RegexFileFilter implements FilePatternFilter {
 
-    private List<FileDate> list;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+    private List<File> list;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 
     /*
      * (non-Javadoc)
@@ -43,8 +45,8 @@ public class RegexFileFilter implements FilePatternFilter {
      * pl.imgw.jrat.tools.in.FilePatternFilter#getFileList(java.lang.String)
      */
     @Override
-    public List<FileDate> getFileList(String exp) {
-        list = new ArrayList<FileDate>();
+    public List<File> getFileList(String exp) {
+        list = new ArrayList<File>();
         String[] parts = exp.split(" ");
         for (int p = 0; p < parts.length; p++) {
             String part = parts[p];
@@ -58,8 +60,9 @@ public class RegexFileFilter implements FilePatternFilter {
             }
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isFile()) {
-                    FileDate fd = new FileDate(files[i], getDate(files[i]));
-                    list.add(fd);
+//                    FileDate fd = new FileDate(files[i], getDate(files[i]));
+                    if(getDate(files[i]) != null)
+                        list.add(files[i]);
                 }
             }
         }
@@ -75,7 +78,7 @@ public class RegexFileFilter implements FilePatternFilter {
      * @param file
      * @return
      */
-    private Date getDate(File file) {
+    public static Date getDate(File file) {
         String word = file.getName();
         int count = 0;
         String s = "";
@@ -97,15 +100,6 @@ public class RegexFileFilter implements FilePatternFilter {
             date = new Date(file.lastModified());
         }
         return date;
-    }
-
-    public static void main(String[] args) {
-        long time = System.currentTimeMillis();
-        FilePatternFilter filter = new RegexFileFilter();
-        String expression = "/home/lwojtas/poligon/vol/brz/vol/BRZ_250_Z.vol/*";
-        List<FileDate> list = filter.getFileList(expression);
-        System.out.println("time=" + (System.currentTimeMillis() - time));
-
     }
 
 }

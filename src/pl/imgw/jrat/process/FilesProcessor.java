@@ -4,6 +4,7 @@
 package pl.imgw.jrat.process;
 
 import java.io.File;
+import java.util.List;
 
 /**
  *
@@ -15,6 +16,6 @@ import java.io.File;
  */
 public interface FilesProcessor {
 
-    public void processFile(File[] files);
+    public void processFile(List<File> files);
     
 }

@@ -44,6 +44,11 @@ public class ParserManager {
         return parser.isValid(file);
     }
     
+    /**
+     * Method checks if <code>FileParser</code> is set with not null object
+     * 
+     * @return true if <code>FileParser</code> is not null otherwise returns false
+     */
     public boolean isSet() {
         return (parser == null) ? false : true;
     }

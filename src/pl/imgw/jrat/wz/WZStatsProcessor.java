@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -62,15 +64,15 @@ public class WZStatsProcessor implements FilesProcessor {
      * @see pl.imgw.jrat.process.FileProcessor#processFile(java.io.File)
      */
     @Override
-    public void processFile(File[] file) {
-        for (int i = 0; i < file.length; i++) {
-            if (pm.initialize(file[i])) {
+    public void processFile(List<File> files) {
+        for (File file : files) {
+            if (pm.initialize(file)) {
                 System.out.println("processing WZ file: "
-                        + file[i].getAbsolutePath());
+                        + file.getAbsolutePath());
                 data = (WZDataContainer) pm.getProduct();
                 updateResults();
                 data = null;
-                updateList(file[i].getName());
+                updateList(file.getName());
                 
             }
         }
@@ -179,7 +181,9 @@ public class WZStatsProcessor implements FilesProcessor {
         LogHandler.getLogs().setLoggingVerbose(ERROR);
         WZStatsProcessor proc = new WZStatsProcessor();
         proc.setDest(new File("/home/lwojtas/Desktop"));
-        FileWatcher fw = new FileWatcher(proc, new File("test-data/watched"));
+        List<File> files = new LinkedList<File>();
+        files.add(new File("test-data/watched"));
+        FileWatcher fw = new FileWatcher(proc, files);
         
 //        SequentialProcess sp = new SequentialProcess(proc, new File("test-data/watched"), 1);
         Thread t = new Thread(fw);

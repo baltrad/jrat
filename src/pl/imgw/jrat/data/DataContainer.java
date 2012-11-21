@@ -8,8 +8,8 @@ import java.util.TreeMap;
 
 /**
  * 
- * Simple container for products that has array data and ability to print all
- * attributes as an original tree
+ * Simple container for products that has array data list and set of attributes.
+ * It also has ability to print all attributes as an original tree
  * 
  * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
@@ -34,7 +34,7 @@ public interface DataContainer {
     public void setArrayList(Map<String, ArrayData> arrayList);
 
     public Object getAttributeValue(String path, String name);
-    
+
     /**
      * Receiving list of arrays, where key reflects the name of dataset in
      * original file with full path if available and value is an object of

@@ -4,8 +4,14 @@
 package pl.imgw.jrat.process;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -17,16 +23,26 @@ import java.util.Date;
  */
 public class SequentialProcess implements Runnable {
 
-    private File path;
+    private List<File> folders;
+    private List<File> files = new LinkedList<File>();
     private Calendar cal;
     private FilesProcessor proc;
     // private int length;
     private int interval = 60;
 
-    public SequentialProcess(FilesProcessor proc, File watchedPath, int interval) {
+    public SequentialProcess(FilesProcessor proc, List<File> folders,
+            String seqValue) {
+
         this.proc = proc;
-        this.interval = interval;
-        this.path = watchedPath;
+        this.folders = folders;
+        try {
+            interval = Integer.parseInt(seqValue);
+        } catch (NumberFormatException e) {
+            LogHandler.getLogs().displayMsg(
+                    "Incorrect value for seqence time interval",
+                    LogHandler.ERROR);
+            proc = null;
+        }
         cal = Calendar.getInstance();
         // cal.setTimeZone(TimeZone.getTimeZone("UTC"));
         cal.set(Calendar.SECOND, 0);
@@ -46,7 +62,10 @@ public class SequentialProcess implements Runnable {
             return;
         while (true) {
             if (cal.getTime().before(new Date(System.currentTimeMillis()))) {
-                File[] files = path.listFiles();
+                files.clear();
+                for (File folder : folders) {
+                    files.addAll(Arrays.asList(folder.listFiles()));
+                }
                 proc.processFile(files);
                 cal.add(Calendar.MINUTE, interval);
             } else {

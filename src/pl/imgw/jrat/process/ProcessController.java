@@ -3,15 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.AUTO;
-import static pl.imgw.jrat.process.CommandLineArgsParser.F;
-import static pl.imgw.jrat.process.CommandLineArgsParser.I;
-import static pl.imgw.jrat.process.CommandLineArgsParser.O;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
+import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.SILENT;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
@@ -49,11 +41,14 @@ public class ProcessController {
     private int format = -1;
     
     private CommandLine cmd;
-    private List<FileDate> files = new LinkedList<FileDate>();
+    private List<File> files = new LinkedList<File>();
+    private List<File> folders = new LinkedList<File>();
 
-    public List<FileDate> getFiles(){
+    public List<File> getFiles(){
         return files;
     }
+    
+   
     
     public ProcessController(String[] args) {
 
@@ -85,10 +80,16 @@ public class ProcessController {
             LogHandler.getLogs().printVersion();
             return true;
         }
-
-        /* Starting continues mode */
-        if(cmd.hasOption(AUTO)) {
-            return true;
+        FilesProcessor proc = null;
+        
+        if (cmd.hasOption(TEST)) {
+            proc = new FilesProcessor() {
+                @Override
+                public void processFile(List<File> files) {
+                    for (File file : files)
+                        System.out.println(file);
+                }
+            };
         }
         
         /* Loading list of files to process*/
@@ -96,9 +97,12 @@ public class ProcessController {
             FilePatternFilter filter = new RegexFileFilter();
             for (int i = 0; i < cmd.getOptionValues(I).length; i++) {
                 files.addAll(filter.getFileList(cmd.getOptionValues(I)[i]));
+                if(new File(cmd.getOptionValues(I)[i]).isDirectory()) {
+                    folders.add(new File(cmd.getOptionValues(I)[i]));
+                }
             }
         }
-        /*----------------------------------*/
+        /*----------------------------------
         
         if(cmd.hasOption(F)) {
             String f = cmd.getOptionValue(F);
@@ -109,6 +113,7 @@ public class ProcessController {
             else if(f.matches("rbvol") || f.matches("rainbowvol"))
                 format = RBV;
         }
+        */
         
         /* Setting output file */
         File output = new File(".");
@@ -125,22 +130,13 @@ public class ProcessController {
         }
         
         if (cmd.hasOption(PRINTIMAGE)) {
-            ImagesController ic = new ImagesController(cmd.getOptionValues(PRINTIMAGE));
+            ImagesController ic = new ImagesController(
+                    cmd.getOptionValues(PRINTIMAGE));
             ParserManager pm = new ParserManager();
-            
-            if(format == HDF) {
-                pm.setParser(new OdimH5Parser());
-            } else if (format == RBI) {
-                pm.setParser(new Rainbow53ImageParser());
-            } else if (format == RBV) {
-                pm.setParser(new Rainbow53VolumeParser());
-            } else {
-                pm.setParser(new DefaultParser());
-            }
-            
-            Iterator<FileDate> itrf = files.iterator();
-            while (itrf.hasNext()) {
-                File file = itrf.next().getFile();
+
+            pm.setParser(new DefaultParser());
+
+            for (File file : files) {
                 if (pm.initialize(file)) {
                     ic.getBuilder().setData(
                             pm.getProduct().getArray(ic.getDatasetValue()));
@@ -152,6 +148,23 @@ public class ProcessController {
             }
         }
 
+        /* Starting continues mode */
+        if(cmd.hasOption(WATCH)) {
+            FileWatcher watcher = new FileWatcher(proc, folders);
+            Thread t = new Thread(watcher);
+            t.run();
+            return true;
+        }
+        
+        /* Starting sequence mode */
+        if (cmd.hasOption(SEQ)) {
+            SequentialProcess seq = new SequentialProcess(proc, folders,
+                    cmd.getOptionValue(SEQ));
+            Thread t = new Thread(seq);
+            t.run();
+            return true;
+        }
+        
         return false;
     }
 
