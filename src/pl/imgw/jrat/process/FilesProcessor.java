@@ -18,4 +18,6 @@ public interface FilesProcessor {
 
     public void processFile(List<File> files);
     
+    public String getProcessName();
+    
 }

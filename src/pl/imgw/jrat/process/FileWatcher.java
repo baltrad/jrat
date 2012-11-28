@@ -41,15 +41,15 @@ public class FileWatcher implements Runnable {
     private List<File> files = new LinkedList<File>();
 //    private File[] watchedPath = null;
 
-    public FileWatcher(FilesProcessor proc, List<File> watchedPath) {
-        if (watchedPath == null || watchedPath.isEmpty()) {
+    public FileWatcher(FilesProcessor proc, List<File> watchedPathList) {
+        if (watchedPathList == null || watchedPathList.isEmpty()) {
             return;
         }
         this.proc = proc;
 //        this.watchedPath = watchedPath;
         Path path = null;
         try {
-            for (File file : watchedPath) {
+            for (File file : watchedPathList) {
                 if(!file.isDirectory())
                     continue;
                 path = Paths.get(file.getPath());
@@ -84,6 +84,11 @@ public class FileWatcher implements Runnable {
         if (proc == null || pathMap.isEmpty()) {
             return;
         }
+        
+        LogHandler.getLogs().displayMsg(
+                "Watching process started with: " + proc.getProcessName(),
+                WARNING);
+        
         for (String path : pathMap.values()) {
             LogHandler.getLogs().displayMsg("Start watching " + path, WARNING);
         }
@@ -122,9 +127,11 @@ public class FileWatcher implements Runnable {
                         LogHandler.getLogs().displayMsg(
                                 "New file: " + input.getName(),
                                 WARNING);
-                        files.clear();
                         files.add(input);
                         proc.processFile(files);
+                        files.clear();
+                        input.delete();
+                        
                     }
                 }
                 if (fileTimeMap.isEmpty()) {

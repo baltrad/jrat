@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2012 Institute of Meteorology and Water Management, IMGW
+
+This file is part of the jrat software.
+
+jrat is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+jrat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+long with the jrat.  If not, see http://www.gnu.org/licenses.
+-->
+
 <project name="jrat" default="dist" basedir=".">
-    <description>Builds, tests, and runs the project jRAT.</description>
+    <description>Builds, tests, and runs the project jrat.</description>
     <property name="app.name" value="jrat" />
+    <property name="main.class" value="pl.imgw.jrat.Main" />
     <property name="root.dir" value="${basedir}"/>
     <property name="src.dir" value="src"/>
     <property name="lib.dir" value="lib"/>
+    <property name="lib.native.dir" value="lib/native"/>
+    <property name="log.dir" value="log"/>
     <property name="dist.dir" value="dist"/>
+    <property name="share.dir" value="share"/>
+    <property name="bin.dir" value="bin"/>
     <property name="build.dir" value="build"/>
     <property name="build.test.dir" value="${build.dir}/test"/>
     <property name="build.coverage.dir" value="${build.dir}/coverage"/>
@@ -19,9 +43,31 @@
     <property name="test.dir" value="test"/>
     <property name="build.test.dir" value="${build.dir}/test"/>
 
+    <property name="install.prefix" value="/opt/baltrad"/>
+
     <path id="classpath">
-        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="${lib.dir}" includes="*.jar"/>
     </path>
+
+    <target name="install" depends="dist">
+        <mkdir dir="${install.prefix}/${app.name}"/>
+        <mkdir dir="${install.prefix}/${app.name}/${lib.dir}"/>
+        <mkdir dir="${install.prefix}/${app.name}/${bin.dir}"/>
+        <mkdir dir="${install.prefix}/${app.name}/${share.dir}"/>
+        <mkdir dir="${install.prefix}/${app.name}/${log.dir}"/>
+        <copy todir="${install.prefix}/${app.name}/${share.dir}" flatten="true">
+            <fileset dir="${dist.dir}">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
+        <copy todir="${install.prefix}/${app.name}/${lib.native.dir}" >  
+            <fileset dir="${lib.native.dir}" includes="**"/>  
+        </copy>
+        <echo file="${install.prefix}/${app.name}/${bin.dir}/jrat">#!/bin/sh
+java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -XX:MaxPermSize=512m -Duser.timezone=UTC \
+-jar ${install.prefix}/${app.name}/${share.dir}/${app.name}.jar $@</echo>
+        <chmod file="${install.prefix}/${app.name}/${bin.dir}/jrat" perm="755" />
+    </target>
 
     <target name="init">
         <mkdir dir="${build.dir}"/>
@@ -30,14 +76,19 @@
     </target>
 
     <target name="compile" depends="clean, init">
-      <javac srcdir="${src.dir}" deprecation="on"
-             destdir="${build.classes.dir}" classpathref="classpath"/>
+        <javac encoding="UTF-8" deprecation="on" srcdir="${src.dir}" destdir="${build.classes.dir}" 
+               includeantruntime="false">
+            <include name="**/*.java"/>
+            <classpath refid="classpath"/>
+        </javac>
     </target>
 
     <target name="dist" depends="compile">
-        <jar jarfile="${dist.dir}/${app.name}.jar"
-            basedir="${build.classes.dir}">
-            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/>    
+        <jar destfile="${dist.dir}/${app.name}.jar" basedir="${build.classes.dir}" >
+            <zipgroupfileset dir="${lib.dir}" includes="*.jar"/>
+           <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+           </manifest>
         </jar>
     </target>
 
@@ -59,7 +110,7 @@
     <target name="execute.test">
         <mkdir dir="${dist.dir}/junit-reports" />
         <junit showoutput="true" forkmode="perBatch" printsummary="no" >
-            <jvmarg line="-Dnative.libpath=${lib.dir}/cisd-jhdf5/lib/native -Xmx512m -XX:MaxPermSize=512m"/>
+            <jvmarg line="-Dnative.libpath=${lib.native.dir} -Xmx512m -XX:MaxPermSize=512m"/>
             <formatter type="xml"/>
 	   		<formatter type="brief" usefile="false" />
             <classpath location="${build.classes.dir}"/>

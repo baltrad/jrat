@@ -24,7 +24,7 @@ import static pl.imgw.jrat.AplicationConstans.*;
 public class LogHandler implements Logging {
 
     private static LogHandler logs = new LogHandler();
-    private int verbose = 1;
+    private int verbose = 0;
 
     private String msgFormat = "[dd/MM/yy HH:mm:ss] ";
     private SimpleDateFormat msgDate = new SimpleDateFormat(msgFormat);

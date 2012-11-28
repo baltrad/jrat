@@ -3,24 +3,29 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.*;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
+import static pl.imgw.jrat.process.CommandLineArgsParser.I;
+import static pl.imgw.jrat.process.CommandLineArgsParser.O;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
+import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
+import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.SILENT;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.data.parsers.DefaultParser;
-import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
-import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
-import pl.imgw.jrat.tools.in.FileDate;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
 import pl.imgw.jrat.tools.out.LogHandler;
@@ -89,10 +94,16 @@ public class ProcessController {
                     for (File file : files)
                         System.out.println(file);
                 }
+
+                @Override
+                public String getProcessName() {
+                    // TODO Auto-generated method stub
+                    return "TEST process";
+                }
             };
         }
         
-        /* Loading list of files to process*/
+        /* Loading list of files to process or setting input folder path*/
         if (cmd.hasOption(I)) {
             FilePatternFilter filter = new RegexFileFilter();
             for (int i = 0; i < cmd.getOptionValues(I).length; i++) {
@@ -100,6 +111,12 @@ public class ProcessController {
                 if(new File(cmd.getOptionValues(I)[i]).isDirectory()) {
                     folders.add(new File(cmd.getOptionValues(I)[i]));
                 }
+            }
+            for(File f : files) {
+                LogHandler.getLogs().displayMsg("Input files: " + f.getPath(), WARNING);
+            }
+            for(File f : folders) {
+                LogHandler.getLogs().displayMsg("Input folders: " + f.getPath(), WARNING);
             }
         }
         /*----------------------------------
@@ -120,8 +137,8 @@ public class ProcessController {
         if (cmd.hasOption(O)) {
             output = new File(cmd.getOptionValue(O));
             output.mkdirs();
+            LogHandler.getLogs().displayMsg("Output: " + output.getPath(), WARNING);
         }
-        /* ................................. */
         
         
         if (cmd.hasOption(PRINT)) {
@@ -147,22 +164,46 @@ public class ProcessController {
                 }
             }
         }
+        
+        /* CALID */
+        if (cmd.hasOption(CALID)) {
+            proc = new CalidProcessor(cmd.getOptionValues(CALID));
+            if (proc != null) {
+                String par = "";
+                for (String s : cmd.getOptionValues(CALID)) {
+                    par += s + " ";
+                }
+                LogHandler.getLogs().displayMsg("Start CALID with: " + par,
+                        WARNING);
+            }
+        }
 
-        /* Starting continues mode */
         if(cmd.hasOption(WATCH)) {
+            /* Starting continues mode */
             FileWatcher watcher = new FileWatcher(proc, folders);
             Thread t = new Thread(watcher);
-            t.run();
-            return true;
-        }
-        
-        /* Starting sequence mode */
-        if (cmd.hasOption(SEQ)) {
+            t.start();
+            if(t.isAlive()) {
+                LogHandler.getLogs().displayMsg("Watching process started",
+                        WARNING);
+                return true;
+            }
+        } else if (cmd.hasOption(SEQ)) {
+            /* Starting sequence mode */
             SequentialProcess seq = new SequentialProcess(proc, folders,
                     cmd.getOptionValue(SEQ));
             Thread t = new Thread(seq);
-            t.run();
-            return true;
+            t.start();
+            if(t.isAlive()) {
+                return true;
+            }
+        } else {
+            SingleRunProcessor single = new SingleRunProcessor(proc, folders, files);
+            Thread t = new Thread(single);
+            t.start();
+            if(t.isAlive()) {
+                return true;
+            }
         }
         
         return false;

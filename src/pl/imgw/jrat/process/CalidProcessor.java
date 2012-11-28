@@ -24,6 +24,8 @@ public class CalidProcessor implements FilesProcessor {
     
     public CalidProcessor(String args[]) {
         manager = new CalidManager(args);
+        if(manager == null)
+            return;
     }
     
     /* (non-Javadoc)
@@ -36,6 +38,15 @@ public class CalidProcessor implements FilesProcessor {
         for(Pair pair : pairs.getPairs()) {
             manager.compare(pair);
         }
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.process.FilesProcessor#getProcessName()
+     */
+    @Override
+    public String getProcessName() {
+        // TODO Auto-generated method stub
+        return "CALID Process";
     }
 
 }

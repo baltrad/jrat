@@ -3,11 +3,10 @@
  */
 package pl.imgw.jrat.wz;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,30 +14,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import javax.imageio.ImageIO;
-
-import pl.imgw.jrat.data.ArrayData;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.WZFileParser;
 import pl.imgw.jrat.process.FileWatcher;
 import pl.imgw.jrat.process.FilesProcessor;
-import pl.imgw.jrat.process.SequentialProcess;
-import pl.imgw.jrat.tools.out.ColorScales;
-import pl.imgw.jrat.tools.out.ImageBuilder;
 import pl.imgw.jrat.tools.out.LogHandler;
-import static pl.imgw.jrat.tools.out.Logging.*;
 
 /**
  *
@@ -209,6 +197,15 @@ public class WZStatsProcessor implements FilesProcessor {
         }
          */
 
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.process.FilesProcessor#getProcessName()
+     */
+    @Override
+    public String getProcessName() {
+        // TODO Auto-generated method stub
+        return "WZ Statistics";
     }
 
 }

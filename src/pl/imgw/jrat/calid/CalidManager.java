@@ -48,10 +48,18 @@ public class CalidManager {
     private double elevation = -1;
     private int distance = -1;
     private double reflectivity = -31.5;
-    
+
     private CalidContainer container;
 
-
+    /**
+     * Generates path name to CALID folder specified by given parameters,
+     * different for every pair, distance and elevation
+     * 
+     * @param pair
+     * @param distance
+     * @param elevation
+     * @return
+     */
     public static String getCalidPath(Pair pair, int distance, double elevation) {
 
         String pairsName = pair.getVol1().getSiteName()
@@ -65,16 +73,17 @@ public class CalidManager {
 
         return new File(folder).getPath();
     }
-    
+
     // private String[] par = { "0.5deg", "500m" };
 
     /**
      * 
-     * Initializes manager and setting two parameters for the algorithm:
+     * Initializes manager and sets two parameters for the algorithm:
      * 
      * <p>
      * <tt>elevation</tt> of the scan, in degrees, the proper format for the
-     * argument should contain numerical value and word 'deg' e.g. '0.5deg'</pre>
+     * argument should contain numerical value and word 'deg' e.g.
+     * '0.5deg'</pre>
      * 
      * <p>
      * <tt>distance</tt> (maximal) between overlapping pixels in meters, in
@@ -130,39 +139,38 @@ public class CalidManager {
 
     }
 
-   
     /**
-     * Compares two scans in 
+     * Compares two scans in
      * 
      * @return null if failed
      */
     public ArrayList<PairedPoints> compare(Pair pair) {
-        //check if the volumes contain selected elevation
+        // check if the volumes contain selected elevation
         if (pair.getVol1().getScan(elevation) == null
                 || pair.getVol2().getScan(elevation) == null) {
             return null;
         }
-        
+
         ArrayList<PairedPoints> pairedPointsList = null;
 
-        
-//        LogHandler.getLogs().displayMsg(
-//                "Calculating overlapping points for: " + pair.getSource1()
-//                        + " and " + pair.getSource2(), LogHandler.WARNING);
+        // LogHandler.getLogs().displayMsg(
+        // "Calculating overlapping points for: " + pair.getSource1()
+        // + " and " + pair.getSource2(), LogHandler.WARNING);
 
         container = new CalidContainer(pair, elevation, distance, reflectivity);
         pairedPointsList = container.getCoords();
-        
-        if(!pairedPointsList.isEmpty()) {
+
+        if (!pairedPointsList.isEmpty()) {
             LogHandler.getLogs().displayMsg(
-                    "Number of overlapping points: " + pairedPointsList.size(), LogHandler.WARNING);
- 
+                    "Number of overlapping points: " + pairedPointsList.size(),
+                    LogHandler.WARNING);
+
         } else {
-            LogHandler.getLogs().displayMsg(
-                    "No overlapping points.", LogHandler.WARNING);
+            LogHandler.getLogs().displayMsg("No overlapping points.",
+                    LogHandler.WARNING);
             return null;
         }
-        
+
         if (!container.loadResults(pair.getDate())) {
 
             Comparator.compare(pairedPointsList,
@@ -171,23 +179,22 @@ public class CalidManager {
 
             container.saveResults();
         }
-        
+
         // results = comp.getResults();
         // comp.save(coords.getId(), pair.toString(), pair.getDate());
 
         LogHandler.getLogs().displayMsg(
-                "Comparison completed for: " + pair.getSource1()
-                + " and " + pair.getSource2(), LogHandler.WARNING);
-        
+                "Comparison completed for: " + pair.getSource1() + " and "
+                        + pair.getSource2(), LogHandler.WARNING);
+
         return pairedPointsList;
     }
 
     public List<PairedPoints> getResults(Pair pair, Date date) {
-        
+
         return null;
     }
 
-    
     public void displayResults(Pair pair, Date date) {
 
     }
