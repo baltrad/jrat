@@ -37,7 +37,7 @@ public class RegexFileFilter implements FilePatternFilter {
 
     private List<File> list;
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -60,6 +60,7 @@ public class RegexFileFilter implements FilePatternFilter {
             }
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isFile()) {
+//                    System.out.println(files[i]);
 //                    FileDate fd = new FileDate(files[i], getDate(files[i]));
                     if(getDate(files[i]) != null)
                         list.add(files[i]);

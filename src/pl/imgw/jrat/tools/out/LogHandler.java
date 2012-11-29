@@ -55,7 +55,7 @@ public class LogHandler implements Logging {
 
     
     public void printVersion() {
-        displayMsg(APS_DESC + " version: " + VERSION,
+        displayMsg(APS_DESC + " version: " + VERSION + " compiled on " + DATE,
                 SILENT);
     }
     

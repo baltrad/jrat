@@ -6,7 +6,7 @@ package pl.imgw.jrat;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.imgw.jrat.process.ProcessController;
+import pl.imgw.jrat.process.MainProcessController;
 import eu.baltrad.beast.pgfwk.IGeneratorPlugin;
 
 /**
@@ -38,7 +38,7 @@ public class BeastPluginHandler implements IGeneratorPlugin {
             }
         }
         
-        ProcessController proc = new ProcessController(argList.toArray(new String[argList.size()]));
+        MainProcessController proc = new MainProcessController(argList.toArray(new String[argList.size()]));
         proc.start();
         
         return null;

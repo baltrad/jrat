@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.H5DataContainer;
@@ -20,7 +21,6 @@ import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.tools.in.FileDate;
 
 /**
  * 
@@ -34,7 +34,7 @@ import pl.imgw.jrat.tools.in.FileDate;
  */
 public class PairsContainer {
 
-    private Set<Pair> pairs = new HashSet<Pair>();
+    private Set<Pair> pairs = new TreeSet<Pair>();
 
     /**
      * 
@@ -88,6 +88,7 @@ public class PairsContainer {
                 }
             }
         }
+        
     }
 
     /**

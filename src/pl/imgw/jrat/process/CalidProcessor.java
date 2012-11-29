@@ -6,6 +6,7 @@ package pl.imgw.jrat.process;
 import java.io.File;
 import java.util.List;
 
+import pl.imgw.jrat.calid.CalidComparator;
 import pl.imgw.jrat.calid.CalidManager;
 import pl.imgw.jrat.calid.Pair;
 import pl.imgw.jrat.calid.PairsContainer;
@@ -36,7 +37,7 @@ public class CalidProcessor implements FilesProcessor {
         
         PairsContainer pairs = new PairsContainer(files);
         for(Pair pair : pairs.getPairs()) {
-            manager.compare(pair);
+            CalidComparator.getResult(manager, pair);
         }
     }
 

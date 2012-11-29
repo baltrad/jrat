@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 
 import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.process.ProcessController;
+import pl.imgw.jrat.process.MainProcessController;
 import pl.imgw.jrat.projection.ProjectionUtility;
 import pl.imgw.jrat.tools.out.ColorScales;
 import pl.imgw.jrat.tools.out.ImageBuilder;
@@ -54,32 +54,38 @@ public class CalidManagerTest {
                 "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5",
                 "--calid a", "-v" };
         
-        ProcessController proc = new ProcessController(args);
+        MainProcessController proc = new MainProcessController(args);
         proc.start();
         PairsContainer pairs = new PairsContainer(proc.getFiles());
         Iterator<Pair> i = pairs.getPairs().iterator();
         
-        args = new String[] { "0.5deg", "500m" };
-        System.out.println("Run CalidManager with 0.5deg and 500m");
+        args = new String[] { "ele=0.5", "dis=500" };
+        System.out.println("Run CalidManager with ele=0.5 and dis=500");
         manager = new CalidManager(args);
         assertTrue(manager != null);
         Pair pair = i.next();
         System.out.println(pair);
-        ArrayList<PairedPoints> results = manager.compare(pair);
+        ArrayList<PairedPoints> results = CalidComparator.getResult(manager, pair);
         
         assertTrue(results.size() > 0);
         
-        args = new String[] { "-0.2deg", "0.5km" };
-        System.out.println("Run CalidManager with -0.2deg and 0.5km");
+        args = new String[] { "ele=-0.2", "dis=0.5" };
+        System.out.println("Run CalidManager with ele=-0.2 and dis=0.5");
         manager = new CalidManager(args);
         assertTrue(manager != null);
         
-        args = new String[] { "0.2deg", "500m" };
-        System.out.println("Run CalidManager with 0.2deg and 500m");
+        args = new String[] { "ele=0.2", "dis=500" };
+        System.out.println("Run CalidManager with ele=0.2 and dis=500");
         manager = new CalidManager(args);
         pair = i.next();
         System.out.println(pair);
-        assertNull(manager.compare(pair));
+        assertNull(CalidComparator.getResult(manager, pair));
+        
+        args = new String[] { "ele=0.2", "dis=500", "ref=3.5" };
+        System.out.println("Run CalidManager with ele=0.2, dis=500, ref=3.5");
+        manager = new CalidManager(args);
+//        System.out.println(pair);
+        assertTrue(manager != null);
         
     }
    
@@ -91,23 +97,23 @@ public class CalidManagerTest {
                 "test-data/calid/T_PAGZ46_C_SOWR_20120109180013.hdf",
                 };
         
-        ProcessController proc = new ProcessController(args);
+        MainProcessController proc = new MainProcessController(args);
         proc.start();
         PairsContainer pairs = new PairsContainer(proc.getFiles());
         
-        args = new String[] { "0.5deg", "500m" };
+        args = new String[] { "ele=0.5", "dis=500" };
         manager = new CalidManager(args);
         new File("calid/overlapping/WMO:12151WMO:12220/500_0.5/results").delete();
         System.out.println("Asking for results after deleting results file");
         Pair pair = pairs.getPairs().iterator().next();
-        ArrayList<PairedPoints> array = manager.compare(pair);
+        ArrayList<PairedPoints> array = CalidComparator.getResult(manager, pair);
         
         java.lang.Double v11 = array.get(10).getDifference();
         java.lang.Double v12 = array.get(80).getDifference();
         
         System.out.println("Asking for results again");
         
-        array = manager.compare(pair);
+        array = CalidComparator.getResult(manager, pair);
         
         java.lang.Double v21 = array.get(10).getDifference();
         java.lang.Double v22 = array.get(80).getDifference();
@@ -115,6 +121,7 @@ public class CalidManagerTest {
         assertEquals(v11, v21);
         assertEquals(v12, v22);
         
+        /*
         System.out.println("Print results to png");
         
         Results2DManager results = new Results2DManager(array, pair);
@@ -134,7 +141,7 @@ public class CalidManagerTest {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+        */
     }
     
 }

@@ -24,7 +24,7 @@ import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.WZFileParser;
-import pl.imgw.jrat.process.FileWatcher;
+import pl.imgw.jrat.process.FileWatchingProcess;
 import pl.imgw.jrat.process.FilesProcessor;
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -171,7 +171,7 @@ public class WZStatsProcessor implements FilesProcessor {
         proc.setDest(new File("/home/lwojtas/Desktop"));
         List<File> files = new LinkedList<File>();
         files.add(new File("test-data/watched"));
-        FileWatcher fw = new FileWatcher(proc, files);
+        FileWatchingProcess fw = new FileWatchingProcess(proc, files);
         
 //        SequentialProcess sp = new SequentialProcess(proc, new File("test-data/watched"), 1);
         Thread t = new Thread(fw);

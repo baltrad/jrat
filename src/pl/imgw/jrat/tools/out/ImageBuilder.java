@@ -58,6 +58,7 @@ public class ImageBuilder {
             LogHandler.getLogs().displayMsg(
                     "Saving image to file: '" + file + "' failed",
                     WARNING);
+            LogHandler.getLogs().displayMsg(e.getMessage(), ERROR);
         }
     }
     

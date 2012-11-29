@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import pl.imgw.jrat.process.FileWatcher;
+import pl.imgw.jrat.process.FileWatchingProcess;
 import pl.imgw.jrat.tools.out.LogHandler;
 import static pl.imgw.jrat.tools.out.Logging.*;
 
@@ -37,7 +37,7 @@ public class WZStats {
             LogHandler.getLogs().setLoggingVerbose(ERROR);
             WZStatsProcessor proc = new WZStatsProcessor();
             proc.setDest(dest);
-            FileWatcher fw = new FileWatcher(proc, files);
+            FileWatchingProcess fw = new FileWatchingProcess(proc, files);
 
             // SequentialProcess sp = new SequentialProcess(proc, new
             // File("test-data/watched"), 1);

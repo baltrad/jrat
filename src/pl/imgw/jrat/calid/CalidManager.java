@@ -2,19 +2,14 @@
  * (C) 2011 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
 package pl.imgw.jrat.calid;
-
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.AplicationConstans.ETC;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import pl.imgw.jrat.tools.in.FileDate;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -36,9 +31,9 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class CalidManager {
 
-    private static final String DEG = "deg";
-    private static final String M = "m";
-    private static final String DBZ = "dBZ";
+    private static final String ELEVATION = "ele=";
+    private static final String DISTANCE = "dis=";
+    private static final String REFLECTIVITY = "ref=";
 
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
@@ -49,36 +44,44 @@ public class CalidManager {
     private int distance = -1;
     private double reflectivity = -31.5;
 
-    private CalidContainer container;
-
     /**
-     * Generates path name to CALID folder specified by given parameters,
-     * different for every pair, distance and elevation
+     * Receives path name to CALID folder specified by given parameters,
+     * different for every pair, distance, elevation and reflectivity
      * 
      * @param pair
      * @param distance
      * @param elevation
+     * @param reflectivity
      * @return
      */
-    public static String getCalidPath(Pair pair, int distance, double elevation) {
+    public static String getCalidPath(Pair pair, int distance,
+            double elevation, double reflectivity) {
 
         String pairsName = pair.getVol1().getSiteName()
                 + pair.getVol2().getSiteName();
 
-        String distele = distance + "_" + elevation;
+        String distele = distance + "_" + elevation + "_" + reflectivity;
 
-        String folder = "calid/overlapping/" + pairsName + "/" + distele;
+        String folder = "calid/" + pairsName + "/" + distele;
 
-        new File(folder).mkdirs();
+        new File(ETC, folder).mkdirs();
 
-        return new File(folder).getPath();
+        return new File(ETC, folder).getPath();
+    }
+    
+    /**
+     * Receives path name to CALID root folder
+     * @return
+     */
+    public static String getCalidPath() {
+        return new File(ETC, "calid").getPath();
     }
 
     // private String[] par = { "0.5deg", "500m" };
 
     /**
      * 
-     * Initializes manager and sets two parameters for the algorithm:
+     * Initializes manager and sets parameters for the algorithm:
      * 
      * <p>
      * <tt>elevation</tt> of the scan, in degrees, the proper format for the
@@ -108,28 +111,27 @@ public class CalidManager {
      */
     public CalidManager(String[] par) {
 
+        String error_msg = "CALID: Arguments for CALID are incorrect, use --help option for details";
+        
         if (par == null || par.length < 2) {
             LogHandler.getLogs().displayMsg(
-                    "Arguments for CALID are incorrect", WARNING);
+                    error_msg, WARNING);
             return;
         }
 
         try {
             for (int i = 0; i < par.length; i++) {
-                if (par[i].endsWith(DEG)) {
-                    elevation = Double.parseDouble(par[i].substring(0,
-                            par[i].length() - DEG.length()));
-                } else if (par[i].endsWith(M)) {
-                    distance = Integer.parseInt(par[i].substring(0,
-                            par[i].length() - M.length()));
-                } else if (par[i].endsWith(DBZ)) {
-                    reflectivity = Double.parseDouble(par[i].substring(0,
-                            par[i].length() - DBZ.length()));
+                if (par[i].startsWith(ELEVATION)) {
+                    elevation = Double.parseDouble(par[i].substring(ELEVATION.length()));
+                } else if (par[i].startsWith(DISTANCE)) {
+                    distance = Integer.parseInt(par[i].substring(DISTANCE.length()));
+                } else if (par[i].startsWith(REFLECTIVITY)) {
+                    reflectivity = Double.parseDouble(par[i].substring(REFLECTIVITY.length()));
                 }
             }
         } catch (NumberFormatException e) {
             LogHandler.getLogs().displayMsg(
-                    "Format of arguments for CALID is incorrect", WARNING);
+                    error_msg, WARNING);
             return;
         }
 
@@ -138,65 +140,26 @@ public class CalidManager {
         }
 
     }
+    
+    /**
+     * @return the elevation
+     */
+    public double getElevation() {
+        return elevation;
+    }
 
     /**
-     * Compares two scans in
-     * 
-     * @return null if failed
+     * @return the distance
      */
-    public ArrayList<PairedPoints> compare(Pair pair) {
-        // check if the volumes contain selected elevation
-        if (pair.getVol1().getScan(elevation) == null
-                || pair.getVol2().getScan(elevation) == null) {
-            return null;
-        }
-
-        ArrayList<PairedPoints> pairedPointsList = null;
-
-        // LogHandler.getLogs().displayMsg(
-        // "Calculating overlapping points for: " + pair.getSource1()
-        // + " and " + pair.getSource2(), LogHandler.WARNING);
-
-        container = new CalidContainer(pair, elevation, distance, reflectivity);
-        pairedPointsList = container.getCoords();
-
-        if (!pairedPointsList.isEmpty()) {
-            LogHandler.getLogs().displayMsg(
-                    "Number of overlapping points: " + pairedPointsList.size(),
-                    LogHandler.WARNING);
-
-        } else {
-            LogHandler.getLogs().displayMsg("No overlapping points.",
-                    LogHandler.WARNING);
-            return null;
-        }
-
-        if (!container.loadResults(pair.getDate())) {
-
-            Comparator.compare(pairedPointsList,
-                    pair.getVol1().getScan(elevation),
-                    pair.getVol2().getScan(elevation), reflectivity);
-
-            container.saveResults();
-        }
-
-        // results = comp.getResults();
-        // comp.save(coords.getId(), pair.toString(), pair.getDate());
-
-        LogHandler.getLogs().displayMsg(
-                "Comparison completed for: " + pair.getSource1() + " and "
-                        + pair.getSource2(), LogHandler.WARNING);
-
-        return pairedPointsList;
+    public int getDistance() {
+        return distance;
     }
 
-    public List<PairedPoints> getResults(Pair pair, Date date) {
-
-        return null;
-    }
-
-    public void displayResults(Pair pair, Date date) {
-
+    /**
+     * @return the reflectivity
+     */
+    public double getReflectivity() {
+        return reflectivity;
     }
 
 }

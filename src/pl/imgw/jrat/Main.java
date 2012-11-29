@@ -3,7 +3,12 @@
  */
 package pl.imgw.jrat;
 
-import pl.imgw.jrat.process.ProcessController;
+import java.io.File;
+
+import static pl.imgw.jrat.AplicationConstans.*;
+
+import pl.imgw.jrat.process.MainProcessController;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  *
@@ -19,7 +24,16 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        ProcessController pc = new ProcessController(args);
+        
+        File genFile = new File(LOG, "log_gen");
+        File recFile = new File(LOG, "log_rec");
+        File errFile = new File(LOG, "log_err");
+        
+        LogHandler.getLogs().setGeneralLogsPath(genFile, 0);
+        LogHandler.getLogs().setErrorLogsPath(errFile, 0);
+        LogHandler.getLogs().setRecantFileLogsPath(recFile, 0);
+        
+        MainProcessController pc = new MainProcessController(args);
         pc.start();
     }
 

@@ -9,7 +9,7 @@ import java.io.File;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.process.ProcessController;
+import pl.imgw.jrat.process.MainProcessController;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class OverlappingCoordsTest {
                 "test-data/calid/2011082113400400dBZ.vol",
                 "test-data/calid/2011082113402900dBZ.vol", "--calid", "500m",
                 "0.5deg", "-v" };
-        ProcessController proc = new ProcessController(args);
+        MainProcessController proc = new MainProcessController(args);
         proc.start();
         PairsContainer container = new PairsContainer(proc.getFiles());
         Pair pair = container.getPairs().iterator().next();
@@ -49,7 +49,7 @@ public class OverlappingCoordsTest {
         args = new String[] { "-i", "test-data/calid/2011082113400400dBZ.vol",
                 "test-data/calid/2011082113402900dBZ.vol", "--calid a", "-v" };
 
-        proc = new ProcessController(args);
+        proc = new MainProcessController(args);
         proc.start();
         container = new PairsContainer(proc.getFiles());
         pair = container.getPairs().iterator().next();

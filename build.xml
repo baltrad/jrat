@@ -21,12 +21,14 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
 <project name="jrat" default="dist" basedir=".">
     <description>Builds, tests, and runs the project jrat.</description>
     <property name="app.name" value="jrat" />
+    <property name="version.src" value="src/pl/imgw/jrat/AplicationConstans.java" />
     <property name="main.class" value="pl.imgw.jrat.Main" />
     <property name="root.dir" value="${basedir}"/>
     <property name="src.dir" value="src"/>
     <property name="lib.dir" value="lib"/>
     <property name="lib.native.dir" value="lib/native"/>
     <property name="log.dir" value="log"/>
+    <property name="etc.dir" value="etc"/>
     <property name="dist.dir" value="dist"/>
     <property name="share.dir" value="share"/>
     <property name="bin.dir" value="bin"/>
@@ -55,6 +57,7 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
         <mkdir dir="${install.prefix}/${app.name}/${bin.dir}"/>
         <mkdir dir="${install.prefix}/${app.name}/${share.dir}"/>
         <mkdir dir="${install.prefix}/${app.name}/${log.dir}"/>
+        <mkdir dir="${install.prefix}/${app.name}/${etc.dir}"/>
         <copy todir="${install.prefix}/${app.name}/${share.dir}" flatten="true">
             <fileset dir="${dist.dir}">
                 <include name="**/*.jar" />
@@ -67,7 +70,11 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
 java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -XX:MaxPermSize=512m -Duser.timezone=UTC \
 -jar ${install.prefix}/${app.name}/${share.dir}/${app.name}.jar $@</echo>
         <chmod file="${install.prefix}/${app.name}/${bin.dir}/jrat" perm="755" />
-    </target>
+         <echo file="${install.prefix}/${app.name}/${share.dir}/before">#!/bin/sh
+PATH=$PATH:${install.prefix}/${app.name}/${bin.dir}
+export PATH</echo>
+        <chmod file="${install.prefix}/${app.name}/${share.dir}/before" perm="755" />
+   </target>
 
     <target name="init">
         <mkdir dir="${build.dir}"/>
@@ -76,11 +83,21 @@ java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -XX:MaxPer
     </target>
 
     <target name="compile" depends="clean, init">
-        <javac encoding="UTF-8" deprecation="on" srcdir="${src.dir}" destdir="${build.classes.dir}" 
+       <tstamp>
+          <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+       </tstamp>
+       <copy file="version.txt" toFile="${version.src}" overwrite="true">
+          <filterset>
+             <filter token="DATE" value="${TODAY}"/>
+             <filter token="LOG" value="${install.prefix}/${app.name}/${log.dir}"/>
+             <filter token="ETC" value="${install.prefix}/${app.name}/${etc.dir}"/>
+         </filterset>
+       </copy>
+       <javac encoding="UTF-8" deprecation="on" srcdir="${src.dir}" destdir="${build.classes.dir}" 
                includeantruntime="false">
-            <include name="**/*.java"/>
-            <classpath refid="classpath"/>
-        </javac>
+         <include name="**/*.java"/>
+         <classpath refid="classpath"/>
+       </javac>
     </target>
 
     <target name="dist" depends="compile">

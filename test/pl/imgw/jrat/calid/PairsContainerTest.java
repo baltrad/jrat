@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.junit.Test;
 import org.junit.Before;
@@ -22,7 +23,7 @@ import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.process.ProcessController;
+import pl.imgw.jrat.process.MainProcessController;
 import pl.imgw.jrat.tools.in.FileSegregatorByDateAndSource;
 
 /**
@@ -46,9 +47,9 @@ public class PairsContainerTest {
                 "test-data/calid/2011082113402500dBZ.vol",
                 "test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5",
                 "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5",
-                "--calid a", "-v" };
+                "-v" };
         
-        ProcessController proc = new ProcessController(args);
+        MainProcessController proc = new MainProcessController(args);
         proc.start();
         pairs = new PairsContainer(proc.getFiles());
 
@@ -92,5 +93,13 @@ public class PairsContainerTest {
         Date date = cal.getTime();
         assertEquals(3, pairs.getPairs(date).size());
         
+    }
+    
+    @Test
+    public void pairsInRightOrder() {
+        Iterator<Pair> i = pairs.getPairs().iterator();
+        Pair p1 = ((TreeSet<Pair>)pairs.getPairs()).first();
+        Pair p2 = ((TreeSet<Pair>)pairs.getPairs()).last();
+        assertTrue(p1.getDate().before(p2.getDate()));
     }
 }

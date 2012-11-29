@@ -12,10 +12,10 @@ import java.util.List;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
@@ -23,34 +23,39 @@ public class SingleRunProcessor implements Runnable {
 
     List<File> files;
     FilesProcessor proc;
-    
+
     /**
      * 
      */
-    public SingleRunProcessor(FilesProcessor proc, List<File> folders, List<File> files) {
+    public SingleRunProcessor(FilesProcessor proc, List<File> folders,
+            List<File> files) {
         for (File folder : folders) {
             files.addAll(Arrays.asList(folder.listFiles()));
         }
         this.files = files;
         this.proc = proc;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Runnable#run()
      */
     @Override
     public void run() {
-        if(proc == null)
+        if (proc == null)
             return;
-        
-        LogHandler.getLogs().displayMsg(
-                "Single run process started with: " + proc.getProcessName(),
-                WARNING);
-        
-        proc.processFile(files);
-        
-    }
+        if (files.isEmpty())
+            LogHandler.getLogs()
+                    .displayMsg("No input files specified", WARNING);
+        else
+            LogHandler.getLogs()
+                    .displayMsg(
+                            "Single run process started with: "
+                                    + proc.getProcessName(), WARNING);
 
-    
+        proc.processFile(files);
+
+    }
 
 }

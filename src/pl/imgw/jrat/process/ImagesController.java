@@ -149,7 +149,7 @@ public class ImagesController {
     
     public static void main(String[] args) {
         LogHandler.getLogs().setLoggingVerbose(ERROR);
-        ProcessController pc;
+        MainProcessController pc;
 //        args = "--print-image".split(" ");
 //        pc = new ProcessController(args);
 //        pc.start();
@@ -157,7 +157,7 @@ public class ImagesController {
         args = ("-i test-data/2vol.h5 --verbose "
                 + "--print-image format=gif dataset=dataset1 scale=rb nodata=0"
                 ).split(" ");
-        pc = new ProcessController(args);
+        pc = new MainProcessController(args);
         pc.start();
     }
     

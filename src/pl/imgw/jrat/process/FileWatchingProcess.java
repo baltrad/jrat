@@ -31,7 +31,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class FileWatcher implements Runnable {
+public class FileWatchingProcess implements Runnable {
 
     private WatchService watchSvc = FileSystems.getDefault().newWatchService();
     private HashMap<String, Long> fileTimeMap = new HashMap<String, Long>();
@@ -41,7 +41,7 @@ public class FileWatcher implements Runnable {
     private List<File> files = new LinkedList<File>();
 //    private File[] watchedPath = null;
 
-    public FileWatcher(FilesProcessor proc, List<File> watchedPathList) {
+    public FileWatchingProcess(FilesProcessor proc, List<File> watchedPathList) {
         if (watchedPathList == null || watchedPathList.isEmpty()) {
             return;
         }
@@ -61,13 +61,13 @@ public class FileWatcher implements Runnable {
         } catch (UnsupportedOperationException uox) {
             LogHandler.getLogs().displayMsg("file watching not supported!",
                     ERROR);
-            LogHandler.getLogs().saveErrorLogs(FileWatcher.class.getName(),
+            LogHandler.getLogs().saveErrorLogs(FileWatchingProcess.class.getName(),
                     uox.getMessage());
 
         } catch (IOException iox) {
             LogHandler.getLogs().displayMsg(
                     "I/O errors while watching " + path, ERROR);
-            LogHandler.getLogs().saveErrorLogs(FileWatcher.class.getName(),
+            LogHandler.getLogs().saveErrorLogs(FileWatchingProcess.class.getName(),
                     iox.getMessage());
 
         }
@@ -106,7 +106,7 @@ public class FileWatcher implements Runnable {
                 // other thread closed watch service
                 LogHandler.getLogs().displayMsg(
                         "watch service closed, terminating", ERROR);
-                LogHandler.getLogs().saveErrorLogs(FileWatcher.class.getName(),
+                LogHandler.getLogs().saveErrorLogs(FileWatchingProcess.class.getName(),
                         cwse.getMessage());
                 break;
             }
@@ -142,12 +142,12 @@ public class FileWatcher implements Runnable {
                                 "watch service closed, terminating",
                                 ERROR);
                         LogHandler.getLogs().saveErrorLogs(
-                                FileWatcher.class.getName(), e1.getMessage());
+                                FileWatchingProcess.class.getName(), e1.getMessage());
                     } catch (InterruptedException e1) {
                         LogHandler.getLogs().displayMsg(
                                 "watch service interrupted", ERROR);
                         LogHandler.getLogs().saveErrorLogs(
-                                FileWatcher.class.getName(), e1.getMessage());
+                                FileWatchingProcess.class.getName(), e1.getMessage());
                     }
                 } else {
                     continue;

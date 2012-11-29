@@ -51,6 +51,7 @@ public class CommandLineArgsParser {
     public final static String DEBUG = "debug";
     
     public final static String CALID = "calid";
+    public final static String CALID_RESULT = "calid-result";
 
     public final static String FILE_ARG = "file";
     public final static String FILES_ARG = "file(s)";
@@ -72,7 +73,7 @@ public class CommandLineArgsParser {
 
     private final static String OUTPUT_DESCR = "output file";
 
-    private final static String AUTO_DESCR = "start process";
+    private final static String WATCH_DESCR = "watching processer";
 
     private final static String DEBUG_DESCR = "print debugging information";
 
@@ -80,7 +81,11 @@ public class CommandLineArgsParser {
     
     private final static String PRINT_DESCR = "print information of the file";
     
-    private final static String IMAGE_DESCR = "print dataset as an image";
+    private final static String PRINT_IMAGE_DESCR = "print dataset as an image\n" +
+    		"<arg> must specify dataset number, nodata value, color scale name and" +
+    		" additionally but not necessarily format\n" +
+    		"supported scales at the moment are rb and gray\n" +
+    		"example use: --print-image dataset=dataset1 nodata=0 scale=rb format=png";
 
     public final static String QUIET_DESCR = "be extra quiet";
 
@@ -90,8 +95,12 @@ public class CommandLineArgsParser {
     
     private final static String SEQ_DESCR = "sequence mode to process files\n<arg> interval lenght in minutes";
     
-    private final static String CALID_DESCR = "calibration difference of two radars";
+    private final static String CALID_DESCR = "calibration difference of two radars\n" +
+    		"<arg> must specify elevation of radar scan (deg) and maximum distance between two points" +
+    		" which will be compared (m), optionally minimal reflectivity value (dBZ) for each point to use\n" +
+    		"example use: --calid 0.5deg 500m 3.5dBZ";
     
+    private final static String CALID_RESULT_DESCR = "handle CALID results\n<arg>";
 //    private final static String FORMAT_DESCR = "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
 
     private static Options options = null;
@@ -127,7 +136,7 @@ public class CommandLineArgsParser {
         options.addOption(P, PRINT, false, PRINT_DESCR);
         
         Option print_img = OptionBuilder.withLongOpt(PRINTIMAGE)
-                .withDescription(IMAGE_DESCR).hasArgs()
+                .withDescription(PRINT_IMAGE_DESCR).hasArgs()
                 .create();
         
         Option seq = OptionBuilder.withLongOpt(SEQ).hasArgs()
@@ -138,12 +147,16 @@ public class CommandLineArgsParser {
                 .withDescription(CALID_DESCR).create();
         options.addOption(calid);
         
+        Option calidResults = OptionBuilder.withLongOpt(CALID_RESULT).hasArgs()
+                .withDescription(CALID_RESULT_DESCR).create();
+        options.addOption(calidResults);
+        
         options.addOption(print_img);
-        options.addOption(W, WATCH, false, AUTO_DESCR);
+        options.addOption(W, WATCH, false, WATCH_DESCR);
         
         options.addOption(Q, QUIET, false, QUIET_DESCR);
         options.addOption(V, VERBOSE,false, VERBOSE_DESCR);
-        options.addOption(D, DEBUG, false, DEBUG_DESCR);
+//        options.addOption(D, DEBUG, false, DEBUG_DESCR);
 //        options.addOption(F, FORMAT, true, FORMAT_DESCR);
         options.addOption(null, VERSION, false, VERSION_DESCR);
     }

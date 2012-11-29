@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.process.ProcessController;
+import pl.imgw.jrat.process.MainProcessController;
 
 /**
  *
@@ -20,30 +20,30 @@ import pl.imgw.jrat.process.ProcessController;
  */
 public class ProcessControllerTest {
     
-    private ProcessController pc;
+    private MainProcessController pc;
     private String[] args;
 
 
     /**
-     * Test method for {@link pl.imgw.jrat.process.ProcessController#start()}.
+     * Test method for {@link pl.imgw.jrat.process.MainProcessController#start()}.
      */
     @Test
     public void testStart() {
 
         args = "--print".split(" ");
-        pc = new ProcessController(args);
+        pc = new MainProcessController(args);
         
         assertTrue(pc.start());
         
         args = "--version".split(" ");
-        pc = new ProcessController(args);
+        pc = new MainProcessController(args);
         
         assertTrue(pc.start());
         
         args = "-h".split(" ");
-        pc = new ProcessController(args);
+        pc = new MainProcessController(args);
         
-        assertTrue(!pc.start());
+        assertTrue(pc.start());
         
         
         /*

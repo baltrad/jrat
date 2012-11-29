@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
+@SuppressWarnings("deprecation")
 public class XMLHandler {
 
     // XML settings
@@ -208,7 +209,7 @@ public class XMLHandler {
             serializer.setOutputCharStream(fw);
             serializer.serialize(doc);
             fw.close();
-            LogHandler.getLogs().displayMsg("Data saved to " + fileName, LogHandler.WARNING);
+            LogHandler.getLogs().displayMsg("XML: Data saved to " + fileName, LogHandler.WARNING);
         } catch (Exception e) {
             LogHandler.getLogs().displayMsg("Error while saving XML file: "
                     + e.getMessage(), Logging.ERROR);

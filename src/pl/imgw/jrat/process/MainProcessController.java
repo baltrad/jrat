@@ -3,17 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
-import static pl.imgw.jrat.process.CommandLineArgsParser.I;
-import static pl.imgw.jrat.process.CommandLineArgsParser.O;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
-import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
-import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
-import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
+import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.SILENT;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
@@ -24,6 +14,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
+import pl.imgw.jrat.calid.CalidResultManager;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
@@ -38,7 +29,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class ProcessController {
+public class MainProcessController {
 
     private final int HDF = 0;
     private final int RBI = 1;
@@ -48,14 +39,14 @@ public class ProcessController {
     private CommandLine cmd;
     private List<File> files = new LinkedList<File>();
     private List<File> folders = new LinkedList<File>();
+    private File root = new File(System.getProperty("user.dir"));
 
     public List<File> getFiles(){
         return files;
     }
     
-   
     
-    public ProcessController(String[] args) {
+    public MainProcessController(String[] args) {
 
         CommandLineArgsParser parser = new CommandLineArgsParser();
         parser.parseArgs(args);
@@ -85,6 +76,19 @@ public class ProcessController {
             LogHandler.getLogs().printVersion();
             return true;
         }
+        
+        if (cmd.hasOption(H)) {
+            /* nothing to do when help displayed */
+            return true;
+        }
+        
+        System.out.println();
+        
+        if(cmd.hasOption(CALID_RESULT)) {
+            CalidResultManager crm = new CalidResultManager(cmd.getOptionValues(CALID_RESULT));
+            return true;
+        }
+        
         FilesProcessor proc = null;
         
         if (cmd.hasOption(TEST)) {
@@ -106,10 +110,13 @@ public class ProcessController {
         /* Loading list of files to process or setting input folder path*/
         if (cmd.hasOption(I)) {
             FilePatternFilter filter = new RegexFileFilter();
-            for (int i = 0; i < cmd.getOptionValues(I).length; i++) {
-                files.addAll(filter.getFileList(cmd.getOptionValues(I)[i]));
-                if(new File(cmd.getOptionValues(I)[i]).isDirectory()) {
-                    folders.add(new File(cmd.getOptionValues(I)[i]));
+            for(String name : cmd.getOptionValues(I)) {
+                if(!name.startsWith("/")) {
+                    name = root.getPath() + "/" + name;
+                }
+                files.addAll(filter.getFileList(name));
+                if(new File(name).isDirectory()) {
+                    folders.add(new File(name));
                 }
             }
             for(File f : files) {
@@ -133,28 +140,34 @@ public class ProcessController {
         */
         
         /* Setting output file */
-        File output = new File(".");
+        File output = root;
         if (cmd.hasOption(O)) {
-            output = new File(cmd.getOptionValue(O));
+            if (!cmd.getOptionValue(O).startsWith("/")) {
+                output = new File(root, cmd.getOptionValue(O));
+            } else {
+                output = new File(cmd.getOptionValue(O));
+            }
             output.mkdirs();
             LogHandler.getLogs().displayMsg("Output: " + output.getPath(), WARNING);
         }
         
         
         if (cmd.hasOption(PRINT)) {
-            System.out.println(cmd.getOptionValue(PRINT));
+            System.out.println("Printing information about the file is not supported yet");
             return true;
         }
         
         if (cmd.hasOption(PRINTIMAGE)) {
-            ImagesController ic = new ImagesController(
-                    cmd.getOptionValues(PRINTIMAGE));
+//            LogHandler.getLogs().displayMsg("Printing image from file", WARNING);
+            ImagesController ic = null;
             ParserManager pm = new ParserManager();
 
             pm.setParser(new DefaultParser());
 
             for (File file : files) {
                 if (pm.initialize(file)) {
+                    ic = new ImagesController(
+                            cmd.getOptionValues(PRINTIMAGE));
                     ic.getBuilder().setData(
                             pm.getProduct().getArray(ic.getDatasetValue()));
 
@@ -180,7 +193,7 @@ public class ProcessController {
 
         if(cmd.hasOption(WATCH)) {
             /* Starting continues mode */
-            FileWatcher watcher = new FileWatcher(proc, folders);
+            FileWatchingProcess watcher = new FileWatchingProcess(proc, folders);
             Thread t = new Thread(watcher);
             t.start();
             if(t.isAlive()) {
@@ -210,7 +223,7 @@ public class ProcessController {
     }
 
     public static void main(String[] args) {
-        ProcessController pc = new ProcessController(args);
+        MainProcessController pc = new MainProcessController(args);
         pc.start();
     }
 

@@ -17,7 +17,7 @@ import pl.imgw.jrat.data.VolumeContainer;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class Pair {
+public class Pair implements Comparable<Pair> {
 
     private Date date;
     private VolumeContainer vol1;
@@ -143,6 +143,21 @@ public class Pair {
         } catch (NullPointerException e) {
             return false;
         }
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(Pair pair2) {
+        
+        if (this.equals(pair2))
+            return 0;
+        
+        if (this.getDate().after(pair2.getDate()))
+            return 1;
+        
+        return -1;
     }
 
 }

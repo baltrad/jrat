@@ -18,7 +18,7 @@ import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.process.ProcessController;
+import pl.imgw.jrat.process.MainProcessController;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 
@@ -92,7 +92,7 @@ public class FileSegregatorByDateAndSource {
     public static void main(String[] args) {
         LogHandler.getLogs().setLoggingVerbose(Logging.SILENT);
         args = new String[] { "-i", "test-data/comp/*", "test-data/*.vol", "-v" };
-        ProcessController proc = new ProcessController(args);
+        MainProcessController proc = new MainProcessController(args);
         proc.start();
         FileSegregatorByDateAndSource seg = new FileSegregatorByDateAndSource();
         seg.setInputFiles(proc.getFiles());

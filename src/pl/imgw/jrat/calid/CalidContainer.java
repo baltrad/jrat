@@ -81,13 +81,13 @@ public class CalidContainer {
     public boolean valid = true;
 
     private String getCoordsPath() {
-        return new File(CalidManager.getCalidPath(pair, distance, elevation),
+        return new File(CalidManager.getCalidPath(pair, distance, elevation, reflectivity),
                 COORDSFILE).getPath();
     }
 
     private String getResultsPath() {
-        return new File(CalidManager.getCalidPath(pair, distance, elevation),
-                RESULTSFILE + reflectivity).getPath();
+        return new File(CalidManager.getCalidPath(pair, distance, elevation, reflectivity),
+                RESULTSFILE).getPath();
     }
 
     
@@ -128,7 +128,9 @@ public class CalidContainer {
         if (!valid)
             return false;
 
-        LogHandler.getLogs().displayMsg("Calculating coordinates", LogHandler.WARNING);
+        LogHandler.getLogs().displayMsg(
+                "CALID: Calculating overlapping points coordinates for: " + pair.getSource1()
+                        + " and " + pair.getSource2(), LogHandler.WARNING);
         
         Point2D.Double r1coords = new Point2D.Double(pair.getVol1().getLon(),
                 pair.getVol1().getLat());
@@ -152,7 +154,7 @@ public class CalidContainer {
         
         if (radHalfDist > radarRange1 || radHalfDist > radarRange2 ) {
             LogHandler.getLogs().displayMsg(
-                    "Radars are to far from each other"
+                    "CALID: Radars are to far from each other"
                             + " and have no overlapping points", Logging.WARNING);
             return false;
         }
@@ -277,7 +279,7 @@ public class CalidContainer {
 
         } catch (ParserConfigurationException e) {
             LogHandler.getLogs().displayMsg(
-                    "Error while creating XML document object", Logging.ERROR);
+                    "CALID: Error while creating XML document object", Logging.ERROR);
             return false;
         }
         Element root = doc.createElement(ROOT);
@@ -376,7 +378,9 @@ public class CalidContainer {
         
         Document oldDoc = XMLHandler.loadXML(getCoordsPath());
         if (oldDoc != null && oldDoc.hasChildNodes()) {
-            LogHandler.getLogs().displayMsg("Loading coordinates from file", LogHandler.WARNING);
+            LogHandler.getLogs().displayMsg(
+                    "CALID: Loading coordinates from file: " + getCoordsPath(),
+                    LogHandler.WARNING);
             NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
             for (int i = 0; i < list.getLength(); i++) {
 
@@ -490,6 +494,9 @@ public class CalidContainer {
             Scanner scan = new Scanner(file);
             while (scan.hasNext()) {
                 String line = scan.nextLine();
+                if(line.startsWith("#")) {
+                    continue;
+                }                    
                 String[] words = line.split(" ");
                 if (words.length != pairedPointsList.size() + 1) {
                     continue;
@@ -523,10 +530,20 @@ public class CalidContainer {
         File file = new File(getResultsPath());
 
         PrintWriter pw = null;
+        boolean newfile = false;
         try {
-            if (!file.exists())
+            if (!file.exists()) {
                 file.createNewFile();
+                newfile = true;
+            }
             pw = new PrintWriter(new FileOutputStream(file, true), true);
+            
+            if (newfile) {
+                pw.println("# " + pair.getSource1() + " " + pair.getSource2()
+                        + " elevation=" + elevation + " distance=" + distance
+                        + " reflectivity=" + reflectivity);
+            }
+            
             pw.print(sdf.format(pair.getDate()));
             
             Iterator<PairedPoints> itr = pairedPointsList.iterator();
@@ -538,18 +555,18 @@ public class CalidContainer {
                 pw.print(v);
             }
             pw.print("\n");
-            LogHandler.getLogs().displayMsg("Saving results complete",
+            LogHandler.getLogs().displayMsg("CALID: Saving results complete",
                     LogHandler.WARNING);
         } catch (FileNotFoundException e) {
             LogHandler.getLogs()
                     .displayMsg(
-                            "Cannot create result file in path "
+                            "CALID: Cannot create result file in path "
                                     + file.getAbsolutePath() + "\n"
                                     + e.getMessage(), 3);
         } catch (IOException e) {
             LogHandler.getLogs()
                     .displayMsg(
-                            "Cannot create result file in path "
+                            "CALID: Cannot create result file in path "
                                     + file.getAbsolutePath() + "\n"
                                     + e.getMessage(), 3);
 
