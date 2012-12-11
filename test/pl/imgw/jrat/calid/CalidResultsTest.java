@@ -44,6 +44,7 @@ public class CalidResultsTest {
         assertTrue(calid.isValid());
     }
  
+    /*
     @Test
     public void resultsListTest() {
         args = "ele=0.5 dis=500 src=WMO:12568,WMO:12579".split(" ");
@@ -51,5 +52,5 @@ public class CalidResultsTest {
         CalidResultManager manager = new CalidResultManager(calid);
         manager.printPairsList();
     }
-    
+    */
 }
