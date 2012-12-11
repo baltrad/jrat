@@ -63,6 +63,7 @@ public class HDF5ParserTest {
         assertEquals("nbins is wrong", 1000.0, scan.getRScale(), 0.01);
         ArrayData array = scan.getArray();
         assertEquals("array value", 36, array.getRawIntPoint(138, 18));
+        assertEquals(10, vol.getAllScans().size());
     }
     
     

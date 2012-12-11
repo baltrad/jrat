@@ -5,6 +5,7 @@ package pl.imgw.jrat.data;
 
 import java.awt.geom.Point2D;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -125,7 +126,7 @@ public class OdimH5Volume implements VolumeContainer {
             }
 
             @Override
-            public ArrayData getArray() {
+            public RawByteDataArray getArray() {
 
                 RawByteDataArray array = (RawByteDataArray) data
                         .getArray(dataset + "/data1/data");
@@ -227,6 +228,33 @@ public class OdimH5Volume implements VolumeContainer {
         id += formatMinutePrecision.format(getTime());
         id += "'";
         return id;
+    }
+
+    
+    private double getElevation(String datasetName) {
+
+        String[] parts = datasetName.split("/");
+        String path = "/";
+        for (String part : parts) {
+            if (part.startsWith("dataset")) {
+                path += part + "/where";
+                return (Double) data.getAttributeValue(path, "elangle");
+            }
+        }
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.VolumeContainer#getAllScans()
+     */
+    @Override
+    public List<ScanContainer> getAllScans() {
+        List<ScanContainer> scans = new ArrayList<ScanContainer>();
+        for(String eleStr : data.getArrayList().keySet()) {
+            double ele = getElevation(eleStr);
+            scans.add(getScan(ele));
+        }
+        return scans;
     }
 
 }

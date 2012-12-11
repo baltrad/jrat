@@ -34,18 +34,25 @@ public class CalidManager {
     private static final String ELEVATION = "ele=";
     private static final String DISTANCE = "dis=";
     private static final String REFLECTIVITY = "ref=";
+    private static final String SOURCE = "src=";
 
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
     // private PairsContainer pcont;
     // private Set<Pair> pairs = new HashSet<Pair>();
 
-    private double elevation = -1;
-    private int distance = -1;
+    private double elevation = 0;
+    private int distance = 0;
     private double reflectivity = -31.5;
+    private String source1 = "";
+    private String source2 = "";
+    private Date date1 = null;
+    private Date date2 = null;
 
+    private boolean valid = false;
+    
     /**
-     * Receives path name to CALID folder specified by given parameters,
+     * Receives path name to CALID results folder specified by given parameters,
      * different for every pair, distance, elevation and reflectivity
      * 
      * @param pair
@@ -77,6 +84,10 @@ public class CalidManager {
         return new File(ETC, "calid").getPath();
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+    
     // private String[] par = { "0.5deg", "500m" };
 
     /**
@@ -111,14 +122,12 @@ public class CalidManager {
      */
     public CalidManager(String[] par) {
 
-        String error_msg = "CALID: Arguments for CALID are incorrect, use --help option for details";
-        
-        if (par == null || par.length < 2) {
-            LogHandler.getLogs().displayMsg(
-                    error_msg, WARNING);
+        if(par == null) {
+//            System.out.println("bez opcji");
+            valid = true;
             return;
         }
-
+        String error_msg = "CALID: Arguments for CALID are incorrect";
         try {
             for (int i = 0; i < par.length; i++) {
                 if (par[i].startsWith(ELEVATION)) {
@@ -127,20 +136,57 @@ public class CalidManager {
                     distance = Integer.parseInt(par[i].substring(DISTANCE.length()));
                 } else if (par[i].startsWith(REFLECTIVITY)) {
                     reflectivity = Double.parseDouble(par[i].substring(REFLECTIVITY.length()));
+                } else if (par[i].startsWith(SOURCE)) {
+                    String sources = par[i].substring(SOURCE.length());
+                    if (sources.contains(",")) {
+                        source1 = sources.split(",")[0];
+                        source2 = sources.split(",")[1];
+                    } else
+                        source1 = sources;
+                } else {
+                    LogHandler.getLogs().displayMsg(
+                            error_msg + " (" + par[i] + ")", WARNING);
+                    return;
                 }
             }
         } catch (NumberFormatException e) {
+            LogHandler.getLogs().displayMsg(
+                    error_msg + " (" + e.getLocalizedMessage() + ")", WARNING);
+            return;
+        } catch (ArrayIndexOutOfBoundsException e) {
             LogHandler.getLogs().displayMsg(
                     error_msg, WARNING);
             return;
         }
 
-        if (elevation < 0 || distance < 0) {
+        if (elevation < -10 || elevation > 90 || distance < 0) {
             return;
         }
 
+//        System.out.println(elevation);
+//        System.out.println(distance);
+//        System.out.println(source1);
+//        System.out.println(source2);
+//        System.out.println(reflectivity);
+        
+        valid = true;
     }
     
+    private boolean parseDate(String s) {
+        
+        if(s.split(",").length == 2) {
+            
+        }
+        
+        String t1 = "";
+        String d1 = "";
+        String t2 = "";
+        String d2 = "";
+        
+        
+        
+        return false;
+    }
     /**
      * @return the elevation
      */
@@ -160,6 +206,20 @@ public class CalidManager {
      */
     public double getReflectivity() {
         return reflectivity;
+    }
+
+    /**
+     * @return the source1
+     */
+    public String getSource1() {
+        return source1;
+    }
+
+    /**
+     * @return the source2
+     */
+    public String getSource2() {
+        return source2;
     }
 
 }

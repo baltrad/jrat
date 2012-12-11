@@ -3,13 +3,12 @@
  */
 package pl.imgw.jrat.data;
 
-
-
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * Unsigned byte array data container. All values will be converted to
+ * unsigned byte from range 0 to 255.
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
@@ -19,16 +18,18 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
     protected double offset = 0;
     protected double gain = 0;
     protected int xShift = 0;
-    
+
     /**
-     * @param offset the offset to set
+     * @param offset
+     *            the offset to set
      */
     public void setOffset(double offset) {
         this.offset = offset;
     }
 
     /**
-     * @param gain the gain to set
+     * @param gain
+     *            the gain to set
      */
     public void setGain(double gain) {
         this.gain = gain;
@@ -40,7 +41,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
     public void setXShift(int xShift) {
         this.xShift = xShift;
     }
-    
+
     /**
      * @return the offset
      */
@@ -56,9 +57,9 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
     }
 
     public RawByteDataArray() {
-        
+
     }
-    
+
     /**
      * @param infDataBuff
      */
@@ -70,7 +71,9 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#initialize(int, int)
      */
     @Override
@@ -80,14 +83,13 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         this.data = new byte[sizeX][sizeY];
     }
 
-
-    public short[][] getData() {
+    public short[][] getShortData() {
         short[][] idata = new short[sizeX][sizeY];
-        
-        for(int i = 0; i < sizeX; i++)
-            for(int j = 0; j < sizeY; j++)
+
+        for (int i = 0; i < sizeX; i++)
+            for (int j = 0; j < sizeY; j++)
                 idata[i][j] = (short) unsignedByte2Int(data[i][j]);
-        
+
         return idata;
     }
 
@@ -95,6 +97,12 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         return data;
     }
 
+    /**
+     * Given value has to be from 0 to 255 range and byte should be unsigned.
+     * Otherwise when converting to integer the value might be wrong.
+     * 
+     * @param data
+     */
     public void setByteData(byte[][] data) {
         this.sizeX = data.length;
         this.sizeY = data[0].length;
@@ -102,6 +110,12 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
 
     }
 
+    /**
+     * Given value will be converted to unsigned byte, it has to be from 0 to
+     * 255 range. Otherwise value 0 will be set.
+     * 
+     * @param data
+     */
     public void setIntData(int[][] data) {
         if (data != null) {
             int sizeX = data.length;
@@ -112,8 +126,10 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
                     this.data[x][y] = int2byte((short) data[x][y]);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#getPoint(int, int)
      */
     @Override
@@ -125,7 +141,9 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         return (short) unsignedByte2Int(data[x][y]);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setPoint(int, int, short)
      */
     @Override
@@ -139,7 +157,9 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#getBytePoint(int, int)
      */
     @Override
@@ -151,13 +171,15 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         return data[x][y];
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setBytePoint(int, int, byte)
      */
     @Override
     public boolean setRawBytePoint(int x, int y, byte value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
-            
+
             return false;
         }
         data[x][y] = value;
@@ -169,18 +191,20 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
             System.arraycopy(source[a], 0, destination[a], 0, source[a].length);
         }
     }
-    
+
     public Object clone() {
-        
+
         byte[][] array = new byte[sizeX][sizeY];
         multiArrayCopy(data, array);
-        
+
         ArrayData dc = new RawByteDataArray(array);
 
         return dc;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#getDoublePoint(int, int)
      */
     @Override
@@ -190,13 +214,16 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
             return -9999;
         }
         short value = (short) unsignedByte2Int(data[x][y]);
-        if(gain == 0)
+        if (gain == 0)
             return value;
         return raw2real(value);
     }
 
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.data.ArrayDataContainer#setDoublePoint(int, int, double)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see pl.imgw.jrat.data.ArrayDataContainer#setDoublePoint(int, int,
+     * double)
      */
     @Override
     public boolean setPoint(int x, int y, double value) {
@@ -215,9 +242,9 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
             return 0;
         return (short) ((1 / gain * (x - offset)) + 1);
     }
-    
+
     private double raw2real(int x) {
         return gain * x + offset;
     }
-    
+
 }

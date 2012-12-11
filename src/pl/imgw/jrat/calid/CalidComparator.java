@@ -41,7 +41,7 @@ public class CalidComparator {
         }
 
         LogHandler.getLogs().displayMsg("CALID: Processing data completed",
-                LogHandler.WARNING);
+                LogHandler.NORMAL);
     }
 
     /**
@@ -74,7 +74,7 @@ public class CalidComparator {
         if (!pairedPointsList.isEmpty()) {
             LogHandler.getLogs().displayMsg(
                     "CALID: Number of overlapping points: "
-                            + pairedPointsList.size(), LogHandler.WARNING);
+                            + pairedPointsList.size(), LogHandler.NORMAL);
 
         } else {
             LogHandler.getLogs().displayMsg("CALID: No overlapping points.",
@@ -97,7 +97,7 @@ public class CalidComparator {
         LogHandler.getLogs().displayMsg(
                 "CALID: Comparison completed for: " + pair.getSource1()
                         + " and " + pair.getSource2() + "\n",
-                LogHandler.WARNING);
+                LogHandler.NORMAL);
 
         return pairedPointsList;
     }

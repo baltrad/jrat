@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat.calid;
 
+import static pl.imgw.jrat.tools.out.Logging.PROGRESS_BAR_ONLY;
+
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +23,8 @@ import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.tools.out.ConsoleProgressBar;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -47,7 +51,13 @@ public class PairsContainer {
 
         Map<Date, Map<String, VolumeContainer>> segregated = new HashMap<Date, Map<String, VolumeContainer>>();
 
+        ConsoleProgressBar.getProgressBar().initialize(20,
+                files.size(),
+                LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
+                "Initializing files");
+        
         for (File f : files) {
+            ConsoleProgressBar.getProgressBar().evaluate();
             // System.out.println(f);
             if (manager.initialize(f)) {
                 DataContainer data = manager.getProduct();
@@ -83,11 +93,13 @@ public class PairsContainer {
                     continue;
                 Iterator<String> i = pairnames.iterator();
                 Pair pair = new Pair(single.get(i.next()), single.get(i.next()));
-                if (pair.isValid()) {
+                if (pair.hasRealVolums()) {
                     pairs.add(pair);
                 }
             }
         }
+        
+        ConsoleProgressBar.getProgressBar().printDoneMsg();
         
     }
 

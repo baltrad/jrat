@@ -7,28 +7,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.Color;
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
-import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.imageio.ImageIO;
-
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.AplicationConstans;
 import pl.imgw.jrat.process.MainProcessController;
-import pl.imgw.jrat.projection.ProjectionUtility;
-import pl.imgw.jrat.tools.out.ColorScales;
-import pl.imgw.jrat.tools.out.ImageBuilder;
-import pl.imgw.jrat.tools.out.ImageTools;
 
 /**
  *
@@ -94,7 +80,7 @@ public class CalidManagerTest {
         System.out.println("Results Test");
         String[] args = new String[] { "-i",
                 "test-data/calid/T_PAGZ47_C_SOWR_20120109180044.hdf",
-                "test-data/calid/T_PAGZ46_C_SOWR_20120109180013.hdf",
+                "test-data/calid/T_PAGZ46_C_SOWR_20120109180013.hdf", "-q",
                 };
         
         MainProcessController proc = new MainProcessController(args);
@@ -103,7 +89,9 @@ public class CalidManagerTest {
         
         args = new String[] { "ele=0.5", "dis=500" };
         manager = new CalidManager(args);
-        new File("calid/overlapping/WMO:12151WMO:12220/500_0.5/results").delete();
+        
+        File f = new File(AplicationConstans.ETC + "/calid/WMO:12220WMO:12151/500_0.5_-31.5/20120109.results");
+        
         System.out.println("Asking for results after deleting results file");
         Pair pair = pairs.getPairs().iterator().next();
         ArrayList<PairedPoints> array = CalidComparator.getResult(manager, pair);

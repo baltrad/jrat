@@ -39,7 +39,7 @@ public class ByteDataContainerTest {
     @Test
     public void testInitialize() {
         dc.initialize(100, 100);
-        assertNotNull("Container is null", dc.getData());
+        assertNotNull("Container is null", dc.getShortData());
         assertEquals("Container is not empty:", 0, dc.getRawIntPoint(20, 20));
         assertEquals("Out of bounds should return -1:", -1, dc.getRawIntPoint(101, 80));
         assertEquals("Out of bounds should return 0:", 0, dc.getRawBytePoint(101, 80));

@@ -42,8 +42,14 @@ public class PairTest {
         pair = new Pair(vol1, vol2);
         Pair pair2 = new Pair(vol2, vol1);
         assertTrue(pair.getVol1() == pair2.getVol1());
-        assertTrue("validation is not working well with odim format", pair.isValid());
+        assertTrue("validation is not working well with odim format", pair.hasRealVolums());
         assertEquals(57, pair.getVol2().getScan(elevation).getArray().getRawIntPoint(116, 16));
+        String s1 = "WMO:12374";
+        String s2 = "WMO:12579";
+        Pair pair3 = new Pair(s1, s2);
+        assertTrue(pair.getSource1().matches(s2));
+//        System.out.println(pair3);
+//        System.out.println(pair);
         
     }
     
@@ -56,19 +62,21 @@ public class PairTest {
         pm.initialize(new File("test-data/calid", "2011082113400400dBZ.vol"));
         VolumeContainer vol2 = new RainbowVolume((RainbowDataContainer) pm.getProduct());
         pair = new Pair(vol1, vol2);
-        assertTrue("validation is not working well with rainbow format", pair.isValid());
+        assertTrue("validation is not working well with rainbow format", pair.hasRealVolums());
         assertEquals(60, pair.getVol2().getScan(elevation).getArray().getRawIntPoint(301, 20));
         assertEquals(-2d, pair.getVol2().getScan(elevation).getArray().getPoint(301, 20), 0.1);
+        System.out.println(pair);
+        assertTrue("Comparing pair's source name", pair.getSource1().matches("Rzeszow"));
     }
     
     @Test
-    public void emptyPairTest() {
+    public void pairCreatedFromStringOrderTest() {
         String source1 = "Rzeszow";
         String source2 = "Legionowo";
         pair = new Pair(source1, source2);
-        assertFalse(pair.isValid());
-        assertTrue(pair.getSource2().matches(source1));
+        assertFalse(pair.hasRealVolums());
+        assertTrue(pair.getSource2().matches(source2));
         pair = new Pair(source2, source1);
-        assertTrue(pair.getSource2().matches(source1));
+        assertTrue(pair.getSource2().matches(source2));
     }
 }

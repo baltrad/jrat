@@ -5,8 +5,10 @@ package pl.imgw.jrat.data;
 
 import java.awt.geom.Point2D;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -170,7 +172,7 @@ public class RainbowVolume implements VolumeContainer {
             }
 
             @Override
-            public ArrayData getArray() {
+            public RawByteDataArray getArray() {
                 String blobid = data.getRainbowAttributeValue(
                         path + "/rawdata", "blobid");
 
@@ -277,6 +279,22 @@ public class RainbowVolume implements VolumeContainer {
         id += formatMinutePrecision.format(getTime());
         id += "'";
         return id;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.VolumeContainer#getAllScans()
+     */
+    @Override
+    public List<ScanContainer> getAllScans() {
+        List<ScanContainer> scans = new ArrayList<ScanContainer>();
+        int size = data.getArrayList().size();
+        for (int i = 0; i < size; i++) {
+            String posangle = data.getRainbowAttributeValue(
+                    "/volume/scan/slice:refid=" + i + "/posangle", "");
+            double ele = Double.parseDouble(posangle);
+            scans.add(getScan(ele));
+        }
+        return scans;
     }
 
 }

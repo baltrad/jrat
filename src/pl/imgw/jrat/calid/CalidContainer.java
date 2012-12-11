@@ -31,6 +31,7 @@ import org.w3c.dom.NodeList;
 import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.proj.VincentyFormulas;
+import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 import pl.imgw.jrat.tools.out.XMLHandler;
@@ -67,7 +68,8 @@ public class CalidContainer {
     private static final String R2RAY = "r2ray";
     private static final String ID = "id";
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
+    public static final SimpleDateFormat calidDateTime = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
+    public static final SimpleDateFormat calidDate = new SimpleDateFormat("yyyyMMdd");
     private static final String NULL = "n";
 
     private ArrayList<PairedPoints> pairedPointsList = new ArrayList<PairedPoints>();
@@ -85,9 +87,10 @@ public class CalidContainer {
                 COORDSFILE).getPath();
     }
 
-    private String getResultsPath() {
-        return new File(CalidManager.getCalidPath(pair, distance, elevation, reflectivity),
-                RESULTSFILE).getPath();
+    private String getResultsPath(Date date) {
+        return new File(CalidManager.getCalidPath(pair, distance, elevation,
+                reflectivity), calidDate.format(date) + "." + RESULTSFILE)
+                .getPath();
     }
 
     
@@ -98,7 +101,7 @@ public class CalidContainer {
      */
     public CalidContainer(Pair pair, double elevation, int distance, double reflectity) {
 
-        if (pair.isValid()) {
+        if (pair.hasRealVolums()) {
             this.pair = pair;
         } else
             valid = false;
@@ -130,7 +133,7 @@ public class CalidContainer {
 
         LogHandler.getLogs().displayMsg(
                 "CALID: Calculating overlapping points coordinates for: " + pair.getSource1()
-                        + " and " + pair.getSource2(), LogHandler.WARNING);
+                        + " and " + pair.getSource2(), LogHandler.NORMAL);
         
         Point2D.Double r1coords = new Point2D.Double(pair.getVol1().getLon(),
                 pair.getVol1().getLat());
@@ -190,6 +193,7 @@ public class CalidContainer {
         
         for (int b1 = radHalfDist; b1 < radarRange1; b1++) {
             for (int b2 = radHalfDist; b2 < radarRange2; b2++) {
+                
 //                System.out.println(b1 + " koniec: " + radarRange1);
                 if (b1 != b2)
                     continue;
@@ -489,7 +493,7 @@ public class CalidContainer {
         if (pairedPointsList.isEmpty())
             return false;
         
-        File file = new File(getResultsPath());
+        File file = new File(getResultsPath(date));
         try {
             Scanner scan = new Scanner(file);
             while (scan.hasNext()) {
@@ -501,7 +505,7 @@ public class CalidContainer {
                 if (words.length != pairedPointsList.size() + 1) {
                     continue;
                 }
-                Date dateRead = sdf.parse(words[0]);
+                Date dateRead = calidDateTime.parse(words[0]);
                 if (dateRead.equals(date)) {
                     for (int i = 1; i < words.length; i++) {
                         if (words[i].matches(NULL)) {
@@ -514,7 +518,7 @@ public class CalidContainer {
                 }
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
+            LogHandler.getLogs().displayMsg(file + ": File not found", Logging.WARNING);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
         } catch (NumberFormatException e) {
@@ -527,7 +531,7 @@ public class CalidContainer {
         if (pairedPointsList.isEmpty())
             return;
 
-        File file = new File(getResultsPath());
+        File file = new File(getResultsPath(pair.getDate()));
 
         PrintWriter pw = null;
         boolean newfile = false;
@@ -539,12 +543,12 @@ public class CalidContainer {
             pw = new PrintWriter(new FileOutputStream(file, true), true);
             
             if (newfile) {
-                pw.println("# " + pair.getSource1() + " " + pair.getSource2()
+                pw.println("# src=" + pair.getSource1() + "," + pair.getSource2()
                         + " elevation=" + elevation + " distance=" + distance
                         + " reflectivity=" + reflectivity);
             }
             
-            pw.print(sdf.format(pair.getDate()));
+            pw.print(calidDateTime.format(pair.getDate()));
             
             Iterator<PairedPoints> itr = pairedPointsList.iterator();
             while (itr.hasNext()) {
@@ -562,13 +566,13 @@ public class CalidContainer {
                     .displayMsg(
                             "CALID: Cannot create result file in path "
                                     + file.getAbsolutePath() + "\n"
-                                    + e.getMessage(), 3);
+                                    + e.getMessage(), LogHandler.ERROR);
         } catch (IOException e) {
             LogHandler.getLogs()
                     .displayMsg(
                             "CALID: Cannot create result file in path "
                                     + file.getAbsolutePath() + "\n"
-                                    + e.getMessage(), 3);
+                                    + e.getMessage(), LogHandler.ERROR);
 
         } finally {
             if (pw != null)

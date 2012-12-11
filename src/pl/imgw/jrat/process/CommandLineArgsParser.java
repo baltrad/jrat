@@ -52,7 +52,10 @@ public class CommandLineArgsParser {
     
     public final static String CALID = "calid";
     public final static String CALID_RESULT = "calid-result";
+    public final static String CALID_LIST = "calid-list";
 
+    public final static String SCANSUN = "scansun";
+    
     public final static String FILE_ARG = "file";
     public final static String FILES_ARG = "file(s)";
     public final static String VALUE_ARG = "value";
@@ -100,7 +103,10 @@ public class CommandLineArgsParser {
     		" which will be compared (m), optionally minimal reflectivity value (dBZ) for each point to use\n" +
     		"example use: --calid 0.5deg 500m 3.5dBZ";
     
+    private final static String SCANSUN_DESCR = "opis algorytmu i sposób użycia";
+    
     private final static String CALID_RESULT_DESCR = "handle CALID results\n<arg>";
+    private final static String CALID_LIST_DESCR = "print list of available CALID results\n<arg>";
 //    private final static String FORMAT_DESCR = "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
 
     private static Options options = null;
@@ -150,6 +156,14 @@ public class CommandLineArgsParser {
         Option calidResults = OptionBuilder.withLongOpt(CALID_RESULT).hasArgs()
                 .withDescription(CALID_RESULT_DESCR).create();
         options.addOption(calidResults);
+        
+        Option calidList = OptionBuilder.withLongOpt(CALID_LIST).hasOptionalArgs()
+                .withDescription(CALID_LIST_DESCR).create();
+        options.addOption(calidList);
+        
+        Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasOptionalArgs()
+                .withDescription(SCANSUN_DESCR).create();
+        options.addOption(scansun);
         
         options.addOption(print_img);
         options.addOption(W, WATCH, false, WATCH_DESCR);

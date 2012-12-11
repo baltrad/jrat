@@ -15,8 +15,11 @@ import java.io.File;
  */
 public interface Logging {
 
-    int ERROR = 2;
-    int WARNING = 1;
+    int ALL_MSG = 5;
+    int ERROR = 4;
+    int WARNING = 3;
+    int NORMAL = 2;
+    int PROGRESS_BAR_ONLY = 1;
     int SILENT = 0;
     
     /**

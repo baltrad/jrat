@@ -5,9 +5,13 @@ package pl.imgw.jrat.calid;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
@@ -22,34 +26,10 @@ import pl.imgw.jrat.tools.out.Logging;
  */
 public class CalidResultManager {
 
-    private static final String HELP = "help";
-    private static final String LIST = "list";
-    private static final String PRINT = "print";
-    private static final String SOURCE1 = "src1";
-    private static final String SOURCE2 = "src2";
-    private static final String ELEVATION = "ele";
-    private static final String DISTANCE = "dis";
-    private static final String REFLECTIVITY = "ref";
-    
+    CalidManager calid = null;
 
-    public CalidResultManager(String[] args) {
-        if (args == null || args.length == 0) {
-            return;
-        }
-        if (args.length == 1) {
-            if (args[0].matches(HELP)) {
-                printHelp();
-            } else if (args[0].matches(LIST)) {
-                printList("");
-            }
-        } else if (args.length == 6) {
-            if (args[0].matches(LIST)) {
-                printList(args[1] + " " + args[2]);
-            } else if (args[0].matches(PRINT)) {
-
-            }
-        } else
-            printHelp();
+    public CalidResultManager(CalidManager calid) {
+        this.calid = calid;
     }
 
     private List<File> getResultsFiles() {
@@ -65,7 +45,7 @@ public class CalidResultManager {
                         // parameters
                         for (File file : parameters.listFiles()) {
                             if (file.isFile()
-                                    && file.getName().startsWith("result")) {
+                                    && file.getName().endsWith("results")) {
                                 results.add(file);
                             }
                         }
@@ -76,21 +56,47 @@ public class CalidResultManager {
         return results;
     }
 
-    private File getResultFile(String pair) {
+    private List<File> getResultFiles(Pair pair, boolean printPairs) {
 
+        Set<String> pairSet = new HashSet<String>();
+        
         List<File> results = getResultsFiles();
+        if (printPairs && results.isEmpty()) {
+            LogHandler.getLogs().displayMsg("No corresponing results found.",
+                    Logging.WARNING);
+        }
+
+        List<File> matchingResults = new ArrayList<File>();
         for (File f : results) {
+//            System.out.println(f);
             try {
                 Scanner scanner = new Scanner(f);
                 if (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
-                    if (line.startsWith("#")) {
-                        String readpair = line.substring(2);
-
-                        if (pair.split(" ")[0].matches(readpair.split(" ")[0])
-                                && pair.split(" ")[1].matches(readpair
-                                        .split(" ")[1]))
-                            return f;
+                    if (line.startsWith("# src=")) {
+//                        System.out.println(line);
+                        String readpair = line.substring(6);
+                        readpair = readpair.split(" ")[0];
+                        if (pair.hasBothSources()) {
+                            if (pair.getSource1().matches(
+                                    readpair.split(",")[0])
+                                    && pair.getSource2().matches(
+                                            readpair.split(",")[1])) {
+                                matchingResults.add(f);
+                                pairSet.add(line.substring(2));
+                            }
+                        } else if (pair.hasOnlyOneSource()) {
+                            if (pair.getSource1().matches(
+                                    readpair.split(",")[0])
+                                    || pair.getSource1().matches(
+                                            readpair.split(",")[1])) {
+                                matchingResults.add(f);
+                                pairSet.add(line.substring(2));
+                            }
+                        } else {
+                            matchingResults.add(f);
+                            pairSet.add(line.substring(2));
+                        }
                     }
                 }
 
@@ -101,71 +107,118 @@ public class CalidResultManager {
             }
         }
 
-        return null;
+        if(printPairs)
+            for(String s : pairSet)
+                System.out.println(s);
+        
+        return matchingResults;
     }
 
-    private void printList(String pair) {
-        LogHandler.getLogs().displayMsg(
-                "CALID Result Manager. List of available pairs:",
-                Logging.SILENT);
-
-        System.out.println(pair);
-
-        File folder = new File(CalidManager.getCalidPath());
-        for (File pairname : folder.listFiles()) {
-            if (pairname.isDirectory()) {
-                // pair name
-                for (File parameters : pairname.listFiles()) {
-                    if (parameters.isDirectory()) {
-                        // parameters
-                        for (File file : parameters.listFiles()) {
-                            if (file.isFile()
-                                    && file.getName().startsWith("result")) {
-                                try {
-                                    Scanner scanner = new Scanner(file);
-                                    if (scanner.hasNextLine()) {
-                                        String line = scanner.nextLine();
-                                        if (line.startsWith("#")) {
-                                            String readpair = line.substring(2);
-
-                                            if (pair.isEmpty())
-                                                System.out.println(readpair);
-                                            else if (pair.split(" ")[0]
-                                                    .matches(readpair
-                                                            .split(" ")[0])
-                                                    && pair.split(" ")[1]
-                                                            .matches(readpair
-                                                                    .split(" ")[1]))
-                                                while (scanner.hasNextLine()) {
-                                                    System.out.println(scanner
-                                                            .nextLine().split(
-                                                                    " ")[0]);
-                                                }
-                                        }
-                                    }
-                                } catch (FileNotFoundException e) {
-                                    LogHandler.getLogs().displayMsg(
-                                            e.getMessage(), Logging.ERROR);
-                                } catch (Exception e) {
-                                    LogHandler.getLogs().displayMsg(
-                                            e.getMessage(), Logging.ERROR);
-                                }
-
-                            }
-                        }
+    private boolean printResultsDateList(File f) {
+//        System.out.println(f);
+        int i = 0;
+        try {
+            Scanner scanner = new Scanner(f);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("#")) {
+                    if(!scanner.hasNextLine()) {
+                        System.out.println("No results found.");
+                        return true;
                     }
+                    continue;
+                }
+                System.out.println(line.split(" ")[0]);
+                if (LogHandler.getLogs().getVerbose() < Logging.WARNING)
+                    i++;
+                if (i == 5) {
+                    return false;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+        } catch (Exception e) {
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+        }
+        return true;
+    }
+
+    private boolean printResultsDateList(File f, Date start, Date end) {
+        // System.out.println(f);
+
+        Date readDate = null;
+        int i = 0;
+        try {
+            Scanner scanner = new Scanner(f);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("#")) {
+                    if (!scanner.hasNextLine()) {
+                        System.out.println("No results found.");
+                        return true;
+                    }
+                    continue;
+                }
+                readDate = CalidContainer.calidDateTime
+                        .parse(line.split(" ")[0]);
+
+                if (!readDate.before(start) && !readDate.after(end)) {
+
+                    System.out.println(line);
+                    if (LogHandler.getLogs().getVerbose() < Logging.WARNING)
+                        i++;
+                    if (i == 5) {
+                        return false;
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+        } catch (Exception e) {
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+        }
+        return true;
+    }
+
+    
+    public void printPairsList() {
+        Pair pair = new Pair(calid.getSource1(), calid.getSource2());
+        List<File> files;
+        if (!pair.hasBothSources()) {
+            files = getResultFiles(pair, true);
+            if (files.isEmpty()) {
+                LogHandler.getLogs().displayMsg(
+                        "No results for: " + pair.getBothSources(),
+                        Logging.SILENT);
+            }
+        } else {
+            boolean printed = false;
+            files = getResultFiles(pair, false);
+            if (files.isEmpty()) {
+                LogHandler.getLogs().displayMsg(
+                        "No results for: " + pair.getBothSources(),
+                        Logging.SILENT);
+            } else {
+                for (File f : files) {
+                    printed = printResultsDateList(f);
+                }
+                if (!printed) {
+                    System.out
+                            .println("And more... (use -v parameter to print all)");
                 }
             }
         }
 
+//        System.out.println(files.size());
+        
     }
 
-    private void printHelp() {
-        LogHandler.getLogs().displayMsg("CALID Result Manager usage:\n",
-                Logging.SILENT);
-        String msg = "";
-        msg += "--calid-result help\t\tdisplay this information\n";
-        msg += "--calid-result list [<args>]\tlist all available pairs with results [name1 name2]";
+    public static void printHelp() {
+        // LogHandler.getLogs().displayMsg("CALID algorytm usage:\n",
+        // Logging.SILENT);
+        String msg = "CALID algorytm usage:\n";
+        msg += "--calid-result [<args>]\t\tdisplay results\n";
+        msg += "--calid-list [<args>]\t\tlist all available pairs with results [name1 name2]";
         System.out.println(msg);
     }
 }

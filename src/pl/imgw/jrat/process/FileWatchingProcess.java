@@ -41,8 +41,12 @@ public class FileWatchingProcess implements Runnable {
     private List<File> files = new LinkedList<File>();
 //    private File[] watchedPath = null;
 
+    private boolean valid = false;
+    
     public FileWatchingProcess(FilesProcessor proc, List<File> watchedPathList) {
         if (watchedPathList == null || watchedPathList.isEmpty()) {
+            LogHandler.getLogs().displayMsg("No valid folders to watch.",
+                    WARNING);
             return;
         }
         this.proc = proc;
@@ -72,8 +76,14 @@ public class FileWatchingProcess implements Runnable {
 
         }
 
+        valid = true;
+        
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+    
     /*
      * (non-Javadoc)
      * 

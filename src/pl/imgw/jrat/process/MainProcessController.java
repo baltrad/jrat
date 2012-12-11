@@ -4,9 +4,7 @@
 package pl.imgw.jrat.process;
 
 import static pl.imgw.jrat.process.CommandLineArgsParser.*;
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
-import static pl.imgw.jrat.tools.out.Logging.SILENT;
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -14,11 +12,15 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
+import pl.imgw.jrat.calid.CalidManager;
+import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultManager;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.scansun.ScansunProcessor;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
+import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -60,9 +62,9 @@ public class MainProcessController {
             LogHandler.getLogs().setLoggingVerbose(SILENT);
         } else if (cmd.hasOption(VERBOSE)) {
 //            System.out.println("ustawia verbose");
-            LogHandler.getLogs().setLoggingVerbose(ERROR);
+            LogHandler.getLogs().setLoggingVerbose(ALL_MSG);
         } else
-            LogHandler.getLogs().setLoggingVerbose(WARNING);
+            LogHandler.getLogs().setLoggingVerbose(PROGRESS_BAR_ONLY);
 
     }
 
@@ -82,11 +84,21 @@ public class MainProcessController {
             return true;
         }
         
-        System.out.println();
-        
         if(cmd.hasOption(CALID_RESULT)) {
-            CalidResultManager crm = new CalidResultManager(cmd.getOptionValues(CALID_RESULT));
+            CalidManager calid = new CalidManager(cmd.getOptionValues(CALID_RESULT));
+            new CalidResultManager(calid);
             return true;
+        }
+        
+        if (cmd.hasOption(CALID_LIST)) {
+
+            CalidManager calid = new CalidManager(
+                    cmd.getOptionValues(CALID_LIST));
+            if (calid.isValid()) {
+                new CalidResultManager(calid).printPairsList();
+                return true;
+            } else
+                return false;
         }
         
         FilesProcessor proc = null;
@@ -104,27 +116,56 @@ public class MainProcessController {
                     // TODO Auto-generated method stub
                     return "TEST process";
                 }
+
+                @Override
+                public boolean isValid() {
+                    // TODO Auto-generated method stub
+                    return true;
+                }
             };
         }
         
         /* Loading list of files to process or setting input folder path*/
         if (cmd.hasOption(I)) {
+            
+            int p = 0;
+            
             FilePatternFilter filter = new RegexFileFilter();
-            for(String name : cmd.getOptionValues(I)) {
-                if(!name.startsWith("/")) {
+            for (String name : cmd.getOptionValues(I)) {
+                if (!name.startsWith("/")) {
                     name = root.getPath() + "/" + name;
                 }
                 files.addAll(filter.getFileList(name));
-                if(new File(name).isDirectory()) {
+                if (new File(name).isDirectory()) {
                     folders.add(new File(name));
                 }
             }
-            for(File f : files) {
-                LogHandler.getLogs().displayMsg("Input files: " + f.getPath(), WARNING);
+            
+            if (files.isEmpty() && folders.isEmpty()) {
+                LogHandler.getLogs().displayMsg("No such file or directory",
+                        WARNING);
+            } else {
+
+                ConsoleProgressBar.getProgressBar().initialize(20,
+                        files.size(),
+                        LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
+                        "Setting files\t");
+
+                for (File f : files) {
+                    LogHandler.getLogs().displayMsg(
+                            "Input files: " + f.getPath(), NORMAL);
+                    ConsoleProgressBar.getProgressBar().evaluate();
+                }
+                for (File f : folders) {
+                    LogHandler.getLogs().displayMsg(
+                            "Input folders: " + f.getPath(), NORMAL);
+                    ConsoleProgressBar.getProgressBar().evaluate();
+                }
+                
             }
-            for(File f : folders) {
-                LogHandler.getLogs().displayMsg("Input folders: " + f.getPath(), WARNING);
-            }
+
+            ConsoleProgressBar.getProgressBar().printDoneMsg();
+            
         }
         /*----------------------------------
         
@@ -181,19 +222,39 @@ public class MainProcessController {
         /* CALID */
         if (cmd.hasOption(CALID)) {
             proc = new CalidProcessor(cmd.getOptionValues(CALID));
-            if (proc != null) {
+            if (proc.isValid()) {
                 String par = "";
                 for (String s : cmd.getOptionValues(CALID)) {
                     par += s + " ";
                 }
-                LogHandler.getLogs().displayMsg("Start CALID with: " + par,
+                LogHandler.getLogs().displayMsg("Starting CALID with: " + par,
                         WARNING);
             }
         }
 
+        /* SCANSUN */
+        if (cmd.hasOption(SCANSUN)) {
+            proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
+            if (proc.isValid()) {
+                String par = "";
+                if (cmd.getOptionValue(SCANSUN) == null) {
+                    par = "no parameters";
+                } else
+                    for (String s : cmd.getOptionValues(SCANSUN)) {
+                        par += s + " ";
+                    }
+                LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par,
+                        WARNING);
+            }
+        }
+        
         if(cmd.hasOption(WATCH)) {
             /* Starting continues mode */
             FileWatchingProcess watcher = new FileWatchingProcess(proc, folders);
+            
+            if(!watcher.isValid())
+                return false;
+            
             Thread t = new Thread(watcher);
             t.start();
             if(t.isAlive()) {
@@ -213,7 +274,8 @@ public class MainProcessController {
         } else {
             SingleRunProcessor single = new SingleRunProcessor(proc, folders, files);
             Thread t = new Thread(single);
-            t.start();
+            //shouldn't be run as a separate thread, this is why I'm using run() not start()
+            t.run();
             if(t.isAlive()) {
                 return true;
             }

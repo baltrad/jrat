@@ -3,8 +3,10 @@
  */
 package pl.imgw.jrat.calid;
 
+import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.data.VolumeContainer;
@@ -19,22 +21,22 @@ import pl.imgw.jrat.data.VolumeContainer;
  */
 public class Pair implements Comparable<Pair> {
 
-    private Date date;
+    private Date date = new Date();
     private VolumeContainer vol1;
     private VolumeContainer vol2;
-    private String source1;
-    private String source2;
+    private String source1 = "";
+    private String source2 = "";
     
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
 
     public Pair(String source1, String source2) {
         if (!source1.isEmpty() && !source1.matches(source2)) {
-            if (source1.compareTo(source2) > 1) {
-                this.source1 = source2;
-                this.source2 = source1;
-            } else {
+            if (source2.isEmpty() || source1.compareTo(source2) > 0) {
                 this.source1 = source1;
                 this.source2 = source2;
+            } else {
+                this.source1 = source2;
+                this.source2 = source1;
             }
         }
     }
@@ -52,7 +54,7 @@ public class Pair implements Comparable<Pair> {
         String source1 = vol1.getSiteName();
         String source2 = vol2.getSiteName();
         if (!source1.isEmpty() && !source1.matches(source2)) {
-            if (source1.compareTo(source2) > 1) {
+            if (source1.compareTo(source2) > 0) {
                 this.vol1 = vol1;
                 this.vol2 = vol2;
                 this.source1 = source1;
@@ -71,12 +73,25 @@ public class Pair implements Comparable<Pair> {
             this.date = d1;
     }
 
-    public boolean isValid() {
+    public boolean hasRealVolums() {
         if (date != null && vol1 != null && vol2 != null)
             return true;
         return false;
     }
 
+    public boolean hasBothSources() {
+        if(source1.isEmpty() || source2.isEmpty())
+            return false;
+        return true;
+    }
+    
+    public boolean hasOnlyOneSource() {
+        if(source1.isEmpty() && !source2.isEmpty())
+            return true;
+        if(source2.isEmpty() && !source1.isEmpty())
+            return true;
+        return false;
+    }
     
     /**
      * @return the source1
@@ -92,7 +107,9 @@ public class Pair implements Comparable<Pair> {
         return source2;
     }
 
-    
+    public String getBothSources() {
+        return source1 + ", " + source2;
+    }
 
     /**
      * @return the date
@@ -160,4 +177,14 @@ public class Pair implements Comparable<Pair> {
         return -1;
     }
 
+    public static void main(String[] args) {
+        String a1 = "Rzeszow";
+        String a2 = "Brzuchania";
+        System.out.println(a1.compareTo(a2));
+        System.out.println(a2.compareTo(a1));
+        Pair pair = new Pair(a1, a2);
+        System.out.println(pair);
+        
+    }
+    
 }

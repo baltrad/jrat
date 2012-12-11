@@ -11,6 +11,9 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.commons.lang.SystemUtils;
+
 import static pl.imgw.jrat.AplicationConstans.*;
 
 /**
@@ -23,8 +26,15 @@ import static pl.imgw.jrat.AplicationConstans.*;
  */
 public class LogHandler implements Logging {
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    
     private static LogHandler logs = new LogHandler();
-    private int verbose = 0;
+    private int verbose = 1;
 
     private String msgFormat = "[dd/MM/yy HH:mm:ss] ";
     private SimpleDateFormat msgDate = new SimpleDateFormat(msgFormat);
@@ -53,6 +63,9 @@ public class LogHandler implements Logging {
         return logs;
     }
 
+    public int getVerbose() {
+        return verbose;
+    }
     
     public void printVersion() {
         displayMsg(APS_DESC + " version: " + VERSION + " compiled on " + DATE,
@@ -125,7 +138,18 @@ public class LogHandler implements Logging {
             if (type == Logging.ERROR) {
                 msg += ".\nFor more details see log file.";
             }
+            if (SystemUtils.IS_OS_UNIX) {
+                if (type == Logging.ERROR) {
+                    System.out.print(ANSI_RED);
+                } else if (type == Logging.WARNING) {
+                    System.out.print(ANSI_YELLOW);
+                }
+            }
             System.out.println(msgDate.format(new Date()) + msg);
+            if (SystemUtils.IS_OS_UNIX) {
+                System.out.print(ANSI_RESET);
+            }
+            
         }
 
     }

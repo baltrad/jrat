@@ -5,6 +5,7 @@ package pl.imgw.jrat.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -69,6 +70,8 @@ public interface VolumeContainer {
      */
     public ScanContainer getScan(double elevation);
 
+    public List<ScanContainer> getAllScans();
+    
     /**
      * Get time of this volume according to scan scheduler with minute precision
      * 

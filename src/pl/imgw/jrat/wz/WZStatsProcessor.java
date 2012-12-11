@@ -208,4 +208,13 @@ public class WZStatsProcessor implements FilesProcessor {
         return "WZ Statistics";
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.process.FilesProcessor#isValid()
+     */
+    @Override
+    public boolean isValid() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
