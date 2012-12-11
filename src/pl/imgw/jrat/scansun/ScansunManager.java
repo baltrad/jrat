@@ -42,14 +42,11 @@ public class ScansunManager {
         	
 //            System.out.println("elewacja=" + scan.getElevation());
         }
-        ConsoleProgressBar.getProgressBar().printDoneMsg();
-        System.out.println("Na razie nic nie robie");
 
         ConsoleProgressBar.getProgressBar().printDoneMsg();
         System.out.println("Na razie nic nie robie");
 
-        ConsoleProgressBar.getProgressBar().printDoneMsg();
-        System.out.println("Na razie nic nie robie");
+
 
         
     }
