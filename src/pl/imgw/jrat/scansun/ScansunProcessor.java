@@ -40,6 +40,7 @@ public class ScansunProcessor implements FilesProcessor {
     public void processFile(List<File> files) {
 
         for (File f : files) {
+            parser.initialize(f);
             if (parser.getProduct() instanceof RainbowDataContainer) {
                 manager.calculate(new RainbowVolume(
                         (RainbowDataContainer) parser.getProduct()));

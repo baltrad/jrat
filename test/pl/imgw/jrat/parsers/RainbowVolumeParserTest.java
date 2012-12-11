@@ -18,6 +18,7 @@ import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.ScanContainer;
+import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
 /**
@@ -32,7 +33,8 @@ public class RainbowVolumeParserTest {
 
     RawByteDataArray dc;
     File file;
-    Rainbow53VolumeParser rip;
+//    Rainbow53VolumeParser rip;
+    DefaultParser rip = new DefaultParser();
     DataContainer pdc;
     ParserManager pm;
     
@@ -41,7 +43,8 @@ public class RainbowVolumeParserTest {
         file = new File("test-data", "1.vol");
         
         pm = new ParserManager();
-        rip = new Rainbow53VolumeParser();
+//        rip = new Rainbow53VolumeParser();
+        rip = new DefaultParser();
         pm.setParser(rip);
         
     }
@@ -49,6 +52,7 @@ public class RainbowVolumeParserTest {
     @Test
     public void isValidVolume() {
         pm.initialize(file);
+        
         RainbowDataContainer data = (RainbowDataContainer) pm.getProduct();
         
 //        System.out.println(data.getArrayList().get("10_rayinfo").getPoint(10, 10));
