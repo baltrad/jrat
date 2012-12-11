@@ -44,7 +44,7 @@ public class ScansunManager {
         }
 
         ConsoleProgressBar.getProgressBar().printDoneMsg();
-        System.out.println("Na razie nic nie robie");
+        System.out.println("Na razie nic nie robie, ale bede pozniej");
 
 
 

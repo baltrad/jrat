@@ -1,2 +1,9 @@
 *~
-
+.classpath
+.project
+.settings/
+bin/*
+build/*
+dist/*
+etc/*
+test-data/log*
