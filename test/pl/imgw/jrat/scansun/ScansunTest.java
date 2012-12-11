@@ -4,6 +4,7 @@
 package pl.imgw.jrat.scansun;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import pl.imgw.jrat.process.MainProcessController;
 /**

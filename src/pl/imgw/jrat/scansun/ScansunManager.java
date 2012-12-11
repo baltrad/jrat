@@ -5,6 +5,9 @@ package pl.imgw.jrat.scansun;
 
 import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.tools.out.ConsoleProgressBar;
+import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.Logging;
 
 /**
  *
@@ -30,12 +33,24 @@ public class ScansunManager {
         vol.getScan(0.5).getArray().getPoint(0, 0); //dBZ
         System.out.println("Wczytane wolumy: " + vol.getSiteName() + " " + vol.getTime());
 
+        ConsoleProgressBar.getProgressBar().initialize(5, 10, LogHandler.getLogs().getVerbose() == Logging.PROGRESS_BAR_ONLY);
         for(ScanContainer scan : vol.getAllScans()) {
-            System.out.println("elewacja=" + scan.getElevation());
+        	
+        	
+        	LogHandler.getLogs().displayMsg("elewacja=" + scan.getElevation(), Logging.WARNING);
+        	ConsoleProgressBar.getProgressBar().evaluate();
+        	
+//            System.out.println("elewacja=" + scan.getElevation());
         }
-        
+        ConsoleProgressBar.getProgressBar().printDoneMsg();
         System.out.println("Na razie nic nie robie");
-        
+
+        ConsoleProgressBar.getProgressBar().printDoneMsg();
+        System.out.println("Na razie nic nie robie");
+
+        ConsoleProgressBar.getProgressBar().printDoneMsg();
+        System.out.println("Na razie nic nie robie");
+
         
     }
 
