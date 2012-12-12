@@ -205,6 +205,18 @@ public class LogHandler implements Logging {
     }
     
     /**
+     * 
+     * Save class name and exception localized message to error log file
+     * 
+     * @param obj
+     * @param e
+     */
+    public void saveErrorLogs(Object obj, Exception e) {
+        saveErrorLogs(obj.getClass().getName(), e.getLocalizedMessage());
+
+    }
+    
+    /**
      * Helping method
      * 
      * @param file

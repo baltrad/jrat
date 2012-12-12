@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -60,7 +60,7 @@ public class SequentialProcess implements Runnable {
      */
     @Override
     public void run() {
-        if(proc == null)
+        if (proc == null)
             return;
         LogHandler.getLogs().displayMsg(
                 "Sequential process started with: " + proc.getProcessName(),
@@ -71,10 +71,10 @@ public class SequentialProcess implements Runnable {
                 for (File folder : folders) {
                     files.addAll(Arrays.asList(folder.listFiles()));
                 }
-                
+
                 proc.processFile(files);
-                
-                for(File f : files) {
+
+                for (File f : files) {
                     f.delete();
                 }
                 cal.add(Calendar.MINUTE, interval);
@@ -82,8 +82,10 @@ public class SequentialProcess implements Runnable {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    LogHandler.getLogs().displayMsg(
+                            "Process '" + proc.getProcessName()
+                                    + "' interupted", ERROR);
+                    LogHandler.getLogs().saveErrorLogs(this, e);
                 }
             }
         }
