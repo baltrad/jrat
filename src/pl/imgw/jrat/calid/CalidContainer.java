@@ -68,8 +68,8 @@ public class CalidContainer {
     private static final String R2RAY = "r2ray";
     private static final String ID = "id";
 
-    public static final SimpleDateFormat calidDateTime = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
-    public static final SimpleDateFormat calidDate = new SimpleDateFormat("yyyyMMdd");
+    public static final SimpleDateFormat CALID_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
+    public static final SimpleDateFormat CALID_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private static final String NULL = "n";
 
     private ArrayList<PairedPoints> pairedPointsList = new ArrayList<PairedPoints>();
@@ -89,7 +89,7 @@ public class CalidContainer {
 
     private String getResultsPath(Date date) {
         return new File(CalidManager.getCalidPath(pair, distance, elevation,
-                reflectivity), calidDate.format(date) + "." + RESULTSFILE)
+                reflectivity), CALID_DATE_FORMAT.format(date) + "." + RESULTSFILE)
                 .getPath();
     }
 
@@ -505,7 +505,7 @@ public class CalidContainer {
                 if (words.length != pairedPointsList.size() + 1) {
                     continue;
                 }
-                Date dateRead = calidDateTime.parse(words[0]);
+                Date dateRead = CALID_DATE_TIME_FORMAT.parse(words[0]);
                 if (dateRead.equals(date)) {
                     for (int i = 1; i < words.length; i++) {
                         if (words[i].matches(NULL)) {
@@ -548,7 +548,7 @@ public class CalidContainer {
                         + " reflectivity=" + reflectivity);
             }
             
-            pw.print(calidDateTime.format(pair.getDate()));
+            pw.print(CALID_DATE_TIME_FORMAT.format(pair.getDate()));
             
             Iterator<PairedPoints> itr = pairedPointsList.iterator();
             while (itr.hasNext()) {

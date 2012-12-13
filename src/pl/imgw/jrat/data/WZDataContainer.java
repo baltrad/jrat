@@ -116,4 +116,13 @@ public class WZDataContainer implements DataContainer {
         this.nodata = nodata;
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.DataContainer#printGeneralIfnormation()
+     */
+    @Override
+    public void printGeneralIfnormation() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

@@ -33,11 +33,6 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class MainProcessController {
 
-    private final int HDF = 0;
-    private final int RBI = 1;
-    private final int RBV = 2;
-    private int format = -1;
-    
     private CommandLine cmd;
     private List<File> files = new LinkedList<File>();
     private List<File> folders = new LinkedList<File>();
@@ -84,10 +79,24 @@ public class MainProcessController {
             return true;
         }
         
+        if (cmd.hasOption(FORMAT)) {
+            GlobalParserSetter.getInstance().setParser(cmd.getOptionValue(F));
+        }
+        
+        if(cmd.hasOption(CALID_HELP)) {
+            CalidResultManager.printHelp();
+            return true;
+        }
+        
         if(cmd.hasOption(CALID_RESULT)) {
             CalidManager calid = new CalidManager(cmd.getOptionValues(CALID_RESULT));
-            new CalidResultManager(calid);
-            return true;
+            if (calid.isValid()) {
+                new CalidResultManager(calid).printResults();
+                return true;
+            } else {
+                CalidResultManager.printHelp();
+                return false;
+            }
         }
         
         if (cmd.hasOption(CALID_LIST)) {
@@ -97,8 +106,10 @@ public class MainProcessController {
             if (calid.isValid()) {
                 new CalidResultManager(calid).printPairsList();
                 return true;
-            } else
+            } else {
+                CalidResultManager.printHelp();
                 return false;
+            }
         }
         
         FilesProcessor proc = null;
@@ -229,6 +240,8 @@ public class MainProcessController {
                 }
                 LogHandler.getLogs().displayMsg("Starting CALID with: " + par,
                         WARNING);
+            } else {
+                return false;
             }
         }
 

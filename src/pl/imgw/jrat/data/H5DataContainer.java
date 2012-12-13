@@ -128,5 +128,14 @@ public class H5DataContainer implements DataContainer {
     protected void finalize() {
         reader.close();
     }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.DataContainer#printGeneralIfnormation()
+     */
+    @Override
+    public void printGeneralIfnormation() {
+        // TODO Auto-generated method stub
+        
+    }
     
 }

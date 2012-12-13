@@ -69,4 +69,13 @@ public class SimpleDataContainer implements DataContainer {
 
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.DataContainer#printGeneralIfnormation()
+     */
+    @Override
+    public void printGeneralIfnormation() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

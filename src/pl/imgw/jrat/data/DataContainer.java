@@ -50,5 +50,10 @@ public interface DataContainer {
      * Print all attributes to console as a tree
      */
     public void printAllAttributes();
+    
+    /**
+     * Print general information about the product, like: date, source etc. 
+     */
+    public void printGeneralIfnormation();
 
 }

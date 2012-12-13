@@ -6,7 +6,9 @@ import static pl.imgw.jrat.AplicationConstans.ETC;
 import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class CalidManager {
     private static final String DISTANCE = "dis=";
     private static final String REFLECTIVITY = "ref=";
     private static final String SOURCE = "src=";
+    private static final String DATE = "date=";
 
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
@@ -143,6 +146,8 @@ public class CalidManager {
                         source2 = sources.split(",")[1];
                     } else
                         source1 = sources;
+                } else if (par[i].startsWith(DATE)) {
+                    parseDate(par[i]);
                 } else {
                     LogHandler.getLogs().displayMsg(
                             error_msg + " (" + par[i] + ")", WARNING);
@@ -156,6 +161,10 @@ public class CalidManager {
         } catch (ArrayIndexOutOfBoundsException e) {
             LogHandler.getLogs().displayMsg(
                     error_msg, WARNING);
+            return;
+        } catch (ParseException e) {
+            LogHandler.getLogs().displayMsg(
+                    error_msg + " (" + e.getLocalizedMessage() + ")", WARNING);
             return;
         }
 
@@ -172,21 +181,35 @@ public class CalidManager {
         valid = true;
     }
     
-    private boolean parseDate(String s) {
+    private void parseDate(String s) throws ParseException {
         
-        if(s.split(",").length == 2) {
-            
+        String dates = s.substring(DATE.length());
+        if (dates.contains(",")) {
+            if (dates.split(",")[0].contains("/")) {
+                date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                        .split(",")[0]);
+            } else {
+                date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                        .split(",")[0] + "/00:00");
+            }
+            if (dates.split(",")[1].contains("/")) {
+                date2 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                        .split(",")[1]);
+            } else {
+                date2 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                        .split(",")[1] + "/23:59");
+            }
+        } else if (dates.contains("/")) {
+            date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates);
+        } else {
+            date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                    + "/00:00");
+            date2 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                    + "/23:59");;
         }
-        
-        String t1 = "";
-        String d1 = "";
-        String t2 = "";
-        String d2 = "";
-        
-        
-        
-        return false;
     }
+    
+
     /**
      * @return the elevation
      */
@@ -222,4 +245,20 @@ public class CalidManager {
         return source2;
     }
 
+    /**
+     * @return the date1
+     */
+    public Date getDate1() {
+        return date1;
+    }
+
+    /**
+     * @return the date2
+     */
+    public Date getDate2() {
+        return date2;
+    }
+
+    
+    
 }

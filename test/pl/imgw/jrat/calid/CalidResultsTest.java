@@ -8,6 +8,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
+import pl.imgw.jrat.process.MainProcessController;
+
 
 /**
  *
@@ -53,4 +55,5 @@ public class CalidResultsTest {
         manager.printPairsList();
     }
     */
+    
 }

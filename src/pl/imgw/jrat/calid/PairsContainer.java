@@ -23,6 +23,7 @@ import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.process.GlobalParserSetter;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -47,7 +48,7 @@ public class PairsContainer {
     public PairsContainer(List<File> files) {
 
         ParserManager manager = new ParserManager();
-        manager.setParser(new DefaultParser());
+        manager.setParser(GlobalParserSetter.getInstance().getParser());
 
         Map<Date, Map<String, VolumeContainer>> segregated = new HashMap<Date, Map<String, VolumeContainer>>();
 

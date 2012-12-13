@@ -145,11 +145,12 @@ public class CalidResultManager {
 
     private boolean printResultsDateList(File f, Date start, Date end) {
         // System.out.println(f);
-
+        
         Date readDate = null;
         int i = 0;
         try {
             Scanner scanner = new Scanner(f);
+            String header = "";
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.startsWith("#")) {
@@ -157,25 +158,33 @@ public class CalidResultManager {
                         System.out.println("No results found.");
                         return true;
                     }
+                    header = line.substring(2);
                     continue;
                 }
-                readDate = CalidContainer.calidDateTime
+                readDate = CalidContainer.CALID_DATE_TIME_FORMAT
                         .parse(line.split(" ")[0]);
 
                 if (!readDate.before(start) && !readDate.after(end)) {
 
+                    if(!header.isEmpty()) {
+                        System.out.println(header);
+                        header = "";
+                    }
+                    
                     System.out.println(line);
                     if (LogHandler.getLogs().getVerbose() < Logging.WARNING)
                         i++;
                     if (i == 5) {
+                        System.out
+                        .println("And more... (use -v parameter to print all)");
                         return false;
                     }
                 }
             }
         } catch (FileNotFoundException e) {
-            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.WARNING);
         } catch (Exception e) {
-            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.WARNING);
         }
         return true;
     }
@@ -213,12 +222,38 @@ public class CalidResultManager {
         
     }
 
+    /**
+     * 
+     */
+    public void printResults() {
+//        System.out.println("Sprawdzam parsowanie daty");
+//        System.out.println("Date1: " + calid.getDate1());
+//        System.out.println("Date2: " + calid.getDate2());
+        
+        if(calid.getDate1() == null) {
+            LogHandler.getLogs().displayMsg("Must specify date",
+                    Logging.WARNING);
+            printHelp();
+            return;
+        }
+        
+        Pair pair = new Pair(calid.getSource1(), calid.getSource2());
+        List<File> files;
+        files = getResultFiles(pair, false);
+        for (File f : files) {
+            printResultsDateList(f, calid.getDate1(), calid.getDate2());
+        }
+
+    }
+    
     public static void printHelp() {
         // LogHandler.getLogs().displayMsg("CALID algorytm usage:\n",
         // Logging.SILENT);
         String msg = "CALID algorytm usage:\n";
         msg += "--calid-result [<args>]\t\tdisplay results\n";
-        msg += "--calid-list [<args>]\t\tlist all available pairs with results [name1 name2]";
+        msg += "--calid-list [<args>]\t\tlist all available pairs\n\t\t\t" +
+        		"<args> src=Source1[,Source2]";
         System.out.println(msg);
     }
+
 }
