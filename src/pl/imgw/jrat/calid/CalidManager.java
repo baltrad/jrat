@@ -74,6 +74,10 @@ public class CalidManager {
 
         String folder = "calid/" + pairsName + "/" + distele;
 
+        if(ETC.isEmpty()) {
+            new File(folder).mkdirs();
+            return new File(folder).getPath();
+        }
         new File(ETC, folder).mkdirs();
 
         return new File(ETC, folder).getPath();

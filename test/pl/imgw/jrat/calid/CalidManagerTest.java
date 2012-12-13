@@ -90,7 +90,7 @@ public class CalidManagerTest {
         args = new String[] { "ele=0.5", "dis=500" };
         manager = new CalidManager(args);
         
-        File f = new File(AplicationConstans.ETC + "/calid/WMO:12220WMO:12151/500_0.5_-31.5/20120109.results");
+        File f = new File("calid/RzeszowBrzuchania/500_0.5_-31.5/20110821.results");
         
         assertTrue(f.delete());
         
