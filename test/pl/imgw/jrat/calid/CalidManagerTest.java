@@ -27,6 +27,12 @@ import pl.imgw.jrat.process.MainProcessController;
 public class CalidManagerTest {
 
     CalidManager manager;
+    
+    @Test
+    public void emptyTest() {
+        
+    }
+    
     /*
     @Test
     public void calculateTest() {
