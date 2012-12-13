@@ -12,7 +12,9 @@ import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
+import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.process.FilesProcessor;
+import pl.imgw.jrat.process.GlobalParserSetter;
 
 /**
  *
@@ -25,10 +27,11 @@ import pl.imgw.jrat.process.FilesProcessor;
 public class ScansunProcessor implements FilesProcessor {
 
     private ScansunManager manager;
-    private DefaultParser parser = new DefaultParser();
+    private FileParser parser;
     
     public ScansunProcessor(String[] args) {
         manager = new ScansunManager(args);
+        parser = GlobalParserSetter.getInstance().getParser();
     }
     
     /*
