@@ -136,10 +136,9 @@ public class MainProcessController {
             };
         }
         
+        
         /* Loading list of files to process or setting input folder path*/
         if (cmd.hasOption(I)) {
-            
-            int p = 0;
             
             FilePatternFilter filter = new RegexFileFilter();
             for (String name : cmd.getOptionValues(I)) {
@@ -152,16 +151,15 @@ public class MainProcessController {
                 }
             }
             
+            
             if (files.isEmpty() && folders.isEmpty()) {
                 LogHandler.getLogs().displayMsg("No such file or directory",
                         WARNING);
             } else {
-
                 ConsoleProgressBar.getProgressBar().initialize(20,
                         files.size(),
                         LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
                         "Setting files\t");
-
                 for (File f : files) {
                     LogHandler.getLogs().displayMsg(
                             "Input files: " + f.getPath(), NORMAL);

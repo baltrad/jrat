@@ -92,6 +92,8 @@ public class CalidManagerTest {
         
         File f = new File(AplicationConstans.ETC + "/calid/WMO:12220WMO:12151/500_0.5_-31.5/20120109.results");
         
+        assertTrue(f.delete());
+        
         System.out.println("Asking for results after deleting results file");
         Pair pair = pairs.getPairs().iterator().next();
         ArrayList<PairedPoints> array = CalidComparator.getResult(manager, pair);

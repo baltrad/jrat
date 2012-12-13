@@ -13,10 +13,10 @@ package pl.imgw.jrat.tools.out;
  */
 public class ConsoleProgressBar {
 
-    private int barSize;
-    private double factor;
+    private int barSize = 1;
+    private double factor = 1;
     private boolean show = false;
-    private int maxValue;
+    private int maxValue = 1;
     private String msg = "";
     private int progress = 0;
     
@@ -44,6 +44,10 @@ public class ConsoleProgressBar {
      *            message printed in front of progress bar
      */
     public void initialize(int barSize, int maxValue, boolean show, String msg) {
+        if(maxValue == 0 || barSize == 0) {
+            reset();
+            return;
+        }
         if(this.show)
             printDoneMsg();
         this.msg = msg;
@@ -107,7 +111,7 @@ public class ConsoleProgressBar {
 
     private String getProgress(int value) {
         int prog = (int) (factor * value);
-//        System.out.println(value + " " +factor + " " + prog);
+        
         String progress = "";
         for (int i = 0; i < prog; i++)
             progress += "=";

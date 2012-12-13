@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.data;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,10 @@ public class H5DataContainer implements DataContainer {
     protected IHDF5Reader reader;
     protected Map<String, ArrayData> arrayList;
 
+    private String name;
+    private Date date;
+    private String format;
+    
     /**
      * @param reader
      *            the reader to set
@@ -96,6 +101,29 @@ public class H5DataContainer implements DataContainer {
         return null;
     }
 
+    
+    
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * @param format the format to set
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -134,8 +162,7 @@ public class H5DataContainer implements DataContainer {
      */
     @Override
     public void printGeneralIfnormation() {
-        // TODO Auto-generated method stub
-        
+        String msg = "This is HDF5 file format";
     }
     
 }

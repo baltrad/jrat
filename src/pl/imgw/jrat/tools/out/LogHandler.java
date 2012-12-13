@@ -34,7 +34,7 @@ public class LogHandler implements Logging {
     public static final String ANSI_BLUE = "\u001B[34m";
     
     private static LogHandler logs = new LogHandler();
-    private int verbose = 1;
+    private int verbose = Logging.PROGRESS_BAR_ONLY;
 
     private String msgFormat = "[dd/MM/yy HH:mm:ss] ";
     private SimpleDateFormat msgDate = new SimpleDateFormat(msgFormat);

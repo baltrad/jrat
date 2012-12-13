@@ -46,13 +46,11 @@ public class PairsContainerTest {
                 "test-data/calid/2011082113402900dBZ.vol",
                 "test-data/calid/2011082113402500dBZ.vol",
                 "test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5",
-                "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5",
-                "-v" };
-        
+                "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5", "-v" };
+
         MainProcessController proc = new MainProcessController(args);
         proc.start();
         pairs = new PairsContainer(proc.getFiles());
-
     }
 
     @Test
@@ -62,13 +60,15 @@ public class PairsContainerTest {
         File f1 = new File("test-data/calid/2011082113400400dBZ.vol");
         File f2 = new File("test-data/calid/2011082113402900dBZ.vol");
         manager.initialize(f1);
-        VolumeContainer vol1 = new RainbowVolume((RainbowDataContainer) manager.getProduct());
+        VolumeContainer vol1 = new RainbowVolume(
+                (RainbowDataContainer) manager.getProduct());
         manager.initialize(f2);
-        VolumeContainer vol2 = new RainbowVolume((RainbowDataContainer) manager.getProduct());
+        VolumeContainer vol2 = new RainbowVolume(
+                (RainbowDataContainer) manager.getProduct());
         Pair pair1 = new Pair(vol1, vol2);
         Pair pair2 = new Pair(vol2, vol1);
         assertTrue(pair1.equals(pair2));
-        
+
         f1 = new File("test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5");
         f2 = new File("test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5");
         manager.initialize(f1);
@@ -78,28 +78,27 @@ public class PairsContainerTest {
         pair2 = new Pair(vol1, vol2);
         assertTrue(!pair1.equals(pair2));
     }
-    
+
     @Test
     public void getAllPairsTest() {
         assertEquals(4, pairs.getPairs().size());
     }
-    
-    
-    @Test 
+
+    @Test
     public void getPairsByDateTest() {
         Calendar cal = Calendar.getInstance();
         cal.set(2011, 7, 21, 13, 40, 0);
         cal.set(Calendar.MILLISECOND, 0);
         Date date = cal.getTime();
         assertEquals(3, pairs.getPairs(date).size());
-        
+
     }
-    
+
     @Test
     public void pairsInRightOrder() {
         Iterator<Pair> i = pairs.getPairs().iterator();
-        Pair p1 = ((TreeSet<Pair>)pairs.getPairs()).first();
-        Pair p2 = ((TreeSet<Pair>)pairs.getPairs()).last();
+        Pair p1 = ((TreeSet<Pair>) pairs.getPairs()).first();
+        Pair p2 = ((TreeSet<Pair>) pairs.getPairs()).last();
         assertTrue(p1.getDate().before(p2.getDate()));
     }
 }
