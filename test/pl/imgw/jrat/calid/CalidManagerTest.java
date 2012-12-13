@@ -27,13 +27,9 @@ import pl.imgw.jrat.process.MainProcessController;
 public class CalidManagerTest {
 
     CalidManager manager;
+
     
-    @Test
-    public void emptyTest() {
-        
-    }
-    
-    /*
+
     @Test
     public void calculateTest() {
         
@@ -98,7 +94,7 @@ public class CalidManagerTest {
         
         File f = new File("calid/RzeszowBrzuchania/500_0.5_-31.5/20110821.results");
         
-        assertTrue(f.delete());
+//        assertTrue(f.delete());
         
         System.out.println("Asking for results after deleting results file");
         Pair pair = pairs.getPairs().iterator().next();
@@ -138,6 +134,6 @@ public class CalidManagerTest {
             e.printStackTrace();
         }
         */
-//    }
+    }
     
 }
