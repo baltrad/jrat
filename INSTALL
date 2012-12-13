@@ -4,11 +4,12 @@ Java Radar data Analizing Tool
 	j r a t
 
 Łukasz Wojtas
-Institute of Meteorology and Water Management, IMGW
 
-October 2011
+Copyright (C) 2011-2012 Institute of Meteorology and Water Management, IMGW
 
 ################################################################################
+This file is part of the jrat software.
+
 jrat is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -22,3 +23,17 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with the jrat software.  If not, see http://www.gnu.org/licenses.
 ################################################################################
+
+Installation of jrat software is driven by ant and requires several options
+passed to the build script. The following options are required:
+
+install.prefix :: installation prefix / target directory
+
+Example of installation command:
+
+$ ant -Dinstall.prefix=/opt/baltrad install
+
+In this case the software will be installed in under /opt/baltrad/jrat
+
+################################################################################
+
