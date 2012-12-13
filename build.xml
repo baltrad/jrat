@@ -45,7 +45,7 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
     <property name="test.dir" value="test"/>
     <property name="build.test.dir" value="${build.dir}/test"/>
 
-    <property name="install.prefix" value="/opt/baltrad"/>
+    <property name="install.prefix" value="."/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="*.jar"/>
