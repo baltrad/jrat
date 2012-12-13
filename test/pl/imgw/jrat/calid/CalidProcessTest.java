@@ -23,11 +23,11 @@ public class CalidProcessTest {
 
     @Test
     public void processTest() {
-        String[] args = "-i test-data/watched --seq 1 --calid 0.5deg 500m -q".split(" ");
+        String[] args = "-i test-data/watched --seq 1 --calid-list".split(" ");
         MainProcessController pc = new MainProcessController(args);
         assertTrue(pc.start());
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
