@@ -23,7 +23,7 @@ public class CalidProcessTest {
 
     @Test
     public void processTest() {
-        String[] args = "-i test-data/watched --seq 1 --calid-list".split(" ");
+        String[] args = "-i test-data/watched --seq 1 --calid ele=0.5 dis=500".split(" ");
         MainProcessController pc = new MainProcessController(args);
         assertTrue(pc.start());
         try {
