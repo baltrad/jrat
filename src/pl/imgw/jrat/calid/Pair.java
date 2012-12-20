@@ -73,7 +73,7 @@ public class Pair implements Comparable<Pair> {
             this.date = d1;
     }
 
-    public boolean hasRealVolums() {
+    public boolean hasRealVolumes() {
         if (date != null && vol1 != null && vol2 != null)
             return true;
         return false;

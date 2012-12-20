@@ -66,7 +66,7 @@ public class OdimH5Parser implements FileParser {
             h5data = new H5DataContainer();
             h5data.setReader(reader);
             LogHandler.getLogs().displayMsg("File " + file.getName() + " initialized",
-                    WARNING);
+                    NORMAL);
             readDatasets();
         } catch (Exception e) {
 //            e.printStackTrace();

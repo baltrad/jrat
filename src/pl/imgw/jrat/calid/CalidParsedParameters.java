@@ -31,68 +31,36 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidManager {
+public class CalidParsedParameters {
 
-    private static final String ELEVATION = "ele=";
-    private static final String DISTANCE = "dis=";
-    private static final String REFLECTIVITY = "ref=";
-    private static final String SOURCE = "src=";
-    private static final String DATE = "date=";
+    public static final String ELEVATION = "ele=";
+    public static final String DISTANCE = "dis=";
+    public static final String REFLECTIVITY = "ref=";
+    public static final String SOURCE = "src=";
+    public static final String DATE = "date=";
+    public static final String METHOD = "method=";
 
+    private static Integer DEFAULT_DIS = new Integer(1000);
+    private static Double DEFAULT_REF = new Double(0.0);
+    private static Double DEFAULT_ELE = new Double(0.0);
+    
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
     // private PairsContainer pcont;
     // private Set<Pair> pairs = new HashSet<Pair>();
 
-    private double elevation = 0;
-    private int distance = 0;
-    private double reflectivity = -31.5;
+    private Double elevation = null;
+    private Integer distance = null;
+    private Double reflectivity = null;
     private String source1 = "";
     private String source2 = "";
     private Date date1 = null;
     private Date date2 = null;
 
-    private boolean valid = false;
+    private boolean isEmpty = true;
     
-    /**
-     * Receives path name to CALID results folder specified by given parameters,
-     * different for every pair, distance, elevation and reflectivity
-     * 
-     * @param pair
-     * @param distance
-     * @param elevation
-     * @param reflectivity
-     * @return
-     */
-    public static String getCalidPath(Pair pair, int distance,
-            double elevation, double reflectivity) {
-
-        String pairsName = pair.getVol1().getSiteName()
-                + pair.getVol2().getSiteName();
-
-        String distele = distance + "_" + elevation + "_" + reflectivity;
-
-        String folder = "calid/" + pairsName + "/" + distele;
-
-        if(ETC.isEmpty()) {
-            new File(folder).mkdirs();
-            return new File(folder).getPath();
-        }
-        new File(ETC, folder).mkdirs();
-
-        return new File(ETC, folder).getPath();
-    }
-    
-    /**
-     * Receives path name to CALID root folder
-     * @return
-     */
-    public static String getCalidPath() {
-        return new File(ETC, "calid").getPath();
-    }
-
-    public boolean isValid() {
-        return valid;
+    public boolean isEmpty() {
+        return isEmpty;
     }
     
     // private String[] par = { "0.5deg", "500m" };
@@ -127,13 +95,17 @@ public class CalidManager {
      *            <code>String[] par = { "0.5deg", "500m", "3.5dBZ" }</code> -
      *            elevation, distance and reflectivity
      */
-    public CalidManager(String[] par) {
+    public boolean initialize(String[] par) {
 
+        /*
+         * Default settings
+         */
         if(par == null) {
 //            System.out.println("bez opcji");
-            valid = true;
-            return;
+            isEmpty = true;
+            return true;
         }
+        
         String error_msg = "CALID: Arguments for CALID are incorrect";
         try {
             for (int i = 0; i < par.length; i++) {
@@ -155,25 +127,35 @@ public class CalidManager {
                 } else {
                     LogHandler.getLogs().displayMsg(
                             error_msg + " (" + par[i] + ")", WARNING);
-                    return;
+                    return false;
                 }
             }
         } catch (NumberFormatException e) {
             LogHandler.getLogs().displayMsg(
                     error_msg + " (" + e.getLocalizedMessage() + ")", WARNING);
-            return;
+            return false;
         } catch (ArrayIndexOutOfBoundsException e) {
             LogHandler.getLogs().displayMsg(
                     error_msg, WARNING);
-            return;
+            return false;
         } catch (ParseException e) {
             LogHandler.getLogs().displayMsg(
                     error_msg + " (" + e.getLocalizedMessage() + ")", WARNING);
-            return;
+            return false;
         }
 
-        if (elevation < -10 || elevation > 90 || distance < 0) {
-            return;
+        /*
+         * Checks if provided parameters are valid
+         */
+        if (getElevation() < -10 || getElevation() > 90) {
+            LogHandler.getLogs().displayMsg(
+                    error_msg + " (" + getElevation() + ")", WARNING);
+            return false;
+        }
+        if (getDistance() < 0) {
+            LogHandler.getLogs().displayMsg(
+                    error_msg + " (" + getDistance() + ")", WARNING);
+            return false;
         }
 
 //        System.out.println(elevation);
@@ -181,8 +163,8 @@ public class CalidManager {
 //        System.out.println(source1);
 //        System.out.println(source2);
 //        System.out.println(reflectivity);
-        
-        valid = true;
+        isEmpty = false;
+        return true;
     }
     
     private void parseDate(String s) throws ParseException {
@@ -190,25 +172,25 @@ public class CalidManager {
         String dates = s.substring(DATE.length());
         if (dates.contains(",")) {
             if (dates.split(",")[0].contains("/")) {
-                date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[0]);
             } else {
-                date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[0] + "/00:00");
             }
             if (dates.split(",")[1].contains("/")) {
-                date2 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                date2 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[1]);
             } else {
-                date2 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+                date2 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[1] + "/23:59");
             }
         } else if (dates.contains("/")) {
-            date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates);
+            date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates);
         } else {
-            date1 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+            date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                     + "/00:00");
-            date2 = CalidContainer.CALID_DATE_TIME_FORMAT.parse(dates
+            date2 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                     + "/23:59");;
         }
     }
@@ -217,22 +199,22 @@ public class CalidManager {
     /**
      * @return the elevation
      */
-    public double getElevation() {
-        return elevation;
+    public Double getElevation() {
+        return (elevation == null) ? DEFAULT_ELE : elevation;
     }
 
     /**
      * @return the distance
      */
-    public int getDistance() {
-        return distance;
+    public Integer getDistance() {
+        return (distance == null) ? DEFAULT_DIS : distance;
     }
 
     /**
      * @return the reflectivity
      */
-    public double getReflectivity() {
-        return reflectivity;
+    public Double getReflectivity() {
+        return (reflectivity == null) ? DEFAULT_REF : reflectivity;
     }
 
     /**
@@ -262,7 +244,5 @@ public class CalidManager {
     public Date getDate2() {
         return date2;
     }
-
-    
     
 }

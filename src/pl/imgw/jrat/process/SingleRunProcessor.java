@@ -3,7 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class SingleRunProcessor implements Runnable {
             LogHandler.getLogs()
                     .displayMsg(
                             "Single run process started with: "
-                                    + proc.getProcessName(), WARNING);
+                                    + proc.getProcessName(), NORMAL);
 
         proc.processFile(files);
 

@@ -277,6 +277,9 @@ public class WZFileParser implements FileParser {
             return false;
         }
 
+        LogHandler.getLogs().displayMsg(
+                "File " + file.getName() + " initialized", NORMAL);
+        
         return true;
 
     }

@@ -9,6 +9,7 @@ import static pl.imgw.jrat.AplicationConstans.*;
 
 import pl.imgw.jrat.process.MainProcessController;
 import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.Logging;
 
 /**
  *
@@ -34,7 +35,10 @@ public class Main {
         LogHandler.getLogs().setRecantFileLogsPath(recFile, 0);
         
         MainProcessController pc = new MainProcessController(args);
-        pc.start();
+        if(!pc.start()) {
+            if(LogHandler.getLogs().getVerbose() != Logging.SILENT)
+                System.out.println("JRAT: failed");
+        }
     }
 
 }

@@ -161,7 +161,7 @@ public class CommandLineArgsParser {
                 .withDescription(SEQ_DESCR).create();
         options.addOption(seq);
         
-        Option calid = OptionBuilder.withLongOpt(CALID).hasArgs()
+        Option calid = OptionBuilder.withLongOpt(CALID).hasOptionalArgs()
                 .withDescription(CALID_DESCR).create();
         options.addOption(calid);
         
@@ -191,7 +191,7 @@ public class CommandLineArgsParser {
 
     HelpFormatter formatter = new HelpFormatter();
 
-    public void parseArgs(String[] args) {
+    public boolean parseArgs(String[] args) {
         Parser parser = new PosixParser();
         
         try {
@@ -199,9 +199,11 @@ public class CommandLineArgsParser {
             if(cmd.getOptions().length == 0 || cmd.hasOption(H))
                 printHelp();
         } catch (ParseException e) {
-//            System.out.println("ZLE");
             printHelp();
+//            System.out.println("ZLE");
+            return false;
         }
+        return true;
     }
     
     public void printHelp() {

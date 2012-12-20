@@ -22,15 +22,16 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class CalidProcessor implements FilesProcessor {
 
-    private CalidManager manager;
+    private CalidParsedParameters params = new CalidParsedParameters();
+    private boolean valid = false;
     
     public CalidProcessor(String args[]) {
-        manager = new CalidManager(args);
+        valid = params.initialize(args);
         
     }
     
     public boolean isValid() {
-        return manager.isValid();
+        return valid;
     }
     
     /* (non-Javadoc)
@@ -44,10 +45,15 @@ public class CalidProcessor implements FilesProcessor {
                 pairs.getPairs().size(),
                 LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
                 "CALID calculations");
+        
+        CalidContainer cc = new CalidContainer(params);
         for (Pair pair : pairs.getPairs()) {
 
             ConsoleProgressBar.getProgressBar().evaluate();
-            CalidComparator.getResult(manager, pair);
+            if(isValid()) {
+                cc.setPair(pair);
+                cc.initialize(pair.getDate());
+            }
         }
         ConsoleProgressBar.getProgressBar().printDoneMsg();
     }

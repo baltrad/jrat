@@ -209,7 +209,7 @@ public class XMLHandler {
             serializer.setOutputCharStream(fw);
             serializer.serialize(doc);
             fw.close();
-            LogHandler.getLogs().displayMsg("XML: Data saved to " + fileName, LogHandler.WARNING);
+            LogHandler.getLogs().displayMsg("XML: Data saved to " + fileName, LogHandler.NORMAL);
         } catch (Exception e) {
             LogHandler.getLogs().displayMsg("Error while saving XML file: "
                     + e.getMessage(), Logging.ERROR);

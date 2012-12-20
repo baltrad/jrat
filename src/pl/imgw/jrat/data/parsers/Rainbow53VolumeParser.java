@@ -3,8 +3,7 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -308,7 +307,7 @@ public class Rainbow53VolumeParser implements FileParser {
         // System.out.println("ilosc blobow: " +
         // getProduct().getArrayList().size());
         LogHandler.getLogs().displayMsg(
-                "File " + file.getName() + " initialized", WARNING);
+                "File " + file.getName() + " initialized", NORMAL);
         return true;
     }
 

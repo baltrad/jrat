@@ -143,6 +143,8 @@ public class LogHandler implements Logging {
                     System.out.print(ANSI_RED);
                 } else if (type == Logging.WARNING) {
                     System.out.print(ANSI_YELLOW);
+                } else if (type == Logging.NORMAL) {
+                    System.out.print(ANSI_BLUE);
                 }
             }
             System.out.println(msgDate.format(new Date()) + msg);

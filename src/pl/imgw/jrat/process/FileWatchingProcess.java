@@ -3,8 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,10 +96,10 @@ public class FileWatchingProcess implements Runnable {
         
         LogHandler.getLogs().displayMsg(
                 "Watching process started with: " + proc.getProcessName(),
-                WARNING);
+                NORMAL);
         
         for (String path : pathMap.values()) {
-            LogHandler.getLogs().displayMsg("Start watching " + path, WARNING);
+            LogHandler.getLogs().displayMsg("Start watching " + path, NORMAL);
         }
         while (true) {
 
@@ -136,7 +135,7 @@ public class FileWatchingProcess implements Runnable {
 
                         LogHandler.getLogs().displayMsg(
                                 "New file: " + input.getName(),
-                                WARNING);
+                                NORMAL);
                         files.add(input);
                         proc.processFile(files);
                         files.clear();

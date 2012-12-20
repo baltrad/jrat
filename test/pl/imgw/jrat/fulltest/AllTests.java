@@ -7,10 +7,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import pl.imgw.jrat.calid.CalidContainerTest;
+import pl.imgw.jrat.calid.CalidFileHandlerTest;
 import pl.imgw.jrat.calid.CalidManagerTest;
 import pl.imgw.jrat.calid.CalidProcessTest;
 import pl.imgw.jrat.calid.CalidResultsTest;
-import pl.imgw.jrat.calid.OverlappingCoordsTest;
 import pl.imgw.jrat.calid.PairTest;
 import pl.imgw.jrat.calid.PairsContainerTest;
 import pl.imgw.jrat.controller.ProcessControllerTest;
@@ -41,7 +42,8 @@ import pl.imgw.jrat.tools.in.FilePatternFilterTest;
         WZParserTest.class, FilePatternFilterTest.class,
         PairsContainerTest.class, PairTest.class, CalidManagerTest.class,
         CalidProcessTest.class, CalidResultsTest.class,
-        OverlappingCoordsTest.class })
+        CalidContainerTest.class, CalidFileHandlerTest.class })
+
 public class AllTests {
 
 }

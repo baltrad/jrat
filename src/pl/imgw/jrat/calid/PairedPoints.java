@@ -23,7 +23,6 @@ public class PairedPoints {
     private int bin2;
     private Point2D.Double coord2;
     private Double difference = null;
-
     
     
     /**

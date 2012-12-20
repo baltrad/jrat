@@ -94,7 +94,7 @@ public class PairsContainer {
                     continue;
                 Iterator<String> i = pairnames.iterator();
                 Pair pair = new Pair(single.get(i.next()), single.get(i.next()));
-                if (pair.hasRealVolums()) {
+                if (pair.hasRealVolumes()) {
                     pairs.add(pair);
                 }
             }

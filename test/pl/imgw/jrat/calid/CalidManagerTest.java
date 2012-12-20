@@ -7,18 +7,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.AplicationConstans;
-import pl.imgw.jrat.process.MainProcessController;
-
 /**
  *
- *  /Class description/
+ *  Tests CALID arguments parser
  *
  *
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
@@ -26,114 +22,62 @@ import pl.imgw.jrat.process.MainProcessController;
  */
 public class CalidManagerTest {
 
-    CalidManager manager;
+    CalidParsedParameters manager = new CalidParsedParameters(); 
+    String[] args;
 
-    
 
     @Test
-    public void calculateTest() {
+    public void parserTest() {
         
-        System.out.println("Calculating Test");
+        args = "ele=91 dis=500 ref=5.0 date=2011-01-01/00:00,2011-12-31/23:59".split(" ");
+        assertTrue("Parsing elevation should failed", !manager.initialize(args));
         
-        String[] args = new String[] { "-i",
-                "test-data/calid/2011082113400400dBZ.vol",
-                "test-data/calid/2011082113402900dBZ.vol",
-                "test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5",
-                "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5",
-                "--calid a", "-v" };
+        args = "ele=0.5 dis=-1 ref=5.0 date=2011-01-01/00:00,2011-12-31/23:59".split(" ");
+        assertTrue("Parsing distance should failed", !manager.initialize(args));
         
-        MainProcessController proc = new MainProcessController(args);
-        proc.start();
-        PairsContainer pairs = new PairsContainer(proc.getFiles());
-        Iterator<Pair> i = pairs.getPairs().iterator();
+        args = "ele=0.5 dis=500 ref=a date=2011-01-01/00:00,2011-12-31/23:59".split(" ");
+        assertTrue("Parsing reflectivity should failed", !manager.initialize(args));
         
-        args = new String[] { "ele=0.5", "dis=500" };
-        System.out.println("Run CalidManager with ele=0.5 and dis=500");
-        manager = new CalidManager(args);
-        assertTrue(manager != null);
-        Pair pair = i.next();
-        System.out.println(pair);
-        ArrayList<PairedPoints> results = CalidComparator.getResult(manager, pair);
+        args = "ele=0.5 dis=500 ref=a date=2011-13-01/00:00,2011-12-31/23:59".split(" ");
+        assertTrue("Parsing date should failed", !manager.initialize(args));
         
-        assertTrue(results.size() > 0);
+        args = "ele=0.5 dis=500 ref=5.0 date=2011-12-31/15:18".split(" ");
+        assertTrue("Parsing failed", manager.initialize(args));
         
-        args = new String[] { "ele=-0.2", "dis=0.5" };
-        System.out.println("Run CalidManager with ele=-0.2 and dis=0.5");
-        manager = new CalidManager(args);
-        assertTrue(manager != null);
+        int dis = manager.getDistance();
+        double elevation = manager.getElevation();
+        double reflectivity = manager.getReflectivity();
+        Date date1 = manager.getDate1();
+        Date date2 = manager.getDate2();
         
-        args = new String[] { "ele=0.2", "dis=500" };
-        System.out.println("Run CalidManager with ele=0.2 and dis=500");
-        manager = new CalidManager(args);
-        pair = i.next();
-        System.out.println(pair);
-        assertNull(CalidComparator.getResult(manager, pair));
+        assertEquals(500, dis);
+        assertEquals(0.5, elevation, 0.01);
+        assertEquals(5.0, reflectivity, 0.01);
         
-        args = new String[] { "ele=0.2", "dis=500", "ref=3.5" };
-        System.out.println("Run CalidManager with ele=0.2, dis=500, ref=3.5");
-        manager = new CalidManager(args);
-//        System.out.println(pair);
-        assertTrue(manager != null);
+        Calendar cal = Calendar.getInstance();
+        cal.set(2011, 11, 31, 15, 18, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        assertTrue(date1.equals(cal.getTime()));
+        cal.set(2011, 11, 31, 23, 59);
+        assertTrue(date2.equals(cal.getTime()));
         
     }
-   
+    
     @Test
-    public void resultsTest() {
-        System.out.println("Results Test");
-        String[] args = new String[] { "-i",
-                "test-data/calid/T_PAGZ47_C_SOWR_20120109180044.hdf",
-                "test-data/calid/T_PAGZ46_C_SOWR_20120109180013.hdf", "-q",
-                };
+    public void parseDefaultTest() {
         
-        MainProcessController proc = new MainProcessController(args);
-        proc.start();
-        PairsContainer pairs = new PairsContainer(proc.getFiles());
+        int dis = manager.getDistance();
+        Double elevation = manager.getElevation();
+        double reflectivity = manager.getReflectivity();
+        Date date1 = manager.getDate1();
+        Date date2 = manager.getDate2();
         
-        args = new String[] { "ele=0.5", "dis=500" };
-        manager = new CalidManager(args);
+        assertEquals(0, elevation, 0.01);
+        assertNull(date1);
+        assertNull(date2);
+        assertEquals(1000, dis);
+        assertEquals(0.0, reflectivity, 0.01);
         
-        File f = new File("calid/RzeszowBrzuchania/500_0.5_-31.5/20110821.results");
-        
-//        assertTrue(f.delete());
-        
-        System.out.println("Asking for results after deleting results file");
-        Pair pair = pairs.getPairs().iterator().next();
-        ArrayList<PairedPoints> array = CalidComparator.getResult(manager, pair);
-        
-        java.lang.Double v11 = array.get(10).getDifference();
-        java.lang.Double v12 = array.get(80).getDifference();
-        
-        System.out.println("Asking for results again");
-        
-        array = CalidComparator.getResult(manager, pair);
-        
-        java.lang.Double v21 = array.get(10).getDifference();
-        java.lang.Double v22 = array.get(80).getDifference();
-        
-        assertEquals(v11, v21);
-        assertEquals(v12, v22);
-        
-        /*
-        System.out.println("Print results to png");
-        
-        Results2DManager results = new Results2DManager(array, pair);
-        ArrayData data = results.getData();
-        
-        BufferedImage img = new ImageBuilder()
-        .setData(data)
-        .setNoDataValue(Results2DManager.NO_DATA)
-        .setScale(ColorScales.getColdWarmScale(60, 5))
-        .addPoint(results.source1.x, results.source1.y, results.name1, Color.PINK)
-        .addPoint(results.source2.x, results.source2.y, results.name2, Color.orange)
-//        .hasCaption(true)
-        .create();
-        try {
-            ImageIO.write(img, "PNG", new File("calid", "results.png"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        */
     }
     
 }

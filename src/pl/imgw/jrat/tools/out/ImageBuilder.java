@@ -3,8 +3,7 @@
  */
 package pl.imgw.jrat.tools.out;
 
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -53,7 +52,7 @@ public class ImageBuilder {
             ImageIO.write(create(), format, file);
             LogHandler.getLogs().displayMsg(
                     "Saving image to file: '" + file.getCanonicalFile() + "' complete",
-                    WARNING);
+                    NORMAL);
         } catch (Exception e) {
             LogHandler.getLogs().displayMsg(
                     "Saving image to file: '" + file + "' failed",

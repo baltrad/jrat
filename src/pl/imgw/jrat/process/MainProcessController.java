@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-import pl.imgw.jrat.calid.CalidManager;
+import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultManager;
 import pl.imgw.jrat.data.parsers.DefaultParser;
@@ -46,8 +46,8 @@ public class MainProcessController {
     public MainProcessController(String[] args) {
 
         CommandLineArgsParser parser = new CommandLineArgsParser();
-        parser.parseArgs(args);
-        cmd = parser.getCmd();
+        if(parser.parseArgs(args))
+            cmd = parser.getCmd();
 
         if (cmd == null)
             return;
@@ -89,9 +89,9 @@ public class MainProcessController {
         }
         
         if(cmd.hasOption(CALID_RESULT)) {
-            CalidManager calid = new CalidManager(cmd.getOptionValues(CALID_RESULT));
-            if (calid.isValid()) {
-                new CalidResultManager(calid).printResults();
+            CalidParsedParameters params = new CalidParsedParameters();
+            if (params.initialize(cmd.getOptionValues(CALID_RESULT))) {
+                new CalidResultManager(params).printResults();
                 return true;
             } else {
                 CalidResultManager.printHelp();
@@ -101,9 +101,8 @@ public class MainProcessController {
         
         if (cmd.hasOption(CALID_LIST)) {
 
-            CalidManager calid = new CalidManager(
-                    cmd.getOptionValues(CALID_LIST));
-            if (calid.isValid()) {
+            CalidParsedParameters calid = new CalidParsedParameters();
+            if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
                 new CalidResultManager(calid).printPairsList();
                 return true;
             } else {
@@ -198,7 +197,7 @@ public class MainProcessController {
                 output = new File(cmd.getOptionValue(O));
             }
             output.mkdirs();
-            LogHandler.getLogs().displayMsg("Output: " + output.getPath(), WARNING);
+            LogHandler.getLogs().displayMsg("Output: " + output.getPath(), NORMAL);
         }
         
         
@@ -233,11 +232,14 @@ public class MainProcessController {
             proc = new CalidProcessor(cmd.getOptionValues(CALID));
             if (proc.isValid()) {
                 String par = "";
-                for (String s : cmd.getOptionValues(CALID)) {
-                    par += s + " ";
-                }
+                if (cmd.getOptionValue(CALID) == null)
+                    par = "default settings";
+                else
+                    for (String s : cmd.getOptionValues(CALID)) {
+                        par += s + " ";
+                    }
                 LogHandler.getLogs().displayMsg("Starting CALID with: " + par,
-                        WARNING);
+                        NORMAL);
             } else {
                 return false;
             }
@@ -255,7 +257,7 @@ public class MainProcessController {
                         par += s + " ";
                     }
                 LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par,
-                        WARNING);
+                        NORMAL);
             }
         }
         
@@ -270,7 +272,7 @@ public class MainProcessController {
             t.start();
             if(t.isAlive()) {
                 LogHandler.getLogs().displayMsg("Watching process started",
-                        WARNING);
+                        NORMAL);
                 return true;
             }
         } else if (cmd.hasOption(SEQ)) {
@@ -284,12 +286,10 @@ public class MainProcessController {
             }
         } else {
             SingleRunProcessor single = new SingleRunProcessor(proc, folders, files);
-            Thread t = new Thread(single);
+            
             //shouldn't be run as a separate thread, this is why I'm using run() not start()
-            t.run();
-            if(t.isAlive()) {
-                return true;
-            }
+            single.run();
+            return true;
         }
         
         return false;

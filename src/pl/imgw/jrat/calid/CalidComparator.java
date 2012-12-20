@@ -3,9 +3,8 @@
  */
 package pl.imgw.jrat.calid;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import pl.imgw.jrat.data.RawByteDataArray;
 import pl.imgw.jrat.data.ScanContainer;
@@ -21,10 +20,11 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class CalidComparator {
 
-    private static void compare(List<PairedPoints> results, ScanContainer scan1,
+    
+    private static void compare(CalidContainer container, ScanContainer scan1,
             ScanContainer scan2, double dbz) {
 
-        Iterator<PairedPoints> itr = results.iterator();
+        Iterator<PairedPoints> itr = container.getPairedPointsList().iterator();
         while (itr.hasNext()) {
             PairedPoints coords = itr.next();
             RawByteDataArray array1 = (RawByteDataArray) scan1.getArray();
@@ -40,66 +40,62 @@ public class CalidComparator {
             }
         }
 
+        container.setHasResults(true);
         LogHandler.getLogs().displayMsg("CALID: Processing data completed",
                 LogHandler.NORMAL);
     }
 
     /**
-     * Compares two scans in
+     * Load results from file or if not found compares two scans
      * 
      * @return null if failed
      */
-    public static ArrayList<PairedPoints> getResult(CalidManager calid, Pair pair) {
+    public static void receiveResults(CalidContainer cc, Date date) {
 
-        double elevation = calid.getElevation();
-        int distance = calid.getDistance();
-        double reflectivity = calid.getReflectivity();
+//        double reflectivity = cc.getManager().getReflectivity();
+        
+        if(cc.getVerifiedElevation() == null)
+            return;
 
-        // check if the volumes contain selected elevation
-        if (pair.getVol1().getScan(elevation) == null
-                || pair.getVol2().getScan(elevation) == null) {
-            return null;
-        }
-
-        ArrayList<PairedPoints> pairedPointsList = null;
-
+        double elevation = cc.getVerifiedElevation();
+        
         // LogHandler.getLogs().displayMsg(
         // "Calculating overlapping points for: " + pair.getSource1()
         // + " and " + pair.getSource2(), LogHandler.WARNING);
 
-        CalidContainer container = new CalidContainer(pair, elevation,
-                distance, reflectivity);
-        pairedPointsList = container.getCoords();
+        if(!CalidFileHandler.loadCoords(cc)) {
+            CalidFileHandler.calculateMatchingPoints(cc);
+        }
 
-        if (!pairedPointsList.isEmpty()) {
+        if (!cc.getPairedPointsList().isEmpty()) {
             LogHandler.getLogs().displayMsg(
                     "CALID: Number of overlapping points: "
-                            + pairedPointsList.size(), LogHandler.NORMAL);
+                            + cc.getPairedPointsList().size(),
+                    LogHandler.NORMAL);
 
         } else {
             LogHandler.getLogs().displayMsg("CALID: No overlapping points.",
                     LogHandler.WARNING);
-            return null;
+            return;
         }
 
-        if (!container.loadResults(pair.getDate())) {
+        ScanContainer scan1 = cc.getPair().getVol1().getScan(elevation);
+        ScanContainer scan2 = cc.getPair().getVol2().getScan(elevation);
+        
+        
+        if (!CalidFileHandler.loadResults(cc, date)) {
+            compare(cc, scan1, scan2, cc.getParsedParameters().getReflectivity());
+            CalidFileHandler.saveResults(cc);
 
-            compare(pairedPointsList,
-                    pair.getVol1().getScan(elevation),
-                    pair.getVol2().getScan(elevation), reflectivity);
-
-            container.saveResults();
         }
 
         // results = comp.getResults();
         // comp.save(coords.getId(), pair.toString(), pair.getDate());
 
         LogHandler.getLogs().displayMsg(
-                "CALID: Comparison completed for: " + pair.getSource1()
-                        + " and " + pair.getSource2() + "\n",
+                "CALID: Comparison completed for: " + cc.getPair().getSource1()
+                        + " and " + cc.getPair().getSource2() + "\n",
                 LogHandler.NORMAL);
 
-        return pairedPointsList;
     }
-
 }

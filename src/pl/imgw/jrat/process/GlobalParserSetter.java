@@ -52,18 +52,18 @@ public class GlobalParserSetter {
     public void setParser(String format) {
         if (format.matches(Format.ODIM.name)) {
             parser = new OdimH5Parser();
-            LogHandler.getLogs().displayMsg(format + " parser set", Logging.WARNING);
+            LogHandler.getLogs().displayMsg(format + " parser set", Logging.NORMAL);
         } else if (format.matches(Format.RB53IMG.name)) {
             parser = new Rainbow53ImageParser();
-            LogHandler.getLogs().displayMsg(format + " parser set", Logging.WARNING);
+            LogHandler.getLogs().displayMsg(format + " parser set", Logging.NORMAL);
         } else if (format.matches(Format.RB53VOL.name)) {
             parser = new Rainbow53VolumeParser();
-            LogHandler.getLogs().displayMsg(format + " parser set", Logging.WARNING);
+            LogHandler.getLogs().displayMsg(format + " parser set", Logging.NORMAL);
         } else if (format.matches(Format.WZ.name)) {
             parser = new WZFileParser();
-            LogHandler.getLogs().displayMsg(format + " parser set", Logging.WARNING);
+            LogHandler.getLogs().displayMsg(format + " parser set", Logging.NORMAL);
         } else {
-            LogHandler.getLogs().displayMsg("Default parser set", Logging.WARNING);
+            LogHandler.getLogs().displayMsg("Default parser set", Logging.NORMAL);
         }
 
     }

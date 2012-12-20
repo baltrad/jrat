@@ -64,7 +64,7 @@ public class SequentialProcess implements Runnable {
             return;
         LogHandler.getLogs().displayMsg(
                 "Sequential process started with: " + proc.getProcessName(),
-                WARNING);
+                NORMAL);
         while (true) {
             if (cal.getTime().before(new Date(System.currentTimeMillis()))) {
                 files.clear();

@@ -3,57 +3,33 @@
  */
 package pl.imgw.jrat.calid;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import pl.imgw.jrat.process.MainProcessController;
-
-
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
 public class CalidResultsTest {
-    private CalidManager calid;
+
+    private CalidParsedParameters params = new CalidParsedParameters();
     private String[] args;
-    
+
     @Test
-    public void argsParserTest() {
-        
-        calid = new CalidManager(null);
-        assertTrue(calid.isValid());
-        
-        args = "ele=-11 dis=500 src=WMO:12568,WMO:12579".split(" ");
-        calid = new CalidManager(args);
-        assertTrue(!calid.isValid());
-        
-        args = "ele=0.5 dis=0.6 src=WMO:12568,WMO:12579".split(" ");
-        calid = new CalidManager(args);
-        assertTrue(!calid.isValid());
-        
-        args = "ele=0.5 dis=dziesiec src=WMO:12568,WMO:12579".split(" ");
-        calid = new CalidManager(args);
-        assertTrue(!calid.isValid());
-        
-        args = "ele=0.5 dis=500 src=WMO:12568,WMO:12579".split(" ");
-        calid = new CalidManager(args);
-        assertTrue(calid.isValid());
+    public void printResultsTest() {
+
+        args = "src=Rzeszow ele=0.5 dis=500 ref=5.0".split(" ");
+        params.initialize(args);
+
+        CalidResultsPrinter printer = new CalidResultsPrinter(params);
+
+        printer.printList();
+        assertTrue(true);
     }
- 
-    /*
-    @Test
-    public void resultsListTest() {
-        args = "ele=0.5 dis=500 src=WMO:12568,WMO:12579".split(" ");
-        calid = new CalidManager(args);
-        CalidResultManager manager = new CalidResultManager(calid);
-        manager.printPairsList();
-    }
-    */
-    
+
 }
