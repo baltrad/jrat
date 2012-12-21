@@ -54,11 +54,12 @@ public class CalidParsedParameters {
     private Double reflectivity = null;
     private String source1 = "";
     private String source2 = "";
-    private Date date1 = null;
-    private Date date2 = null;
+    private Date start = null;
+    private Date end = null;
 
     // private String[] par = { "0.5deg", "500m" };
 
+    
     /**
      * 
      * Initializes manager and sets parameters for the algorithm:
@@ -91,6 +92,8 @@ public class CalidParsedParameters {
      */
     public boolean initialize(String[] par) {
 
+        resetAllFields();
+        
         /*
          * Default settings
          */
@@ -164,27 +167,39 @@ public class CalidParsedParameters {
         String dates = s.substring(DATE.length());
         if (dates.contains(",")) {
             if (dates.split(",")[0].contains("/")) {
-                date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[0]);
             } else {
-                date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[0] + "/00:00");
             }
             if (dates.split(",")[1].contains("/")) {
-                date2 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                end = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[1]);
             } else {
-                date2 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                end = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[1] + "/23:59");
             }
         } else if (dates.contains("/")) {
-            date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates);
+            start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates);
+            end = start;
         } else {
-            date1 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+            start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                     + "/00:00");
-            date2 = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+            end = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
                     + "/23:59");;
         }
+    }
+    
+    
+    private void resetAllFields() {
+        elevation = null;
+        distance = null;
+        reflectivity = null;
+        source1 = "";
+        source2 = "";
+        start = null;
+        end = null;
     }
     
     /**
@@ -238,14 +253,28 @@ public class CalidParsedParameters {
      * @return the date1
      */
     public Date getDate1() {
-        return date1;
+        return start;
     }
 
     /**
      * @return the date2
      */
     public Date getDate2() {
-        return date2;
+        return end;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isDate1Default() {
+        return (start == null) ? true : false;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isDate2Default() {
+        return (end == null) ? true: false;
     }
     
 }

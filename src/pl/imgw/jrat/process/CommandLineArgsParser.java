@@ -165,12 +165,12 @@ public class CommandLineArgsParser {
                 .withDescription(CALID_DESCR).create();
         options.addOption(calid);
         
-        Option calidResults = OptionBuilder.withLongOpt(CALID_RESULT).hasArgs()
-                .withDescription(CALID_RESULT_DESCR).create();
+        Option calidResults = OptionBuilder.withLongOpt(CALID_RESULT)
+                .hasOptionalArgs().withDescription(CALID_RESULT_DESCR).create();
         options.addOption(calidResults);
         
-        Option calidList = OptionBuilder.withLongOpt(CALID_LIST).hasOptionalArgs()
-                .withDescription(CALID_LIST_DESCR).create();
+        Option calidList = OptionBuilder.withLongOpt(CALID_LIST)
+                .hasOptionalArgs().withDescription(CALID_LIST_DESCR).create();
         options.addOption(calidList);
         
         options.addOption(null, CALID_HELP, false, CALID_HELP_DESCR);

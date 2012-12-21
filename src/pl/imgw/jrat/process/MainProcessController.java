@@ -90,9 +90,9 @@ public class MainProcessController {
         }
         
         if(cmd.hasOption(CALID_RESULT)) {
-            CalidParsedParameters params = new CalidParsedParameters();
-            if (params.initialize(cmd.getOptionValues(CALID_RESULT))) {
-                new CalidResultManager(params).printResults();
+            CalidParsedParameters calid = new CalidParsedParameters();
+            if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
+                new CalidResultsPrinter(calid).printResults();
                 return true;
             } else {
                 CalidResultManager.printHelp();

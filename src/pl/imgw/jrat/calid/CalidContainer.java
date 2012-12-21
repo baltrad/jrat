@@ -157,7 +157,10 @@ public class CalidContainer implements Comparable<CalidContainer> {
      * 
      * @return
      */
-    public double getMean() {
+    public Double getMean(int perc) {
+        
+        perc = scalePerc(perc);
+        
         double mean = 0;
         int size = 0;
         for (PairedPoints pp : pairedPointsList) {
@@ -166,11 +169,15 @@ public class CalidContainer implements Comparable<CalidContainer> {
                 size++;
             }
         }
-        if (size == 0)
-            return 0;
-        return mean / size;
+        if (size <= perc)
+            return null;
+        return new Double(round(mean / size, 2));
     }
 
+    public Double getMean() {
+        return getMean(0);
+    }
+    
     /**
      * Root mean square
      * 
@@ -251,6 +258,21 @@ public class CalidContainer implements Comparable<CalidContainer> {
     @Override
     public int compareTo(CalidContainer o) {
         return pair.getDate().compareTo(o.getPair().getDate());
+    }
+    
+    private int scalePerc(int perc) {
+        return (int) (pairedPointsList.size() * perc / 100);
+    }
+    
+    
+    private double round(double value, int decimal) {
+        double pow = Math.pow(10, decimal);
+        
+        value *= pow;
+        
+        value = Math.round(value);
+        
+        return value / pow;
     }
 
 }

@@ -126,20 +126,45 @@ public class CalidFileHandler {
     
     /**
      * 
+     * Load results from default file.
+     * 
+     * @param results
+     *            will be saved in cc
+     * @param date
+     *            specify exact date of the result
+     * @return true if operation ends with success
+     */
+    public static boolean loadResults(CalidContainer cc, Date date) {
+        File file = new File(getResultsPath(cc, date));
+        return loadResults(file, cc, date);
+    }
+    
+    /**
+     * 
      * Load results from file.
      * 
-     * @param cc must be initialized with coordinates
+     * @param file
+     *            pointing results file
+     * @param results
+     *            will be saved in cc
      * @param date
-     * @return
+     *            specify exact date of the result
+     * @return true if operation ends with success
      */
-    public static boolean loadResults(CalidContainer cc, Date date){
+    public static boolean loadResults(File file, CalidContainer cc, Date date){
         
-        if (cc.getPairedPointsList().isEmpty())
-            return false;
+        if (cc.getPairedPointsList().isEmpty()) {
+            if (!loadCoords(cc))
+                return false;
+        }
         
-        File file = new File(getResultsPath(cc, date));
         try {
             Scanner scan = new Scanner(file);
+            
+            LogHandler.getLogs().displayMsg(
+                    "CALID: Loading results from file: " + file,
+                    LogHandler.NORMAL);
+            
             while (scan.hasNext()) {
                 String line = scan.nextLine();
                 if(line.startsWith("#")) {

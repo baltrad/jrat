@@ -5,6 +5,8 @@ package pl.imgw.jrat.calid;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,6 +35,8 @@ public class CalidResultsPrinter {
     
     private Set<String> headers;
     
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    
     /**
      * 
      */
@@ -40,7 +44,49 @@ public class CalidResultsPrinter {
         this.params = params;
     }
     
-    
+    public void printResults() {
+        headers = new HashSet<String>();
+
+        CalidContainer cc = new CalidContainer(params);
+        Set<File> files = getResultsFiles();
+        List<Date> dates;
+
+        if (files.isEmpty()) {
+            System.out.println("No results matching selected parameters");
+            return;
+        }
+
+        if (!params.getSource1().isEmpty() && !params.getSource1().isEmpty()
+                && !params.isDistanceDefault() && !params.isElevationDefault()
+                && !params.isReflectivityDefault() && params.getDate1() != null) {
+
+            for (File f : files) {
+                printResultsHeader(f);
+                
+                dates = getDateList(f);
+                for(Date d : dates) {
+                    
+                    if(d.before(params.getDate1()) || d.after(params.getDate2()))
+                        continue;
+                    
+                    CalidFileHandler.loadResults(f, cc, d);
+                    Double mean = cc.getMean(30);
+                    if(mean != null)
+                        System.out.println(sdf.format(d) + " średnia=" + cc.getMean(30));
+                    
+                }
+                
+            }
+        } else {
+            printList();
+            
+            System.out.println("To print results for any particular pair"
+                    + " provide its src, ele, dis, ref and date");
+            
+        }
+
+    }
+   
     public void printList() {
         
         headers = new HashSet<String>();
@@ -56,17 +102,20 @@ public class CalidResultsPrinter {
         if (!params.getSource1().isEmpty() && !params.getSource1().isEmpty()
                 && !params.isDistanceDefault() && !params.isElevationDefault()
                 && !params.isReflectivityDefault()) {
-            
+            /* all parameters are provided and printing list of dates */
+
             System.out.println("Printing list of available dates...\n");
             int n = 0;
             for (File f : files) {
-                
+
                 printResultsHeader(f);
                 n += printResultsDateList(f);
             }
-            if(n > 1)
-            System.out.println("\t" + n + " dates database.");
+            if (n > 1)
+                System.out.println("\t" + n + " dates database.");
+
         } else {
+            /* printing list of available reuslts pairs */
 
             System.out.println("Printing results list...\n");
 
@@ -82,6 +131,41 @@ public class CalidResultsPrinter {
                             + " provide its src, ele, dis and ref");
 
         }
+    }
+    
+    private List<Date> getDateList(File f) {
+
+        List<Date> list = new LinkedList<Date>();
+        Date date;
+        try {
+            Scanner scanner = new Scanner(f);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("#")) {
+                    if (!scanner.hasNextLine()) {
+                        System.out.println("No results found.");
+                        return list;
+                    }
+                    continue;
+                }
+                try {
+                    date = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(line
+                            .split(" ")[0]);
+                } catch (ParseException e) {
+                    continue;
+                }
+                list.add(date);
+
+            }
+        } catch (FileNotFoundException e) {
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+            LogHandler.getLogs().saveErrorLogs(this, e);
+        } catch (Exception e) {
+            LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
+            LogHandler.getLogs().saveErrorLogs(this, e);
+        }
+
+        return list;
     }
     
     private int printResultsDateList(File f) {
