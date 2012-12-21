@@ -21,21 +21,34 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class SingleRunProcessor implements Runnable {
 
-    List<File> files;
-    FilesProcessor proc;
+    private List<File> files;
+    private FilesProcessor proc;
+    private boolean valid = false;
+    
 
     /**
      * 
      */
     public SingleRunProcessor(FilesProcessor proc, List<File> folders,
             List<File> files) {
+        
+        if (files.isEmpty() && folders.isEmpty()) {
+            LogHandler.getLogs().displayMsg("No input files specified", WARNING);
+            return;
+        }
+        
         for (File folder : folders) {
             files.addAll(Arrays.asList(folder.listFiles()));
         }
         this.files = files;
         this.proc = proc;
+        valid = true;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -45,9 +58,7 @@ public class SingleRunProcessor implements Runnable {
     public void run() {
         if (proc == null)
             return;
-        if (files.isEmpty())
-            LogHandler.getLogs()
-                    .displayMsg("No input files specified", WARNING);
+        
         else
             LogHandler.getLogs()
                     .displayMsg(

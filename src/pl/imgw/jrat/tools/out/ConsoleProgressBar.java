@@ -94,21 +94,26 @@ public class ConsoleProgressBar {
     }
     
     public void evaluate() {
-        printProgress(progress++);
+        if(show)
+            printProgress(progress++);
     }
 
     /**
      * Must be printed in the end if value never reach maxValue
      */
-    public void printDoneMsg() {
+    public void printDoneMsg(String endMsg) {
         if (show) {
             String progress = getProgress(maxValue + 1);
-            System.out.print(msg + "\tdone\t|" + progress + "|\r");
+            System.out.print(msg + "\tdone\t|" + progress + "| " + endMsg);
             System.out.print("\n");
         }
         reset();
     }
 
+    public void printDoneMsg() {
+        printDoneMsg("");
+    }
+    
     private String getProgress(int value) {
         int prog = (int) (factor * value);
         

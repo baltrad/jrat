@@ -139,7 +139,7 @@ public class CalidResultManager {
                     }
                     continue;
                 }
-                System.out.println(line.split(" ")[0]);
+                System.out.println("\t\t" + line.split(" ")[0]);
                 if (LogHandler.getLogs().getVerbose() < Logging.NORMAL)
                     i++;
                 if (i == 5) {

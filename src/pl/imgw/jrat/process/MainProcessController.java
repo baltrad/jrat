@@ -15,6 +15,7 @@ import org.apache.commons.cli.CommandLine;
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultManager;
+import pl.imgw.jrat.calid.CalidResultsPrinter;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.scansun.ScansunProcessor;
@@ -102,8 +103,8 @@ public class MainProcessController {
         if (cmd.hasOption(CALID_LIST)) {
 
             CalidParsedParameters calid = new CalidParsedParameters();
-            if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
-                new CalidResultManager(calid).printPairsList();
+            if (calid.initialize(cmd.getOptionValues(CALID_LIST))) {
+                new CalidResultsPrinter(calid).printList();
                 return true;
             } else {
                 CalidResultManager.printHelp();
@@ -158,7 +159,7 @@ public class MainProcessController {
                 ConsoleProgressBar.getProgressBar().initialize(20,
                         files.size(),
                         LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
-                        "Setting files\t");
+                        "Setting up files");
                 for (File f : files) {
                     LogHandler.getLogs().displayMsg(
                             "Input files: " + f.getPath(), NORMAL);
@@ -171,8 +172,12 @@ public class MainProcessController {
                 }
                 
             }
-
-            ConsoleProgressBar.getProgressBar().printDoneMsg();
+            String msg = "";
+            if (!files.isEmpty()) {
+                msg = files.size() + " files";
+            }
+            ConsoleProgressBar.getProgressBar().printDoneMsg(msg);
+            
             
         }
         /*----------------------------------
@@ -238,7 +243,7 @@ public class MainProcessController {
                     for (String s : cmd.getOptionValues(CALID)) {
                         par += s + " ";
                     }
-                LogHandler.getLogs().displayMsg("Starting CALID with: " + par,
+                LogHandler.getLogs().displayMsg("Starting CALID with " + par,
                         NORMAL);
             } else {
                 return false;
@@ -261,16 +266,16 @@ public class MainProcessController {
             }
         }
         
-        if(cmd.hasOption(WATCH)) {
+        if (cmd.hasOption(WATCH)) {
             /* Starting continues mode */
             FileWatchingProcess watcher = new FileWatchingProcess(proc, folders);
-            
-            if(!watcher.isValid())
+
+            if (!watcher.isValid())
                 return false;
-            
+
             Thread t = new Thread(watcher);
             t.start();
-            if(t.isAlive()) {
+            if (t.isAlive()) {
                 LogHandler.getLogs().displayMsg("Watching process started",
                         NORMAL);
                 return true;
@@ -279,15 +284,22 @@ public class MainProcessController {
             /* Starting sequence mode */
             SequentialProcess seq = new SequentialProcess(proc, folders,
                     cmd.getOptionValue(SEQ));
+
+            if (!seq.isValid())
+                return false;
+
             Thread t = new Thread(seq);
             t.start();
-            if(t.isAlive()) {
+            if (t.isAlive()) {
                 return true;
             }
         } else {
-            SingleRunProcessor single = new SingleRunProcessor(proc, folders, files);
-            
-            //shouldn't be run as a separate thread, this is why I'm using run() not start()
+            SingleRunProcessor single = new SingleRunProcessor(proc, folders,
+                    files);
+            if (!single.isValid())
+                return false;
+            // shouldn't be run as a separate thread, this is why I'm using
+            // run() not start()
             single.run();
             return true;
         }

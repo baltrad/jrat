@@ -173,7 +173,9 @@ public class XMLHandler {
 
     public static Document loadXML(String filename) {
 
-        if(!new File(filename).exists()) {
+        if (!new File(filename).exists()) {
+            LogHandler.getLogs().displayMsg("XML: File not found: " + filename,
+                    LogHandler.WARNING);
             return null;
         }
         

@@ -40,9 +40,9 @@ public class CalidParsedParameters {
     public static final String DATE = "date=";
     public static final String METHOD = "method=";
 
-    private static Integer DEFAULT_DIS = new Integer(1000);
-    private static Double DEFAULT_REF = new Double(0.0);
-    private static Double DEFAULT_ELE = new Double(0.0);
+    public static Integer DEFAULT_DIS = new Integer(1000);
+    public static Double DEFAULT_REF = new Double(0.0);
+    public static Double DEFAULT_ELE = new Double(0.0);
     
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
@@ -57,12 +57,6 @@ public class CalidParsedParameters {
     private Date date1 = null;
     private Date date2 = null;
 
-    private boolean isEmpty = true;
-    
-    public boolean isEmpty() {
-        return isEmpty;
-    }
-    
     // private String[] par = { "0.5deg", "500m" };
 
     /**
@@ -102,7 +96,6 @@ public class CalidParsedParameters {
          */
         if(par == null) {
 //            System.out.println("bez opcji");
-            isEmpty = true;
             return true;
         }
         
@@ -163,7 +156,6 @@ public class CalidParsedParameters {
 //        System.out.println(source1);
 //        System.out.println(source2);
 //        System.out.println(reflectivity);
-        isEmpty = false;
         return true;
     }
     
@@ -195,12 +187,15 @@ public class CalidParsedParameters {
         }
     }
     
-
     /**
      * @return the elevation
      */
     public Double getElevation() {
         return (elevation == null) ? DEFAULT_ELE : elevation;
+    }
+
+    public boolean isElevationDefault() {
+        return (elevation == null) ? true : false;
     }
 
     /**
@@ -210,6 +205,10 @@ public class CalidParsedParameters {
         return (distance == null) ? DEFAULT_DIS : distance;
     }
 
+    public boolean isDistanceDefault() {
+        return (distance == null) ? true : false;
+    }
+
     /**
      * @return the reflectivity
      */
@@ -217,6 +216,10 @@ public class CalidParsedParameters {
         return (reflectivity == null) ? DEFAULT_REF : reflectivity;
     }
 
+    public boolean isReflectivityDefault() {
+        return (reflectivity == null) ? true : false;
+    }
+    
     /**
      * @return the source1
      */

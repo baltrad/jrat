@@ -23,7 +23,7 @@ public class CalidResultsTest {
     @Test
     public void printResultsTest() {
 
-        args = "src=Rzeszow ele=0.5 dis=500 ref=5.0".split(" ");
+        args = "dis=500 ref=5.0".split(" ");
         params.initialize(args);
 
         CalidResultsPrinter printer = new CalidResultsPrinter(params);

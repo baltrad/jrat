@@ -24,6 +24,11 @@ public class CalidComparator {
     private static void compare(CalidContainer container, ScanContainer scan1,
             ScanContainer scan2, double dbz) {
 
+        LogHandler.getLogs().displayMsg(
+                "CALID: Comparing data for " + container.getPair().getSource1()
+                        + " and " + container.getPair().getSource2(),
+                LogHandler.NORMAL);
+        
         Iterator<PairedPoints> itr = container.getPairedPointsList().iterator();
         while (itr.hasNext()) {
             PairedPoints coords = itr.next();
@@ -41,8 +46,7 @@ public class CalidComparator {
         }
 
         container.setHasResults(true);
-        LogHandler.getLogs().displayMsg("CALID: Processing data completed",
-                LogHandler.NORMAL);
+        
     }
 
     /**

@@ -31,10 +31,16 @@ public class SequentialProcess implements Runnable {
     private FilesProcessor proc;
     // private int length;
     private int interval = 60;
+    private boolean valid = false;
 
     public SequentialProcess(FilesProcessor proc, List<File> folders,
             String seqValue) {
 
+        if (folders.isEmpty()) {
+            LogHandler.getLogs().displayMsg("No valid folders specified.",
+                    WARNING);
+            return;
+        }
         this.proc = proc;
         this.folders = folders;
         try {
@@ -51,8 +57,13 @@ public class SequentialProcess implements Runnable {
         int minute = cal.get(Calendar.MINUTE);
         minute = (minute / interval) * interval;
         cal.set(Calendar.MINUTE, minute);
+        valid = true;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -60,8 +71,16 @@ public class SequentialProcess implements Runnable {
      */
     @Override
     public void run() {
-        if (proc == null)
+        if (proc == null) {
             return;
+        }
+        if(folders.isEmpty()) {
+            LogHandler
+                    .getLogs().displayMsg(
+                            "No input folders for sequential process specified",
+                            SILENT);
+            return;
+        }
         LogHandler.getLogs().displayMsg(
                 "Sequential process started with: " + proc.getProcessName(),
                 NORMAL);

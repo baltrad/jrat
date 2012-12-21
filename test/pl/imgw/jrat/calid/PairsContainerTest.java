@@ -53,52 +53,24 @@ public class PairsContainerTest {
         pairs = new PairsContainer(proc.getFiles());
     }
 
-    @Test
-    public void isEqualTest() {
-        ParserManager manager = new ParserManager();
-        manager.setParser(new DefaultParser());
-        File f1 = new File("test-data/calid/2011082113400400dBZ.vol");
-        File f2 = new File("test-data/calid/2011082113402900dBZ.vol");
-        manager.initialize(f1);
-        VolumeContainer vol1 = new RainbowVolume(
-                (RainbowDataContainer) manager.getProduct());
-        manager.initialize(f2);
-        VolumeContainer vol2 = new RainbowVolume(
-                (RainbowDataContainer) manager.getProduct());
-        Pair pair1 = new Pair(vol1, vol2);
-        Pair pair2 = new Pair(vol2, vol1);
-        assertTrue(pair1.equals(pair2));
-
-        f1 = new File("test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5");
-        f2 = new File("test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5");
-        manager.initialize(f1);
-        vol1 = new OdimH5Volume((H5DataContainer) manager.getProduct());
-        manager.initialize(f2);
-        vol2 = new OdimH5Volume((H5DataContainer) manager.getProduct());
-        pair2 = new Pair(vol1, vol2);
-        assertTrue(!pair1.equals(pair2));
-    }
+    
 
     @Test
     public void getAllPairsTest() {
-        assertEquals(4, pairs.getPairs().size());
+        assertEquals(4, pairs.getSize());
     }
 
     @Test
-    public void getPairsByDateTest() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2011, 7, 21, 13, 40, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        Date date = cal.getTime();
-        assertEquals(3, pairs.getPairs(date).size());
-
-    }
-
-    @Test
-    public void pairsInRightOrder() {
-        Iterator<Pair> i = pairs.getPairs().iterator();
-        Pair p1 = ((TreeSet<Pair>) pairs.getPairs()).first();
-        Pair p2 = ((TreeSet<Pair>) pairs.getPairs()).last();
+    public void pairsInRightOrderTest() {
+        Pair p1 = pairs.getNext();
+        Pair p2 = pairs.getNext();
         assertTrue(p1.getDate().before(p2.getDate()));
+    }
+    
+    @Test
+    public void dataValidationTest() {
+        Pair p = pairs.getNext();
+        assertTrue(!p.getVol1().getSiteName().matches(p.getVol2().getSiteName()));
+        
     }
 }

@@ -41,16 +41,16 @@ public class CalidProcessor implements FilesProcessor {
     public void processFile(List<File> files) {
 
         PairsContainer pairs = new PairsContainer(files);
-        ConsoleProgressBar.getProgressBar().initialize(20,
-                pairs.getPairs().size(),
+        ConsoleProgressBar.getProgressBar().initialize(20, pairs.getSize(),
                 LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
                 "CALID calculations");
-        
-        CalidContainer cc = new CalidContainer(params);
-        for (Pair pair : pairs.getPairs()) {
 
+        CalidContainer cc = new CalidContainer(params);
+        Pair pair = null;
+        while (pairs.hasNext()) {
+            pair = pairs.getNext();
             ConsoleProgressBar.getProgressBar().evaluate();
-            if(isValid()) {
+            if (isValid()) {
                 cc.setPair(pair);
                 cc.initialize(pair.getDate());
             }

@@ -163,7 +163,7 @@ public class CalidFileHandler {
                 }
             }
         } catch (FileNotFoundException e) {
-            LogHandler.getLogs().displayMsg(file + ": File not found", Logging.WARNING);
+            LogHandler.getLogs().displayMsg("CALID: Results file not found: " + file , Logging.WARNING);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
         } catch (NumberFormatException e) {
