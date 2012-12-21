@@ -167,12 +167,12 @@ public class CalidResultsPrinter {
     }
     
     private boolean keep(File file) {
-        
+
         String src = "";
         String ele = "";
         String dis = "";
         String ref = "";
-        
+
         try {
             scanner = new Scanner(file);
             if (scanner.hasNextLine()) {
@@ -192,6 +192,42 @@ public class CalidResultsPrinter {
                 } else
                     return false;
             }
+
+            /*
+             * filtering out if selected different sources
+             */
+            if (!src.isEmpty() && !params.getSource1().isEmpty()) {
+                if (!params.getSource2().isEmpty()) {
+                    if (!src.contains(params.getSource1())
+                            || !src.contains(params.getSource2()))
+                        return false;
+                } else if (!src.contains(params.getSource1())) {
+                    return false;
+                }
+            }
+
+            /*
+             * filtering out if selected different elevation
+             */
+            if (!params.isElevationDefault()) {
+                if (Double.parseDouble(ele) != params.getElevation())
+                    return false;
+            }
+            /*
+             * filtering out if selected different distance
+             */
+            if (!params.isDistanceDefault()) {
+                if (Integer.parseInt(dis) != params.getDistance())
+                    return false;
+            }
+            /*
+             * filtering out if selected different reflectivity
+             */
+            if (!params.isReflectivityDefault()) {
+                if (Double.parseDouble(ref) != params.getReflectivity())
+                    return false;
+            }
+            
         } catch (FileNotFoundException e) {
             LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
             LogHandler.getLogs().saveErrorLogs(this, e);
@@ -202,43 +238,8 @@ public class CalidResultsPrinter {
             return false;
         }
         
-        /*
-         * filtering out if selected different sources
-         */
-        if (!src.isEmpty() && !params.getSource1().isEmpty()) {
-            if (!params.getSource2().isEmpty()) {
-                if (!src.contains(params.getSource1())
-                        || !src.contains(params.getSource2()))
-                    return false;
-            } else if (!src.contains(params.getSource1())) {
-                return false;
-            }
-        }
-        
-        /*
-         * filtering out if selected different elevation
-         */
-        if (!params.isElevationDefault()) {
-            if (Double.parseDouble(ele) != params.getElevation())
-                return false;
-        }
-        /*
-         * filtering out if selected different distance
-         */
-        if(!params.isDistanceDefault()) {
-            if (Integer.parseInt(dis) != params.getDistance())
-                return false;
-        }
-        /*
-         * filtering out if selected different reflectivity
-         */
-        if (!params.isReflectivityDefault()) {
-            if (Double.parseDouble(ref) != params.getReflectivity())
-                return false;
-        }
-        
         return true;
-        
+
     }
     
 }
