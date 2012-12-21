@@ -228,6 +228,11 @@ public class CalidResultsPrinter {
         Set<File> results = new TreeSet<File>();
 
         File folder = new File(CalidFileHandler.getCalidPath());
+        
+        if(!folder.isDirectory()) {
+            return results;
+        }
+        
         for (File pairname : folder.listFiles()) {
             if (pairname.isDirectory()) {
                 // pair name

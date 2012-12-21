@@ -21,6 +21,7 @@ import org.apache.commons.cli.PosixParser;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
+@SuppressWarnings("static-access")
 public class CommandLineArgsParser {
     
     public final static String CALID = "calid";
@@ -80,7 +81,7 @@ public class CommandLineArgsParser {
 
     private final static String WATCH_DESCR = "watching processer";
 
-    private final static String DEBUG_DESCR = "print debugging information";
+//    private final static String DEBUG_DESCR = "print debugging information";
 
     private final static String VERBOSE_DESCR = "be extra verbose";
     
@@ -124,14 +125,12 @@ public class CommandLineArgsParser {
         
         
         
-        @SuppressWarnings("static-access")
         Option input_file = OptionBuilder.withArgName(FILES_ARG)
                 .hasArgs().withDescription(INPUT_DESCR)
                 .create(I);
 
 //        options.addOption(input_file);
         
-        @SuppressWarnings("static-access")
         Option output_file = OptionBuilder.withArgName(FILE_ARG)
                 .hasArg().withDescription(OUTPUT_DESCR)
                 .create(O);
@@ -189,15 +188,12 @@ public class CommandLineArgsParser {
         options.addOption(null, VERSION, false, VERSION_DESCR);
     }
 
-    HelpFormatter formatter = new HelpFormatter();
-
     public boolean parseArgs(String[] args) {
         Parser parser = new PosixParser();
         
         try {
             cmd = parser.parse(options, args);
-            if(cmd.getOptions().length == 0 || cmd.hasOption(H))
-                printHelp();
+            
         } catch (ParseException e) {
             printHelp();
 //            System.out.println("ZLE");
@@ -206,7 +202,8 @@ public class CommandLineArgsParser {
         return true;
     }
     
-    public void printHelp() {
+    public static void printHelp() {
+        HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp(APS_NAME + " [options]", options);
         
     }
@@ -218,7 +215,7 @@ public class CommandLineArgsParser {
     public static void main(String[] args) {
         CommandLineArgsParser cmd = new CommandLineArgsParser();
         cmd.parseArgs(args);
-        cmd.printHelp();
+        printHelp();
     }
     
 }

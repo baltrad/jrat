@@ -65,10 +65,13 @@ public class MainProcessController {
     }
 
     public boolean start() {
-
+        
         if (cmd == null) {
             return false;
         }
+        
+        if(cmd.getOptions().length == 0 || cmd.hasOption(H))
+            printHelp();
 
         if (cmd.hasOption(VERSION)) {
             LogHandler.getLogs().printVersion();
