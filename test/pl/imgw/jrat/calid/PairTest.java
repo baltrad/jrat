@@ -72,9 +72,9 @@ public class PairTest {
         pair = new Pair(vol1, vol2);
         assertTrue("validation is not working well with rainbow format",
                 pair.hasRealVolumes());
-        assertEquals(60, pair.getVol2().getScan(elevation).getArray()
+        assertEquals(61, pair.getVol2().getScan(elevation).getArray()
                 .getRawIntPoint(301, 20));
-        assertEquals(-2d, pair.getVol2().getScan(elevation).getArray()
+        assertEquals(-1.5d, pair.getVol2().getScan(elevation).getArray()
                 .getPoint(301, 20), 0.1);
         System.out.println(pair);
         assertTrue("Comparing pair's source name",
