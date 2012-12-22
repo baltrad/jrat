@@ -117,12 +117,15 @@ public class MainProcessController {
         
         FilesProcessor proc = null;
         
+        // test process, prints files name
         if (cmd.hasOption(TEST)) {
             proc = new FilesProcessor() {
                 @Override
                 public void processFile(List<File> files) {
                     for (File file : files)
-                        System.out.println(file);
+                        LogHandler.getLogs().displayMsg("" + file, SILENT);
+                    if(files.isEmpty())
+                        LogHandler.getLogs().displayMsg("No files to process", SILENT);
                 }
 
                 @Override
@@ -271,10 +274,14 @@ public class MainProcessController {
         
         if (cmd.hasOption(WATCH)) {
             /* Starting continues mode */
+            
             FileWatchingProcess watcher = new FileWatchingProcess(proc, folders);
 
             if (!watcher.isValid())
                 return false;
+            
+            if(!FolderManager.continueWithDeletingFiles(folders))
+                return true;
 
             Thread t = new Thread(watcher);
             t.start();
@@ -285,12 +292,16 @@ public class MainProcessController {
             }
         } else if (cmd.hasOption(SEQ)) {
             /* Starting sequence mode */
+            
             SequentialProcess seq = new SequentialProcess(proc, folders,
                     cmd.getOptionValue(SEQ));
 
             if (!seq.isValid())
                 return false;
 
+            if(!FolderManager.continueWithDeletingFiles(folders))
+                return true;
+            
             Thread t = new Thread(seq);
             t.start();
             if (t.isAlive()) {

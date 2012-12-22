@@ -27,6 +27,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
 public class RainbowDataContainer implements DataContainer {
 
     protected Map<String, ArrayData> arrayList = new HashMap<String, ArrayData>();
+    
     protected Document attribues;
 
     /**

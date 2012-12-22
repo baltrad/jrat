@@ -139,7 +139,9 @@ public class FileWatchingProcess implements Runnable {
                         files.add(input);
                         proc.processFile(files);
                         files.clear();
-                        input.delete();
+                        if (input.delete())
+                            LogHandler.getLogs().displayMsg(
+                                    input.getName() + " deleted.", WARNING);
                         
                     }
                 }

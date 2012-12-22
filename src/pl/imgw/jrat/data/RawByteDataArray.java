@@ -17,8 +17,10 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
     protected byte[][] data = null;
     protected double offset = 0;
     protected double gain = 0;
-    protected int xShift = 0;
 
+
+    
+    
     /**
      * @param offset
      *            the offset to set
@@ -33,13 +35,6 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      */
     public void setGain(double gain) {
         this.gain = gain;
-    }
-
-    /**
-     * @param xShift
-     */
-    public void setXShift(int xShift) {
-        this.xShift = xShift;
     }
 
     /**
@@ -151,7 +146,6 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             return false;
         }
-
         data[x][y] = int2byte(value);
 
         return true;

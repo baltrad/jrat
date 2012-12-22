@@ -94,8 +94,11 @@ public class SequentialProcess implements Runnable {
                 proc.processFile(files);
 
                 for (File f : files) {
-                    f.delete();
+                    if (f.delete())
+                        LogHandler.getLogs().displayMsg(
+                                f.getName() + " deleted.", WARNING);
                 }
+                
                 cal.add(Calendar.MINUTE, interval);
             } else {
                 try {

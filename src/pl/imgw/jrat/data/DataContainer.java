@@ -18,7 +18,9 @@ import java.util.TreeMap;
 public interface DataContainer {
 
     /**
-     * Receiving list of arrays available in the product.
+     * Receiving list of arrays available in the product, where key reflects the
+     * name of dataset in original file with full path if available and value is
+     * an object of <code>ArrayData</code>
      * 
      * @return
      */
@@ -36,9 +38,7 @@ public interface DataContainer {
     public Object getAttributeValue(String path, String name);
 
     /**
-     * Receiving list of arrays, where key reflects the name of dataset in
-     * original file with full path if available and value is an object of
-     * <code>ArrayData</code>
+     * Receiving an array of data, 
      * 
      * @param name
      *            path or name of an array in original file

@@ -7,8 +7,10 @@ import java.awt.geom.Point2D;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -24,6 +26,8 @@ public class OdimH5Volume implements VolumeContainer {
 
     H5DataContainer data = null;
 
+    private Map<Double, ScanContainer> scans = new HashMap<Double, ScanContainer>();
+    
     public OdimH5Volume(H5DataContainer data) {
         if (((String) data.getAttributeValue("/what", "object"))
                 .matches("PVOL"))
@@ -80,6 +84,9 @@ public class OdimH5Volume implements VolumeContainer {
      */
     @Override
     public ScanContainer getScan(final double elevation) {
+        
+        if(scans.containsKey(elevation))
+            return scans.get(elevation);
 
         if (getDatasetByElevation(elevation) == null) {
             return null;
@@ -140,6 +147,7 @@ public class OdimH5Volume implements VolumeContainer {
                 return new Point2D.Double(getLon(), getLat());
             }
         };
+        scans.put(elevation, scan);
         return scan;
     }
 
@@ -249,12 +257,13 @@ public class OdimH5Volume implements VolumeContainer {
      */
     @Override
     public List<ScanContainer> getAllScans() {
-        List<ScanContainer> scans = new ArrayList<ScanContainer>();
+//        List<ScanContainer> scans = new ArrayList<ScanContainer>();
         for(String eleStr : data.getArrayList().keySet()) {
             double ele = getElevation(eleStr);
-            scans.add(getScan(ele));
+            
+            getScan(ele);
         }
-        return scans;
+        return new ArrayList<ScanContainer>(scans.values());
     }
 
 }

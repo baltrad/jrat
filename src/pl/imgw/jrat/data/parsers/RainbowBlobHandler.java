@@ -248,7 +248,6 @@ public class RainbowBlobHandler {
         return output_buf;
     }
 
-    
     /**
      * Decompress data; returned data is allocated in this method.
      *
@@ -301,6 +300,51 @@ public class RainbowBlobHandler {
         return (b & (1 << (8 - bit ))) != 0;
     }
 
+    public short firstAzimuth(byte[] input_buf, int len) {
+        
+        byte[] byte_buf = new byte[2 * len];
+
+        // Inflate input stream
+        ZStream defStream = new ZStream();
+        defStream.next_in = input_buf;
+        defStream.next_in_index = 0;
+        defStream.next_out = byte_buf;
+        defStream.next_out_index = 0;
+        int err = defStream.inflateInit();
+//        int a = 0;
+        while (defStream.total_out < 2*len
+                && defStream.total_in < input_buf.length) {
+            defStream.avail_in = defStream.avail_out = 1;
+            err = defStream.inflate(JZlib.Z_NO_FLUSH);
+            if (err == JZlib.Z_STREAM_END)
+                break;
+//            a++;
+            if(!isOK(defStream, err, "Inflation error")) {
+                return 0;
+            }
+        }
+        // System.out.println(a);
+        err = defStream.inflateEnd();
+        if(!isOK(defStream, err, "Inflation end error")) {
+            return 0;
+        }
+
+        int azimuth = 2 * Short.MAX_VALUE;
+        short firstAzimuth = 0;
+        int a = 0;
+        for (short i = 0; i < len; i++) {
+            a = unsignedShortToInt(new byte[] { byte_buf[i * 2],
+                    byte_buf[i * 2 + 1] });
+            if (a < azimuth) {
+                azimuth = a;
+                firstAzimuth = i;
+            }
+        }
+        
+        return firstAzimuth;
+        
+    }
+    
     /**
      * Check whether flag bits for given byte of 2D data are OK (e.g. all set to zero).
      * 
@@ -388,7 +432,7 @@ public class RainbowBlobHandler {
     }
 
     /**
-     * Method converts byte array value into integer value.
+     * Method converts 4 byte array value into integer value.
      * 
      * @param b
      *            Byte array
@@ -403,6 +447,19 @@ public class RainbowBlobHandler {
         return value;
     }
 
+    /**
+     * Converts a two byte array to an integer
+     * @param b a byte array of length 2
+     * @return an int representing the unsigned short
+     */
+    private int unsignedShortToInt(byte[] b) {
+        int i = 0;
+        i |= b[0] & 0xFF;
+        i <<= 8;
+        i |= b[1] & 0xFF;
+        return i;
+    }
+    
     /**
      * Method parses RAINBOW metadata buffer
      * 

@@ -7,8 +7,12 @@ import java.awt.geom.Point2D;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.plaf.SliderUI;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -22,7 +26,8 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class RainbowVolume implements VolumeContainer {
 
-    RainbowDataContainer data = null;
+    protected RainbowDataContainer data = null;
+    protected Map<Double, ScanContainer> scans = new HashMap<Double, ScanContainer>();
 
     public RainbowVolume(RainbowDataContainer data) {
         if (((String) data.getAttributeValue("/volume", "type")).matches("vol"))
@@ -111,6 +116,9 @@ public class RainbowVolume implements VolumeContainer {
     @Override
     public ScanContainer getScan(final double elevation) {
 
+        if(scans.containsKey(elevation))
+            return scans.get(elevation);
+        
         if (getSlicedataPath(elevation) == null) {
             return null;
         }
@@ -204,6 +212,8 @@ public class RainbowVolume implements VolumeContainer {
             }
 
         };
+        
+        scans.put(elevation, scan);
         return scan;
     }
 
@@ -286,15 +296,19 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public List<ScanContainer> getAllScans() {
-        List<ScanContainer> scans = new ArrayList<ScanContainer>();
+
         int size = data.getArrayList().size();
-        for (int i = 0; i < size; i++) {
-            String posangle = data.getRainbowAttributeValue(
-                    "/volume/scan/slice:refid=" + i + "/posangle", "");
-            double ele = Double.parseDouble(posangle);
-            scans.add(getScan(ele));
+
+        if (scans.size() < size) {
+
+            for (int i = 0; i < size; i++) {
+                String posangle = data.getRainbowAttributeValue(
+                        "/volume/scan/slice:refid=" + i + "/posangle", "");
+                double ele = Double.parseDouble(posangle);
+                getScan(ele);
+            }
         }
-        return scans;
+        return new ArrayList<ScanContainer>(scans.values());
     }
 
 }

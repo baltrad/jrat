@@ -25,6 +25,7 @@ import javax.xml.stream.XMLStreamReader;
 import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.RawByteDataArrayWithTransposition;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -258,15 +259,23 @@ public class Rainbow53VolumeParser implements FileParser {
             while (itr.hasNext()) {
                 Param p = params.get(itr.next());
                 byte[][] infDataBuff = rp.inflateDataSection(
-                        blobs.get(p.blobidraw), p.rays, p.bins, p.depthraw);
+                        blobs.get(p.blobidraw), p.bins, p.rays, p.depthraw);
+                byte[][] infRayInfo = rp.inflateDataSection(
+                        blobs.get(p.blobidray), p.rays, 1, p.depthray);
+
+//                System.out.println("depth=" + p.depthraw + ", " + p.depthray);
                 
-                // shift
+                int shiftX = rp.firstAzimuth(blobs.get(p.blobidray).getDataBuffer(), p.rays);;
+//                System.out.println("shift=" + shiftX);
                 
-                // transpose
+//                System.out.println("size=" + infRayInfo.length + ", " + infRayInfo[0].length + " shift=" + shiftX);
                 
-                RawByteDataArray array = new RawByteDataArray(infDataBuff);
+                RawByteDataArrayWithTransposition array = new RawByteDataArrayWithTransposition(
+                        infDataBuff);
                 array.setGain(0.5);
                 array.setOffset(-31.5);
+                array.setXShift(shiftX);
+                array.setTranspose(true);
                 data.getArrayList().put(p.blobidraw + "", array);
             }
 
@@ -277,30 +286,22 @@ public class Rainbow53VolumeParser implements FileParser {
         } catch (FileNotFoundException e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " was not found", ERROR);
-            LogHandler.getLogs().saveErrorLogs(
-                    Rainbow53ImageParser.class.getSimpleName(),
-                    e.getLocalizedMessage());
+            LogHandler.getLogs().saveErrorLogs(this, e);
             return false;
         } catch (XMLStreamException e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " is not a XML format", ERROR);
-            LogHandler.getLogs().saveErrorLogs(
-                    Rainbow53ImageParser.class.getSimpleName(),
-                    e.getLocalizedMessage());
+            LogHandler.getLogs().saveErrorLogs(this, e);
             return false;
         } catch (FactoryConfigurationError e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " cannot be initialized", ERROR);
-            LogHandler.getLogs().saveErrorLogs(
-                    Rainbow53ImageParser.class.getSimpleName(),
-                    e.getLocalizedMessage());
+            LogHandler.getLogs().saveErrorLogs(this, e.getException());
             return false;
         } catch (IOException e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " cannot be initialized", ERROR);
-            LogHandler.getLogs().saveErrorLogs(
-                    Rainbow53ImageParser.class.getSimpleName(),
-                    e.getLocalizedMessage());
+            LogHandler.getLogs().saveErrorLogs(this, e);
             return false;
         }
 
