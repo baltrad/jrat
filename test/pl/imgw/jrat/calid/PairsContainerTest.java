@@ -3,28 +3,13 @@
  */
 package pl.imgw.jrat.calid;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeSet;
-
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
-import pl.imgw.jrat.data.parsers.DefaultParser;
-import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.process.MainProcessController;
-import pl.imgw.jrat.tools.in.FileSegregatorByDateAndSource;
 
 /**
  * 

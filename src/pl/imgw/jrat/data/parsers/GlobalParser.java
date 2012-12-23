@@ -1,14 +1,8 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.process;
+package pl.imgw.jrat.data.parsers;
 
-import pl.imgw.jrat.data.parsers.DefaultParser;
-import pl.imgw.jrat.data.parsers.FileParser;
-import pl.imgw.jrat.data.parsers.OdimH5Parser;
-import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
-import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
-import pl.imgw.jrat.data.parsers.WZFileParser;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 
@@ -20,7 +14,7 @@ import pl.imgw.jrat.tools.out.Logging;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class GlobalParserSetter {
+public class GlobalParser {
 
     private FileParser parser = new DefaultParser();
     
@@ -35,13 +29,13 @@ public class GlobalParserSetter {
         }
     };
     
-    private static GlobalParserSetter gps = new GlobalParserSetter();
+    private static GlobalParser gps = new GlobalParser();
     
-    private GlobalParserSetter() {
+    private GlobalParser() {
         //private constructor
     }
     
-    public static GlobalParserSetter getInstance() {
+    public static GlobalParser getInstance() {
         return gps;
     }
     

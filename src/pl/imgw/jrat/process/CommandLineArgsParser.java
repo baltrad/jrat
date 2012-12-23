@@ -13,6 +13,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
 import org.apache.commons.cli.PosixParser;
+
+import pl.imgw.jrat.data.parsers.GlobalParser;
 /**
  * 
  * /Class description/
@@ -146,7 +148,7 @@ public class CommandLineArgsParser {
         options.addOption(P, PRINT, false, PRINT_DESCR);
         
         String formatDescr = "";
-        for(GlobalParserSetter.Format format : GlobalParserSetter.Format.values()) {
+        for(GlobalParser.Format format : GlobalParser.Format.values()) {
             formatDescr += format.getName() + ", ";
         }
         

@@ -137,8 +137,10 @@ public class OdimH5Volume implements VolumeContainer {
 
                 RawByteDataArray array = (RawByteDataArray) data
                         .getArray(dataset + "/data1/data");
-                array.setGain((Double) data.getAttributeValue(dataset + "/data1/what", "gain"));
-                array.setOffset((Double) data.getAttributeValue(dataset + "/data1/what", "offset"));
+                array.setGain((Double) data.getAttributeValue(dataset
+                        + "/data1/what", "gain"));
+                array.setOffset((Double) data.getAttributeValue(dataset
+                        + "/data1/what", "offset"));
                 return array;
             }
 
@@ -260,7 +262,6 @@ public class OdimH5Volume implements VolumeContainer {
 //        List<ScanContainer> scans = new ArrayList<ScanContainer>();
         for(String eleStr : data.getArrayList().keySet()) {
             double ele = getElevation(eleStr);
-            
             getScan(ele);
         }
         return new ArrayList<ScanContainer>(scans.values());

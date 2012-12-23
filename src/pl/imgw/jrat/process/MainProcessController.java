@@ -3,8 +3,30 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.*;
-import static pl.imgw.jrat.tools.out.Logging.*;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_HELP;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_LIST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.F;
+import static pl.imgw.jrat.process.CommandLineArgsParser.FORMAT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.H;
+import static pl.imgw.jrat.process.CommandLineArgsParser.I;
+import static pl.imgw.jrat.process.CommandLineArgsParser.O;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
+import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
+import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
+import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
+import static pl.imgw.jrat.tools.out.Logging.ALL_MSG;
+import static pl.imgw.jrat.tools.out.Logging.NORMAL;
+import static pl.imgw.jrat.tools.out.Logging.PROGRESS_BAR_ONLY;
+import static pl.imgw.jrat.tools.out.Logging.SILENT;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -17,12 +39,14 @@ import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultManager;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
 import pl.imgw.jrat.data.parsers.DefaultParser;
+import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.scansun.ScansunProcessor;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.ProductInfoPrinter;
 
 /**
  * 
@@ -84,7 +108,7 @@ public class MainProcessController {
         }
         
         if (cmd.hasOption(FORMAT)) {
-            GlobalParserSetter.getInstance().setParser(cmd.getOptionValue(F));
+            GlobalParser.getInstance().setParser(cmd.getOptionValue(F));
         }
         
         if(cmd.hasOption(CALID_HELP)) {
@@ -213,7 +237,7 @@ public class MainProcessController {
         
         
         if (cmd.hasOption(PRINT)) {
-            System.out.println("Printing information about the file is not supported yet");
+            ProductInfoPrinter.print(files);
             return true;
         }
         

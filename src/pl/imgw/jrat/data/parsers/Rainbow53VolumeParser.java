@@ -91,7 +91,7 @@ public class Rainbow53VolumeParser implements FileParser {
         if (!isValid(file)) {
             LogHandler.getLogs().displayMsg(
                     "'" + file.getName()
-                            + "' is not a valid RAINBOW 5.3 format", WARNING);
+                            + "' is not a valid RAINBOW 5.3x format", WARNING);
 
             return false;
         }
@@ -281,6 +281,7 @@ public class Rainbow53VolumeParser implements FileParser {
 
             if (data != null && rp != null) {
                 data.setAttribues(rp.parseXML());
+                data.setType(RainbowDataContainer.VOLUME);
             }
 
         } catch (FileNotFoundException e) {

@@ -3,11 +3,21 @@
  */
 package pl.imgw.jrat.data;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -15,6 +25,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.Logging;
 
 /**
  * 
@@ -29,7 +40,20 @@ public class RainbowDataContainer implements DataContainer {
     protected Map<String, ArrayData> arrayList = new HashMap<String, ArrayData>();
     
     protected Document attribues;
+    
+    public static final int VOLUME = 1;
+    public static final int PRODUCT = 2;
+    
+    protected int type = 0;
 
+    public void setType(int type) {
+        this.type = type;
+    }
+    
+    public int getType() {
+        return this.type;
+    }
+    
     /**
      * @param attribues
      *            the attribues to set
@@ -184,8 +208,29 @@ public class RainbowDataContainer implements DataContainer {
      */
     @Override
     public void printAllAttributes() {
-        // TODO Auto-generated method stub
+        try {
+//        System.out.println(getAttributeValue("/product", "version"));
+        
+            Transformer transformer;
+            transformer = TransformerFactory.newInstance().newTransformer();
+            Source source = new DOMSource(attribues);
+            Result output = new StreamResult(System.out);
+            transformer.transform(source, output);
+            System.out.print("\n");
 
+        } catch (TransformerConfigurationException e) {
+            LogHandler.getLogs().displayMsg("Parsing XML text error",
+                    Logging.ERROR);
+            LogHandler.getLogs().saveErrorLogs(this, e);
+        } catch (TransformerFactoryConfigurationError e) {
+            LogHandler.getLogs().displayMsg("Parsing XML text error",
+                    Logging.ERROR);
+            LogHandler.getLogs().saveErrorLogs(this, e.getException());
+        } catch (TransformerException e) {
+            LogHandler.getLogs().displayMsg("Parsing XML text error",
+                    Logging.ERROR);
+            LogHandler.getLogs().saveErrorLogs(this, e);
+        }
     }
 
     /* (non-Javadoc)
@@ -193,7 +238,11 @@ public class RainbowDataContainer implements DataContainer {
      */
     @Override
     public void printGeneralIfnormation() {
-        // TODO Auto-generated method stub
+        if (type == VOLUME) {
+
+        } else if (type == PRODUCT) {
+
+        }
         
     }
 

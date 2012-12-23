@@ -245,6 +245,7 @@ public class Rainbow53ImageParser implements FileParser{
             
             if (data != null && rp != null) {
                 data.setAttribues(rp.parseXML());
+                data.setType(RainbowDataContainer.PRODUCT);
             }
             
         } catch (FileNotFoundException e) {
