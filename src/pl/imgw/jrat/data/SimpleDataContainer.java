@@ -66,6 +66,7 @@ public class SimpleDataContainer implements DataContainer {
     @Override
     public void printAllAttributes() {
         // TODO Auto-generated method stub
+        System.out.println("Not implemented yet");
 
     }
 
@@ -75,6 +76,7 @@ public class SimpleDataContainer implements DataContainer {
     @Override
     public void printGeneralIfnormation() {
         // TODO Auto-generated method stub
+        System.out.println("Not implemented yet");
         
     }
 

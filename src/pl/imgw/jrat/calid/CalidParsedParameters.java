@@ -6,6 +6,7 @@ import static pl.imgw.jrat.AplicationConstans.ETC;
 import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
+import java.io.ObjectInputStream.GetField;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,11 +39,12 @@ public class CalidParsedParameters {
     public static final String REFLECTIVITY = "ref=";
     public static final String SOURCE = "src=";
     public static final String DATE = "date=";
-    public static final String METHOD = "method=";
+    public static final String FREQUENCY = "freq=";
 
     public static Integer DEFAULT_DIS = new Integer(1000);
     public static Double DEFAULT_REF = new Double(0.0);
     public static Double DEFAULT_ELE = new Double(0.0);
+    public static Integer DEFAULT_FREQ = new Integer(1);
     
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
@@ -56,6 +58,7 @@ public class CalidParsedParameters {
     private String source2 = "";
     private Date start = null;
     private Date end = null;
+    private Integer freq = null;
 
     // private String[] par = { "0.5deg", "500m" };
 
@@ -81,8 +84,16 @@ public class CalidParsedParameters {
      * data). The proper format for the argument should contain numerical value
      * and word 'dBZ' e.g. '500m'</pre>
      * 
+     * <p>
+     * <tt>date</tt> (from [,to]) e.g. date=2012-12-30 or
+     * date=2012-12-30/09:10,2012-12-30/10:00</pre>
+     * 
+     * <p>
+     * <tt>frequency</tt> minimal frequency in per cents of non zero results that is taken
+     * to calculation e.g. freq=30</pre>
+     * 
      * @param par
-     *            array of size 2 or 3 eg.
+     *            array of strings each representing parameters.
      *            <p>
      *            <code>String[] par = { "0.5deg", "500m" }</code> - elevation
      *            and distance
@@ -111,6 +122,8 @@ public class CalidParsedParameters {
                     distance = Integer.parseInt(par[i].substring(DISTANCE.length()));
                 } else if (par[i].startsWith(REFLECTIVITY)) {
                     reflectivity = Double.parseDouble(par[i].substring(REFLECTIVITY.length()));
+                } else if (par[i].startsWith(FREQUENCY)) {
+                    freq = Integer.parseInt(par[i].substring(FREQUENCY.length()));
                 } else if (par[i].startsWith(SOURCE)) {
                     String sources = par[i].substring(SOURCE.length());
                     if (sources.contains(",")) {
@@ -145,15 +158,21 @@ public class CalidParsedParameters {
          */
         if (getElevation() < -10 || getElevation() > 90) {
             LogHandler.getLogs().displayMsg(
-                    error_msg + " (" + getElevation() + ")", WARNING);
+                    error_msg + " (" + ELEVATION + getElevation() + ")", WARNING);
             return false;
         }
         if (getDistance() < 0) {
             LogHandler.getLogs().displayMsg(
-                    error_msg + " (" + getDistance() + ")", WARNING);
+                    error_msg + " (" + DISTANCE + getDistance() + ")", WARNING);
             return false;
         }
-
+        
+        if (getFrequency() < 1 || getFrequency() > 100) {
+            LogHandler.getLogs().displayMsg(
+                    error_msg + " (" + FREQUENCY + getFrequency() + ")", WARNING);
+            return false;
+        }
+        
 //        System.out.println(elevation);
 //        System.out.println(distance);
 //        System.out.println(source1);
@@ -224,6 +243,17 @@ public class CalidParsedParameters {
         return (distance == null) ? true : false;
     }
 
+    /**
+     * @return the frequency
+     */
+    public Integer getFrequency() {
+        return (freq == null) ? DEFAULT_FREQ : freq;
+    }
+
+    public boolean isFrequencyDefault() {
+        return (freq == null) ? true : false;
+    }
+    
     /**
      * @return the reflectivity
      */

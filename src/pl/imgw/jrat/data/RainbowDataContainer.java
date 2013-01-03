@@ -119,7 +119,6 @@ public class RainbowDataContainer implements DataContainer {
      */
     public String getRainbowAttributeValue(String path, String name) {
         return (String) getAttributeValue(path, name);
-        
     }
 
     @Override
@@ -239,11 +238,45 @@ public class RainbowDataContainer implements DataContainer {
     @Override
     public void printGeneralIfnormation() {
         if (type == VOLUME) {
+            // software version
+            print("This is Rainbow volume version "
+                    + getAttributeValue("/volume", "version"));
 
+            // type
+            print("Data type:\t"
+                    + getAttributeValue("/volume/scan/slice/slicedata/rawdata",
+                            "type"));
+            // date
+            print("Date:\t\t" + getAttributeValue("/volume/scan", "date") + " "
+                    + getAttributeValue("/volume/scan", "time"));
+            // site name
+            print("Site name:\t"
+                    + getAttributeValue("/volume/sensorinfo", "name"));
+            
+            
+            
         } else if (type == PRODUCT) {
 
+            // software version
+            print("This is Rainbow image version "
+                    + getAttributeValue("/product", "version"));
+
+            // type
+            print("Product type:\t" + getAttributeValue("/product", "name"));
+            print("Data type:\t" + getAttributeValue("/product", "datatype"));
+            // date
+            print("Date:\t\t" + getAttributeValue("/product/data", "date")
+                    + " " + getAttributeValue("/product/data", "time"));
+            // site name
+            print("Site name:\t"
+                    + getAttributeValue("/product/data/sensorinfo", "name"));
+            
         }
         
     }
 
+    private void print(String s) {
+        System.out.println(s);
+    }
+    
 }

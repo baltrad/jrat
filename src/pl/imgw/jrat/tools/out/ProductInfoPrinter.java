@@ -22,13 +22,30 @@ public class ProductInfoPrinter {
     public static void print(List<File> files) {
         ParserManager parser = new ParserManager();
         parser.setParser(GlobalParser.getInstance().getParser());
+        
+        boolean printed = false;
+        
         for (File f : files) {
-            parser.initialize(f);
+            if (!parser.initialize(f)) {
+                continue;
+            }
+            
+            System.out.println("\nInformation about file: " + f.getName());
+            
             if (LogHandler.getLogs().getVerbose() > Logging.PROGRESS_BAR_ONLY)
                 parser.getProduct().printAllAttributes();
             else
                 parser.getProduct().printGeneralIfnormation();
+            
+            printed = true;
+            
         }
+        
+        if(printed) {
+            if (LogHandler.getLogs().getVerbose() == Logging.PROGRESS_BAR_ONLY)
+                System.out.println("\nTo print detailed information use -v parameter");
+        }
+        
     }
     
 }

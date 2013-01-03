@@ -91,7 +91,7 @@ public class Rainbow53VolumeParser implements FileParser {
         if (!isValid(file)) {
             LogHandler.getLogs().displayMsg(
                     "'" + file.getName()
-                            + "' is not a valid RAINBOW 5.3x format", WARNING);
+                            + "' is not a valid RAINBOW 5.3x volume format", WARNING);
 
             return false;
         }

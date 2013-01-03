@@ -46,6 +46,7 @@ public class RegexFileFilter implements FilePatternFilter {
      */
     @Override
     public List<File> getFileList(String exp) {
+        System.out.println(exp);
         list = new ArrayList<File>();
         String[] parts = exp.split(" ");
         for (int p = 0; p < parts.length; p++) {
@@ -62,7 +63,7 @@ public class RegexFileFilter implements FilePatternFilter {
                 if (files[i].isFile()) {
 //                    System.out.println(files[i]);
 //                    FileDate fd = new FileDate(files[i], getDate(files[i]));
-                    if(getDate(files[i]) != null)
+//                    if(getDate(files[i]) != null)
                         list.add(files[i]);
                 }
             }

@@ -159,7 +159,8 @@ public class CalidContainer implements Comparable<CalidContainer> {
      */
     public Double getMean(int perc) {
         
-        perc = scalePerc(perc);
+        if(perc > getFreq())
+            return null;
         
         double mean = 0;
         int size = 0;
@@ -169,8 +170,9 @@ public class CalidContainer implements Comparable<CalidContainer> {
                 size++;
             }
         }
-        if (size <= perc)
+        if (size == 0)
             return null;
+        
         return new Double(round(mean / size, 2));
     }
 
@@ -178,12 +180,19 @@ public class CalidContainer implements Comparable<CalidContainer> {
         return getMean(0);
     }
     
+    public Double getRMS() {
+        return getRMS(0);
+    }
+    
     /**
      * Root mean square
      * 
      * @return
      */
-    public double getRMS() {
+    public Double getRMS(int perc) {
+        
+        if(perc > getFreq())
+            return null;
         double rms = 0;
         int size = 0;
         for (PairedPoints pp : pairedPointsList) {
@@ -193,22 +202,46 @@ public class CalidContainer implements Comparable<CalidContainer> {
             }
         }
         if (size == 0)
-            return 0;
-        return Math.sqrt(rms / size);
+            return null;
+        
+        return round(Math.sqrt(rms / size), 2);
     }
 
+    
+    public Double getMedian() {
+        return getMedian(0);
+    }
+    
     /**
      * Median
      * 
      * @return
      */
-    public double getMedian() {
+    public Double getMedian(int perc) {
+
+        if(perc > getFreq())
+            return null;
+        
+//        perc = scalePerc(perc);
         ArrayList<Double> array = new ArrayList<Double>();
 
+//        int size = 0;
         for (PairedPoints pp : pairedPointsList) {
-            if (pp.getDifference() != null)
+            if (pp.getDifference() != null) {
                 array.add(pp.getDifference());
+//                size++;
+            }
         }
+
+//        System.out.println("aray size=" + array.size());
+        if (array.size() == 0) {
+            return null;
+        }
+        
+        if (array.size() == 1) {
+            return array.get(0);
+        }
+
         Collections.sort(array);
         int middle = array.size() / 2;
 
@@ -217,6 +250,19 @@ public class CalidContainer implements Comparable<CalidContainer> {
         } else {
             return (array.get(middle - 1) + array.get(middle)) / 2.0;
         }
+    }
+    
+    public Integer getFreq() {
+        int size = 0;
+        for (PairedPoints pp : pairedPointsList) {
+            if (pp.getDifference() != null) {
+                size++;
+            }
+        }
+        
+        double freq = (double) size / pairedPointsList.size() * 100;
+        
+        return (int) Math.round(freq);
     }
 
     public boolean hasVolumeData() {
@@ -261,7 +307,7 @@ public class CalidContainer implements Comparable<CalidContainer> {
     }
     
     private int scalePerc(int perc) {
-        return (int) (pairedPointsList.size() * perc / 100);
+        return (int) ((double)(pairedPointsList.size() * perc) / 100);
     }
     
     

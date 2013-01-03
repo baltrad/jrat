@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat.data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -78,6 +80,9 @@ public class H5DataContainer implements DataContainer {
         try {
             String type = reader.getAttributeInformation(path, name).toString()
                     .toUpperCase();
+            
+            if(type.contains("#"))
+                return null;
             if (type.contains(DOUBLE)) {
                 return reader.getDoubleAttribute(path, name);
             } else if (type.contains(FLOAT)) {
@@ -150,10 +155,38 @@ public class H5DataContainer implements DataContainer {
     @Override
     public void printAllAttributes() {
         // TODO Auto-generated method stub
-        LogHandler.getLogs().displayMsg("Not implemented yet", Logging.SILENT);
+        
+        List<String> groups = reader.getAllGroupMembers("/");
+        
+        for(String s : groups) {
+            recursive("/" + s, 0);
+        }
+        
+//        LogHandler.getLogs().displayMsg("Not implemented yet", Logging.WARNING);
         
     }
 
+    private void recursive(String s, int i) {
+
+//        print("recursive " + s);
+        i++;
+        List<String> members = reader.getAllGroupMembers(s);
+        for (String str : members) {
+            str = s + "/" + str;
+//            print("members " + str);
+            if (reader.isGroup(str)) {
+                print(str);
+                recursive(str, i);
+            } else if (reader.isDataSet(str)) {
+                print(str);
+            }
+            List<String> atr = reader.getAllAttributeNames(str);
+            for (String atrStr : atr) {
+                print(atrStr + "=" + getAttributeValue(str, atrStr), str.length());
+            }
+        }
+    }
+    
     protected void finalize() {
         reader.close();
     }
@@ -163,7 +196,33 @@ public class H5DataContainer implements DataContainer {
      */
     @Override
     public void printGeneralIfnormation() {
-        String msg = "This is HDF5 file format";
+        String msg = "This is HDF5 file format version ";
+        print(msg + getAttributeValue("/", "Conventions"));
+        // type
+        print("Type:\t\t" + getAttributeValue("/what", "object"));
+        // date
+        SimpleDateFormat formatIn = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat formatOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date d = formatIn.parse("" + getAttributeValue("/what", "date")
+                    + getAttributeValue("/what", "time"));
+            print("Date:\t\t" + formatOut.format(d));
+        } catch (ParseException e) {
+
+        }
+        // name
+        print("Site name:\t" + getAttributeValue("/what", "source"));
+    }
+    
+    private void print(String s) {
+        System.out.println(s);
+    }
+    
+    private void print(String s, int l) {
+        for(int i = 0; i < l; i++) {
+            s = " " + s;
+        }
+        print(s);
     }
     
 }

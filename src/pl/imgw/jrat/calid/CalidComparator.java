@@ -32,10 +32,10 @@ public class CalidComparator {
         Iterator<PairedPoints> itr = container.getPairedPointsList().iterator();
         while (itr.hasNext()) {
             PairedPoints coords = itr.next();
-            RawByteDataArray array1 = (RawByteDataArray) scan1.getArray();
-            RawByteDataArray array2 = (RawByteDataArray) scan2.getArray();
-            double val1 = array1.getPoint(coords.getRay1(), coords.getBin1());
-            double val2 = array2.getPoint(coords.getRay2(), coords.getBin2());
+//            RawByteDataArray array1 = (RawByteDataArray) scan1.getArray();
+//            RawByteDataArray array2 = (RawByteDataArray) scan2.getArray();
+            double val1 = scan1.getArray().getPoint(coords.getRay1(), coords.getBin1());
+            double val2 = scan2.getArray().getPoint(coords.getRay2(), coords.getBin2());
             if (val1 >= dbz || val2 >= dbz) {
                 // val1 = array1.getPoint(coords.getRay1(), coords.getBin1());
                 // val2 = array2.getPoint(coords.getRay2(), coords.getBin2());

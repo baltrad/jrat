@@ -36,7 +36,6 @@ import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
-import pl.imgw.jrat.calid.CalidResultManager;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.GlobalParser;
@@ -112,7 +111,7 @@ public class MainProcessController {
         }
         
         if(cmd.hasOption(CALID_HELP)) {
-            CalidResultManager.printHelp();
+            CalidResultsPrinter.printHelp();
             return true;
         }
         
@@ -122,7 +121,7 @@ public class MainProcessController {
                 new CalidResultsPrinter(calid).printResults();
                 return true;
             } else {
-                CalidResultManager.printHelp();
+                CalidResultsPrinter.printHelp();
                 return false;
             }
         }
@@ -134,7 +133,7 @@ public class MainProcessController {
                 new CalidResultsPrinter(calid).printList();
                 return true;
             } else {
-                CalidResultManager.printHelp();
+                CalidResultsPrinter.printHelp();
                 return false;
             }
         }
@@ -175,9 +174,15 @@ public class MainProcessController {
                 if (!name.startsWith("/")) {
                     name = root.getPath() + "/" + name;
                 }
-                files.addAll(filter.getFileList(name));
-                if (new File(name).isDirectory()) {
-                    folders.add(new File(name));
+                if(name.contains("*")) {
+                    files.addAll(filter.getFileList(name));
+                } else {
+                    File f = new File(name);
+                    if (f.isFile()) {
+                        files.add(f);
+                    } else if (f.isDirectory()) {
+                        folders.add(f);
+                    }
                 }
             }
             

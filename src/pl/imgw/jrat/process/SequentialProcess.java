@@ -33,6 +33,15 @@ public class SequentialProcess implements Runnable {
     private int interval = 60;
     private boolean valid = false;
 
+    /**
+     * 
+     * @param proc
+     *            process to run
+     * @param folders
+     *            folders to watch
+     * @param seqValue
+     *            in minutes
+     */
     public SequentialProcess(FilesProcessor proc, List<File> folders,
             String seqValue) {
 

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -65,6 +66,8 @@ public class PairsContainer {
      */
     public PairsContainer(List<File> files) {
 
+//        fileNameDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        
         ParserManager manager = new ParserManager();
         manager.setParser(GlobalParser.getInstance().getParser());
 
@@ -76,12 +79,12 @@ public class PairsContainer {
 
             date = parseDateFromFileName(f.getName());
             if (date != null) {
-                Set<File> single = segregated.get(date);
+                Set<File> singles = segregated.get(date);
 
-                if (single == null)
-                    single = new HashSet<File>();
-                single.add(f);
-                segregated.put(date, single);
+                if (singles == null)
+                    singles = new HashSet<File>();
+                singles.add(f);
+                segregated.put(date, singles);
             }
         }
 
@@ -109,12 +112,13 @@ public class PairsContainer {
             try {
                 date = fileNameDateFormat.parse(name.substring(i, i + l));
             } catch (ParseException e) {
-                // TODO Auto-generated catch block
+                
                 continue;
             }
 
-            if (date != null)
+            if (date != null) {
                 return date;
+            }
         }
 
         return null;
@@ -137,8 +141,12 @@ public class PairsContainer {
     private void setPairItr(Date date) {
         setOfPairs = new HashSet<Pair>();
 
+//        System.out.println(date);
+        
         Set<File> files = segregated.get(date);
         Set<Set<File>> pairsOfFiles = combine(files);
+        if (pairsOfFiles == null)
+            return;
         Iterator<Set<File>> pairedFilesItr = pairsOfFiles.iterator();
         if (pairedFilesItr.hasNext()) {
             Set<File> pairedFile = pairedFilesItr.next();
@@ -273,12 +281,10 @@ public class PairsContainer {
      */
     private Set<Set<File>> combine(Set<File> set) {
         Set<Set<File>> c = new HashSet<Set<File>>();
-        if (set.size() < 2) {
-            {
-                c.add(set);
-                return c;
-            }
-        } else {
+        if (set.size() == 2) {
+            c.add(set);
+            return c;
+        } else if(set.size() > 2) {
             for (File o : set) {
                 // make a copy of the array
                 HashSet<File> rest = new HashSet<File>(set);
@@ -289,6 +295,7 @@ public class PairsContainer {
             }
             return c;
         }
+        return null;
     }
 
     /**

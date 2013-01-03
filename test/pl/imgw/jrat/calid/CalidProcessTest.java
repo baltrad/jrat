@@ -47,4 +47,6 @@ public class CalidProcessTest {
         MainProcessController main = new MainProcessController(args);
         assertTrue(main.start());
     }
+    
+    
 }

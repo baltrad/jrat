@@ -50,9 +50,9 @@ public class CalidResultsPrinter {
         CalidContainer cc = new CalidContainer(params);
         Set<File> files = getResultsFiles();
         List<Date> dates;
-
+        boolean noResults = true;
         if (files.isEmpty()) {
-            System.out.println("No results matching selected parameters");
+            System.out.println("# No results matching selected parameters");
             return;
         }
 
@@ -60,8 +60,23 @@ public class CalidResultsPrinter {
                 && !params.isDistanceDefault() && !params.isElevationDefault()
                 && !params.isReflectivityDefault() && params.getDate1() != null) {
 
+            boolean printHeader = true;
+            
             for (File f : files) {
+                
                 printResultsHeader(f);
+                String header = "";
+                
+                header += "#";
+                
+                for (int i = 0; i < 54; i++) {
+                    header += "=";
+                }
+                
+                header += "\n#\tdate \t\tfreq" + " \tmean" + " \tRMS" + " \tmedian\n";
+
+                
+                
                 
                 dates = getDateList(f);
                 for(Date d : dates) {
@@ -70,13 +85,37 @@ public class CalidResultsPrinter {
                         continue;
                     
                     CalidFileHandler.loadResults(f, cc, d);
-                    Double mean = cc.getMean(30);
-                    if(mean != null)
-                        System.out.println(sdf.format(d) + " średnia=" + cc.getMean(30));
+                    int freq = params.getFrequency();
+                    Double mean = cc.getMean(freq);
+                    Double rms = cc.getRMS(freq);
+                    Double median = cc.getMedian(freq);
+                    
+                    String msg = " \t" + cc.getFreq() + " \t" + mean
+                            + " \t" + rms + " \t" + median; 
+                    
+                    if(mean != null || rms != null || median != null) {
+                        if(printHeader) {
+                            System.out.print(header);
+                            printHeader = false;
+                        }
+                        noResults = false;
+                        System.out.println(sdf.format(d) + msg);
+                    } 
                     
                 }
+//                if (!printHeader) {
+//                    System.out.print("#");
+//                    for (int i = 0; i < 54; i++) {
+//                        System.out.print("=");
+//                    }
+//                    System.out.print("\n");
+//                }
                 
             }
+            if(noResults) {
+                System.out.println("# No results matching selected parameters");
+            }
+            System.out.print("\n");
         } else {
             printList();
             
@@ -84,6 +123,8 @@ public class CalidResultsPrinter {
                     + " provide its src, ele, dis, ref and date");
             
         }
+        
+        
 
     }
    
@@ -104,15 +145,25 @@ public class CalidResultsPrinter {
                 && !params.isReflectivityDefault()) {
             /* all parameters are provided and printing list of dates */
 
-            System.out.println("Printing list of available dates...\n");
+            System.out.println("Printing list of available results...\n");
             int n = 0;
+            boolean printHeader = true;
             for (File f : files) {
 
-                printResultsHeader(f);
-                n += printResultsDateList(f);
+                if(printHeader) {
+                    printResultsHeader(f);
+                    printHeader = false;
+                }
+                int a = printResultsDateNumber(f);
+                if (a < 1) {
+                    continue;
+                }
+//                String msg = f.getName().split("\\.")[0] + " number of dates: " + a;
+//                System.out.println("\t" + msg);
+                n += a;
             }
             if (n > 1)
-                System.out.println("\t" + n + " dates database.");
+                System.out.println("\t" + n + " results all together in database.");
 
         } else {
             /* printing list of available reuslts pairs */
@@ -168,8 +219,9 @@ public class CalidResultsPrinter {
         return list;
     }
     
-    private int printResultsDateList(File f) {
+    private int printResultsDateNumber(File f) {
         // System.out.println(f);
+        String date = "";
         int i = 0;
         try {
             Scanner scanner = new Scanner(f);
@@ -182,15 +234,19 @@ public class CalidResultsPrinter {
                     }
                     continue;
                 }
-                System.out.println("\t\t" + line.split(" ")[0]);
+//                System.out.println("\t\t" + line.split(" ")[0]);
+                
+                if(date.isEmpty()) {
+                    date = line.split(" ")[0].split("/")[0];
+                }
                 
                 i++;
-                if (LogHandler.getLogs().getVerbose() < Logging.NORMAL && i == 5) {
-                    System.out.println("\t\t\t.\n\t\t\t.\n\t\t\t.");
-                    System.out
-                            .println("\t(use -v parameter to print all)");
-                    return -1;
-                }
+//                if (LogHandler.getLogs().getVerbose() < Logging.NORMAL && i == 5) {
+//                    System.out.println("\t\t\t.\n\t\t\t.\n\t\t\t.");
+//                    System.out
+//                            .println("\t(use -v parameter to print all)");
+//                    return -1;
+//                }
             }
         } catch (FileNotFoundException e) {
             LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
@@ -199,6 +255,9 @@ public class CalidResultsPrinter {
             LogHandler.getLogs().displayMsg(e.getMessage(), Logging.ERROR);
             LogHandler.getLogs().saveErrorLogs(this, e);
         }
+        
+        System.out.println("\t\t" + date + " number of results: " + i);
+        
         return i;
     }
     
@@ -212,7 +271,7 @@ public class CalidResultsPrinter {
                     return;
                 headers.add(line);
                 if (line.startsWith("#")) {
-                    System.out.println("\t" + line.substring(2));
+                    System.out.println(line);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -329,6 +388,37 @@ public class CalidResultsPrinter {
         
         return true;
 
+    }
+    
+    public static void printHelp() {
+        // LogHandler.getLogs().displayMsg("CALID algorytm usage:\n",
+        // Logging.SILENT);
+
+        String src = "src=Source1[,Source2]";
+        String date = "date=Start[,End]";
+        String rest = "[ele=X] [dis=Y]";
+
+        String msg = "CALID algorytm usage: jrat [options]\n";
+        msg += "--calid-help\t\tprint this message\n";
+        msg += "--calid-list [<args>]\tlist all available pairs\n\t\t\t"
+                + "<args> " + src + " " + rest + "\n";
+        msg += "--calid-result [<args>]\tdisplay results\n"
+                + "\t\t\t"
+                + "<args> "
+                + date + " [" + src + "] "
+                + rest + " [freq=Z]\n"
+                + "\t\t\tdate: sets range of time, if only starting date is selected then\n" 
+                + "\t\t\t\tonly this date is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional\n" 
+                + "\t\t\tsrc: source name\n" 
+                + "\t\t\tele: elevation angle in degrees, from -10.0 to 90.0 \n"
+                + "\t\t\tdis: minimal distance between paired points in meters, must be bigger then 0\n"
+                + "\t\t\tfreq: minimal frequency percentage of points with precipitation\n"
+                + "\t\t\t\tabove given threshold, must be bigger then 0\n" 
+                + "\t\t\te.g: --calid-result src=Rzeszow"
+                + " date=2011-08-21/09:30,2011-08-21/10:30 freq=10\n";
+        
+
+        System.out.println(msg);
     }
     
 }

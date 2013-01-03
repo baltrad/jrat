@@ -87,9 +87,10 @@ public class Rainbow53ImageParser implements FileParser{
         if (file == null) {
             return false;
         }
+        
         if(!isValid(file)) {
             LogHandler.getLogs().displayMsg("'" + file.getName()
-                    + "' is not a valid RAINBOW 5.3 format", WARNING);   
+                    + "' is not a valid RAINBOW image 5.3 format", WARNING);   
         
             return false;
         }

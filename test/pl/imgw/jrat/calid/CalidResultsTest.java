@@ -23,7 +23,7 @@ public class CalidResultsTest {
     @Test
     public void printResultsTest() {
 
-        args = "dis=500 ref=5.0".split(" ");
+        args = "src=WMO:12579,WMO:12568 ele=0.5 dis=500 ref=5.0".split(" ");
         params.initialize(args);
 
         CalidResultsPrinter printer = new CalidResultsPrinter(params);
