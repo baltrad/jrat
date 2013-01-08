@@ -99,11 +99,15 @@ public class CalidContainer implements Comparable<CalidContainer> {
         }
         
         CalidComparator.receiveResults(this, date);
-
+        
         return hasResults;
 
     }
 
+    public void resetContainer() {
+        pairedPointsList = new ArrayList<PairedPoints>();
+    }
+    
     /**
      * 
      * @return elevation set as --calid parameter.

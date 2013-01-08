@@ -148,7 +148,7 @@ public class PairsContainer {
         if (pairsOfFiles == null)
             return;
         Iterator<Set<File>> pairedFilesItr = pairsOfFiles.iterator();
-        if (pairedFilesItr.hasNext()) {
+        while (pairedFilesItr.hasNext()) {
             Set<File> pairedFile = pairedFilesItr.next();
             Iterator<File> itr = pairedFile.iterator();
             
@@ -220,7 +220,7 @@ public class PairsContainer {
     private static int combination(int n) {
         if (n < 2)
             return 0;
-        return factorial(n) / 2 * factorial(n - 2);
+        return factorial(n) / (2 * factorial(n - 2));
 
     }
     

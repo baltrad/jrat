@@ -45,14 +45,15 @@ public class CalidProcessor implements FilesProcessor {
                 LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
                 "CALID calculations");
 
-        CalidContainer cc = new CalidContainer(params);
         Pair pair = null;
+        CalidContainer cc = new CalidContainer(params);
         while (pairs.hasNext()) {
             pair = pairs.getNext();
             ConsoleProgressBar.getProgressBar().evaluate();
             if (isValid()) {
                 cc.setPair(pair);
                 cc.initialize(pair.getDate());
+                cc.resetContainer();
             }
         }
         ConsoleProgressBar.getProgressBar().printDoneMsg();

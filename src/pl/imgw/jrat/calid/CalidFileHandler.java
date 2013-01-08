@@ -302,6 +302,9 @@ public class CalidFileHandler {
                 .getScan(ele).getNBins()
                 * scale2 / 1000);
 
+//        System.out.println("radar1 range = " + radarRange1);
+//        System.out.println("radar2 range = " + radarRange2);
+        
 //        System.out.println(pair.getVol1().getSiteName() + " " + pair.getVol2().getSiteName());
 //        System.out.println(raddist + "m, " + bins1 * pair.getVol1().getScan(elevation).getRScale());
         
@@ -432,9 +435,9 @@ public class CalidFileHandler {
      * helping method
      */
     private static boolean saveCoords(CalidContainer cc) {
-        if (cc.getPairedPointsList().isEmpty()) {
-            return false;
-        }
+//        if (cc.getPairedPointsList().isEmpty()) {
+//            return false;
+//        }
         double ele = cc.getVerifiedElevation();
         
         Document doc = null;
@@ -612,10 +615,10 @@ public class CalidFileHandler {
                     return false;
                 }
             }
-            if (!pairedPointsList.isEmpty()) {
-                cc.setPairedPointsList(pairedPointsList);
-                return true;
-            }
+//            if (!pairedPointsList.isEmpty()) {
+//            }
+            cc.setPairedPointsList(pairedPointsList);
+            return true;
         }
         return false;
     }
