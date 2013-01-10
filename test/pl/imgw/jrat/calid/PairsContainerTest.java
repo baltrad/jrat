@@ -47,17 +47,17 @@ public class PairsContainerTest {
 
     @Test
     public void pairsInRightOrderTest() {
-        Pair p1 = pairs.getNext(); //first pair, 201108211340
-        pairs.getNext();
-        pairs.getNext();
-        Pair p2 = pairs.getNext(); //last pair, 2011092200
+        Pair p1 = pairs.next(); //first pair, 201108211340
+        pairs.next();
+        pairs.next();
+        Pair p2 = pairs.next(); //last pair, 2011092200
 //        System.out.println(p1.getDate() + ", " + p2.getDate());
         assertTrue(p1.getDate().before(p2.getDate()));
     }
     
     @Test
     public void dataValidationTest() {
-        Pair p = pairs.getNext();
+        Pair p = pairs.next();
         assertTrue(!p.getVol1().getSiteName().matches(p.getVol2().getSiteName()));
         
     }

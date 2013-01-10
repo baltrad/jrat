@@ -18,6 +18,8 @@ import pl.imgw.jrat.data.VolumeContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.Logging;
 import static org.junit.Assert.*;
 /**
  *
@@ -47,6 +49,8 @@ public class HDF5ParserTest {
         x = 1190;
         y = 677;
         value = 18.5;
+        
+        LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
     }
     
     
@@ -80,7 +84,7 @@ public class HDF5ParserTest {
         pm.initialize(file2);
         pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
         
-        assertNotNull("Initialization failed", pdc1);
+        assertTrue("Initialization failed", pdc1.isValid());
         assertNotNull("Initializationf of arrays failed", pdc1.getData());
         
         assertEquals(1900, pdc1.getXSize());

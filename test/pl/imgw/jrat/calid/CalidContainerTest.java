@@ -40,7 +40,7 @@ public class CalidContainerTest {
         
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
         
-        par = "ele=0.5 dis=500 ref=5.0".split(" ");
+        par = "ele=0.5 dis=500 ref=5.0 range=250".split(" ");
         manager.initialize(par);
         cont = new CalidContainer(manager);
         assertTrue(!cont.initialize());
@@ -70,7 +70,7 @@ public class CalidContainerTest {
         
         Pair pair = new Pair(vol1, vol2);
         
-        String[] par = "ele=0.5 dis=500 ref=5.0".split(" ");
+        String[] par = "ele=0.5 dis=500 ref=5.0 range=250".split(" ");
         CalidParsedParameters calid = new CalidParsedParameters();
         calid.initialize(par);
         

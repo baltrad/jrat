@@ -48,12 +48,12 @@ public class CalidProcessor implements FilesProcessor {
         Pair pair = null;
         CalidContainer cc = new CalidContainer(params);
         while (pairs.hasNext()) {
-            pair = pairs.getNext();
+            pair = pairs.next();
             ConsoleProgressBar.getProgressBar().evaluate();
             if (isValid()) {
                 cc.setPair(pair);
                 cc.initialize(pair.getDate());
-                cc.resetContainer();
+//                cc.resetDifferences();
             }
         }
         ConsoleProgressBar.getProgressBar().printDoneMsg();

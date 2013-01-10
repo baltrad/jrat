@@ -186,7 +186,7 @@ public class PairsContainer {
         pairItr = setOfPairs.iterator();
     }
 
-    public Pair getNext() {
+    public Pair next() {
         if (hasNext())
             return pairItr.next();
         else

@@ -30,9 +30,10 @@ public class CommandLineArgsParser {
     public final static String CALID_RESULT = "calid-result";
     public final static String CALID_LIST = "calid-list";
     public final static String CALID_HELP = "calid-help";
+    public final static String CALID_RESULT_DETAIL = "calid-result-detail";
     
-    public final static String D = "d";
-    public final static String DEBUG = "debug";
+//    public final static String D = "d";
+//    public final static String DEBUG = "debug";
 
     public final static String F = "f";
     public final static String FORMAT = "format";
@@ -75,7 +76,7 @@ public class CommandLineArgsParser {
     // "java -jar jrat.jar [-i <data_file>] [-o <output_file>] [-f <path>] "
     // + "[-v] [-h] [-d]";
 
-    private final static String INPUT_DESCR = "input file(s)";
+    private final static String INPUT_DESCR = "input file(s) or folder(s)";
     
     private final static String TEST_DESCR = "testing processor";
 
@@ -124,8 +125,6 @@ public class CommandLineArgsParser {
         options = new Options();
 
         options.addOption(H, HELP, false, HELP_DESCR);
-        
-        
         
         Option input_file = OptionBuilder.withArgName(FILES_ARG)
                 .hasArgs().withDescription(INPUT_DESCR)
@@ -176,6 +175,11 @@ public class CommandLineArgsParser {
         
         options.addOption(null, CALID_HELP, false, CALID_HELP_DESCR);
         
+        calidResults = OptionBuilder.withLongOpt(CALID_RESULT_DETAIL)
+                .withDescription("for more help use --calid-help option")
+                .hasArgs().create();
+        options.addOption(calidResults);
+        
         Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasOptionalArgs()
                 .withDescription(SCANSUN_DESCR).create();
         options.addOption(scansun);
@@ -206,6 +210,7 @@ public class CommandLineArgsParser {
     
     public static void printHelp() {
         HelpFormatter formatter = new HelpFormatter();
+        formatter.setWidth(100);
         formatter.printHelp(APS_NAME + " [options]", options);
         
     }

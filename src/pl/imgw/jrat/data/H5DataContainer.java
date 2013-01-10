@@ -159,8 +159,9 @@ public class H5DataContainer implements DataContainer {
         List<String> groups = reader.getAllGroupMembers("/");
         
         for(String s : groups) {
+//            System.out.println(s);
             recursive("/" + s, 0);
-        }
+        }        
         
 //        LogHandler.getLogs().displayMsg("Not implemented yet", Logging.WARNING);
         
@@ -175,16 +176,24 @@ public class H5DataContainer implements DataContainer {
             str = s + "/" + str;
 //            print("members " + str);
             if (reader.isGroup(str)) {
-                print(str);
+//                print(str);
                 recursive(str, i);
             } else if (reader.isDataSet(str)) {
                 print(str);
-            }
-            List<String> atr = reader.getAllAttributeNames(str);
-            for (String atrStr : atr) {
-                print(atrStr + "=" + getAttributeValue(str, atrStr), str.length());
+                List<String> atr = reader.getAllAttributeNames(str);
+                for (String atrStr : atr) {
+                    print(atrStr + "=" + getAttributeValue(str, atrStr), str.length());
+                }
             }
         }
+        List<String> atr = reader.getAllAttributeNames(s);
+        if (!atr.isEmpty()) {
+            print(s);
+            for (String atrStr : atr) {
+                print(atrStr + "=" + getAttributeValue(s, atrStr), s.length());
+            }
+        }
+        
     }
     
     protected void finalize() {

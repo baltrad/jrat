@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.calid;
 
+import java.awt.Container;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -30,12 +31,13 @@ import pl.imgw.jrat.tools.out.Logging;
  */
 public class CalidResultsPrinter {
 
-    private CalidParsedParameters params;
+    protected CalidParsedParameters params;
     private Scanner scanner;
     
     private Set<String> headers;
     
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    protected SimpleDateFormat fsdf = new SimpleDateFormat("yyyyMMdd");
     
     /**
      * 
@@ -49,16 +51,14 @@ public class CalidResultsPrinter {
 
         CalidContainer cc = new CalidContainer(params);
         Set<File> files = getResultsFiles();
-        List<Date> dates;
+//        List<Date> dates;
         boolean noResults = true;
         if (files.isEmpty()) {
             System.out.println("# No results matching selected parameters");
             return;
         }
 
-        if (!params.getSource1().isEmpty() && !params.getSource1().isEmpty()
-                && !params.isDistanceDefault() && !params.isElevationDefault()
-                && !params.isReflectivityDefault() && params.getDate1() != null) {
+        if (isSet()) {
 
             boolean printHeader = true;
             
@@ -69,6 +69,7 @@ public class CalidResultsPrinter {
                 
                 header += "#";
                 
+                //print horizontal line
                 for (int i = 0; i < 54; i++) {
                     header += "=";
                 }
@@ -77,8 +78,8 @@ public class CalidResultsPrinter {
 
                 
                 
-                
-                dates = getDateList(f);
+                Set<Date> dates = new TreeSet<Date>();
+                setDates(f, dates);
                 for(Date d : dates) {
                     
                     if(d.before(params.getDate1()) || d.after(params.getDate2()))
@@ -184,9 +185,9 @@ public class CalidResultsPrinter {
         }
     }
     
-    private List<Date> getDateList(File f) {
+    protected void setDates(File f, Set<Date> set) {
 
-        List<Date> list = new LinkedList<Date>();
+//        Set<Date> list = new TreeSet<Date>();
         Date date;
         try {
             Scanner scanner = new Scanner(f);
@@ -195,7 +196,7 @@ public class CalidResultsPrinter {
                 if (line.startsWith("#")) {
                     if (!scanner.hasNextLine()) {
                         System.out.println("No results found.");
-                        return list;
+                        return;
                     }
                     continue;
                 }
@@ -205,7 +206,7 @@ public class CalidResultsPrinter {
                 } catch (ParseException e) {
                     continue;
                 }
-                list.add(date);
+                set.add(date);
 
             }
         } catch (FileNotFoundException e) {
@@ -216,7 +217,6 @@ public class CalidResultsPrinter {
             LogHandler.getLogs().saveErrorLogs(this, e);
         }
 
-        return list;
     }
     
     private int printResultsDateNumber(File f) {
@@ -283,7 +283,11 @@ public class CalidResultsPrinter {
         }
     }
 
-    private Set<File> getResultsFiles() {
+    /**
+     * 
+     * @return files are sorted
+     */
+    protected Set<File> getResultsFiles() {
         Set<File> results = new TreeSet<File>();
 
         File folder = new File(CalidFileHandler.getCalidPath());
@@ -312,6 +316,14 @@ public class CalidResultsPrinter {
         }
 
         return results;
+    }
+    
+    protected boolean isSet() {
+        if (params.getSource1().isEmpty() || params.getSource2().isEmpty()
+                || params.isDistanceDefault() || params.isElevationDefault()
+                || params.isReflectivityDefault() || params.getDate1() == null)
+            return false;
+        return true;
     }
     
     private boolean keep(File file) {
@@ -390,35 +402,14 @@ public class CalidResultsPrinter {
 
     }
     
-    public static void printHelp() {
-        // LogHandler.getLogs().displayMsg("CALID algorytm usage:\n",
-        // Logging.SILENT);
-
-        String src = "src=Source1[,Source2]";
-        String date = "date=Start[,End]";
-        String rest = "[ele=X] [dis=Y]";
-
-        String msg = "CALID algorytm usage: jrat [options]\n";
-        msg += "--calid-help\t\tprint this message\n";
-        msg += "--calid-list [<args>]\tlist all available pairs\n\t\t\t"
-                + "<args> " + src + " " + rest + "\n";
-        msg += "--calid-result [<args>]\tdisplay results\n"
-                + "\t\t\t"
-                + "<args> "
-                + date + " [" + src + "] "
-                + rest + " [freq=Z]\n"
-                + "\t\t\tdate: sets range of time, if only starting date is selected then\n" 
-                + "\t\t\t\tonly this date is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional\n" 
-                + "\t\t\tsrc: source name\n" 
-                + "\t\t\tele: elevation angle in degrees, from -10.0 to 90.0 \n"
-                + "\t\t\tdis: minimal distance between paired points in meters, must be bigger then 0\n"
-                + "\t\t\tfreq: minimal frequency percentage of points with precipitation\n"
-                + "\t\t\t\tabove given threshold, must be bigger then 0\n" 
-                + "\t\t\te.g: --calid-result src=Rzeszow"
-                + " date=2011-08-21/09:30,2011-08-21/10:30 freq=10\n";
+    protected double round(double value, int decimal) {
+        double pow = Math.pow(10, decimal);
         
-
-        System.out.println(msg);
+        value *= pow;
+        
+        value = Math.round(value);
+        
+        return value / pow;
     }
     
 }

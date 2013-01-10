@@ -98,14 +98,15 @@ public class CalidContainer implements Comparable<CalidContainer> {
             return false;
         }
         
-        CalidComparator.receiveResults(this, date);
+        CalidComparator.receiveResults(this, date, params.getMaxRange());
         
         return hasResults;
 
     }
 
-    public void resetContainer() {
-        pairedPointsList = new ArrayList<PairedPoints>();
+    public void resetDifferences() {
+        for(PairedPoints pp : pairedPointsList)
+            pp.setDifference(null);
     }
     
     /**

@@ -24,14 +24,23 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class OdimH5Volume implements VolumeContainer {
 
-    H5DataContainer data = null;
+    private H5DataContainer data = null;
+    private boolean valid = false;
 
     private Map<Double, ScanContainer> scans = new HashMap<Double, ScanContainer>();
     
     public OdimH5Volume(H5DataContainer data) {
         if (((String) data.getAttributeValue("/what", "object"))
-                .matches("PVOL"))
+                .matches("PVOL")
+                || ((String) data.getAttributeValue("/what", "object"))
+                        .matches("SCAN")) {
             this.data = data;
+            valid = true;
+        } else {
+            LogHandler.getLogs()
+                    .displayMsg("This is not a valid ODIM Polar Volume",
+                            LogHandler.WARNING);
+        }
     }
 
     /*
@@ -73,8 +82,24 @@ public class OdimH5Volume implements VolumeContainer {
      */
     @Override
     public String getSiteName() {
+        
+        String source = (String) data.getAttributeValue("/what", "source");
 
-        return (String) data.getAttributeValue("/what", "source");
+        String[] src1 = source.split(",");
+        String tmp = "";
+
+        for (String s : src1) {
+            if (s.startsWith("PLC:")) {
+                tmp = s.substring("PLC:".length());
+                break;
+            } else if (s.startsWith("WMO:")) {
+                tmp = s.substring("WMO:".length());
+            } else if (s.startsWith("RAD:")) {
+                tmp = s.substring("RAD:".length());
+            }
+        }
+
+        return tmp;
     }
 
     /*
@@ -177,9 +202,7 @@ public class OdimH5Volume implements VolumeContainer {
      */
     @Override
     public boolean isValid() {
-        if (data != null)
-            return true;
-        return false;
+        return valid;
     }
 
     /*

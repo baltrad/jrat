@@ -3,24 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_HELP;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_LIST;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.F;
-import static pl.imgw.jrat.process.CommandLineArgsParser.FORMAT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.H;
-import static pl.imgw.jrat.process.CommandLineArgsParser.I;
-import static pl.imgw.jrat.process.CommandLineArgsParser.O;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
-import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN;
-import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
-import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
-import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
+import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
 import static pl.imgw.jrat.tools.out.Logging.ALL_MSG;
 import static pl.imgw.jrat.tools.out.Logging.NORMAL;
@@ -34,6 +17,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
+import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
@@ -111,17 +95,23 @@ public class MainProcessController {
         }
         
         if(cmd.hasOption(CALID_HELP)) {
-            CalidResultsPrinter.printHelp();
+            CalidParsedParameters.printHelp();
             return true;
         }
         
         if(cmd.hasOption(CALID_RESULT)) {
             CalidParsedParameters calid = new CalidParsedParameters();
             if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
-                new CalidResultsPrinter(calid).printResults();
+                if (cmd.hasOption(CALID_RESULT_DETAIL)) {
+                    new CalidDetailedResultsPrinter(calid,
+                            cmd.getOptionValues(CALID_RESULT_DETAIL))
+                            .printResults();
+                } else {
+                    new CalidResultsPrinter(calid).printResults();
+                }
                 return true;
             } else {
-                CalidResultsPrinter.printHelp();
+                CalidParsedParameters.printHelp();
                 return false;
             }
         }
@@ -133,7 +123,7 @@ public class MainProcessController {
                 new CalidResultsPrinter(calid).printList();
                 return true;
             } else {
-                CalidResultsPrinter.printHelp();
+                CalidParsedParameters.printHelp();
                 return false;
             }
         }

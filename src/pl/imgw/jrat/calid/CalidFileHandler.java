@@ -4,7 +4,10 @@
 package pl.imgw.jrat.calid;
 
 import static pl.imgw.jrat.AplicationConstans.ETC;
-import static pl.imgw.jrat.calid.CalidParsedParameters.*;
+import static pl.imgw.jrat.calid.CalidParsedParameters.DISTANCE;
+import static pl.imgw.jrat.calid.CalidParsedParameters.ELEVATION;
+import static pl.imgw.jrat.calid.CalidParsedParameters.REFLECTIVITY;
+import static pl.imgw.jrat.calid.CalidParsedParameters.SOURCE;
 
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -12,14 +15,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,10 +31,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
-import pl.imgw.jrat.proj.VincentyFormulas;
-import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 import pl.imgw.jrat.tools.out.XMLHandler;
@@ -99,12 +95,15 @@ public class CalidFileHandler {
         double reflectivity = cc.getParsedParameters().getReflectivity();
         int distance = cc.getParsedParameters().getDistance();
         
-        String pairsName = cc.getPair().getSource1()
-                + cc.getPair().getSource2();
+        String src1 = cc.getPair().getSource1().replaceAll("[^A-Za-z0-9]", "");;
+        String src2 = cc.getPair().getSource2().replaceAll("[^A-Za-z0-9]", "");;
+        
+//        pairsName = cc.getPair().getSource1()
+//                + cc.getPair().getSource2();
 
         String distele = distance + "_" + elevation + "_" + reflectivity;
 
-        String folder = "calid/" + pairsName + "/" + distele;
+        String folder = "calid/" + src1 + src2 + "/" + distele;
 
         if(ETC.isEmpty()) {
             new File(folder).mkdirs();
@@ -190,9 +189,9 @@ public class CalidFileHandler {
         } catch (FileNotFoundException e) {
             LogHandler.getLogs().displayMsg("CALID: Results file not found: " + file , Logging.WARNING);
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
+            LogHandler.getLogs().displayMsg("CALID: Parsing file error: " + file , Logging.WARNING);
         } catch (NumberFormatException e) {
-            
+            LogHandler.getLogs().displayMsg("CALID: Wrong format: " + file , Logging.WARNING);
         }
         return false;
     }
@@ -259,230 +258,37 @@ public class CalidFileHandler {
                 pw.close();
         }
     }
-    
-    /**
-     * helping method, should be used when loading data from file fails
-     * 
-     * @return
-     */
-    public static boolean calculateMatchingPoints(CalidContainer cc) {
-        if (!cc.hasVolumeData()) {
-            LogHandler.getLogs().displayMsg("CALID: no valid volumes to process",
-                    Logging.WARNING);
-            return false;
-        }
 
-        ArrayList<PairedPoints> pairedPointsList = new ArrayList<PairedPoints>();
-        
-        double ele = cc.getVerifiedElevation();
-        
-        LogHandler.getLogs().displayMsg(
-                "CALID: Calculating overlapping points coordinates for: " + cc.getPair().getSource1()
-                        + " and " + cc.getPair().getSource2(), LogHandler.NORMAL);
-        
-        Point2D.Double r1coords = new Point2D.Double(cc.getPair().getVol1().getLon(),
-                cc.getPair().getVol1().getLat());
-        Point2D.Double r2coords = new Point2D.Double(cc.getPair().getVol2().getLon(),
-                cc.getPair().getVol2().getLat());
-
-        int radHalfDist = 0;
-        Double dist = VincentyFormulas.dist(r1coords, r2coords);
-        if(dist != null)
-            radHalfDist = (int) (dist / 2000);
-
-        double scale1 = cc.getPair().getVol1().getScan(ele)
-                .getRScale();
-        double scale2 = cc.getPair().getVol2().getScan(ele)
-                .getRScale();
-
-        int radarRange1 = (int) (cc.getPair().getVol1()
-                .getScan(ele).getNBins()
-                * scale1 / 1000);
-        int radarRange2 = (int) (cc.getPair().getVol2()
-                .getScan(ele).getNBins()
-                * scale2 / 1000);
-
-//        System.out.println("radar1 range = " + radarRange1);
-//        System.out.println("radar2 range = " + radarRange2);
-        
-//        System.out.println(pair.getVol1().getSiteName() + " " + pair.getVol2().getSiteName());
-//        System.out.println(raddist + "m, " + bins1 * pair.getVol1().getScan(elevation).getRScale());
-        
-        
-        if (radHalfDist > radarRange1 || radHalfDist > radarRange2 ) {
-            LogHandler.getLogs().displayMsg(
-                    "CALID: Radars are to far from each other"
-                            + " and have no overlapping points", Logging.WARNING);
-            return false;
-        }
-        
-        double rad1bearing = VincentyFormulas.getBearing(r1coords, r2coords);
-        double rad2bearing = VincentyFormulas.getBearing(r2coords, r1coords);
-
-        if (rad1bearing < 0) {
-            rad1bearing = 360 + rad1bearing;
-        }
-        if (rad2bearing < 0) {
-            rad2bearing = 360 + rad2bearing;
-        }
-
-        //limiting area to improve performance, with small buffer=2
-        int rad1startray = (int) (rad1bearing - getAngle(radHalfDist, radarRange1)) - 2;
-        int rad1endray = (int) (rad1bearing + getAngle(radHalfDist, radarRange1)) + 2;
-        int rad2startray = (int) (rad2bearing - getAngle(radHalfDist, radarRange2)) - 2;
-        int rad2endray = (int) (rad2bearing + getAngle(radHalfDist, radarRange2)) + 2;
-
-        if (rad1startray < 0) {
-            rad1startray = 360 + rad1startray;
-        }
-        if (rad2startray < 0) {
-            rad2startray = 360 + rad2startray;
-        }
-        if (rad1endray > 360) {
-            rad1endray = rad1endray - 360;
-        }
-        if (rad2endray > 360) {
-            rad2endray = rad2endray - 360;
-        }
-        
-        for (int b1 = radHalfDist; b1 < radarRange1; b1++) {
-            for (int b2 = radHalfDist; b2 < radarRange2; b2++) {
-                
-//                System.out.println(b1 + " koniec: " + radarRange1);
-                if (b1 != b2)
-                    continue;
-                for (int r1 = rad1startray; r1 != rad1endray; r1 = (r1 + 1) % 360) {
-                    for (int r2 = rad2startray; r2 != rad2endray; r2 = (r2 + 1) % 360) {
-                        double calculatedDist1 = Math.cos(Math
-                                .toRadians(ele)) * (b1 + 0.5) * scale1;
-                        Point2D.Double p1 = VincentyFormulas.dest(r1coords, r1,
-                                calculatedDist1);
-                        double calculatedDist2 = Math.cos(Math
-                                .toRadians(ele)) * (b2 + 0.5) * scale2;
-                        Point2D.Double p2 = VincentyFormulas.dest(r2coords, r2,
-                                calculatedDist2);
-                        double calculatedDist = VincentyFormulas.dist(p1, p2);
-                        if (calculatedDist < cc.getParsedParameters().getDistance()) {
-                            // System.out.println(r1coords + " " + r1 + " " +
-                            // calculatedDist1);
-                            // System.out.println(r2coords + " " + r2 + " " +
-                            // calculatedDist2);
-                            // System.out.println("Calculated dist=" +
-                            // calculatedDist);
-                            RayBinData rb = new RayBinData(r1, b1, r2, b2);
-                            rb.setCoord1(p1);
-                            rb.setCoord2(p2);
-                            
-                            pairedPointsList.add(rb);
-                        }
-                    }
-                }
-            }
-        }
-//        CalidCoords[] rb = rayBins.toArray(new CalidCoords[0]);
-        
-        cc.setPairedPointsList(pairedPointsList);
-        saveCoords(cc);
-        return true;
-    }
-
-    /**
-     * Helping method, calculates angle between two sides
-     * 
-     * @param a
-     *            length of the adjacent side
-     * @param h
-     *            length of the hypontenuse
-     * @return angle in degrees
-     */
-    private static int getAngle(double a, double h) {
-        
-        double angle = Math.acos(a / h);
-        return (int) Math.toDegrees(angle);
-        
-    }
-    
-    /**
-     * helping method
-     *
-    public int[] getMatcdhingPointsData(VolumeContainer vol1,
-            VolumeContainer vol2) {
-
-        int data[] = new int[pairedPointsList.size()];
-        int i = 0;
-        Iterator<PairedPoints> itr = pairedPointsList.iterator();
-        // List<RayBinData> rbdlist = new ArrayList<RayBinData>();
-        while (itr.hasNext()) {
-            RayBinData rbd = (RayBinData) itr.next();
-            int r1 = rbd.getRay1();
-            int r2 = rbd.getRay2();
-            int b1 = rbd.getBin1();
-            int b2 = rbd.getBin2();
-            int data1 = vol1.getScan(elevation).getArray()
-                    .getRawIntPoint(r1, b1);
-            int data2 = vol2.getScan(elevation).getArray()
-                    .getRawIntPoint(r2, b2);
-            if (data1 > 80 || data2 > 80) {
-                data[i] = data1 - data2;
-            }
-            i++;
-        }
-        return data;
-    }
-     */
+   
 
     /**
      * helping method
      */
-    private static boolean saveCoords(CalidContainer cc) {
+    public static boolean saveCoords(CalidContainer cc) {
 //        if (cc.getPairedPointsList().isEmpty()) {
 //            return false;
 //        }
         double ele = cc.getVerifiedElevation();
         
+        
         Document doc = null;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory
                     .newInstance();
+            
             DocumentBuilder builder = factory.newDocumentBuilder();
+            
             doc = builder.newDocument();
+//            System.out.println("tutaj");
 
         } catch (ParserConfigurationException e) {
             LogHandler.getLogs().displayMsg(
                     "CALID: Error while creating XML document object", Logging.ERROR);
             return false;
         }
-//        Element root = doc.createElement(ROOT);
-
-        /*
-        HashSet<Integer> ids = new HashSet<Integer>();
-        Document oldDoc = XMLHandler.loadXML(getCoordsPath(cc));
-        if (oldDoc != null && oldDoc.hasChildNodes()) {
-            NodeList list = oldDoc.getChildNodes().item(0).getChildNodes();
-            for (int i = 0; i < list.getLength(); i++) {
-                if (list.item(i).getNodeName().matches(PAIR)) {
-                    Node oldPair = doc.importNode(list.item(i), true);
-//                    String id = XMLHandler.getAttributeValue(oldPair, ID);
-
-                    try {
-//                        ids.add(Integer.parseInt(id));
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-
-                    root.appendChild(oldPair);
-                }
-            }
-        }
-         */
+        
+        
         Element pairElement = doc.createElement(PAIR);
-//        int id = getNewId(ids);
-
-        /* pair header */
-//        pairElement.setAttribute(ID, String.valueOf(id));
-
-//        pairElement.setAttribute(ELEVATION, String.valueOf(ele));
-//        pairElement.setAttribute(DISTANCE, String.valueOf(cc.getManager().getDistance()));
 
         pairElement
                 .setAttribute(R1LON, String.valueOf(cc.getPair().getVol1().getLon()));
@@ -581,7 +387,10 @@ public class CalidFileHandler {
                         .getVol2().getLon(), cc.getPair().getVol2().getLat());
                 
                 if (!p1.equals(r1coords) || !p2.equals(r2coords)) {
-                    return false;
+                    LogHandler.getLogs().displayMsg(
+                            "Radar coordinates have been changed",
+                            Logging.WARNING);
+//                    return false;
                 }
             }
             for (int c = 0; c < coords.getLength(); c++) {
@@ -623,8 +432,5 @@ public class CalidFileHandler {
         return false;
     }
 
-    public static void main(String[] args) {
-        System.out.println(CalidFileHandler.getAngle(125, 250));
-    }
 
 }

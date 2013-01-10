@@ -2,16 +2,10 @@
  * (C) 2011 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
 package pl.imgw.jrat.calid;
-import static pl.imgw.jrat.AplicationConstans.ETC;
-import static pl.imgw.jrat.tools.out.Logging.*;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
-import java.io.File;
-import java.io.ObjectInputStream.GetField;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -40,11 +34,14 @@ public class CalidParsedParameters {
     public static final String SOURCE = "src=";
     public static final String DATE = "date=";
     public static final String FREQUENCY = "freq=";
+    public static final String RANGE = "range=";
+    
 
     public static Integer DEFAULT_DIS = new Integer(1000);
     public static Double DEFAULT_REF = new Double(0.0);
     public static Double DEFAULT_ELE = new Double(0.0);
     public static Integer DEFAULT_FREQ = new Integer(1);
+    public static Integer DEFAULT_RANGE = new Integer(200);
     
     // private HashMap<String, CoordsManager> mps = new HashMap<String,
     // CoordsManager>();
@@ -53,6 +50,7 @@ public class CalidParsedParameters {
 
     private Double elevation = null;
     private Integer distance = null;
+    private Integer range = null;
     private Double reflectivity = null;
     private String source1 = "";
     private String source2 = "";
@@ -120,6 +118,8 @@ public class CalidParsedParameters {
                     elevation = Double.parseDouble(par[i].substring(ELEVATION.length()));
                 } else if (par[i].startsWith(DISTANCE)) {
                     distance = Integer.parseInt(par[i].substring(DISTANCE.length()));
+                } else if (par[i].startsWith(RANGE)) {
+                    range = Integer.parseInt(par[i].substring(RANGE.length()));
                 } else if (par[i].startsWith(REFLECTIVITY)) {
                     reflectivity = Double.parseDouble(par[i].substring(REFLECTIVITY.length()));
                 } else if (par[i].startsWith(FREQUENCY)) {
@@ -164,6 +164,12 @@ public class CalidParsedParameters {
         if (getDistance() < 0) {
             LogHandler.getLogs().displayMsg(
                     error_msg + " (" + DISTANCE + getDistance() + ")", WARNING);
+            return false;
+        }
+        
+        if (getMaxRange() < 1) {
+            LogHandler.getLogs().displayMsg(
+                    error_msg + " (" + RANGE + getDistance() + ")", WARNING);
             return false;
         }
         
@@ -219,6 +225,37 @@ public class CalidParsedParameters {
         source2 = "";
         start = null;
         end = null;
+    }
+    
+    public static void printHelp() {
+        // LogHandler.getLogs().displayMsg("CALID algorytm usage:\n",
+        // Logging.SILENT);
+
+        String src = "src=Source1[,Source2]";
+        String date = "date=Start[,End]";
+        String rest = "[ele=X] [dis=Y]";
+
+        String msg = "CALID algorytm usage: jrat [options]\n";
+        msg += "--calid-help\t\tprint this message\n";
+        msg += "--calid-list [<args>]\tlist all available pairs\n\t\t\t"
+                + "<args> " + src + " " + rest + "\n";
+        msg += "--calid-result [<args>]\tdisplay simple results\n"
+                + "\t\t\t"
+                + "<args> "
+                + date + " [" + src + "] "
+                + rest + " [freq=Z]\n"
+                + "\t\t\tdate: sets range of time, if only starting date is selected then\n" 
+                + "\t\t\t\tonly this date is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional\n" 
+                + "\t\t\tsrc: source name\n" 
+                + "\t\t\tele: elevation angle in degrees, from -10.0 to 90.0 \n"
+                + "\t\t\tdis: minimal distance between paired points in meters, must be bigger then 0\n"
+                + "\t\t\tfreq: minimal frequency percentage of points with precipitation\n"
+                + "\t\t\t\tabove given threshold, must be bigger then 0\n" 
+                + "\t\t\te.g: --calid-result src=Rzeszow"
+                + " date=2011-08-21/09:30,2011-08-21/10:30 freq=10\n";
+        
+
+        System.out.println(msg);
     }
     
     /**
@@ -305,6 +342,13 @@ public class CalidParsedParameters {
      */
     public boolean isDate2Default() {
         return (end == null) ? true: false;
+    }
+
+    /**
+     * @return
+     */
+    public int getMaxRange() {
+        return (range == null) ? DEFAULT_RANGE : range;
     }
     
 }

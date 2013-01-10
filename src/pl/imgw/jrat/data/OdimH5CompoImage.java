@@ -5,6 +5,8 @@ package pl.imgw.jrat.data;
 
 import java.util.Date;
 
+import pl.imgw.jrat.tools.out.LogHandler;
+
 /**
  * 
  * /Class description/
@@ -15,12 +17,19 @@ import java.util.Date;
  */
 public class OdimH5CompoImage implements ImageContainer {
 
-    H5DataContainer data;
+    private H5DataContainer data = new H5DataContainer();
+    private boolean valid = false;
 
     public OdimH5CompoImage(H5DataContainer data) {
+        
         if (((String) (data.getAttributeValue("/what", "object")))
-                .matches("COMP"))
+                .matches("COMP")) {
             this.data = data;
+            valid = true;
+        } else {
+            LogHandler.getLogs().displayMsg(
+                    "This is not a valid ODIM Composite Image", LogHandler.WARNING);
+        }
     }
 
     /*
@@ -111,9 +120,7 @@ public class OdimH5CompoImage implements ImageContainer {
      */
     @Override
     public boolean isValid() {
-        if (data != null)
-            return true;
-        return false;
+        return valid;
     }
 
 }

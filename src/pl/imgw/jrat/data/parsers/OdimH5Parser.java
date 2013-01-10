@@ -44,7 +44,8 @@ public class OdimH5Parser implements FileParser {
      */
     @Override
     public boolean isValid(File file) {
-        return HDF5Factory.isHDF5File(file);
+            return HDF5Factory.isHDF5File(file);
+        
     }
     
     /*

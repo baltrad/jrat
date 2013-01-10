@@ -20,6 +20,7 @@ import pl.imgw.jrat.data.DoubleDataContainerTest;
 import pl.imgw.jrat.data.FloatDataContainerTest;
 import pl.imgw.jrat.output.LogHandlerTest;
 import pl.imgw.jrat.parsers.HDF5ParserTest;
+import pl.imgw.jrat.parsers.HDF5SMHIParserTest;
 import pl.imgw.jrat.parsers.IntArrayParserTest;
 import pl.imgw.jrat.parsers.RainbowCMAXParserTest;
 import pl.imgw.jrat.parsers.RainbowVolumeParserTest;
@@ -37,13 +38,12 @@ import pl.imgw.jrat.tools.in.FilePatternFilterTest;
 @RunWith(Suite.class)
 @SuiteClasses({ ProcessControllerTest.class, ByteDataContainerTest.class,
         DoubleDataContainerTest.class, FloatDataContainerTest.class,
-        LogHandlerTest.class, HDF5ParserTest.class, IntArrayParserTest.class,
-        RainbowCMAXParserTest.class, RainbowVolumeParserTest.class,
-        WZParserTest.class, FilePatternFilterTest.class,
-        PairsContainerTest.class, PairTest.class, CalidManagerTest.class,
-        CalidProcessTest.class, CalidResultsTest.class,
+        LogHandlerTest.class, HDF5ParserTest.class, HDF5SMHIParserTest.class,
+        IntArrayParserTest.class, RainbowCMAXParserTest.class,
+        RainbowVolumeParserTest.class, WZParserTest.class,
+        FilePatternFilterTest.class, PairsContainerTest.class, PairTest.class,
+        CalidManagerTest.class, CalidProcessTest.class, CalidResultsTest.class,
         CalidContainerTest.class, CalidFileHandlerTest.class })
-
 public class AllTests {
 
 }

@@ -50,11 +50,13 @@ public class CalidComparator {
     }
 
     /**
-     * Load results from file or if not found compares two scans
+     * Loads results from file or if not found calculates it from volumes
      * 
-     * @return null if failed
+     * @param cc
+     * @param date
+     * @param maxRange
      */
-    public static void receiveResults(CalidContainer cc, Date date) {
+    public static void receiveResults(CalidContainer cc, Date date, int maxRange) {
 
 //        double reflectivity = cc.getManager().getReflectivity();
         
@@ -68,7 +70,8 @@ public class CalidComparator {
         // + " and " + pair.getSource2(), LogHandler.WARNING);
 
         if(!CalidFileHandler.loadCoords(cc)) {
-            CalidFileHandler.calculateMatchingPoints(cc);
+            CalidCoordsCalc ccc = new CalidCoordsCalc(cc, maxRange);
+            ccc.calculateCoords();
         }
 
         if (!cc.getPairedPointsList().isEmpty()) {

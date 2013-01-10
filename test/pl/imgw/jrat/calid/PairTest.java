@@ -50,8 +50,8 @@ public class PairTest {
                 pair.hasRealVolumes());
         assertEquals(57, pair.getVol2().getScan(elevation).getArray()
                 .getRawIntPoint(116, 16));
-        String s1 = "WMO:12374";
-        String s2 = "WMO:12579";
+        String s1 = "12374";
+        String s2 = "12579";
         Pair pair3 = new Pair(s1, s2);
         assertTrue(pair.getSource1().matches(s2));
         // System.out.println(pair3);

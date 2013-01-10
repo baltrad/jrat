@@ -3,9 +3,12 @@
  */
 package pl.imgw.jrat.data.parsers;
 
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
+
 import java.io.File;
 
 import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  *
@@ -24,6 +27,11 @@ public class ParserManager {
     }
     
     public boolean initialize(File file) {
+        if(!file.exists()) {
+            LogHandler.getLogs().displayMsg("File '" + file.getName()
+                    + "' does not exist", WARNING);
+            return false;
+        }
         if(!isSet())
             return false;
         return parser.initialize(file);
