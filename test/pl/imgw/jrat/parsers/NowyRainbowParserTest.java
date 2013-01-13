@@ -8,14 +8,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.junit.Test;
 
 import pl.imgw.jrat.data.RainbowDataContainer;
 import pl.imgw.jrat.data.RainbowVolume;
 import pl.imgw.jrat.data.ScanContainer;
+import pl.imgw.jrat.data.parsers.testing.NowyRainbowParser;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 

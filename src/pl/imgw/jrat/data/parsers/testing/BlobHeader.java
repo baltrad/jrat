@@ -1,7 +1,7 @@
 /**
  * (C) 2013 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers;
+package pl.imgw.jrat.data.parsers.testing;
 
 /**
  * 

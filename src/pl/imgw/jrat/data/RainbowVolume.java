@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.swing.plaf.SliderUI;
 
-import pl.imgw.jrat.parsers.RainbowVolumeDataArray;
+import pl.imgw.jrat.data.parsers.testing.RainbowVolumeDataArray;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -188,9 +188,10 @@ public class RainbowVolume implements VolumeContainer {
                 if (blobid.isEmpty())
                     return null;
 
+
+                /*
                 RainbowVolumeDataArray array = (RainbowVolumeDataArray) data
                         .getArray(blobid);
-
                 String min = data.getRainbowAttributeValue(path + "/rawdata",
                         "min");
                 String max = data.getRainbowAttributeValue(path + "/rawdata",
@@ -203,8 +204,8 @@ public class RainbowVolume implements VolumeContainer {
                 } catch (NumberFormatException e) {
 
                 }
-
-                return array;
+*/
+                return data.getArray(blobid);
             }
 
             @Override

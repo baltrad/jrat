@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers;
+package pl.imgw.jrat.data.parsers.testing;
 
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.NORMAL;
@@ -129,7 +129,7 @@ public class NowyRainbowParser implements FileParser {
                 array.setBlobdata(blobs.get(p.blobidraw));
                 array.setBlobray(blobs.get(p.blobidray));
                 array.setGain(0.5);
-                array.setOffset(-31.5);
+                array.setOffset(-32.0);
                 data.getArrayList().put(p.blobidraw + "", array);
             }
             data.setAttribues(rp.getDoc());
@@ -171,11 +171,6 @@ public class NowyRainbowParser implements FileParser {
         } catch (FileNotFoundException e) {
             LogHandler.getLogs().displayMsg(
                     "File " + file.getName() + " was not found", ERROR);
-            LogHandler.getLogs().saveErrorLogs(this, e);
-            return false;
-        } catch (IOException e) {
-            LogHandler.getLogs().displayMsg(
-                    "File " + file.getName() + " cannot be initialized", ERROR);
             LogHandler.getLogs().saveErrorLogs(this, e);
             return false;
         }

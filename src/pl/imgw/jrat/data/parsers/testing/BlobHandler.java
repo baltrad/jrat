@@ -1,7 +1,7 @@
 /**
  * (C) 2011 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.parsers;
+package pl.imgw.jrat.data.parsers.testing;
 
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 

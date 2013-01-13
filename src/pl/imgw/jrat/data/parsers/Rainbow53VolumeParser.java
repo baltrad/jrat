@@ -273,7 +273,7 @@ public class Rainbow53VolumeParser implements FileParser {
                 RawByteDataArrayWithTransposition array = new RawByteDataArrayWithTransposition(
                         infDataBuff);
                 array.setGain(0.5);
-                array.setOffset(-31.5);
+                array.setOffset(-32.0);
                 array.setXShift(shiftX);
                 array.setTranspose(true);
                 data.getArrayList().put(p.blobidraw + "", array);

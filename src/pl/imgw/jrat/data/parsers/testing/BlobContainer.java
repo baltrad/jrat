@@ -6,7 +6,7 @@
  * maciej.szewczykowski@imgw.pl
  */
 
-package pl.imgw.jrat.parsers;
+package pl.imgw.jrat.data.parsers.testing;
 
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import pl.imgw.jrat.tools.out.LogHandler;
