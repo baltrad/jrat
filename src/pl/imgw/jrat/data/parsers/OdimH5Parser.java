@@ -35,7 +35,7 @@ public class OdimH5Parser implements FileParser {
     public final static String INT_SYMBOL = "INTEGER";
     
     private H5DataContainer h5data;
-    IHDF5Reader reader;
+    private IHDF5Reader reader;
     private static final String ROOT = "/";
     private static final String DATA = "data";
     

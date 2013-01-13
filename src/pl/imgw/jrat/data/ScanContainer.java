@@ -54,7 +54,7 @@ public interface ScanContainer {
      * 
      * @return
      */
-    public RawByteDataArray getArray();
+    public ArrayData getArray();
 
     /**
      * Geographical coordinates of the site

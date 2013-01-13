@@ -5,8 +5,8 @@ package pl.imgw.jrat.data;
 
 /**
  * 
- * Unsigned byte array data container. All values will be converted to
- * unsigned byte from range 0 to 255.
+ * Unsigned byte array data container. All values will be stored as
+ * unsigned bytes from range 0 to 255.
  * 
  * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
