@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import java.awt.geom.Point2D;
 import java.text.ParseException;
@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -24,12 +25,12 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class OdimH5Volume implements VolumeContainer {
 
-    private H5DataContainer data = null;
+    private OdimDataContainer data = null;
     private boolean valid = false;
 
     private Map<Double, ScanContainer> scans = new HashMap<Double, ScanContainer>();
     
-    public OdimH5Volume(H5DataContainer data) {
+    public OdimH5Volume(OdimDataContainer data) {
         if (((String) data.getAttributeValue("/what", "object"))
                 .matches("PVOL")
                 || ((String) data.getAttributeValue("/what", "object"))

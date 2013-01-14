@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.ScanContainer;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 
 /**
  * 

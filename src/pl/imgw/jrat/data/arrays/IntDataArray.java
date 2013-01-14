@@ -1,59 +1,43 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.arrays;
 
 /**
- * 
- * /Class description/
- * 
- * 
+ *
+ *  /Class description/
+ *
+ *
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class DoubleDataArray extends ArrayData implements
-        Cloneable {
+public class IntDataArray extends ArrayData {
 
-    private double[][] data;
-
-    public DoubleDataArray() {
-
-    }
-
-    /**
-     * @param array
-     */
-    public DoubleDataArray(double[][] data) {
+    protected int[][] data = null;
+    
+    public IntDataArray(int[][] data) {
         if (data != null) {
             this.sizeX = data.length;
             this.sizeY = data[0].length;
             this.data = data;
         }
     }
-
-    public void setDoubleData(double[][] data) {
-        this.sizeX = data.length;
-        this.sizeY = data[0].length;
-        this.data = data;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see pl.imgw.jrat.data.ArrayDataContainer#initialize(int, int)
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.ArrayData#initialize(int, int)
      */
     @Override
     public void initialize(int sizeX, int sizeY) {
-        this.data = new double[sizeX][sizeY];
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+        this.data = new int[sizeX][sizeY];
 
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see pl.imgw.jrat.data.ArrayDataContainer#getIntPoint(int, int)
+     * @see pl.imgw.jrat.data.ArrayDataContainer#getPoint(int, int)
      */
     @Override
     public short getRawIntPoint(int x, int y) {
@@ -64,11 +48,18 @@ public class DoubleDataArray extends ArrayData implements
         return (short) data[x][y];
     }
 
+    public boolean setFloatPoint(int x, int y, int value) {
+        if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
+            return false;
+        }
+        data[x][y] = value;
+        return true;
+    }
+
     /*
      * (non-Javadoc)
      * 
-     * @see pl.imgw.jrat.data.ArrayDataContainer#setIntPoint(int, int, short)
-     */
+     * @see pl.imgw.jrat.data.ArrayDataContainer#setPoint(int, int, short)
     @Override
     public boolean setRawIntPoint(int x, int y, short value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -77,6 +68,7 @@ public class DoubleDataArray extends ArrayData implements
         data[x][y] = value;
         return true;
     }
+     */
 
     /*
      * (non-Javadoc)
@@ -96,7 +88,6 @@ public class DoubleDataArray extends ArrayData implements
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setBytePoint(int, int, byte)
-     */
     @Override
     public boolean setRawBytePoint(int x, int y, byte value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -105,22 +96,7 @@ public class DoubleDataArray extends ArrayData implements
         data[x][y] = unsignedByte2Int(value);
         return true;
     }
-
-    public void multiArrayCopy(double[][] source, double[][] destination) {
-        for (int a = 0; a < source.length; a++) {
-            System.arraycopy(source[a], 0, destination[a], 0, source[a].length);
-        }
-    }
-
-    public Object clone() {
-
-        double[][] array = new double[sizeX][sizeY];
-        multiArrayCopy(data, array);
-
-        ArrayData dc = new DoubleDataArray(array);
-
-        return dc;
-    }
+     */
 
     /*
      * (non-Javadoc)
@@ -141,15 +117,14 @@ public class DoubleDataArray extends ArrayData implements
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setDoublePoint(int, int,
      * double)
-     */
     @Override
     public boolean setPoint(int x, int y, double value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
-
             return false;
         }
-        data[x][y] = value;
+        data[x][y] = (int) value;
         return true;
     }
+     */
 
 }

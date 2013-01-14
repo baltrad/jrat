@@ -8,13 +8,13 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5CompoImage;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5CompoImage;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.ScanContainer;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
@@ -46,8 +46,8 @@ public class HDF5ParserTest {
         pm = new ParserManager();
         pm.setParser(new OdimH5Parser());
         
-        x = 1190;
-        y = 677;
+        x = 677;
+        y = 1190;
         value = 18.5;
         
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
@@ -59,14 +59,14 @@ public class HDF5ParserTest {
     @Test
     public void getScanTest() {
         pm.initialize(file2);
-        H5DataContainer data = (H5DataContainer) pm.getProduct();
+        OdimDataContainer data = (OdimDataContainer) pm.getProduct();
         VolumeContainer vol = new OdimH5Volume(data);
         ScanContainer scan = vol.getScan(10.6);
         assertEquals("nbins is wrong", 250, scan.getNBins());
         assertEquals("nrays is wrong", 360, scan.getNRays());
         assertEquals("nbins is wrong", 1000.0, scan.getRScale(), 0.01);
         ArrayData array = scan.getArray();
-        assertEquals("array value", 36, array.getRawIntPoint(138, 18));
+        assertEquals("array value", 36, array.getRawIntPoint(18, 138));
         assertEquals(10, vol.getAllScans().size());
     }
     
@@ -79,10 +79,10 @@ public class HDF5ParserTest {
         assertTrue("This is not a hdf5 file", pm.isValid(file2));
         
         pm.initialize(file1);
-        pdc1 = new OdimH5CompoImage((H5DataContainer) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((OdimDataContainer) pm.getProduct());
         
         pm.initialize(file2);
-        pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
+        pdc2 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
         
         assertTrue("Initialization failed", pdc1.isValid());
         assertNotNull("Initializationf of arrays failed", pdc1.getData());
@@ -97,26 +97,26 @@ public class HDF5ParserTest {
     @Test
     public void gettingAttributeTest() {
         pm.initialize(file1);
-        pdc1 = new OdimH5CompoImage((H5DataContainer) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((OdimDataContainer) pm.getProduct());
         
         pm.initialize(file2);
-        pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
+        pdc2 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
         
         int i = pdc1.getXSize();
         assertEquals("xsize in where group is wrong:", 1900, i);
         String s = pdc1.getSourceName();
-        assertEquals("xsize in where group is wrong:", "ORG:247", s);
+        assertEquals("source name is wrong:", "ORG:247", s);
         double d = pdc1.getXScale();
-        assertEquals("xsize in where group is wrong:", 2000.0, d, 0);
+        assertEquals("xscale in where group is wrong:", 2000.0, d, 0);
     }
 
     @Test
     public void gettingDataValues() {
         pm.initialize(file1);
-        pdc1 = new OdimH5CompoImage((H5DataContainer) pm.getProduct());
+        pdc1 = new OdimH5CompoImage((OdimDataContainer) pm.getProduct());
         
         pm.initialize(file2);
-        pdc2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
+        pdc2 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
         
         byte b  = pdc1.getData().getRawBytePoint(x, y);
         assertEquals((byte)value, b);
@@ -125,8 +125,16 @@ public class HDF5ParserTest {
         double d = pdc1.getData().getPoint(x, y);
         assertEquals(value, d, 0.1);
         
-        System.out.println(pdc2.getScan(0.5).getArray().getPoint(10, 10));
-        System.out.println(pdc2.getScan(0.5).getArray().getRawIntPoint(10, 10));
+        int x = 166;
+        int y = 170;
+        int val = 84;
+        double rv = -32.0 + 0.5 * val;
+        
+        assertEquals(val, pdc2.getScan(0.5).getArray().getRawIntPoint(x, y));
+        assertEquals(rv, pdc2.getScan(0.5).getArray().getPoint(x, y), 0.01);
+        
+//        System.out.println(pdc2.getScan(0.5).getArray().getPoint(10, 10));
+//        System.out.println(pdc2.getScan(0.5).getArray().getRawIntPoint(10, 10));
     }
     
 }

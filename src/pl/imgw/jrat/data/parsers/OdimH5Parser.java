@@ -3,7 +3,9 @@
  */
 package pl.imgw.jrat.data.parsers;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
+import static pl.imgw.jrat.tools.out.Logging.ERROR;
+import static pl.imgw.jrat.tools.out.Logging.NORMAL;
+import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.io.File;
 import java.util.HashMap;
@@ -12,11 +14,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.FloatDataArray;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.FloatDataArray;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
@@ -34,7 +36,7 @@ public class OdimH5Parser implements FileParser {
     public final static String FLOAT_SYMBOL = "FLOAT";
     public final static String INT_SYMBOL = "INTEGER";
     
-    private H5DataContainer h5data;
+    private OdimDataContainer h5data;
     private IHDF5Reader reader;
     private static final String ROOT = "/";
     private static final String DATA = "data";
@@ -64,7 +66,7 @@ public class OdimH5Parser implements FileParser {
         
         try {
             reader = HDF5Factory.openForReading(file);
-            h5data = new H5DataContainer();
+            h5data = new OdimDataContainer();
             h5data.setReader(reader);
             LogHandler.getLogs().displayMsg("File " + file.getName() + " initialized",
                     NORMAL);
@@ -94,12 +96,13 @@ public class OdimH5Parser implements FileParser {
             if(type.contains(FLOAT_SYMBOL)) {
 //                System.out.println(path);
                 FloatDataArray adc = new FloatDataArray(reader.readFloatMatrix(path));
-                adc.transpose();
+//                adc.transpose();
                 arrayList.put(path, adc);
                 index++;
             } else if(type.contains(INT_SYMBOL)) {
                 RawByteDataArray adc = new RawByteDataArray();
                 adc.setIntData(reader.readIntMatrix(path));
+                adc.transpose();
                 arrayList.put(path, adc);
                 index++;
             }

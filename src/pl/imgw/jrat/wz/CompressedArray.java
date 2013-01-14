@@ -9,8 +9,8 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
 
 /**
  * 
@@ -155,7 +155,6 @@ public class CompressedArray extends ArrayData {
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayData#setRawIntPoint(int, int, short)
-     */
     @Override
     public boolean setRawIntPoint(int x, int y, short value) {
         RawByteDataArray data = new RawByteDataArray(decompress(
@@ -166,6 +165,7 @@ public class CompressedArray extends ArrayData {
         }
         return false;
     }
+     */
 
     /*
      * (non-Javadoc)
@@ -183,7 +183,6 @@ public class CompressedArray extends ArrayData {
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayData#setRawBytePoint(int, int, byte)
-     */
     @Override
     public boolean setRawBytePoint(int x, int y, byte value) {
         RawByteDataArray data = new RawByteDataArray(decompress(
@@ -194,6 +193,7 @@ public class CompressedArray extends ArrayData {
         }
         return false;
     }
+     */
 
     /*
      * (non-Javadoc)
@@ -211,7 +211,6 @@ public class CompressedArray extends ArrayData {
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayData#setPoint(int, int, double)
-     */
     @Override
     public boolean setPoint(int x, int y, double value) {
         RawByteDataArray data = new RawByteDataArray(decompress(
@@ -222,5 +221,6 @@ public class CompressedArray extends ArrayData {
         }
         return false;
     }
+     */
 
 }

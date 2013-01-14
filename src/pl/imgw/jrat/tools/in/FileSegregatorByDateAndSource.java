@@ -10,12 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.process.MainProcessController;
@@ -48,8 +48,8 @@ public class FileSegregatorByDateAndSource {
                 String source = "";
 
                 VolumeContainer vol = null;
-                if (data instanceof H5DataContainer) {
-                    vol = new OdimH5Volume((H5DataContainer) data);
+                if (data instanceof OdimDataContainer) {
+                    vol = new OdimH5Volume((OdimDataContainer) data);
                 } else if (data instanceof RainbowDataContainer) {
                     vol = new RainbowVolume((RainbowDataContainer) data);
                 }

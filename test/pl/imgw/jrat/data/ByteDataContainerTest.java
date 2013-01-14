@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
 
 /**
  *
@@ -34,7 +34,7 @@ public class ByteDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.RawByteDataArray#initialize(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.RawByteDataArray#initialize(int, int)}.
      */
     @Test
     public void testInitialize() {
@@ -47,7 +47,7 @@ public class ByteDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.RawByteDataArray#setData(short[][])}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.RawByteDataArray#setData(short[][])}.
      */
     @Test
     public void testSetData() {
@@ -58,7 +58,7 @@ public class ByteDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.RawByteDataArray#getByteData()}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.RawByteDataArray#getByteData()}.
      */
     @Test
     public void testGetByteData() {
@@ -68,7 +68,7 @@ public class ByteDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.RawByteDataArray#clone()}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.RawByteDataArray#clone()}.
      */
     @Test
     public void testClone() {

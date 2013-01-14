@@ -6,8 +6,8 @@ package pl.imgw.jrat.calid;
 import java.util.Date;
 import java.util.Iterator;
 
-import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.ScanContainer;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.containers.ScanContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**

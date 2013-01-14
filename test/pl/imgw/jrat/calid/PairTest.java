@@ -9,12 +9,12 @@ import java.io.File;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 
@@ -38,18 +38,18 @@ public class PairTest {
         pm.initialize(new File("test-data/calid",
                 "T_PAGZ41_C_SOWR_20110922004019.h5"));
         VolumeContainer vol1 = new OdimH5Volume(
-                (H5DataContainer) pm.getProduct());
+                (OdimDataContainer) pm.getProduct());
         pm.initialize(new File("test-data/calid",
                 "T_PAGZ44_C_SOWR_20110922004021.h5"));
         VolumeContainer vol2 = new OdimH5Volume(
-                (H5DataContainer) pm.getProduct());
+                (OdimDataContainer) pm.getProduct());
         pair = new Pair(vol1, vol2);
         Pair pair2 = new Pair(vol2, vol1);
         assertTrue(pair.getVol1() == pair2.getVol1());
         assertTrue("validation is not working well with odim format",
                 pair.hasRealVolumes());
         assertEquals(57, pair.getVol2().getScan(elevation).getArray()
-                .getRawIntPoint(116, 16));
+                .getRawIntPoint(16, 116));
         String s1 = "12374";
         String s2 = "12579";
         Pair pair3 = new Pair(s1, s2);
@@ -73,9 +73,9 @@ public class PairTest {
         assertTrue("validation is not working well with rainbow format",
                 pair.hasRealVolumes());
         assertEquals(61, pair.getVol2().getScan(elevation).getArray()
-                .getRawIntPoint(301, 20));
+                .getRawIntPoint(20, 301));
         assertEquals(-1.5d, pair.getVol2().getScan(elevation).getArray()
-                .getPoint(301, 20), 0.1);
+                .getPoint(20, 301), 0.1);
         System.out.println(pair);
         assertTrue("Comparing pair's source name",
                 pair.getSource1().matches("Rzeszow"));
@@ -111,9 +111,9 @@ public class PairTest {
         f1 = new File("test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5");
         f2 = new File("test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5");
         manager.initialize(f1);
-        vol1 = new OdimH5Volume((H5DataContainer) manager.getProduct());
+        vol1 = new OdimH5Volume((OdimDataContainer) manager.getProduct());
         manager.initialize(f2);
-        vol2 = new OdimH5Volume((H5DataContainer) manager.getProduct());
+        vol2 = new OdimH5Volume((OdimDataContainer) manager.getProduct());
         pair2 = new Pair(vol1, vol2);
         assertTrue(!pair1.equals(pair2));
     }

@@ -3,8 +3,8 @@
  */
 package pl.imgw.jrat.scansun;
 
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.ScanContainer;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;

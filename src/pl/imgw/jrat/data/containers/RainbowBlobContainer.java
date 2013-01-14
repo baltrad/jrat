@@ -6,7 +6,7 @@
  * maciej.szewczykowski@imgw.pl
  */
 
-package pl.imgw.jrat.data.parsers.testing;
+package pl.imgw.jrat.data.containers;
 
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import pl.imgw.jrat.tools.out.LogHandler;
@@ -20,7 +20,7 @@ import com.jcraft.jzlib.ZStream;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  *
  */
-public class BlobContainer {
+public class RainbowBlobContainer {
 
     private int decompressedSize = 0;
     // Data buffer

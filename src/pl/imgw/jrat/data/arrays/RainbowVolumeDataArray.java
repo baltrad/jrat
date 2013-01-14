@@ -1,17 +1,16 @@
 /**
  * (C) 2013 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data.parsers.testing;
+package pl.imgw.jrat.data.arrays;
 
-import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.data.containers.RainbowBlobContainer;
 
 /**
- *
- *  /Class description/
- *  
- *  usunąć settery z interfejsu
- *
- *
+ * 
+ * Range bins are stored in the array’s equivalent X-dimension and azimuth gates
+ * in the Y-dimension
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
@@ -19,8 +18,8 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
 
     private static final double AZIMUTH_STEP = 0;
     
-    protected BlobContainer blobdata;
-    protected BlobContainer blobray;
+    protected RainbowBlobContainer blobdata;
+    protected RainbowBlobContainer blobray;
     
     protected double offset = 0;
     protected double gain = 0;
@@ -29,21 +28,20 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     
     private int getPosition(int x, int y) {
         
-        System.out.println("size x and y " + getSizeX() + " " + getSizeY());
-        
         if(azimuthZero == -1)
             setAzimuthZero();
         
-        return shiftAzimuth(x) * sizeY + y;
+        return shiftAzimuth(y) * getSizeX() + x;
         
     }
     
-    private int shiftAzimuth(int x) {
-        x += azimuthZero;
-        return x % getSizeX();
+    private int shiftAzimuth(int y) {
+        y += azimuthZero;
+        return y % getSizeY();
     }
     
     public double getAzimuth(int ray) {
+        ray = shiftAzimuth(ray);
         byte[] azimuths = blobray.getDecompressed();
         int a = unsignedShortToInt(new byte[] { azimuths[ray * 2],
                 azimuths[ray * 2 + 1] });
@@ -57,7 +55,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
         byte[] azimuths = blobray.getDecompressed();
         int azimuth = 2 * Short.MAX_VALUE;
         int a = 0;
-        for (short i = 0; i < sizeX; i++) {
+        for (short i = 0; i < getSizeY(); i++) {
             a = unsignedShortToInt(new byte[] { azimuths[i * 2],
                     azimuths[i * 2 + 1] });
             if (a < azimuth) {
@@ -93,7 +91,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     /**
      * @param blobdata the blobdata to set
      */
-    public void setBlobdata(BlobContainer blobdata) {
+    public void setBlobdata(RainbowBlobContainer blobdata) {
         this.blobdata = blobdata;
     }
 
@@ -102,7 +100,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     /**
      * @param blobray the blobray to set
      */
-    public void setBlobray(BlobContainer blobray) {
+    public void setBlobray(RainbowBlobContainer blobray) {
         this.blobray = blobray;
     }
 
@@ -131,17 +129,12 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
      */
     @Override
     public short getRawIntPoint(int x, int y) {
+        if (x < 0 || y < 0 || x >= getSizeX() || y >= getSizeY()) {
+            // System.out.println(index ++);
+            return -1;
+        }
         int p = unsignedByte2Int(blobdata.getDecompressed()[getPosition(x, y)]);
         return (short) p;
-    }
-
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.data.ArrayData#setRawIntPoint(int, int, short)
-     */
-    @Override
-    public boolean setRawIntPoint(int x, int y, short value) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     /* (non-Javadoc)
@@ -149,16 +142,11 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
      */
     @Override
     public byte getRawBytePoint(int x, int y) {
+        if (x < 0 || y < 0 || x >= getSizeX() || y >= getSizeY()) {
+            // System.out.println(index ++);
+            return 0;
+        }
         return blobdata.getDecompressed()[getPosition(x, y)];
-    }
-
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.data.ArrayData#setRawBytePoint(int, int, byte)
-     */
-    @Override
-    public boolean setRawBytePoint(int x, int y, byte value) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     /* (non-Javadoc)
@@ -166,6 +154,10 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
      */
     @Override
     public double getPoint(int x, int y) {
+        if (x < 0 || y < 0 || x >= getSizeX() || y >= getSizeY()) {
+            // System.out.println(index ++);
+            return -9999;
+        }
         short value = getRawIntPoint(x, y);
         if (gain == 0)
             return value;
@@ -174,15 +166,6 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
 
     private double raw2real(int x) {
         return gain * x + offset;
-    }
-    
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.data.ArrayData#setPoint(int, int, double)
-     */
-    @Override
-    public boolean setPoint(int x, int y, double value) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     

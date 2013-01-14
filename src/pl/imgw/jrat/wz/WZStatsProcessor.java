@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZDataContainer;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.containers.WZDataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.WZFileParser;
 import pl.imgw.jrat.process.FileWatchingProcess;

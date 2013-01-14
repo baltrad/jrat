@@ -3,35 +3,26 @@
  */
 package pl.imgw.jrat.calid;
 
-import static pl.imgw.jrat.tools.out.Logging.PROGRESS_BAR_ONLY;
-
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
-import pl.imgw.jrat.data.parsers.DefaultParser;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
-import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -161,9 +152,9 @@ public class PairsContainer {
                 if (parser.getProduct() instanceof RainbowDataContainer) {
                     vol1 = new RainbowVolume(
                             (RainbowDataContainer) parser.getProduct());
-                } else if (parser.getProduct() instanceof H5DataContainer) {
+                } else if (parser.getProduct() instanceof OdimDataContainer) {
                     vol1 = new OdimH5Volume(
-                            (H5DataContainer) parser.getProduct());
+                            (OdimDataContainer) parser.getProduct());
                 }
             }
 
@@ -171,9 +162,9 @@ public class PairsContainer {
                 if (parser.getProduct() instanceof RainbowDataContainer) {
                     vol2 = new RainbowVolume(
                             (RainbowDataContainer) parser.getProduct());
-                } else if (parser.getProduct() instanceof H5DataContainer) {
+                } else if (parser.getProduct() instanceof OdimDataContainer) {
                     vol2 = new OdimH5Volume(
-                            (H5DataContainer) parser.getProduct());
+                            (OdimDataContainer) parser.getProduct());
                 }
             }
 

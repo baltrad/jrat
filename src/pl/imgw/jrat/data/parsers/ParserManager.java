@@ -7,7 +7,7 @@ import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.io.File;
 
-import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.containers.DataContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**

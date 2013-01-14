@@ -6,11 +6,11 @@ package pl.imgw.jrat.scansun;
 import java.io.File;
 import java.util.List;
 
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.GlobalParser;
@@ -47,8 +47,8 @@ public class ScansunProcessor implements FilesProcessor {
             if (parser.getProduct() instanceof RainbowDataContainer) {
                 manager.calculate(new RainbowVolume(
                         (RainbowDataContainer) parser.getProduct()));
-            } else if (parser.getProduct() instanceof H5DataContainer) {
-                manager.calculate(new OdimH5Volume((H5DataContainer) parser
+            } else if (parser.getProduct() instanceof OdimDataContainer) {
+                manager.calculate(new OdimH5Volume((OdimDataContainer) parser
                         .getProduct()));
             }
         }

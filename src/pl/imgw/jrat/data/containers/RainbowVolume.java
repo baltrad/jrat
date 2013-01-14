@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import java.awt.geom.Point2D;
 import java.text.SimpleDateFormat;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.swing.plaf.SliderUI;
 
-import pl.imgw.jrat.data.parsers.testing.RainbowVolumeDataArray;
+import pl.imgw.jrat.data.arrays.ArrayData;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -188,23 +188,6 @@ public class RainbowVolume implements VolumeContainer {
                 if (blobid.isEmpty())
                     return null;
 
-
-                /*
-                RainbowVolumeDataArray array = (RainbowVolumeDataArray) data
-                        .getArray(blobid);
-                String min = data.getRainbowAttributeValue(path + "/rawdata",
-                        "min");
-                String max = data.getRainbowAttributeValue(path + "/rawdata",
-                        "max");
-                try {
-                    double mind = Double.parseDouble(min);
-                    double maxd = Double.parseDouble(max);
-                    array.setOffset(mind - 0.5);
-                    array.setGain((maxd - mind) / 254);
-                } catch (NumberFormatException e) {
-
-                }
-*/
                 return data.getArray(blobid);
             }
 

@@ -1,10 +1,12 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import java.awt.geom.Point2D;
 import java.util.Date;
+
+import pl.imgw.jrat.data.arrays.ArrayData;
 
 /**
  * 

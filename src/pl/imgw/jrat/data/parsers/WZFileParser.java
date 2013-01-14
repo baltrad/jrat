@@ -27,10 +27,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZDataContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.WZDataContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**

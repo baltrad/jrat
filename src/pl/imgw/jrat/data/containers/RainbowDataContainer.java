@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
@@ -24,6 +24,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import pl.imgw.jrat.data.arrays.ArrayData;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 

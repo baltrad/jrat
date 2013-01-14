@@ -11,10 +11,10 @@ import java.io.File;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.parsers.testing.NowyRainbowParser;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.ScanContainer;
+import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 
@@ -26,12 +26,12 @@ import pl.imgw.jrat.tools.out.Logging;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class NowyRainbowParserTest {
+public class RainbowParserTest {
 
     @Test
     public void parseTest() {
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
-        NowyRainbowParser rp = new NowyRainbowParser();
+        Rainbow53VolumeParser rp = new Rainbow53VolumeParser();
         File f = new File("test-data/calid", "2011082113402900dBZ.vol");
         rp.initialize(f);
         RainbowDataContainer data = (RainbowDataContainer) rp.getProduct();
@@ -52,9 +52,9 @@ public class NowyRainbowParserTest {
         assertEquals(10, vol.getAllScans().size());
         
         assertEquals(61, vol.getScan(0.5).getArray()
-                .getRawIntPoint(301, 20));
+                .getRawIntPoint(20, 301));
         assertEquals(-1.5d, vol.getScan(0.5).getArray()
-                .getPoint(301, 20), 0.1);
+                .getPoint(20, 301), 0.1);
         
     }
     

@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.arrays;
 
 /**
  * 
@@ -19,7 +19,16 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
     protected double gain = 0;
 
 
-    
+    public void transpose() {
+        byte[][] array = new byte[sizeY][sizeX];
+        for(int x = 0; x < sizeX; x++)
+            for(int y = 0; y < sizeY; y++)
+                array[y][x] = data[x][y];
+        
+        data = array;
+        this.sizeX = data.length;
+        this.sizeY = data[0].length;
+    }
     
     /**
      * @param offset
@@ -140,7 +149,6 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setPoint(int, int, short)
-     */
     @Override
     public boolean setRawIntPoint(int x, int y, short value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -150,6 +158,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
 
         return true;
     }
+     */
 
     /*
      * (non-Javadoc)
@@ -169,7 +178,6 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setBytePoint(int, int, byte)
-     */
     @Override
     public boolean setRawBytePoint(int x, int y, byte value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -179,6 +187,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         data[x][y] = value;
         return true;
     }
+     */
 
     private void multiArrayCopy(byte[][] source, byte[][] destination) {
         for (int a = 0; a < source.length; a++) {
@@ -218,7 +227,6 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setDoublePoint(int, int,
      * double)
-     */
     @Override
     public boolean setPoint(int x, int y, double value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -230,6 +238,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
             data[x][y] = int2byte(real2raw(value));
         return true;
     }
+     */
 
     private short real2raw(double x) {
         if (gain == 0)

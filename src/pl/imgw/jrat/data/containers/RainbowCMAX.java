@@ -1,13 +1,15 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.util.Date;
 import java.util.Iterator;
 
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.DoubleDataArray;
+import pl.imgw.jrat.data.arrays.DoubleDataArray;
 
 /**
  *
@@ -35,7 +35,7 @@ public class DoubleDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataArray#initialize(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.FloatDataArray#initialize(int, int)}.
      */
     @Test
     public void testInitialize() {
@@ -46,7 +46,7 @@ public class DoubleDataContainerTest {
     }
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataArray#getRawIntPoint(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.FloatDataArray#getRawIntPoint(int, int)}.
      */
     @Test
     public void testGetIntPoint() {
@@ -55,7 +55,7 @@ public class DoubleDataContainerTest {
 
 
     /**
-     * Test method for {@link pl.imgw.jrat.data.FloatDataArray#getRawBytePoint(int, int)}.
+     * Test method for {@link pl.imgw.jrat.data.arrays.FloatDataArray#getRawBytePoint(int, int)}.
      */
     @Test
     public void testGetBytePoint() {

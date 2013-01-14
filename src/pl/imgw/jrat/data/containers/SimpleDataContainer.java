@@ -1,10 +1,12 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import pl.imgw.jrat.data.arrays.ArrayData;
 
 /**
  *

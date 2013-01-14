@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.arrays;
 
 /**
  * 
@@ -11,23 +11,30 @@ package pl.imgw.jrat.data;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class FloatDataArray extends ArrayData implements Cloneable {
+public class DoubleDataArray extends ArrayData implements
+        Cloneable {
 
-    private float[][] data;
+    private double[][] data;
 
-    public FloatDataArray() {
+    public DoubleDataArray() {
 
     }
 
     /**
      * @param array
      */
-    public FloatDataArray(float[][] data) {
+    public DoubleDataArray(double[][] data) {
         if (data != null) {
             this.sizeX = data.length;
             this.sizeY = data[0].length;
             this.data = data;
         }
+    }
+
+    public void setDoubleData(double[][] data) {
+        this.sizeX = data.length;
+        this.sizeY = data[0].length;
+        this.data = data;
     }
 
     /*
@@ -37,16 +44,16 @@ public class FloatDataArray extends ArrayData implements Cloneable {
      */
     @Override
     public void initialize(int sizeX, int sizeY) {
+        this.data = new double[sizeX][sizeY];
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.data = new float[sizeX][sizeY];
 
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see pl.imgw.jrat.data.ArrayDataContainer#getPoint(int, int)
+     * @see pl.imgw.jrat.data.ArrayDataContainer#getIntPoint(int, int)
      */
     @Override
     public short getRawIntPoint(int x, int y) {
@@ -57,19 +64,10 @@ public class FloatDataArray extends ArrayData implements Cloneable {
         return (short) data[x][y];
     }
 
-    public boolean setFloatPoint(int x, int y, float value) {
-        if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
-            return false;
-        }
-        data[x][y] = value;
-        return true;
-    }
-
     /*
      * (non-Javadoc)
      * 
-     * @see pl.imgw.jrat.data.ArrayDataContainer#setPoint(int, int, short)
-     */
+     * @see pl.imgw.jrat.data.ArrayDataContainer#setIntPoint(int, int, short)
     @Override
     public boolean setRawIntPoint(int x, int y, short value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -78,6 +76,7 @@ public class FloatDataArray extends ArrayData implements Cloneable {
         data[x][y] = value;
         return true;
     }
+     */
 
     /*
      * (non-Javadoc)
@@ -97,7 +96,6 @@ public class FloatDataArray extends ArrayData implements Cloneable {
      * (non-Javadoc)
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setBytePoint(int, int, byte)
-     */
     @Override
     public boolean setRawBytePoint(int x, int y, byte value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
@@ -105,6 +103,23 @@ public class FloatDataArray extends ArrayData implements Cloneable {
         }
         data[x][y] = unsignedByte2Int(value);
         return true;
+    }
+     */
+
+    public void multiArrayCopy(double[][] source, double[][] destination) {
+        for (int a = 0; a < source.length; a++) {
+            System.arraycopy(source[a], 0, destination[a], 0, source[a].length);
+        }
+    }
+
+    public Object clone() {
+
+        double[][] array = new double[sizeX][sizeY];
+        multiArrayCopy(data, array);
+
+        ArrayData dc = new DoubleDataArray(array);
+
+        return dc;
     }
 
     /*
@@ -126,41 +141,15 @@ public class FloatDataArray extends ArrayData implements Cloneable {
      * 
      * @see pl.imgw.jrat.data.ArrayDataContainer#setDoublePoint(int, int,
      * double)
-     */
     @Override
     public boolean setPoint(int x, int y, double value) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
+
             return false;
         }
-        data[x][y] = (float) value;
+        data[x][y] = value;
         return true;
     }
-
-    public void multiArrayCopy(float[][] source, float[][] destination) {
-        for (int a = 0; a < source.length; a++) {
-            System.arraycopy(source[a], 0, destination[a], 0, source[a].length);
-        }
-    }
-
-    public Object clone() {
-
-        float[][] array = new float[sizeX][sizeY];
-        multiArrayCopy(data, array);
-
-        ArrayData dc = new FloatDataArray(array);
-
-        return dc;
-    }
-    
-    public void transpose() {
-        float[][] array = new float[sizeY][sizeX];
-        for(int x = 0; x < sizeX; x++)
-            for(int y = 0; y < sizeY; y++)
-                array[y][x] = data[x][y];
-        
-        data = array;
-        this.sizeX = data.length;
-        this.sizeY = data[0].length;
-    }
+     */
 
 }

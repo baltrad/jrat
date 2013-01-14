@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.IntDataArray;
-import pl.imgw.jrat.data.SimpleDataContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.IntDataArray;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.SimpleDataContainer;
 
 /**
  *

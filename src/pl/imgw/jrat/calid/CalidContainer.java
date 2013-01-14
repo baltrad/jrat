@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.ScanContainer;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 

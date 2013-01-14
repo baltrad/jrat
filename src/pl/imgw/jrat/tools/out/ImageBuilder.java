@@ -16,7 +16,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.data.arrays.ArrayData;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;

@@ -3,21 +3,21 @@
  */
 package pl.imgw.jrat.calid;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import pl.imgw.jrat.AplicationConstans;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
-import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
-import pl.imgw.jrat.process.MainProcessController;
+import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 
@@ -90,9 +90,9 @@ public class CalidContainerTest {
         ParserManager pm = new ParserManager();
         pm.setParser(new DefaultParser());
         pm.initialize(new File("test-data/calid", "T_PAGZ41_C_SOWR_20110922004019.h5"));
-        VolumeContainer vol1 = new OdimH5Volume((H5DataContainer) pm.getProduct());
+        VolumeContainer vol1 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
         pm.initialize(new File("test-data/calid", "T_PAGZ44_C_SOWR_20110922004021.h5"));
-        VolumeContainer vol2 = new OdimH5Volume((H5DataContainer) pm.getProduct());
+        VolumeContainer vol2 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
         return new Pair(vol1, vol2);
     }
     

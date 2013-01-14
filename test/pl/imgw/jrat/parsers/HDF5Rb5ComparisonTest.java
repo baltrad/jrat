@@ -7,11 +7,11 @@ import java.io.File;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RainbowVolume;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 
@@ -40,7 +40,7 @@ public class HDF5Rb5ComparisonTest {
         
         parser.initialize(fH5);
         
-        VolumeContainer volH5 = new OdimH5Volume((H5DataContainer)parser.getProduct());
+        VolumeContainer volH5 = new OdimH5Volume((OdimDataContainer)parser.getProduct());
         
         parser.initialize(fRb5);
         
@@ -69,6 +69,9 @@ public class HDF5Rb5ComparisonTest {
         assertEquals(volH5.getScan(0.5).getArray().getPoint(101, 21), volRb5
                 .getScan(0.5).getArray().getPoint(101, 21), 0.01);
 
+        assertEquals(volH5.getScan(0.5).getArray().getPoint(301, 18), volRb5
+                .getScan(0.5).getArray().getPoint(301, 18), 0.01);
+        
         assertEquals(volH5.getScan(0.5).getArray().getRawIntPoint(101, 21),
                 volRb5.getScan(0.5).getArray().getRawIntPoint(101, 21));
 

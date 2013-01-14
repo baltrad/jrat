@@ -11,10 +11,10 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.RainbowCMAX;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RawByteDataArray;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.containers.RainbowCMAX;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
 

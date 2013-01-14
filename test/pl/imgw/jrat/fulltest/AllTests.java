@@ -40,7 +40,7 @@ import pl.imgw.jrat.tools.in.FilePatternFilterTest;
         DoubleDataContainerTest.class, FloatDataContainerTest.class,
         LogHandlerTest.class, HDF5ParserTest.class, HDF5SMHIParserTest.class,
         IntArrayParserTest.class, RainbowCMAXParserTest.class,
-        RainbowVolumeParserTest.class, WZParserTest.class,
+        RainbowVolumeParserTest.class, HDF5SMHIParserTest.class, WZParserTest.class,
         FilePatternFilterTest.class, PairsContainerTest.class, PairTest.class,
         CalidManagerTest.class, CalidProcessTest.class, CalidResultsTest.class,
         CalidContainerTest.class, CalidFileHandlerTest.class })

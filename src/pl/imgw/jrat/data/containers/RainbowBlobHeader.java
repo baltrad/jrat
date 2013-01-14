@@ -1,7 +1,7 @@
 /**
  * (C) 2013 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data.parsers.testing;
+package pl.imgw.jrat.data.containers;
 
 /**
  * 
@@ -11,7 +11,7 @@ package pl.imgw.jrat.data.parsers.testing;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class BlobHeader {
+public class RainbowBlobHeader {
 
     private static final String BLOBID = "blobid=";
     private static final String SIZE = "size=";
@@ -21,7 +21,7 @@ public class BlobHeader {
     private int size = 0;
     private String compression = "";
 
-    public BlobHeader(String header) {
+    public RainbowBlobHeader(String header) {
 
 //        System.out.println(header);
         for (String s : header.split(" ")) {

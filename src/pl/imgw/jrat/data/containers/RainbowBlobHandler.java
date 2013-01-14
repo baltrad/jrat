@@ -1,7 +1,7 @@
 /**
  * (C) 2011 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data.parsers.testing;
+package pl.imgw.jrat.data.containers;
 
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 
@@ -32,7 +32,7 @@ import com.jcraft.jzlib.ZStream;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class BlobHandler {
+public class RainbowBlobHandler {
 
     private static final String blobid = "blobid";
     private static final String size = "size";
@@ -57,7 +57,7 @@ public class BlobHandler {
      * @param verbose
      * @return hash map containing blob number and data buffer container
      */
-    public HashMap<Integer, BlobContainer> getAllRainbowDataBlobs(FileInputStream fis) {
+    public HashMap<Integer, RainbowBlobContainer> getAllRainbowDataBlobs(FileInputStream fis) {
 
 //        HashMap<Integer, BlobContainer> blobs = new HashMap<Integer, BlobContainer>();
         byte[] byteBuff;
@@ -70,7 +70,7 @@ public class BlobHandler {
 //            Node element = doc.getDocumentElement();
 //            System.out.println(element.getLocalName());
             
-            HashMap<Integer, BlobContainer> blobs =  setBlobs(byteBuff);
+            HashMap<Integer, RainbowBlobContainer> blobs =  setBlobs(byteBuff);
             return blobs;
             
         } catch (IOException e) {
@@ -90,9 +90,9 @@ public class BlobHandler {
         return doc;
     }
 
-    private HashMap<Integer, BlobContainer> setBlobs(byte[] b) {
+    private HashMap<Integer, RainbowBlobContainer> setBlobs(byte[] b) {
         
-        HashMap<Integer, BlobContainer> blobs = new HashMap<Integer, BlobContainer>();
+        HashMap<Integer, RainbowBlobContainer> blobs = new HashMap<Integer, RainbowBlobContainer>();
         
         boolean match = false;
         while(offset < b.length) {
@@ -114,7 +114,7 @@ public class BlobHandler {
                 while((char) b[++offset] != '>') {
                     xmlHeader += (char) b[offset];
                 }
-                BlobHeader header = new BlobHeader(xmlHeader);
+                RainbowBlobHeader header = new RainbowBlobHeader(xmlHeader);
 //                if(header.isValid())
 //                    System.out.println("OK");
                 
@@ -131,7 +131,7 @@ public class BlobHandler {
                 byte[] blobdata = Arrays.copyOfRange(b, offset, offset + blobsize);
 //                System.out.println("wczytanych " + blobdata.length);
                 offset += blobsize;
-                BlobContainer bc = new BlobContainer();
+                RainbowBlobContainer bc = new RainbowBlobContainer();
                 if(header.getCompression().matches("qt")) {
                     bc.setCompressedArray(blobdata);
                 } else {
@@ -295,7 +295,7 @@ public class BlobHandler {
             LogHandler.getLogs().displayMsg("Error while decompressing data",
                     ERROR);
             LogHandler.getLogs().saveErrorLogs(
-                    BlobHandler.class.getName(),
+                    RainbowBlobHandler.class.getName(),
                     "decompress: exception!!!\n" + e.getMessage());
             return null;
         }

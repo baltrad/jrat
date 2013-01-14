@@ -30,11 +30,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.RainbowDataContainer;
-import pl.imgw.jrat.data.RawByteDataArray;
-import pl.imgw.jrat.data.WZDataContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.WZDataContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.IntArrayParser;
 import pl.imgw.jrat.data.parsers.ParserManager;

@@ -1,7 +1,7 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.arrays;
 
 /**
  * 
@@ -21,20 +21,21 @@ public abstract class ArrayData {
      * Initialize new array of size sizeX and sizeY
      * 
      * @param sizeX
-     *            width of new array
+     *            X-dimension array size
+
      * @param sizeY
-     *            height of new array
+     *            Y-dimension array size
      */
     public abstract void initialize(int sizeX, int sizeY);
 
     /**
      * 
      * Receiving value from the array in point (x, y). If x or y is out of
-     * bounds return value will be -1
+     * bounds return value will be -1.
      * 
-     * @param x ray number
-     * @param y bin number
-     * @return returns integer from 0 to 255, if x or y is out of bounds returns
+     * @param x 
+     * @param y 
+     * @return returns signed short from 0 to 255, if x or y is out of bounds returns
      *         -1
      */
     public abstract short getRawIntPoint(int x, int y);
@@ -43,19 +44,19 @@ public abstract class ArrayData {
      * Setting value in the array in point (x, y). If x or y is out of bounds it
      * returns false, otherwise it returns true.
      * 
-     * @param x ray number
-     * @param y bin number
+     * @param x 
+     * @param y 
      * @param value
      * @return true if successful, false if x or y is out of bounds
-     */
     public abstract boolean setRawIntPoint(int x, int y, short value);
+     */
 
     /**
      * Receiving value from the array in point (x, y). If x or y is out of
      * bounds return value will be 0.
      * 
-     * @param x ray number
-     * @param y bin number
+     * @param x 
+     * @param y 
      * @return unsigned byte, if x or y is out of bounds returns 0
      */
     public abstract byte getRawBytePoint(int x, int y);
@@ -65,21 +66,21 @@ public abstract class ArrayData {
      * byte. If x or y is out of bounds it returns false, otherwise it returns
      * true
      * 
-     * @param x ray number
-     * @param y bin number
+     * @param x 
+     * @param y 
      * @param value
      * @return true if successful, false if x or y is out of bounds
-     */
     public abstract boolean setRawBytePoint(int x, int y, byte value);
+     */
 
     /**
      * Receiving real value from the array in point (x, y). If x or y is out of
      * bounds return value will be -9999.
      * 
      * @param x
-     *            ray number
+     *            
      * @param y
-     *            bin number
+     *            
      * @return if x or y is out of bounds returns -9999
      */
     public abstract double getPoint(int x, int y);
@@ -92,8 +93,8 @@ public abstract class ArrayData {
      * @param y
      * @param value
      * @return true if successful, false if x or y is out of bounds
-     */
     public abstract boolean setPoint(int x, int y, double value);
+     */
 
     public int getSizeX() {
         return sizeX;
@@ -102,7 +103,7 @@ public abstract class ArrayData {
     public int getSizeY() {
         return sizeY;
     }
-
+    
     protected byte int2byte(short i) {
         if (i > 255)
             return 0;

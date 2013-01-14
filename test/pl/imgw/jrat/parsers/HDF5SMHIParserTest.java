@@ -8,13 +8,13 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.H5DataContainer;
-import pl.imgw.jrat.data.OdimH5CompoImage;
-import pl.imgw.jrat.data.OdimH5Volume;
-import pl.imgw.jrat.data.DataContainer;
-import pl.imgw.jrat.data.ScanContainer;
-import pl.imgw.jrat.data.VolumeContainer;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5CompoImage;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.ScanContainer;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.OdimH5Parser;
 import pl.imgw.jrat.data.parsers.ParserManager;
@@ -54,14 +54,14 @@ public class HDF5SMHIParserTest {
     @Test
     public void getScanTest() {
         assertTrue(pm.initialize(file1));
-        H5DataContainer data = (H5DataContainer) pm.getProduct();
+        OdimDataContainer data = (OdimDataContainer) pm.getProduct();
         VolumeContainer vol = new OdimH5Volume(data);
         ScanContainer scan = vol.getScan(0.5);
         assertEquals("nbins is wrong", 120, scan.getNBins());
         assertEquals("nrays is wrong", 420, scan.getNRays());
         assertEquals("scale is wrong", 2000.0, scan.getRScale(), 0.01);
         ArrayData array = scan.getArray();
-        assertEquals("array value", 132, array.getRawIntPoint(239, 13));
+        assertEquals("array value", 132, array.getRawIntPoint(13, 239));
         assertEquals(1, vol.getAllScans().size());
     }
    

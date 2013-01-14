@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import pl.imgw.jrat.data.ArrayData;
-import pl.imgw.jrat.data.IntDataArray;
+import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.IntDataArray;
 import pl.imgw.jrat.projection.ProjectionUtility;
 
 /**

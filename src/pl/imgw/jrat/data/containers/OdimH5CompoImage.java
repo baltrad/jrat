@@ -1,10 +1,11 @@
 /**
  * (C) 2012 INSTITUT OF METEOROLOGY AND WATER MANAGEMENT
  */
-package pl.imgw.jrat.data;
+package pl.imgw.jrat.data.containers;
 
 import java.util.Date;
 
+import pl.imgw.jrat.data.arrays.ArrayData;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -17,10 +18,10 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class OdimH5CompoImage implements ImageContainer {
 
-    private H5DataContainer data = new H5DataContainer();
+    private OdimDataContainer data = new OdimDataContainer();
     private boolean valid = false;
 
-    public OdimH5CompoImage(H5DataContainer data) {
+    public OdimH5CompoImage(OdimDataContainer data) {
         
         if (((String) (data.getAttributeValue("/what", "object")))
                 .matches("COMP")) {

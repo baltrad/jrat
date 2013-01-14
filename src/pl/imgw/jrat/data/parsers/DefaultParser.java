@@ -5,7 +5,7 @@ package pl.imgw.jrat.data.parsers;
 
 import java.io.File;
 
-import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.containers.DataContainer;
 
 /**
  * 
