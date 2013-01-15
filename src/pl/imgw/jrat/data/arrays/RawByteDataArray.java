@@ -17,8 +17,34 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
     protected byte[][] data = null;
     protected double offset = 0;
     protected double gain = 0;
+    
+    private boolean transposed = false;
+    
+    public void transpose() {
+        transposed = true;
+    }
+    
+    public boolean isTransposed() {
+        return transposed;
+    }
 
-
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.arrays.ArrayData#getSizeX()
+     */
+    @Override
+    public int getSizeX() {
+        return (transposed) ? super.getSizeY() : super.getSizeX();
+    }
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.arrays.ArrayData#getSizeY()
+     */
+    @Override
+    public int getSizeY() {
+        return (transposed) ? super.getSizeX() : super.getSizeY();
+    }
+    
+/*
     public void transpose() {
         byte[][] array = new byte[sizeY][sizeX];
         for(int x = 0; x < sizeX; x++)
@@ -29,7 +55,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         this.sizeX = data.length;
         this.sizeY = data[0].length;
     }
-    
+  */  
     /**
      * @param offset
      *            the offset to set
@@ -138,6 +164,11 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      */
     @Override
     public short getRawIntPoint(int x, int y) {
+        if(transposed) {
+            int tmp = x;
+            x = y;
+            y = tmp;
+        }
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return -1;
@@ -167,6 +198,11 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      */
     @Override
     public byte getRawBytePoint(int x, int y) {
+        if(transposed) {
+            int tmp = x;
+            x = y;
+            y = tmp;
+        }
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return 0;
@@ -212,6 +248,11 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
      */
     @Override
     public double getPoint(int x, int y) {
+        if(transposed) {
+            int tmp = x;
+            x = y;
+            y = tmp;
+        }
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
             return -9999;
