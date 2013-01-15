@@ -11,6 +11,7 @@ import java.io.File;
 
 import org.junit.Test;
 
+import pl.imgw.jrat.data.arrays.RainbowVolumeDataArray;
 import pl.imgw.jrat.data.containers.RainbowDataContainer;
 import pl.imgw.jrat.data.containers.RainbowVolume;
 import pl.imgw.jrat.data.containers.ScanContainer;
@@ -51,10 +52,16 @@ public class RainbowParserTest {
         
         assertEquals(10, vol.getAllScans().size());
         
-        assertEquals(61, vol.getScan(0.5).getArray()
+        assertEquals(52, vol.getScan(0.5).getArray()
                 .getRawIntPoint(20, 301));
-        assertEquals(-1.5d, vol.getScan(0.5).getArray()
+        assertEquals(-6.0d, vol.getScan(0.5).getArray()
                 .getPoint(20, 301), 0.1);
+        
+        RainbowVolumeDataArray array = (RainbowVolumeDataArray) vol.getScan(0.5).getArray();
+        assertEquals(355, array.getAzimuth(355), 0.1);
+        
+//        for(int i = 0; i < array.getSizeY(); i++)
+//            System.out.println(i + " " + array.getAzimuth(i));
         
     }
     

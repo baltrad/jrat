@@ -16,7 +16,7 @@ import pl.imgw.jrat.data.containers.RainbowBlobContainer;
  */
 public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
 
-    private static final double AZIMUTH_STEP = 0;
+    private static final double AZIMUTH_STEP = 0.005493172;
     
     protected RainbowBlobContainer blobdata;
     protected RainbowBlobContainer blobray;
@@ -31,16 +31,38 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
         if(azimuthZero == -1)
             setAzimuthZero();
         
-        return shiftAzimuth(y) * getSizeX() + x;
+        return shiftAzimuth(y) * super.getSizeX() + x;
         
     }
     
-    private int shiftAzimuth(int y) {
-        y += azimuthZero;
-        return y % getSizeY();
+    public int getAzimuthSize() {
+        return super.getSizeY();
+    }
+    
+    public int getRangeSize() {
+        return super.getSizeX();
+    }
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.arrays.ArrayData#getSizeY()
+     */
+    @Override
+    public int getSizeY() {
+        return (super.getSizeY() == 361) ? 360 : super.getSizeY();
+    }
+    
+    private int shiftAzimuth(int ray) {
+        ray += azimuthZero;
+        if(ray > 360)
+            ray++;
+//        System.out.println(ray + " az0="  + azimuthZero + " size=" + getAzimuthSize());
+        return ray % super.getSizeY();
     }
     
     public double getAzimuth(int ray) {
+        if(azimuthZero == -1)
+            setAzimuthZero();
+        
         ray = shiftAzimuth(ray);
         byte[] azimuths = blobray.getDecompressed();
         int a = unsignedShortToInt(new byte[] { azimuths[ray * 2],
@@ -55,7 +77,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
         byte[] azimuths = blobray.getDecompressed();
         int azimuth = 2 * Short.MAX_VALUE;
         int a = 0;
-        for (short i = 0; i < getSizeY(); i++) {
+        for (short i = 0; i < super.getSizeY(); i++) {
             a = unsignedShortToInt(new byte[] { azimuths[i * 2],
                     azimuths[i * 2 + 1] });
             if (a < azimuth) {
