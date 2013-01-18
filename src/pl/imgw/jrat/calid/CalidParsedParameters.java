@@ -236,24 +236,26 @@ public class CalidParsedParameters {
         String rest = "[ele=X] [dis=Y]";
 
         String msg = "CALID algorytm usage: jrat [options]\n";
-        msg += "--calid-help\t\tprint this message\n";
-        msg += "--calid-list [<args>]\tlist all available pairs\n\t\t\t"
-                + "<args> " + src + " " + rest + "\n";
-        msg += "--calid-result [<args>]\tdisplay simple results\n"
-                + "\t\t\t"
-                + "<args> "
+        msg += "--calid-help print this message\n\n";
+        msg += "--calid-list [<args>] list all available pairs."
+                + "\n<args> " + src + " " + rest + "\n\n";
+        msg += "--calid-result [<args>] [-d <args>] display results."
+                + "\n<args> "
                 + date + " [" + src + "] "
                 + rest + " [freq=Z]\n"
-                + "\t\t\tdate: sets range of time, if only starting date is selected then\n" 
-                + "\t\t\t\tonly this date is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional\n" 
-                + "\t\t\tsrc: source name\n" 
-                + "\t\t\tele: elevation angle in degrees, from -10.0 to 90.0 \n"
-                + "\t\t\tdis: minimal distance between paired points in meters, must be bigger then 0\n"
-                + "\t\t\tfreq: minimal frequency percentage of points with precipitation\n"
-                + "\t\t\t\tabove given threshold, must be bigger then 0\n" 
-                + "\t\t\te.g: --calid-result src=Rzeszow"
+                + "date: sets range of time, if only starting date is selected then only " 
+                + "this date data is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional,\n" 
+                + "src: source name\n" 
+                + "ele: elevation angle in degrees, from -10.0 to 90.0\n"
+                + "dis: minimal distance between paired points in meters, must be bigger then 0,\n"
+                + "freq: minimal frequency percentage of paired points with precipitation "
+                + "above used threshold (of dBZ), must be bigger then 0,\n" 
+                + "-d <args> using specified method to present results, available arguments are: " 
+                + " method=median, and period=X where X means number of days (X > 0).\n"
+                + "e.g: --calid-result src=Rzeszow"
                 + " date=2011-08-21/09:30,2011-08-21/10:30 freq=10\n";
-        
+                
+        msg += "\nuse jrat --help to print more general help message";
 
         System.out.println(msg);
     }

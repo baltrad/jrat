@@ -78,7 +78,16 @@ public class HDF5Rb5ComparisonTest {
         assertEquals(volH5.getScan(0.5).getArray().getRawIntPoint(11, 100),
                 volRb5.getScan(0.5).getArray().getRawIntPoint(11, 100));
         
+        
+        assertEquals(volH5.getScan(0.5).getArray().getPoint(100, 300), volRb5
+                .getScan(0.5).getArray().getPoint(100, 300), 0.01);
 
+        assertEquals(volH5.getScan(0.5).getArray().getPoint(31, 310), volRb5
+                .getScan(0.5).getArray().getPoint(31, 301), 0.01);
+        
+        assertEquals(volH5.getScan(0.5).getArray().getRawIntPoint(1, 350),
+                volRb5.getScan(0.5).getArray().getRawIntPoint(1, 350));
+        
 //        for (int x = 0; x < volH5.getScan(0.5).getArray().getSizeX(); x++)
 //            for (int y = 0; y < volRb5.getScan(0.5).getArray().getSizeY(); y++) {
 //                System.out.println("x=" + x + " y=" + y);

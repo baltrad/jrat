@@ -43,7 +43,7 @@ public class IntDataArray extends ArrayData {
     public short getRawIntPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return -1;
+            return NODATA_RAW_INT_POINT;
         }
         return (short) data[x][y];
     }
@@ -79,7 +79,7 @@ public class IntDataArray extends ArrayData {
     public byte getRawBytePoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return 0;
+            return NODATA_RAW_BYTE_POINT;
         }
         return int2byte((short) data[x][y]);
     }
@@ -107,7 +107,7 @@ public class IntDataArray extends ArrayData {
     public double getPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return -9999;
+            return NODATA_POINT;
         }
         return data[x][y];
     }

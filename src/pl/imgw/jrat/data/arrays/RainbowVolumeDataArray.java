@@ -153,7 +153,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     public short getRawIntPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= getSizeX() || y >= getSizeY()) {
             // System.out.println(index ++);
-            return -1;
+            return NODATA_RAW_INT_POINT;
         }
         int p = unsignedByte2Int(blobdata.getDecompressed()[getPosition(x, y)]);
         return (short) p;
@@ -166,7 +166,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     public byte getRawBytePoint(int x, int y) {
         if (x < 0 || y < 0 || x >= getSizeX() || y >= getSizeY()) {
             // System.out.println(index ++);
-            return 0;
+            return NODATA_RAW_BYTE_POINT;
         }
         return blobdata.getDecompressed()[getPosition(x, y)];
     }
@@ -178,7 +178,7 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     public double getPoint(int x, int y) {
         if (x < 0 || y < 0 || x >= getSizeX() || y >= getSizeY()) {
             // System.out.println(index ++);
-            return -9999;
+            return NODATA_POINT;
         }
         short value = getRawIntPoint(x, y);
         if (gain == 0)

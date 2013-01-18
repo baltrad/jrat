@@ -43,7 +43,6 @@ public class RainbowVolumeParserTest {
     @Before
     public void setUp() {
         file = new File("test-data", "1.vol");
-        
         pm = new ParserManager();
 //        rip = new Rainbow53VolumeParser();
         rip = new DefaultParser();
@@ -86,6 +85,7 @@ public class RainbowVolumeParserTest {
         
     }
     
+    @Test
     public void arrayValueTest() {
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
         Rainbow53VolumeParser rp = new Rainbow53VolumeParser();
@@ -103,9 +103,9 @@ public class RainbowVolumeParserTest {
         
         assertEquals(10, vol.getAllScans().size());
         
-        assertEquals(61, vol.getScan(0.5).getArray()
+        assertEquals(52, vol.getScan(0.5).getArray()
                 .getRawIntPoint(20, 301));
-        assertEquals(-1.5d, vol.getScan(0.5).getArray()
+        assertEquals(-6.0d, vol.getScan(0.5).getArray()
                 .getPoint(20, 301), 0.1);
         
     }

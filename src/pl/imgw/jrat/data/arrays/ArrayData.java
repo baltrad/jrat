@@ -16,6 +16,11 @@ public abstract class ArrayData {
     protected int sizeX;
     protected int sizeY;
     
+    public static double NODATA_POINT = -9999;
+    public static byte NODATA_RAW_BYTE_POINT = 0;
+    public static short NODATA_RAW_INT_POINT = -1;
+    
+    
     /**
      * 
      * Initialize new array of size sizeX and sizeY
@@ -31,12 +36,12 @@ public abstract class ArrayData {
     /**
      * 
      * Receiving value from the array in point (x, y). If x or y is out of
-     * bounds return value will be -1.
+     * bounds return value will be <code>NODATA_RAW_INT_POINT</code>..
      * 
-     * @param x 
-     * @param y 
+     * @param x X-dimension (range bin)
+     * @param y Y-dimension (azimuth gate) 
      * @return returns signed short from 0 to 255, if x or y is out of bounds returns
-     *         -1
+     *         <code>NODATA_RAW_INT_POINT</code>.
      */
     public abstract short getRawIntPoint(int x, int y);
 
@@ -53,11 +58,12 @@ public abstract class ArrayData {
 
     /**
      * Receiving value from the array in point (x, y). If x or y is out of
-     * bounds return value will be 0.
+     * bounds return value will be <code>NODATA_RAW_BYTE_POINT</code>.
      * 
-     * @param x 
-     * @param y 
-     * @return unsigned byte, if x or y is out of bounds returns 0
+     * @param x X-dimension (range bin)
+     * @param y Y-dimension (azimuth gate)
+     * @return unsigned byte, if x or y is out of bounds returns
+     *         <code>NODATA_RAW_BYTE_POINT</code>
      */
     public abstract byte getRawBytePoint(int x, int y);
 
@@ -75,13 +81,13 @@ public abstract class ArrayData {
 
     /**
      * Receiving real value from the array in point (x, y). If x or y is out of
-     * bounds return value will be -9999.
+     * bounds return value will be <code>NODATA_POINT</code>..
      * 
-     * @param x
+     * @param x X-dimension (range bin)
      *            
-     * @param y
+     * @param y Y-dimension (azimuth gate)
      *            
-     * @return if x or y is out of bounds returns -9999
+     * @return if x or y is out of bounds returns <code>NODATA_POINT</code>.
      */
     public abstract double getPoint(int x, int y);
 

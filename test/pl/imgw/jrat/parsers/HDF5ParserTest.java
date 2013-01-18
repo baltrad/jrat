@@ -125,6 +125,14 @@ public class HDF5ParserTest {
         double d = pdc1.getData().getPoint(x, y);
         assertEquals(value, d, 0.1);
         
+        b = pdc2.getScan(0.5).getArray().getRawBytePoint(10, 400);
+        assertEquals(ArrayData.NODATA_RAW_BYTE_POINT, b);
+        i = pdc2.getScan(0.5).getArray().getRawIntPoint(400, 2);
+        assertEquals(ArrayData.NODATA_RAW_INT_POINT, i);
+        d = pdc2.getScan(0.5).getArray().getPoint(300, 400);
+        assertEquals(ArrayData.NODATA_POINT, d, 0.1);
+        
+        
         int x = 166;
         int y = 170;
         int val = 84;

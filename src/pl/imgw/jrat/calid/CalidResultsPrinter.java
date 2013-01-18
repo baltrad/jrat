@@ -76,8 +76,6 @@ public class CalidResultsPrinter {
                 
                 header += "\n#\tdate \t\tfreq" + " \tmean" + " \tRMS" + " \tmedian\n";
 
-                
-                
                 Set<Date> dates = new TreeSet<Date>();
                 setDates(f, dates);
                 for(Date d : dates) {

@@ -86,7 +86,7 @@ export PATH</echo>
        <tstamp>
           <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
        </tstamp>
-       <copy file="version.txt" toFile="${version.src}" overwrite="true">
+       <copy file="src/pl/imgw/jrat/AplicationConstans" toFile="${version.src}" overwrite="true">
           <filterset>
              <filter token="DATE" value="${TODAY}"/>
              <filter token="LOG" value="${install.prefix}/${app.name}/${log.dir}"/>

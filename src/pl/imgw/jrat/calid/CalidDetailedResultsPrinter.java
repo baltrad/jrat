@@ -51,7 +51,6 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
             }
         }
         
-        
     }
 
     public void printResults() {

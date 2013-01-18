@@ -171,7 +171,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         }
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return -1;
+            return NODATA_RAW_INT_POINT;
         }
         return (short) unsignedByte2Int(data[x][y]);
     }
@@ -205,7 +205,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         }
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return 0;
+            return NODATA_RAW_BYTE_POINT;
         }
         return data[x][y];
     }
@@ -255,7 +255,7 @@ public class RawByteDataArray extends ArrayData implements Cloneable {
         }
         if (x < 0 || y < 0 || x >= sizeX || y >= sizeY) {
             // System.out.println(index ++);
-            return -9999;
+            return NODATA_POINT;
         }
         short value = (short) unsignedByte2Int(data[x][y]);
         if (gain == 0)

@@ -6,6 +6,7 @@ package pl.imgw.jrat.calid;
 import java.util.Date;
 import java.util.Iterator;
 
+import pl.imgw.jrat.data.arrays.ArrayData;
 import pl.imgw.jrat.data.arrays.RawByteDataArray;
 import pl.imgw.jrat.data.containers.ScanContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
@@ -29,13 +30,20 @@ public class CalidComparator {
                         + " and " + container.getPair().getSource2(),
                 LogHandler.NORMAL);
         
+        System.out.println("Min dBZ: " + dbz);
+        
         Iterator<PairedPoints> itr = container.getPairedPointsList().iterator();
         while (itr.hasNext()) {
             PairedPoints coords = itr.next();
 //            RawByteDataArray array1 = (RawByteDataArray) scan1.getArray();
 //            RawByteDataArray array2 = (RawByteDataArray) scan2.getArray();
-            double val1 = scan1.getArray().getPoint(coords.getRay1(), coords.getBin1());
-            double val2 = scan2.getArray().getPoint(coords.getRay2(), coords.getBin2());
+            double val1 = scan1.getArray().getPoint(coords.getBin1(), coords.getRay1());
+            double val2 = scan2.getArray().getPoint(coords.getBin2(), coords.getRay2());
+//            System.out.println(coords.getRay1() + " " + coords.getBin1() + " "
+//                    + coords.getRay2() + " " + coords.getBin2());
+//            System.out.println("vol1: " + val1 + " vol2: " + val2);
+            if(val1 == ArrayData.NODATA_POINT || val2 == ArrayData.NODATA_POINT)
+                continue;
             if (val1 >= dbz || val2 >= dbz) {
                 // val1 = array1.getPoint(coords.getRay1(), coords.getBin1());
                 // val2 = array2.getPoint(coords.getRay2(), coords.getBin2());
