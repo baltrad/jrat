@@ -4,17 +4,14 @@
 package pl.imgw.jrat.data.containers;
 
 import java.awt.geom.Point2D;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.plaf.SliderUI;
-
 import pl.imgw.jrat.data.arrays.ArrayData;
+import pl.imgw.jrat.data.arrays.RainbowVolumeDataArray;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -194,6 +191,39 @@ public class RainbowVolume implements VolumeContainer {
             @Override
             public Point2D.Double getCoordinates() {
                 return new Point2D.Double(getLon(), getLat());
+            }
+
+            @Override
+            public double getRPM() {
+                String ant = data.getRainbowAttributeValue(
+                        "/volume/scan/pargroup/antspeed", "");
+                try {
+                    return 60 / (360 / Double.parseDouble(ant));
+                } catch (NumberFormatException e) {
+                    return 0;
+                }
+            }
+
+            @Override
+            public double getOffset() {
+
+                return ((RainbowVolumeDataArray) getArray()).getOffset();
+            }
+
+            @Override
+            public double getGain() {
+
+                return ((RainbowVolumeDataArray) getArray()).getGain();
+            }
+
+            @Override
+            public double getNodata() {
+                return 0;
+            }
+
+            @Override
+            public double getUndetect() {
+                return 0;
             }
 
         };

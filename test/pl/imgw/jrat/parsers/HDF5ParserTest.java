@@ -108,6 +108,16 @@ public class HDF5ParserTest {
         assertEquals("source name is wrong:", "ORG:247", s);
         double d = pdc1.getXScale();
         assertEquals("xscale in where group is wrong:", 2000.0, d, 0);
+        
+        ScanContainer scan = pdc2.getScan(0.5);
+        
+        assertEquals(3.0, scan.getRPM(), 0.1);
+        assertEquals(0.5, scan.getGain(), 0.01);
+        assertEquals(-32.0, scan.getOffset(), 0.1);
+        
+        assertEquals(255, (int)scan.getNodata());
+        assertEquals(0, (int)scan.getUndetect());
+        
     }
 
     @Test

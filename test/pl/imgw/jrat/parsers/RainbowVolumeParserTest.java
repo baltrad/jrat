@@ -81,6 +81,13 @@ public class RainbowVolumeParserTest {
         assertEquals("rays", 361, scan.getNRays());
         assertNotNull(scan.getArray());
         
+        assertEquals(3.0, scan.getRPM(), 0.1);
+        assertEquals(0.5, scan.getGain(), 0.01);
+        assertEquals(-32.0, scan.getOffset(), 0.1);
+        
+        assertEquals(0, (int)scan.getNodata());
+        assertEquals(0, (int)scan.getUndetect());
+        
         assertEquals(10, vol.getAllScans().size());
         
     }

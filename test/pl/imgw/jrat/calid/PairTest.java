@@ -69,6 +69,7 @@ public class PairTest {
         pm.initialize(new File("test-data/calid", "2011082113400400dBZ.vol"));
         VolumeContainer vol2 = new RainbowVolume(
                 (RainbowDataContainer) pm.getProduct());
+        
         pair = new Pair(vol1, vol2);
         assertTrue("validation is not working well with rainbow format",
                 pair.hasRealVolumes());

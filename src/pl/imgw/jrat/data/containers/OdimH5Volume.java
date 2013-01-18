@@ -174,6 +174,38 @@ public class OdimH5Volume implements VolumeContainer {
             public Point2D.Double getCoordinates() {
                 return new Point2D.Double(getLon(), getLat());
             }
+
+            @Override
+            public double getRPM() {
+                return (Double) data.getAttributeValue(dataset + "/how", "rpm");
+            }
+
+            @Override
+            public double getOffset() {
+                Double o = (Double) data.getAttributeValue(dataset
+                        + "/data1/what", "offset");
+
+                return (o == null) ? 0 : o;
+            }
+
+            @Override
+            public double getGain() {
+                Double g = (Double) data.getAttributeValue(dataset
+                        + "/data1/what", "gain");
+                return (g == null) ? 1 : g;
+            }
+
+            @Override
+            public double getNodata() {
+                return (Double) data.getAttributeValue(dataset + "/data1/what",
+                        "nodata");
+            }
+
+            @Override
+            public double getUndetect() {
+                return (Double) data.getAttributeValue(dataset + "/data1/what",
+                        "undetect");
+            }
         };
         scans.put(elevation, scan);
         return scan;

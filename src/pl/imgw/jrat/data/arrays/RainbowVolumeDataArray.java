@@ -20,7 +20,6 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
     
     protected RainbowBlobContainer blobdata;
     protected RainbowBlobContainer blobray;
-    
     protected double offset = 0;
     protected double gain = 0;
     
@@ -185,7 +184,21 @@ public class RainbowVolumeDataArray extends ArrayData implements Cloneable  {
             return value;
         return raw2real(value);
     }
+    
+    /**
+     * @return the offset
+     */
+    public double getOffset() {
+        return offset;
+    }
 
+    /**
+     * @return the gain
+     */
+    public double getGain() {
+        return gain;
+    }
+    
     private double raw2real(int x) {
         return gain * x + offset;
     }
