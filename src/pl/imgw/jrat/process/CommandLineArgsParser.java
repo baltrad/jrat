@@ -108,16 +108,16 @@ public class CommandLineArgsParser {
     private final static String SEQ_DESCR = "sequence mode to process files\n<arg> interval lenght in minutes";
     
     private final static String CALID_DESCR = "calibration difference of two radars\n" +
-    		"for more help use --calid-help option";
+    		"<args> [ele=X] [dis=Y] [ref=Z]\nfor more help use --calid-help option";
     
     private final static String CALID_HELP_DESCR = "print an information of CALID usage";
-    
-    private final static String SCANSUN_DESCR = "opis algorytmu i sposób użycia";
     
     private final static String CALID_RESULT_DESCR = "handle CALID results\n<arg>";
     private final static String CALID_LIST_DESCR = "print list of available CALID results\n<arg>";
     private static final String CALID_RESULT_DETAIL_DESCR = "CALID detailed result, " +
     		"for more help use --calid-help option";
+    
+    private final static String SCANSUN_DESCR = "opis algorytmu i sposób użycia";
     // private final static String FORMAT_DESCR =
     // "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
 

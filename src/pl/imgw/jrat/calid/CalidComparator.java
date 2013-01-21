@@ -30,8 +30,6 @@ public class CalidComparator {
                         + " and " + container.getPair().getSource2(),
                 LogHandler.NORMAL);
         
-        System.out.println("Min dBZ: " + dbz);
-        
         Iterator<PairedPoints> itr = container.getPairedPointsList().iterator();
         while (itr.hasNext()) {
             PairedPoints coords = itr.next();

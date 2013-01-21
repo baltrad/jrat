@@ -5,7 +5,7 @@ Java Radar data Analizing Tool
 
 Łukasz Wojtas
 
-Copyright (C) 2011-2012 Institute of Meteorology and Water Management, IMGW
+Copyright (C) 2011-2013 Institute of Meteorology and Water Management, IMGW
 
 ################################################################################
 This file is part of the jrat software.
@@ -33,7 +33,18 @@ Example of installation command:
 
 $ ant -Dinstall.prefix=/opt/baltrad install
 
-In this case the software will be installed in under /opt/baltrad/jrat
+In this case the software will be installed under /opt/baltrad/jrat
+
+After the software is installed succesfully, you should add jrat/bin folder
+to your $PATH e.g.
+$ PATH=$PATH:/opt/baltrad/jrat/bin
+$ export PATH
+
+or run the application from the bin path.
+
+When jrat is installed and ready to run you will receive help information on how
+to use the software by:
+$ jrat --help
 
 ################################################################################
 

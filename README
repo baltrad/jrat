@@ -4,7 +4,7 @@ Java Radar data Analizing Tool
 
 Łukasz Wojtas
 
-Copyright (C) 2011-2012 Institute of Meteorology and Water Management, IMGW
+Copyright (C) 2011-2013 Institute of Meteorology and Water Management, IMGW
 
 What is it?
 -----------
@@ -15,7 +15,10 @@ processing. It operates on ODIM HDF5 and Rainbow5 format.
 It allows user to print information about a radar data file and print basic
 images. The aplication implements CALID algorithm for pair wise comparison.
 
-It can be run for operational in seqential and file event based mode.
+Implemented algorithms:
+* CALID: The algorithm compares reflectivity of two radars in overlapping
+areas.
+* SCANSUN
 
 The Latest Version
 ------------------
@@ -25,15 +28,12 @@ project page under: http://git.baltrad.eu/git/.
 Documentation
 -------------
 The documentation available as of the date of this release is
-included in HTML format in the doc.
+included in HTML format in the doc folder.
 
 Installation
 ------------
-Please see the file called INSTALL.  Platform specific notes can be
-found in README.platforms.
+Please see the file called INSTALL. 
 
 Licensing
 ---------
-
 Please see the file called LICENSE.
-
