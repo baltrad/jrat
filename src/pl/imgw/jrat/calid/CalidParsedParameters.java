@@ -63,32 +63,35 @@ public class CalidParsedParameters {
     
     /**
      * 
-     * Initializes manager and sets parameters for the algorithm:
+     * Initializes manager and sets parameters for the algorithm, valid format
+     * is name=value
      * 
      * <p>
-     * <tt>elevation</tt> of the scan, in degrees, the proper format for the
-     * argument should contain numerical value and word 'deg' e.g.
-     * '0.5deg'</pre>
+     * <tt>ele=</tt> elevation of the scan, in degrees, the proper format for
+     * the argument should contain double value e.g. ele=0.5</pre>
      * 
      * <p>
-     * <tt>distance</tt> (maximal) between overlapping pixels in meters, in
+     * <tt>dis=</tt> distance (maximal) between overlapping pixels in meters, in
      * other words the precision of finding overlapping pixels, the proper
-     * format for the argument should contain numerical value and word 'm' e.g.
-     * '500m'</pre>
+     * format for the argument should contain integer value e.g. dis=500</pre>
      * 
      * <p>
-     * <tt>reflectivity</tt> (minimal) that is taken to calculation, all points
-     * with reflectivity below this value are skipped (they are treated as no
-     * data). The proper format for the argument should contain numerical value
-     * and word 'dBZ' e.g. '500m'</pre>
+     * <tt>ref=</tt> reflectivity in dBZ (minimal) that is taken to calculation,
+     * all points with reflectivity below this value are skipped (they are
+     * treated as no data). The proper format for the argument should contain
+     * double value e.g. ref=3.5 </pre>
      * 
      * <p>
-     * <tt>date</tt> (from [,to]) e.g. date=2012-12-30 or
+     * <tt>date=</tt> date (from [,to]) e.g. date=2012-12-30 or
      * date=2012-12-30/09:10,2012-12-30/10:00</pre>
      * 
      * <p>
-     * <tt>frequency</tt> minimal frequency in per cents of non zero results that is taken
-     * to calculation e.g. freq=30</pre>
+     * <tt>freq=</tt> minimal frequency in per cents of non zero results that is
+     * taken to calculation e.g. freq=30</pre>
+     * 
+     * <p>
+     * <tt>range=</tt> maximum radar range for overlapping points in km e.g.
+     * range=200</pre>
      * 
      * @param par
      *            array of strings each representing parameters.
@@ -233,7 +236,7 @@ public class CalidParsedParameters {
 
         String src = "src=Source1[,Source2]";
         String date = "date=Start[,End]";
-        String rest = "[ele=X] [dis=Y] [ref=Z]";
+        String rest = "[ele=] [dis=] [range=] [ref=]";
 
         String msg = "CALID algorytm usage:\n"
                 + "jrat --calid <args> -i files/folder(s) [-v] start comparison\n"
@@ -241,7 +244,9 @@ public class CalidParsedParameters {
                 + rest
                 + "\n"
                 + "ele: elevation angle in degrees, from -10.0 to 90.0\n"
-                + "dis: minimal distance between paired points in meters, must be bigger then 0,\n"
+                + "dis: minimal distance between two overlapping points in meters,"
+                + " must be bigger then 0,\n"
+                + "range: maximum radar range for overlapping points, (range > 1)\n"
                 + "ref: minimal reflectivity (dBZ)\n\n"
                 + "e.g.  jrat --calid ele=0.5 dis=500 ref=3.5 "
                 + "-i T_PAGZ48_C_SOWR_20120109233027.h5 T_PAGZ44_C_SOWR_20120109233016.h5 -v\n\n";

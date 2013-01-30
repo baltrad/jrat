@@ -40,7 +40,7 @@ public class FilePatternFilterTest {
         pattern = "test-data/*.cmax test-data/*.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
-        assertEquals("number of files filtered is wrong", 6, list.size());
+        assertEquals("number of files filtered is wrong", 7, list.size());
     }
     
     @Test

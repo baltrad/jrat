@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -59,6 +60,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
             return;
         }
         
+        headers = new HashSet<String>();
         CalidContainer cc = new CalidContainer(params);
         Set<File> files = getResultsFiles();
 
@@ -69,6 +71,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         cal.add(Calendar.DATE, period);
         
         for (File f : files) {
+            printResultsHeader(f);
             
             try {
                 

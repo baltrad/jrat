@@ -34,7 +34,8 @@ import pl.imgw.jrat.tools.out.Logging;
 public class RainbowVolumeParserTest {
 
     RawByteDataArray dc;
-    File file;
+    File rb53file;
+    File rb52file;
 //    Rainbow53VolumeParser rip;
     DefaultParser rip = new DefaultParser();
     DataContainer pdc;
@@ -42,7 +43,8 @@ public class RainbowVolumeParserTest {
     
     @Before
     public void setUp() {
-        file = new File("test-data", "1.vol");
+        rb53file = new File("test-data", "1.vol");
+        rb52file = new File("test-data", "old.vol");
         pm = new ParserManager();
 //        rip = new Rainbow53VolumeParser();
         rip = new DefaultParser();
@@ -52,7 +54,7 @@ public class RainbowVolumeParserTest {
     
     @Test
     public void isValidVolume() {
-        pm.initialize(file);
+        pm.initialize(rb53file);
         
         RainbowDataContainer data = (RainbowDataContainer) pm.getProduct();
         
@@ -65,7 +67,7 @@ public class RainbowVolumeParserTest {
     
     @Test
     public void getAttributeTest() {
-        pm.initialize(file);
+        pm.initialize(rb53file);
         RainbowDataContainer data = (RainbowDataContainer) pm.getProduct();
         RainbowVolume vol = new RainbowVolume(data);
         assertTrue(((String) data.getAttributeValue(
@@ -119,12 +121,26 @@ public class RainbowVolumeParserTest {
     
     @Test
     public void isValidFileTest() {
-        assertTrue("this is not a rainbow file", pm.isValid(file));
+        assertTrue("this is not a rainbow file", pm.isValid(rb53file));
+        
     }
     
     @Test
+    public void isValid52VolumeTest() {
+        
+        assertTrue("this is not a rainbow 5.2 file", pm.isValid(rb52file));
+        assertTrue(pm.initialize(rb52file));
+        RainbowVolume vol = new RainbowVolume((RainbowDataContainer) pm.getProduct());
+        assertEquals(453000, vol.getHeight());
+        assertEquals(20.079720, vol.getLon(), 0.01);
+        assertEquals(50.394169, vol.getLat(), 0.01);
+        assertTrue(vol.getSiteName().matches("Brzuchania"));
+        
+        }
+    
+    @Test
     public void initializeTest() {
-        assertTrue(pm.initialize(file));
+        assertTrue(pm.initialize(rb53file));
         pdc = pm.getProduct();
         assertNotNull("Initialization failed", pdc);
         

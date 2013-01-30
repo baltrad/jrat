@@ -42,7 +42,11 @@ public class CalidComparator {
 //            System.out.println("vol1: " + val1 + " vol2: " + val2);
             if(val1 == ArrayData.NODATA_POINT || val2 == ArrayData.NODATA_POINT)
                 continue;
-            if (val1 >= dbz || val2 >= dbz) {
+            if (val1 >= dbz && val2 >= dbz) {
+//                if(val1 == scan1.getOffset())
+//                    val1 = 0;
+//                if(val2 == scan2.getOffset())
+//                    val2 = 0;
                 // val1 = array1.getPoint(coords.getRay1(), coords.getBin1());
                 // val2 = array2.getPoint(coords.getRay2(), coords.getBin2());
                 // System.out.println(val1 + " " + val2);
@@ -107,7 +111,7 @@ public class CalidComparator {
 
         LogHandler.getLogs().displayMsg(
                 "CALID: Comparison completed for: " + cc.getPair().getSource1()
-                        + " and " + cc.getPair().getSource2() + "\n",
+                        + " and " + cc.getPair().getSource2(),
                 LogHandler.NORMAL);
 
     }

@@ -52,9 +52,11 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public Double getLon() {
-        String lon = data
-                .getRainbowAttributeValue("/volume/sensorinfo/lon", "");
-
+        String lon = "";
+        if (data.getType() == RainbowDataContainer.VOLUME53)
+            lon = data.getRainbowAttributeValue("/volume/sensorinfo/lon", "");
+        else if (data.getType() == RainbowDataContainer.VOLUME52)
+            lon = data.getRainbowAttributeValue("/volume/radarinfo", "lon");
         try {
             return Double.parseDouble(lon);
         } catch (NumberFormatException e) {
@@ -69,9 +71,11 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public Double getLat() {
-        String lat = data
-                .getRainbowAttributeValue("/volume/sensorinfo/lat", "");
-
+        String lat = "";
+        if (data.getType() == RainbowDataContainer.VOLUME53)
+            lat = data.getRainbowAttributeValue("/volume/sensorinfo/lat", "");
+        else if (data.getType() == RainbowDataContainer.VOLUME52)
+            lat = data.getRainbowAttributeValue("/volume/radarinfo", "lat");
         try {
             return Double.parseDouble(lat);
         } catch (NumberFormatException e) {
@@ -86,11 +90,14 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public int getHeight() {
-        String alt = data
-                .getRainbowAttributeValue("/volume/sensorinfo/alt", "");
+        String alt = "";
+        if (data.getType() == RainbowDataContainer.VOLUME53)
+            alt = data.getRainbowAttributeValue("/volume/sensorinfo/alt", "");
+        else if (data.getType() == RainbowDataContainer.VOLUME52)
+            alt = data.getRainbowAttributeValue("/volume/radarinfo", "alt");
 
         try {
-            return Integer.parseInt(alt);
+            return (int) Double.parseDouble(alt) * 1000;
         } catch (NumberFormatException e) {
             return 0;
         }
@@ -103,7 +110,12 @@ public class RainbowVolume implements VolumeContainer {
      */
     @Override
     public String getSiteName() {
-        return data.getRainbowAttributeValue("/volume/sensorinfo", "name");
+        if (data.getType() == RainbowDataContainer.VOLUME53)
+            return data.getRainbowAttributeValue("/volume/sensorinfo", "name");
+
+        else if (data.getType() == RainbowDataContainer.VOLUME52)
+            return data.getRainbowAttributeValue("/volume/radarinfo/name", "");
+        return "";
     }
 
     /*

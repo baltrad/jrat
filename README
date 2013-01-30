@@ -11,10 +11,6 @@ What is it?
 The jrat tool is a java based stand alone software for weather radar data
 processing. It operates on ODIM HDF5 and Rainbow5 format.
 
-
-It allows user to print information about a radar data file and print basic
-images. The aplication implements CALID algorithm for pair wise comparison.
-
 Implemented algorithms:
 * CALID: The algorithm compares reflectivity of two radars in overlapping
 areas.

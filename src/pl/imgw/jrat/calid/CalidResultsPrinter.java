@@ -34,9 +34,9 @@ public class CalidResultsPrinter {
     protected CalidParsedParameters params;
     private Scanner scanner;
     
-    private Set<String> headers;
+    protected Set<String> headers;
     
-    protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd;HH:mm");
     protected SimpleDateFormat fsdf = new SimpleDateFormat("yyyyMMdd");
     
     /**
@@ -217,7 +217,7 @@ public class CalidResultsPrinter {
 
     }
     
-    private int printResultsDateNumber(File f) {
+    protected int printResultsDateNumber(File f) {
         // System.out.println(f);
         String date = "";
         int i = 0;
@@ -259,7 +259,11 @@ public class CalidResultsPrinter {
         return i;
     }
     
-    private void printResultsHeader(File f) {
+    /**
+     * 
+     * @param f
+     */
+    protected void printResultsHeader(File f) {
         // System.out.println(f);
         try {
             scanner = new Scanner(f);

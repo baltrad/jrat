@@ -42,8 +42,9 @@ public class RainbowDataContainer implements DataContainer {
     
     protected Document attribues;
     
-    public static final int VOLUME = 1;
-    public static final int PRODUCT = 2;
+    public static final int VOLUME52 = 1;
+    public static final int VOLUME53 = 2;
+    public static final int PRODUCT = 3;
     
     protected int type = 0;
 
@@ -238,7 +239,7 @@ public class RainbowDataContainer implements DataContainer {
      */
     @Override
     public void printGeneralIfnormation() {
-        if (type == VOLUME) {
+        if (type == VOLUME53) {
             // software version
             print("This is Rainbow volume version "
                     + getAttributeValue("/volume", "version"));
@@ -253,6 +254,24 @@ public class RainbowDataContainer implements DataContainer {
             // site name
             print("Site name:\t"
                     + getAttributeValue("/volume/sensorinfo", "name"));
+            
+            
+            
+        } else if (type == VOLUME52) {
+            // software version
+            print("This is Rainbow volume version "
+                    + getAttributeValue("/volume", "version"));
+
+            // type
+            print("Data type:\t"
+                    + getAttributeValue("/volume/scan/slice/slicedata/rawdata",
+                            "type"));
+            // date
+            print("Date:\t\t" + getAttributeValue("/volume/scan", "date") + " "
+                    + getAttributeValue("/volume/scan", "time"));
+            // site name
+            print("Site name:\t"
+                    + getAttributeValue("/volume/radarinfo/name", ""));
             
             
             

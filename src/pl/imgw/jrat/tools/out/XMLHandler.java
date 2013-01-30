@@ -219,15 +219,24 @@ public class XMLHandler {
 
     }
     public static void main(String[] args) {
-        String home = System.getProperty("user.home");
-        String file = "matching.xml";
+        String home = "/home/lwojtas/poligon/jrat/prezentacja/pairs";
+        String file = "rzeleg.xml";
         Document doc = loadXML(new File(home, file).getPath());
         NodeList list = doc.getChildNodes();
-        for(int i = 0; i < list.getLength(); i++) {
-            System.out.println(list.item(i).getNodeName());
-            System.out.println(list.item(i).getChildNodes().item(0).getNodeName());
-            System.out.println(list.item(i).getChildNodes().item(1).getNodeName());
-            System.out.println(list.item(i).getChildNodes().item(2).getNodeName());
+        NodeList pairs = list.item(0).getChildNodes();
+        for(int i = 0; i < pairs.getLength(); i++) {
+            if(!pairs.item(i).hasAttributes()) {
+                continue;
+            }
+            NamedNodeMap points = pairs.item(i).getAttributes();
+//            System.out.println(points.getLength());
+            System.out.println("999.0  1002");
+            System.out.println("    " + points.item(6).getNodeValue() + "\t" + points.item(5).getNodeValue() + "  2");
+//            System.out.println("    " + points.item(2).getNodeValue() + "\t" + points.item(1).getNodeValue() + "  2");
+//            for(int n = 0; n < points.getLength(); n++) {
+////                System.out.println(n + " " + points.item(n).getNodeName());
+//            }
+            
             
         }
     }

@@ -51,8 +51,10 @@ public class CalidProcessor implements FilesProcessor {
             pair = pairs.next();
             ConsoleProgressBar.getProgressBar().evaluate();
             if (isValid()) {
+                LogHandler.getLogs().displayMsg("", LogHandler.NORMAL);
                 cc.setPair(pair);
                 cc.initialize(pair.getDate());
+                cc.resetContainer();
 //                cc.resetDifferences();
             }
         }
