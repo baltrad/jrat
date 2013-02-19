@@ -170,18 +170,23 @@ public class CalidFileHandler {
                     continue;
                 }                    
                 String[] words = line.split(" ");
-                if (words.length != cc.getPairedPointsList().size() + 1) {
+                if (words.length != cc.getPairedPointsList().size() + 3) {
+//                    System.out.println(words.length + " powinno byc: "
+//                            + cc.getPairedPointsList().size() + 3);
                     continue;
                 }
                 Date dateRead = CALID_DATE_TIME_FORMAT.parse(words[0]);
                 if (dateRead.equals(date)) {
-                    for (int i = 1; i < words.length; i++) {
+                    for (int i = 1; i < words.length - 2; i++) {
                         if (words[i].matches(NULL)) {
                             cc.getPairedPointsList().get(i - 1).setDifference(null);
                         } else
                             cc.getPairedPointsList().get(i - 1).setDifference(
                                     Double.parseDouble(words[i]));
                     }
+                    cc.setR1understate(Integer.parseInt(words[words.length - 2]));
+                    cc.setR2understate(Integer.parseInt(words[words.length - 1]));
+                    
                     cc.setHasResults(true);
                     return true;
                 }
@@ -237,6 +242,7 @@ public class CalidFileHandler {
                         .toString(p.getDifference()));
                 pw.print(v);
             }
+            pw.print(" " + cc.getR1understate() + " " + cc.getR2understate());
             pw.print("\n");
             LogHandler.getLogs().displayMsg("CALID: Saving results complete",
                     LogHandler.NORMAL);

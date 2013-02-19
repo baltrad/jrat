@@ -141,7 +141,6 @@ public class CalidCoordsCalc {
 //        System.out.println("nrays " + r1nrays + " " + r2nrays);
 
         double a1, a2;
-        
         for (int b1 = r1bin0; b1 < r1binMax; b1++) {
             for (int b2 = r2bin0; b2 < r2binMax; b2++) {
 
@@ -153,6 +152,7 @@ public class CalidCoordsCalc {
                         
                         a1 = r1 * r1rayScale;
                         a2 = r2 * r2rayScale;
+                        
                         
                         if(!checkAngle(r1ray0, r1rayMax, a1)) {
                             continue;
@@ -169,7 +169,8 @@ public class CalidCoordsCalc {
                                 * (b2 + 0.5) * r2binScale;
                         Point2D.Double p2 = VincentyFormulas.dest(r2coords, a2,
                                 calculatedDist2);
-                        double calculatedDist = VincentyFormulas.dist(p1, p2);
+                        Double calculatedDist = VincentyFormulas.dist(p1, p2);
+                        
                         if (calculatedDist < cc.getParsedParameters()
                                 .getDistance()) {
                             RayBinData rb = new RayBinData(r1, b1, r2, b2);
@@ -183,7 +184,6 @@ public class CalidCoordsCalc {
             }
         }
         // CalidCoords[] rb = rayBins.toArray(new CalidCoords[0]);
-
         cc.setPairedPointsList(pairedPointsList);
         CalidFileHandler.saveCoords(cc);
         return true;

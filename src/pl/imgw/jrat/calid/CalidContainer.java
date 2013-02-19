@@ -28,6 +28,51 @@ public class CalidContainer implements Comparable<CalidContainer> {
     private CalidParsedParameters params;
     private boolean hasResults = false;
 
+    private int r1understate = 0;
+    private int r2understate = 0;
+    
+    /**
+     * incrementing number of understated cases of radar 1 by one
+     */
+    public void r1understated() {
+        r1understate++;
+    }
+
+    /**
+     * incrementing number of understated cases of radar 2 by one
+     */
+    public void r2understated() {
+        r2understate++;
+    }
+
+    /**
+     * @return the r1understate
+     */
+    public int getR1understate() {
+        return r1understate;
+    }
+
+    /**
+     * @param r1understate the r1understate to set
+     */
+    public void setR1understate(int r1understate) {
+        this.r1understate = r1understate;
+    }
+
+    /**
+     * @return the r2understate
+     */
+    public int getR2understate() {
+        return r2understate;
+    }
+
+    /**
+     * @param r2understate the r2understate to set
+     */
+    public void setR2understate(int r2understate) {
+        this.r2understate = r2understate;
+    }
+
     /**
      * @param pair
      * @param params
@@ -105,12 +150,16 @@ public class CalidContainer implements Comparable<CalidContainer> {
     }
 
     public void resetDifferences() {
-        for(PairedPoints pp : pairedPointsList)
+        for (PairedPoints pp : pairedPointsList)
             pp.setDifference(null);
+        r1understate = 0;
+        r2understate = 0;
     }
     
     public void resetContainer() {
         pairedPointsList = new ArrayList<PairedPoints>();
+        r1understate = 0;
+        r2understate = 0;
     }
     
     /**

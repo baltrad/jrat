@@ -20,6 +20,8 @@ import static pl.imgw.jrat.calid.CalidParsedParameters.*;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.jrat.tools.out.ResultPrinter;
+import pl.imgw.jrat.tools.out.ResultPrinterManager;
 
 /**
  *
@@ -39,6 +41,8 @@ public class CalidResultsPrinter {
     protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd;HH:mm");
     protected SimpleDateFormat fsdf = new SimpleDateFormat("yyyyMMdd");
     
+    protected ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
+    
     /**
      * 
      */
@@ -54,11 +58,11 @@ public class CalidResultsPrinter {
 //        List<Date> dates;
         boolean noResults = true;
         if (files.isEmpty()) {
-            System.out.println("# No results matching selected parameters");
+            printer.println("# No results matching selected parameters");
             return;
         }
 
-        if (isSet()) {
+        if (areParametersSet()) {
 
             boolean printHeader = true;
             
@@ -70,11 +74,12 @@ public class CalidResultsPrinter {
                 header += "#";
                 
                 //print horizontal line
-                for (int i = 0; i < 54; i++) {
+                for (int i = 0; i < 70; i++) {
                     header += "=";
                 }
                 
-                header += "\n#\tdate \t\tfreq" + " \tmean" + " \tRMS" + " \tmedian\n";
+                header += "\n#\tdate \t\tfreq" + " \tmean" + " \tRMS"
+                        + " \tmedian" + "\tr1under" + "\tr2under" + "\n";
 
                 Set<Date> dates = new TreeSet<Date>();
                 setDates(f, dates);
@@ -90,15 +95,18 @@ public class CalidResultsPrinter {
                     Double median = cc.getMedian(freq);
                     
                     String msg = " \t" + cc.getFreq() + " \t" + mean
-                            + " \t" + rms + " \t" + median; 
+                            + " \t" + rms + " \t" + median;
+                    
+                    msg += "\t" + cc.getR1understate() + "\t"
+                            + cc.getR2understate();
                     
                     if(mean != null || rms != null || median != null) {
                         if(printHeader) {
-                            System.out.print(header);
+                            printer.print(header);
                             printHeader = false;
                         }
                         noResults = false;
-                        System.out.println(sdf.format(d) + msg);
+                        printer.println(sdf.format(d) + msg);
                     } 
                     
                 }
@@ -114,7 +122,7 @@ public class CalidResultsPrinter {
             if(noResults) {
                 System.out.println("# No results matching selected parameters");
             }
-            System.out.print("\n");
+            printer.print("\n");
         } else {
             printList();
             
@@ -122,9 +130,6 @@ public class CalidResultsPrinter {
                     + " provide its src, ele, dis, ref and date");
             
         }
-        
-        
-
     }
    
     public void printList() {
@@ -137,7 +142,6 @@ public class CalidResultsPrinter {
             System.out.println("No results matching selected parameters");
             return;
         }
-        
 
         if (!params.getSource1().isEmpty() && !params.getSource1().isEmpty()
                 && !params.isDistanceDefault() && !params.isElevationDefault()
@@ -254,7 +258,7 @@ public class CalidResultsPrinter {
             LogHandler.getLogs().saveErrorLogs(this, e);
         }
         
-        System.out.println("\t\t" + date + " number of results: " + i);
+        printer.println("\t\t" + date + " number of results: " + i);
         
         return i;
     }
@@ -273,7 +277,7 @@ public class CalidResultsPrinter {
                     return;
                 headers.add(line);
                 if (line.startsWith("#")) {
-                    System.out.println(line);
+                    printer.println(line);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -301,6 +305,17 @@ public class CalidResultsPrinter {
         for (File pairname : folder.listFiles()) {
             if (pairname.isDirectory()) {
                 // pair name
+                String name = pairname.getName();
+                if (!name.isEmpty() && !params.getSource1().isEmpty()) {
+                    if (!params.getSource2().isEmpty()) {
+                        if (!name.contains(params.getSource1())
+                                || !name.contains(params.getSource2()))
+                            continue;;
+                    } else if (!name.contains(params.getSource1())) {
+                        continue;
+                    }
+                }
+                
                 for (File parameters : pairname.listFiles()) {
                     if (parameters.isDirectory()) {
                         // parameters
@@ -308,7 +323,7 @@ public class CalidResultsPrinter {
                             if (file.isFile()
                                     && file.getName().endsWith("results")) {
 
-                                if (keep(file))
+                                if (areParametersUnset() || keep(file))
                                     results.add(file);
                             }
                         }
@@ -320,16 +335,26 @@ public class CalidResultsPrinter {
         return results;
     }
     
-    protected boolean isSet() {
+    protected boolean areParametersUnset() {
+        if (params.getSource1().isEmpty() && params.getSource2().isEmpty()
+                && params.isDistanceDefault() & params.isElevationDefault()
+                && params.isReflectivityDefault() & params.getDate1() == null)
+            return true;
+                
+        return false;
+    }
+    
+    protected boolean areParametersSet() {
         if (params.getSource1().isEmpty() || params.getSource2().isEmpty()
                 || params.isDistanceDefault() || params.isElevationDefault()
                 || params.isReflectivityDefault() || params.getDate1() == null)
             return false;
+                
         return true;
     }
     
     private boolean keep(File file) {
-
+        
         String src = "";
         String ele = "";
         String dis = "";

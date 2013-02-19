@@ -32,13 +32,14 @@ public class SingleRunProcessor implements Runnable {
     public SingleRunProcessor(FilesProcessor proc, List<File> folders,
             List<File> files) {
         
-        if (files.isEmpty() && folders.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No input files specified", WARNING);
-            return;
-        }
         
         for (File folder : folders) {
             files.addAll(Arrays.asList(folder.listFiles()));
+        }
+        
+        if (files.isEmpty()) {
+            LogHandler.getLogs().displayMsg("No input files specified", WARNING);
+            return;
         }
         this.files = files;
         this.proc = proc;

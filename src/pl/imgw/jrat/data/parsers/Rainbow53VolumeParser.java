@@ -82,6 +82,9 @@ public class Rainbow53VolumeParser implements FileParser {
             }
             return false;
         } catch (Exception e) {// Catch exception if any
+            LogHandler.getLogs().displayMsg(
+                    "File " + file.getName() + ": parsing error", ERROR);
+            LogHandler.getLogs().saveErrorLogs(this, e);
             return false;
         }
 

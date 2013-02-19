@@ -46,8 +46,17 @@ public class OdimH5Parser implements FileParser {
      */
     @Override
     public boolean isValid(File file) {
+
+        try {
             return HDF5Factory.isHDF5File(file);
-        
+        } catch (Exception e) {
+            LogHandler.getLogs().displayMsg("HDF5 validation for " + file.getName()
+                    + " generated error", ERROR);
+            LogHandler.getLogs().saveErrorLogs(this.getClass().getName(),
+                    "HDF5 validation of file " + file.getName() + " failed");
+            return false;
+        }
+
     }
     
     /*

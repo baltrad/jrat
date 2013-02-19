@@ -66,6 +66,7 @@ public class PairsContainer {
 
         Date date;
         for (File f : files) {
+            
             ConsoleProgressBar.getProgressBar().evaluate();
 
             date = parseDateFromFileName(f.getName());

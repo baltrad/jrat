@@ -3,9 +3,8 @@
  */
 package pl.imgw.jrat.calid;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.io.File;
 
 import org.junit.Test;
 
@@ -27,14 +26,14 @@ public class CalidFileHandlerTest {
 
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
 
-        String[] par = "src=Rzeszow,Brzuchania ele=0.5 dis=500 ref=5.0 date=2011-08-21/13:40 range=250"
+        String[] par = "src=Rzeszow,Brzuchania ele=0.5 dis=500 ref=5.0 date=2011-08-21/13:40 range=200"
                 .split(" ");
         CalidParsedParameters calid = new CalidParsedParameters();
         calid.initialize(par);
 
         CalidContainer cc = new CalidContainer(calid);
         assertTrue(CalidFileHandler.loadCoords(cc));
-        assertTrue(cc.getPairedPointsList().size() == 101);
+        assertEquals(90, cc.getPairedPointsList().size());
 
         assertTrue(CalidFileHandler.loadResults(cc, calid.getDate1()));
         assertTrue(cc.hasResults());

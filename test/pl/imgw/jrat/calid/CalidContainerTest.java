@@ -52,12 +52,13 @@ public class CalidContainerTest {
     @Test
     public void fullInitializationTest() {
         
-        LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
+        File dir = new File(AplicationConstans.ETC + "/calid/RzeszowBrzuchania/500_0.5_5.0/");
         
-        new File(AplicationConstans.ETC + "/calid/RzeszowBrzuchania/500_0.5_5.0/coords.xml").delete();
+        for(File f : dir.listFiles())
+            f.delete();
         
-        File a = new File("test-data/calid/2011082113400400dBZ.vol");
-        File b = new File("test-data/calid/2011082113402900dBZ.vol");
+        File a = new File("test-data/calid/2012060317401700dBZ.vol");
+        File b = new File("test-data/calid/2012060317402900dBZ.vol");
         
         ParserManager pm = new ParserManager();
         pm.setParser(new Rainbow53VolumeParser());
@@ -68,9 +69,11 @@ public class CalidContainerTest {
         RainbowDataContainer data2 = (RainbowDataContainer) pm.getProduct();
         RainbowVolume vol2 = new RainbowVolume(data2);
         
+        
+        
         Pair pair = new Pair(vol1, vol2);
         
-        String[] par = "ele=0.5 dis=500 ref=5.0 range=250".split(" ");
+        String[] par = "ele=0.5 dis=500 ref=5.0 range=200".split(" ");
         CalidParsedParameters calid = new CalidParsedParameters();
         calid.initialize(par);
         
