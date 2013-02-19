@@ -98,7 +98,7 @@ public class RainbowVolumeParserTest {
     public void arrayValueTest() {
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
         Rainbow53VolumeParser rp = new Rainbow53VolumeParser();
-        File f = new File("test-data/calid", "2011082113402900dBZ.vol");
+        File f = new File("test-data", "1.vol");
         rp.initialize(f);
         RainbowDataContainer data = (RainbowDataContainer) rp.getProduct();
         RainbowVolume vol = new RainbowVolume(data);
@@ -112,10 +112,10 @@ public class RainbowVolumeParserTest {
         
         assertEquals(10, vol.getAllScans().size());
         
-        assertEquals(52, vol.getScan(0.5).getArray()
-                .getRawIntPoint(20, 301));
-        assertEquals(-6.0d, vol.getScan(0.5).getArray()
-                .getPoint(20, 301), 0.1);
+        assertEquals(61, vol.getScan(0.5).getArray()
+                .getRawIntPoint(55, 1));
+        assertEquals(-1.5d, vol.getScan(0.5).getArray()
+                .getPoint(55, 1), 0.1);
         
     }
     

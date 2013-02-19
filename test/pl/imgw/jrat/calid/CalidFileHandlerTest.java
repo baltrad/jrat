@@ -26,7 +26,7 @@ public class CalidFileHandlerTest {
 
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
 
-        String[] par = "src=Rzeszow,Brzuchania ele=0.5 dis=500 ref=5.0 date=2011-08-21/13:40 range=200"
+        String[] par = "src=Rzeszow,Brzuchania ele=0.5 dis=500 ref=5.0 date=2012-06-03/17:40 range=200"
                 .split(" ");
         CalidParsedParameters calid = new CalidParsedParameters();
         calid.initialize(par);

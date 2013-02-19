@@ -63,19 +63,19 @@ public class PairTest {
     public void isRB5ValidTest() {
         ParserManager pm = new ParserManager();
         pm.setParser(new DefaultParser());
-        pm.initialize(new File("test-data/calid", "2011082113402900dBZ.vol"));
+        pm.initialize(new File("test-data/pair", "2011101003002600dBZ.vol"));
         VolumeContainer vol1 = new RainbowVolume(
                 (RainbowDataContainer) pm.getProduct());
-        pm.initialize(new File("test-data/calid", "2011082113400400dBZ.vol"));
+        pm.initialize(new File("test-data/pair", "2011101003002700dBZ.vol"));
         VolumeContainer vol2 = new RainbowVolume(
                 (RainbowDataContainer) pm.getProduct());
         
         pair = new Pair(vol1, vol2);
         assertTrue("validation is not working well with rainbow format",
                 pair.hasRealVolumes());
-        assertEquals(52, pair.getVol2().getScan(elevation).getArray()
+        assertEquals(57, pair.getVol2().getScan(elevation).getArray()
                 .getRawIntPoint(20, 301));
-        assertEquals(-6.0d, pair.getVol2().getScan(elevation).getArray()
+        assertEquals(-3.5d, pair.getVol2().getScan(elevation).getArray()
                 .getPoint(20, 301), 0.1);
         System.out.println(pair);
         assertTrue("Comparing pair's source name",

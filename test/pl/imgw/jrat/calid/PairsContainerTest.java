@@ -27,11 +27,10 @@ public class PairsContainerTest {
     public void setUp() {
 
         String[] args = new String[] { "-i",
-                "test-data/calid/2011082113400400dBZ.vol",
-                "test-data/calid/2011082113402900dBZ.vol",
-                "test-data/calid/2011082113402500dBZ.vol",
-                "test-data/calid/T_PAGZ41_C_SOWR_20110922004019.h5",
-                "test-data/calid/T_PAGZ44_C_SOWR_20110922004021.h5", "-v" };
+                "test-data/pair/2011101003002600dBZ.vol",
+                "test-data/pair/2011101003002700dBZ.vol",
+                "test-data/pair/2011101003102200dBZ.vol",
+                "test-data/pair/2011101003102600dBZ.vol", "-v" };
 
         MainProcessController proc = new MainProcessController(args);
         proc.start();
@@ -42,14 +41,13 @@ public class PairsContainerTest {
 
     @Test
     public void getAllPairsTest() {
-        assertEquals(4, pairs.getSize());
+        assertEquals(2, pairs.getSize());
     }
 
     @Test
     public void pairsInRightOrderTest() {
         Pair p1 = pairs.next(); //first pair, 201108211340
-        pairs.next();
-        pairs.next();
+
         Pair p2 = pairs.next(); //last pair, 2011092200
 //        System.out.println(p1.getDate() + ", " + p2.getDate());
         assertTrue(p1.getDate().before(p2.getDate()));

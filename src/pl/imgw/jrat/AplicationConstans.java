@@ -13,7 +13,7 @@ package pl.imgw.jrat;
  */
 public class AplicationConstans {
 
-    public static final String DATE = "2013-02-15 09:16:10";
+    public static final String DATE = "2013-02-19 10:03:07";
 
     public static final String LOG = "./jrat/log";
     public static final String ETC = "./jrat/etc";
