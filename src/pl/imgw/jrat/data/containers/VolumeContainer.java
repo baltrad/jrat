@@ -50,9 +50,9 @@ public interface VolumeContainer {
     /**
      * Get height above see level in meters of the site
      * 
-     * @return -1 if not find
+     * @return null if not find
      */
-    public int getHeight();
+    public Double getHeight();
 
     /**
      * Get site name

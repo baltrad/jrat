@@ -89,7 +89,7 @@ public class RainbowVolume implements VolumeContainer {
      * @see pl.imgw.jrat.data.VolumeContainer#getHeight()
      */
     @Override
-    public int getHeight() {
+    public Double getHeight() {
         String alt = "";
         if (data.getType() == RainbowDataContainer.VOLUME53)
             alt = data.getRainbowAttributeValue("/volume/sensorinfo/alt", "");
@@ -97,9 +97,9 @@ public class RainbowVolume implements VolumeContainer {
             alt = data.getRainbowAttributeValue("/volume/radarinfo", "alt");
 
         try {
-            return (int) Double.parseDouble(alt) * 1000;
+            return Double.parseDouble(alt);
         } catch (NumberFormatException e) {
-            return 0;
+            return null;
         }
     }
 

@@ -131,7 +131,7 @@ public class RainbowVolumeParserTest {
         assertTrue("this is not a rainbow 5.2 file", pm.isValid(rb52file));
         assertTrue(pm.initialize(rb52file));
         RainbowVolume vol = new RainbowVolume((RainbowDataContainer) pm.getProduct());
-        assertEquals(453000, vol.getHeight());
+        assertEquals(453.0, vol.getHeight(), 0.01);
         assertEquals(20.079720, vol.getLon(), 0.01);
         assertEquals(50.394169, vol.getLat(), 0.01);
         assertTrue(vol.getSiteName().matches("Brzuchania"));

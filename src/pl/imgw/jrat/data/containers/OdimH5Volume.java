@@ -72,8 +72,8 @@ public class OdimH5Volume implements VolumeContainer {
      * @see pl.imgw.jrat.data.VolumeContainer#getHeight()
      */
     @Override
-    public int getHeight() {
-        return (Integer) data.getAttributeValue("/where", "height");
+    public Double getHeight() {
+        return (Double) data.getAttributeValue("/where", "height");
     }
 
     /*

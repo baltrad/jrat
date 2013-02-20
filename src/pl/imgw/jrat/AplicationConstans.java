@@ -13,11 +13,11 @@ package pl.imgw.jrat;
  */
 public class AplicationConstans {
 
-    public static final String DATE = "2013-02-20 08:50:14";
+    public static final String DATE = "2013-02-20 09:08:03";
 
-    public static final String LOG = "./jrat/log";
-    public static final String ETC = "./jrat/etc";
-    public static final String TMP = "./jrat/tmp";
+    public static final String LOG = "/opt/baltrad/jrat/log";
+    public static final String ETC = "/opt/baltrad/jrat/etc";
+    public static final String TMP = "/opt/baltrad/jrat/tmp";
     public final static String VERSION = "0.07a1"; 
     public final static String APS_NAME = "jrat";
     public final static String APS_DESC = "Java Radar data Analyzing Tool";
