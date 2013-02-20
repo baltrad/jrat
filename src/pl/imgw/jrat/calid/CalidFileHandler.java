@@ -138,6 +138,46 @@ public class CalidFileHandler {
         return loadResults(file, cc, date);
     }
     
+    public static boolean parseLine(String line, CalidContainer cc, Date from, Date to) {
+        
+        if (cc.getPairedPointsList().isEmpty()) {
+            if (!loadCoords(cc))
+                return false;
+        }
+        
+        String[] words = line.split(" ");
+        if (words.length != cc.getPairedPointsList().size() + 3) {
+            // System.out.println(words.length + " powinno byc: "
+            // + cc.getPairedPointsList().size() + 3);
+            return false;
+        }
+        try {
+            Date dateRead = CALID_DATE_TIME_FORMAT.parse(words[0]);
+            if (!dateRead.before(from) && !dateRead.after(to)) {
+                for (int i = 1; i < words.length - 2; i++) {
+                    if (words[i].matches(NULL)) {
+                        cc.getPairedPointsList().get(i - 1).setDifference(null);
+                    } else
+                        cc.getPairedPointsList().get(i - 1)
+                                .setDifference(Double.parseDouble(words[i]));
+                }
+                cc.setR1understate(Integer.parseInt(words[words.length - 2]));
+                cc.setR2understate(Integer.parseInt(words[words.length - 1]));
+
+                cc.setHasResults(true);
+                cc.setDate(dateRead);
+                return true;
+            }
+        } catch (ParseException e) {
+            LogHandler.getLogs().displayMsg("CALID: Wrong format: " + words[0],
+                    Logging.WARNING);
+            return false;
+        }
+
+        return false;
+        
+    }
+    
     /**
      * 
      * Load results from file.

@@ -17,6 +17,7 @@ public class AplicationConstans {
 
     public static final String LOG = "@LOG@";
     public static final String ETC = "@ETC@";
+    public static final String TMP = "@TMP@";
     public final static String VERSION = "0.07a1"; 
     public final static String APS_NAME = "jrat";
     public final static String APS_DESC = "Java Radar data Analyzing Tool";

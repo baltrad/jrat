@@ -5,6 +5,8 @@ package pl.imgw.jrat.tools.out.plot;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.naming.directory.InvalidAttributesException;
 
@@ -14,6 +16,7 @@ import org.jgnuplot.Plot;
 import org.jgnuplot.Style;
 import org.jgnuplot.Terminal;
 
+import pl.imgw.jrat.AplicationConstans;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 
@@ -32,9 +35,11 @@ public abstract class TimeSeriesPlot {
 
     static {
         Plot.setGnuplotExecutable("gnuplot");
-        Plot.setPlotDirectory("/tmp");
+        Plot.setPlotDirectory(AplicationConstans.TMP);
     }
 
+    private SimpleDateFormat gnudate = new SimpleDateFormat("yyyy-MM-dd");
+    
     protected int ymin;
     protected int ymax;
     protected String output = "newplot";
@@ -45,6 +50,8 @@ public abstract class TimeSeriesPlot {
 
     public abstract void setPlot() throws InvalidAttributesException;
     
+    private String xformat = "%d.%m";
+    
     public boolean plot() {
 
         plot = new Plot();
@@ -53,7 +60,7 @@ public abstract class TimeSeriesPlot {
         plot.setYRange(ymin, ymax);
         plot.setXData("time");
         plot.setTimeFormat("%Y-%m-%d");
-        plot.setFormatX("%b");
+        plot.setFormatX(xformat);
 
 
         try {
@@ -107,8 +114,12 @@ public abstract class TimeSeriesPlot {
         this.title.append(title);
     }
     
-    public void setTimePeriod(String from, String to) {
-        period.append("From ").append(from).append(" to ").append(to);
+    public void setTimePeriod(Date from, Date to) {
+        period.append("From ").append(gnudate.format(from)).append(" to ")
+                .append(gnudate.format(to));
+        if (to.getTime() - from.getTime() > 10368000000l)
+            xformat = "%b";
+        
     }
 
 }

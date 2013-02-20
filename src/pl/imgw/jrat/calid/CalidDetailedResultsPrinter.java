@@ -4,6 +4,7 @@
 package pl.imgw.jrat.calid;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,8 +12,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
+
+import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.jrat.tools.out.ResultPrinter;
+import pl.imgw.jrat.tools.out.ResultPrinterManager;
 
 /**
  *
@@ -25,13 +32,13 @@ import java.util.TreeSet;
 public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
 
     private static final String METHOD = "method=";
-    private static final String MEDIAN = "median";
-    private static final String MEAN = "mean";
+    public static final String MEDIAN = "median";
+    public static final String MEAN = "mean";
     
     private static final String PERIOD = "period=";
     
     private String method = "";
-    private int period = 0;
+    private int period = 1;
     
     /**
      * @param params
@@ -53,20 +60,23 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         }
         
     }
+    
+    public CalidDetailedResultsPrinter(CalidParsedParameters params) {
+        super(params);
+    }
 
-    public void printResults() {
+    public void printResults() throws IllegalArgumentException{
         if (!areParametersSet()) {
-            System.out.println("set all params for CALID");
-            return;
+            throw new IllegalArgumentException("set all params for CALID");
         }
-        
+        ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         headers = new HashSet<String>();
         CalidContainer cc = new CalidContainer(params);
         Set<File> files = getResultsFiles();
 
         List<Double> meanRes = new ArrayList<Double>();
         List<Double> rmsRes = new ArrayList<Double>();
-        List<Double> undRes = new ArrayList<Double>();
+//        List<Double> undRes = new ArrayList<Double>();
 //        Calendar cal0 = Calendar.getInstance();
         Calendar cal1 = Calendar.getInstance();
 //        cal0.setTime(params.getDate1());
@@ -91,45 +101,56 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
 
             }
             
-            Set<Date> dates = new TreeSet<Date>();
-            setDates(f, dates);
+//            Set<Date> dates = new TreeSet<Date>();
+//            setDates(f, dates);
             
             // System.out.println(params.getDate1());
 //            System.out.println("cal0=" + cal0.getTime());
 //            System.out.println("cal1=" + cal1.getTime());
 
-            for (Date d : dates) {
+            try {
+                Scanner scan = new Scanner(f);
+                while (scan.hasNext()) {
+                    String line = scan.nextLine();
+                    if (line.startsWith("#")) {
+                        continue;
+                    }
+                    if (!CalidFileHandler.parseLine(line, cc,
+                            params.getDate1(), params.getDate2()))
+                        continue;
+                
+            
                 
 //                System.out.println("d=" + d);
                 
-                while(d.after(cal1.getTime())) {
+                while(cc.getDate().after(cal1.getTime())) {
 //                    cal0.add(Calendar.DATE, period);
                     cal1.add(Calendar.DATE, period);
                 }
 
-                if (d.after(params.getDate2())) {
+                if (cc.getDate().after(params.getDate2())) {
                     break;
                 }
                 
-                if(!CalidFileHandler.loadResults(f, cc, d)) {
-                    continue;
-                }
+                
                 int freq = params.getFrequency();
                 Double mean = cc.getMean(freq);
                 Double rms = cc.getRMS(freq);
-                Double und =  ((double)(cc.getR1understate() + cc
-                        .getR2understate()) / cc.getPairedPointsList().size());
+//                Double und =  ((double)(cc.getR1understate() + cc
+//                        .getR2understate()) / cc.getPairedPointsList().size());
 //                System.out.println("und=" + und + " date=" + d + " " + cal1.getTime());
                 
                 if(mean != null)
                     meanRes.add(mean);
                 if(rms != null)
                     rmsRes.add(rms);
-                if(und != null)
-                    undRes.add(und);
+//                if(und != null)
+//                    undRes.add(und);
                 
-                if (!d.before(cal1.getTime())) {
+                if (!cc.getDate().before(cal1.getTime())) {
                     cal1.add(Calendar.DATE, period);
+                    if(meanRes.size() == 0)
+                        continue;
 //                    cal0.add(Calendar.DATE, period);
                     
 //                    System.out.println("nowy");
@@ -137,30 +158,37 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                     
                     if(method.matches(MEDIAN)) {
                         printer
-                                .println(sdf.format(d)
+                                .println(sdf.format(cc.getDate())
                                         + "\t"
                                         + getMedianResult(meanRes)
                                         + "\t"
                                         + getMedianResult(rmsRes)
-                                        + "\t"
-                                        + getMedianResult(undRes));
+//                                        + "\t"
+//                                        + getMedianResult(undRes)
+                                        );
+                                        
                     } else if (method.matches(MEAN)) {
                         printer
-                                .println(sdf.format(d)
+                                .println(sdf.format(cc.getDate())
                                         + "\t"
                                         + getMeanResult(meanRes)
                                         + "\t"
                                         + getMeanResult(rmsRes)
-                                        + "\t"
-                                        + getMeanResult(undRes));
+//                                        + "\t"
+//                                        + getMeanResult(undRes)
+                                        );
                     }
-                    undRes.clear();
+//                    undRes.clear();
                     meanRes.clear();
                     rmsRes.clear();
                     
                 }
-
+            }
                 // System.out.println(d);
+            } catch (FileNotFoundException e) {
+                LogHandler.getLogs().displayMsg(
+                        "CALID: Results file not found: " + f,
+                        Logging.WARNING);
             }
         }
         
@@ -203,5 +231,21 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         }
         return round(mean / list.size(), 2);
     }
+
+    /**
+     * @param method the method to set
+     */
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    /**
+     * @param period the period to set
+     */
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+    
+    
     
 }

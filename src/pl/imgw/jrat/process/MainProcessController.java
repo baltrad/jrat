@@ -5,19 +5,17 @@ package pl.imgw.jrat.process;
 
 import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
-import static pl.imgw.jrat.tools.out.Logging.ALL_MSG;
-import static pl.imgw.jrat.tools.out.Logging.NORMAL;
-import static pl.imgw.jrat.tools.out.Logging.PROGRESS_BAR_ONLY;
-import static pl.imgw.jrat.tools.out.Logging.SILENT;
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
+import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
+import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
@@ -99,13 +97,31 @@ public class MainProcessController {
             return true;
         }
         
-        if(cmd.hasOption(CALID_RESULT)) {
+        if (cmd.hasOption(CALID_RESULT)) {
             CalidParsedParameters calid = new CalidParsedParameters();
             if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
                 if (cmd.hasOption(CALID_RESULT_DETAIL)) {
-                    new CalidDetailedResultsPrinter(calid,
-                            cmd.getOptionValues(CALID_RESULT_DETAIL))
-                            .printResults();
+                    try {
+                        new CalidDetailedResultsPrinter(calid,
+                                cmd.getOptionValues(CALID_RESULT_DETAIL))
+                                .printResults();
+                    } catch (IllegalArgumentException e) {
+                        LogHandler.getLogs()
+                                .displayMsg(e.getMessage(), WARNING);
+                    }
+                } else if (cmd.hasOption(CALID_RESULT_GNUPLOT)) {
+                    String output = cmd.getOptionValue(CALID_RESULT_GNUPLOT);
+                    try {
+                        new CalidGnuplotResultPrinter(calid, output)
+                                .generateMeanDifferencePlots();
+                    } catch (IllegalArgumentException e) {
+                        LogHandler.getLogs()
+                                .displayMsg(e.getMessage(), WARNING);
+                    } catch (IOException e) {
+                        LogHandler.getLogs()
+                                .displayMsg("Plotting error", ERROR);
+                        LogHandler.getLogs().saveErrorLogs(this, e);
+                    }
                 } else {
                     new CalidResultsPrinter(calid).printResults();
                 }

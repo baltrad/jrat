@@ -41,8 +41,6 @@ public class CalidResultsPrinter {
     protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd;HH:mm");
     protected SimpleDateFormat fsdf = new SimpleDateFormat("yyyyMMdd");
     
-    protected ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
-    
     /**
      * 
      */
@@ -51,6 +49,7 @@ public class CalidResultsPrinter {
     }
     
     public void printResults() {
+        ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         headers = new HashSet<String>();
 
         CalidContainer cc = new CalidContainer(params);
@@ -69,47 +68,59 @@ public class CalidResultsPrinter {
             for (File f : files) {
                 
                 printResultsHeader(f);
-                String header = "";
+                StringBuilder header = new StringBuilder();
                 
-                header += "#";
+                header.append("#");
                 
                 //print horizontal line
                 for (int i = 0; i < 70; i++) {
-                    header += "=";
+                    header.append("=");
                 }
                 
-                header += "\n#\tdate \t\tfreq" + " \tmean" + " \tRMS"
-                        + " \tmedian" + "\tr1under" + "\tr2under" + "\n";
+                header.append("\n#\tdate \t\tfreq \tmean \tRMS"
+                        + " \tmedian \tr1under \tr2under\n");
 
-                Set<Date> dates = new TreeSet<Date>();
-                setDates(f, dates);
-                for(Date d : dates) {
-                    
-                    if(d.before(params.getDate1()) || d.after(params.getDate2()))
-                        continue;
-                    
-                    CalidFileHandler.loadResults(f, cc, d);
-                    int freq = params.getFrequency();
-                    Double mean = cc.getMean(freq);
-                    Double rms = cc.getRMS(freq);
-                    Double median = cc.getMedian(freq);
-                    
-                    String msg = " \t" + cc.getFreq() + " \t" + mean
-                            + " \t" + rms + " \t" + median;
-                    
-                    msg += "\t" + cc.getR1understate() + "\t"
-                            + cc.getR2understate();
-                    
-                    if(mean != null || rms != null || median != null) {
-                        if(printHeader) {
-                            printer.print(header);
-                            printHeader = false;
+//                Set<Date> dates = new TreeSet<Date>();
+//                setDates(f, dates);
+                
+                try {
+                    Scanner scan = new Scanner(f);
+                    while (scan.hasNext()) {
+                        String line = scan.nextLine();
+                        if (line.startsWith("#")) {
+                            continue;
                         }
-                        noResults = false;
-                        printer.println(sdf.format(d) + msg);
-                    } 
-                    
+                        if (!CalidFileHandler.parseLine(line, cc,
+                                params.getDate1(), params.getDate2()))
+                            continue;
+
+                        int freq = params.getFrequency();
+                        Double mean = cc.getMean(freq);
+                        Double rms = cc.getRMS(freq);
+                        Double median = cc.getMedian(freq);
+                        
+                        StringBuilder msg = new StringBuilder(" \t" + cc.getFreq() + " \t" + mean
+                                + " \t" + rms + " \t" + median);
+                        
+                        msg.append("\t" + cc.getR1understate() + "\t"
+                                + cc.getR2understate());
+                        
+                        if(mean != null || rms != null || median != null) {
+                            if(printHeader) {
+                                printer.print(header.toString());
+                                printHeader = false;
+                            }
+                            noResults = false;
+                            printer.println(sdf.format(cc.getDate()) + msg.toString());
+                        } 
+                        
+                    }
+                } catch (FileNotFoundException e) {
+                    LogHandler.getLogs().displayMsg(
+                            "CALID: Results file not found: " + f,
+                            Logging.WARNING);
                 }
+
 //                if (!printHeader) {
 //                    System.out.print("#");
 //                    for (int i = 0; i < 54; i++) {
@@ -222,6 +233,7 @@ public class CalidResultsPrinter {
     }
     
     protected int printResultsDateNumber(File f) {
+        ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         // System.out.println(f);
         String date = "";
         int i = 0;
@@ -268,6 +280,7 @@ public class CalidResultsPrinter {
      * @param f
      */
     protected void printResultsHeader(File f) {
+        ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         // System.out.println(f);
         try {
             scanner = new Scanner(f);

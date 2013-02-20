@@ -33,10 +33,13 @@ public class FileResultPrinter implements ResultPrinter {
     
     public void setFile(File f) throws IOException {
         closeFile();
-        
         if (!f.exists()) {
-            f.getParentFile().mkdirs();
-            f.createNewFile();
+            if (!f.getParentFile().exists() && !f.getParentFile().mkdirs())
+                throw new IOException("Cannot create folders for temporary plot data files");
+
+            if (!f.createNewFile())
+                throw new IOException("Cannot create file for temporary plot data");
+
         }
         pw = new PrintWriter(new FileOutputStream(f, true), true);
     }

@@ -16,8 +16,7 @@ public class ResultPrinterManager {
     /*
      * Default printer
      */
-    ResultPrinter printer = new ResultPrinter() {
-        
+    private ResultPrinter printer = new ResultPrinter() {
         @Override
         public void println(String str) {
             System.out.println(str);
@@ -57,9 +56,6 @@ public class ResultPrinterManager {
     public void setPrinter(ResultPrinter printer) {
         this.printer = printer;
     }
-
-    
-    
     
     
 }

@@ -29,6 +29,7 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
     <property name="lib.native.dir" value="lib/native"/>
     <property name="log.dir" value="log"/>
     <property name="etc.dir" value="etc"/>
+    <property name="tmp.dir" value="tmp"/>
     <property name="dist.dir" value="dist"/>
     <property name="share.dir" value="share"/>
     <property name="bin.dir" value="bin"/>
@@ -58,7 +59,8 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
         <mkdir dir="${install.prefix}/${app.name}/${share.dir}"/>
         <mkdir dir="${install.prefix}/${app.name}/${log.dir}"/>
         <mkdir dir="${install.prefix}/${app.name}/${etc.dir}"/>
-        <copy todir="${install.prefix}/${app.name}/${share.dir}" flatten="true">
+        <mkdir dir="${install.prefix}/${app.name}/${tmp.dir}"/>
+       <copy todir="${install.prefix}/${app.name}/${share.dir}" flatten="true">
             <fileset dir="${dist.dir}">
                 <include name="**/*.jar" />
             </fileset>
@@ -91,6 +93,7 @@ export PATH</echo>
              <filter token="DATE" value="${TODAY}"/>
              <filter token="LOG" value="${install.prefix}/${app.name}/${log.dir}"/>
              <filter token="ETC" value="${install.prefix}/${app.name}/${etc.dir}"/>
+             <filter token="TMP" value="${install.prefix}/${app.name}/${tmp.dir}"/>
          </filterset>
        </copy>
        <javac encoding="UTF-8" deprecation="on" srcdir="${src.dir}" destdir="${build.classes.dir}" 

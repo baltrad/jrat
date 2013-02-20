@@ -27,6 +27,7 @@ public class CalidContainer implements Comparable<CalidContainer> {
     private Pair pair;
     private CalidParsedParameters params;
     private boolean hasResults = false;
+    private Date date = null;
 
     private int r1understate = 0;
     private int r2understate = 0;
@@ -147,6 +148,17 @@ public class CalidContainer implements Comparable<CalidContainer> {
         
         return hasResults;
 
+    }
+
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+    
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void resetDifferences() {

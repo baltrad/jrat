@@ -3,22 +3,18 @@
  */
 package pl.imgw.jrat.tools.out.plot;
 
-import java.io.File;
-import java.io.IOException;
+import static org.junit.Assert.assertTrue;
 
-import org.jgnuplot.Axes;
-import org.jgnuplot.Graph;
-import org.jgnuplot.Plot;
-import org.jgnuplot.Style;
-import org.jgnuplot.Terminal;
-import org.junit.After;
-import org.junit.Before;
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.Test;
 
 import pl.imgw.jrat.calid.CalidMeanDifferencePlot;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -30,6 +26,8 @@ import static org.junit.Assert.*;
  */
 public class CalidPlotTest {
 
+    private SimpleDateFormat gnudate = new SimpleDateFormat("yyyy-MM-dd");
+    
     static {
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
     }
@@ -43,7 +41,12 @@ public class CalidPlotTest {
         
         CalidMeanDifferencePlot plot = new CalidMeanDifferencePlot(data1day, data5day, data10day);
         plot.setPairsName("Poznan", "Legionowo");
-        plot.setTimePeriod("2012-01-01", "2012-12-31");
+        try {
+            plot.setTimePeriod(gnudate.parse("2012-01-01"), gnudate.parse("2012-12-31"));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         plot.setYmin(-15);
         plot.setYmax(15);
         plot.setOutput(output);
