@@ -39,6 +39,7 @@ public abstract class TimeSeriesPlot {
         if(!f.exists()) {
             f.mkdirs();
         }
+        
         Plot.setPlotDirectory(AplicationConstans.TMP);
     }
 
