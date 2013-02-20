@@ -35,6 +35,10 @@ public abstract class TimeSeriesPlot {
 
     static {
         Plot.setGnuplotExecutable("gnuplot");
+        File f = new File(AplicationConstans.TMP);
+        if(!f.exists()) {
+            f.mkdirs();
+        }
         Plot.setPlotDirectory(AplicationConstans.TMP);
     }
 
