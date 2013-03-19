@@ -53,6 +53,8 @@ public class CommandLineArgsParser {
     public final static String Q = "q";
     public final static String QUIET = "quiet";
     
+//    public final static String 
+    
     public final static String SCANSUN = "scansun";
     
     public final static String SEQ = "seq";

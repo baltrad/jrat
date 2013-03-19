@@ -88,13 +88,13 @@ public class MainProcessController {
             return true;
         }
         
-        if (cmd.hasOption(FORMAT)) {
-            GlobalParser.getInstance().setParser(cmd.getOptionValue(F));
-        }
-        
         if(cmd.hasOption(CALID_HELP)) {
             CalidParsedParameters.printHelp();
             return true;
+        }
+        
+        if (cmd.hasOption(FORMAT)) {
+            GlobalParser.getInstance().setParser(cmd.getOptionValue(F));
         }
         
         if (cmd.hasOption(CALID_RESULT)) {
@@ -315,8 +315,10 @@ public class MainProcessController {
             if (!watcher.isValid())
                 return false;
             
-            if(!FolderManager.continueWithDeletingFiles(folders))
+            if(!FolderManager.continueWithDeletingFiles(folders)){
+                // decline to delete files, exiting
                 return true;
+            }
 
             Thread t = new Thread(watcher);
             t.start();
@@ -334,8 +336,10 @@ public class MainProcessController {
             if (!seq.isValid())
                 return false;
 
-            if(!FolderManager.continueWithDeletingFiles(folders))
+            if(!FolderManager.continueWithDeletingFiles(folders)) {
+                // decline to delete files, exiting
                 return true;
+            }
             
             Thread t = new Thread(seq);
             t.start();

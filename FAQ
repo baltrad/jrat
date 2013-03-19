@@ -10,5 +10,18 @@ Copyright (C) 2011-2013 Institute of Meteorology and Water Management, IMGW
 	F  A  Q
 	-------
 
-1. 
+1. How to run CALID - pair wise comparison algorithm to watch given folders every 5 minute?
 
+The given folders are /home/me/input/RAD1 and /home/me/input/RAD2, we want to compare
+the lowest elevation which is 0.5 degree, minimal reflectivity is 3.0dBZ and precision
+ of overlapping pixel is 500m.
+
+$ jrat -i /home/me/input/RAD1 /home/me/input/RAD2 --calid ele=0.5 dis=500 ref=3.0 --seq=5
+
+If folders are not empty during start, aplication will ask for confirmation to delete
+all files after processing them. It will ask only once. Aplication will activate every
+5 minutes (in rounded time e.g. 00, 05, 10, 15 etc.), first run will start imedietly.
+
+2. When using CALID, how can I watch three Radars with different distance setting?
+
+You cannot! :) Well, actualy you can, but it's too complecated to describe it.
