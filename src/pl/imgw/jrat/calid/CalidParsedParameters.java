@@ -238,44 +238,42 @@ public class CalidParsedParameters {
         String date = "date=Start[,End]";
         String rest = "[ele=] [dis=] [range=] [ref=]";
 
-        String msg = "CALID algorytm usage:\n"
-                + "jrat --calid <args> -i files/folder(s) [-v] start comparison\n"
-                + "<args> "
-                + rest
-                + "\n"
-                + "ele: elevation angle in degrees, from -10.0 to 90.0\n"
-                + "dis: minimal distance between two overlapping points in meters,"
-                + " must be bigger then 0,\n"
-                + "range: maximum radar range for overlapping points, (range > 1)\n"
-                + "ref: minimal reflectivity (dBZ)\n\n"
-                + "e.g.  jrat --calid ele=0.5 dis=500 ref=3.5 "
-                + "-i T_PAGZ48_C_SOWR_20120109233027.h5 T_PAGZ44_C_SOWR_20120109233016.h5 -v\n\n";
-        msg += "jrat --calid-help print this message\n\n";
-        msg += "jrat --calid-list [<args>] list all available pairs." + "\n<args> "
-                + src + " " + rest + "\n\n";
-        msg += "jrat --calid-result [<args>] [-d <args>] display results."
-                + "\n<args> "
-                + date
-                + " ["
-                + src
-                + "] "
-                + rest
-                + " [freq=Z]\n"
-                + "date: sets range of time, if only starting date is selected then only "
-                + "this date data is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional,\n"
-                + "src: source name\n"
+        StringBuilder msg = new StringBuilder("CALID algorytm usage:\n");
+        msg.append("jrat --calid <args> -i files/folder(s) [-v] start comparison\n");
+        msg.append("<args> ");
+        msg.append(rest);
+        msg.append("\n");
+        msg.append("ele: elevation angle in degrees, from -10.0 to 90.0\n");
+        msg.append("dis: minimal distance between two overlapping points in meters,");
+        msg.append(" must be bigger then 0,\n");
+        msg.append("range: maximum radar range for overlapping points, (range > 1)\n");
+        msg.append("ref: minimal reflectivity (dBZ)\n\n");
+        msg.append("e.g.  jrat --calid ele=0.5 dis=500 ref=3.5 ");
+        msg.append("-i T_PAGZ48_C_SOWR_20120109233027.h5 T_PAGZ44_C_SOWR_20120109233016.h5 -v\n\n");
+        msg.append("jrat --calid-help print this message\n\n");
+        msg.append("jrat --calid-list [<args>] list all available pairs.").append("\n<args> ");
+        msg.append(src).append(" ").append(rest + "\n\n");
+        msg.append("jrat --calid-result [<args>] [-d <args>] display results.");
+        msg.append("\n<args> ");
+        msg.append(date);
+        msg.append(" [").append(src).append("] ");
+        msg.append(rest);
+        msg.append(" [freq=Z]\n");
+        msg.append("date: sets range of time, if only starting date is selected then only ");
+        msg.append("this date data is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional,\n");
+        msg.append("src: source name\n");
 //                + "ele: elevation angle in degrees, from -10.0 to 90.0\n"
 //                + "dis: minimal distance between paired points in meters, must be bigger then 0,\n"
 //                + "ref: minimal reflectivity (dBZ)\n"
-                + "freq: minimal frequency percentage of paired points with precipitation "
-                + "above used threshold (of dBZ), must be bigger then 0,\n"
-                + "-d <args> using specified method to present results, available arguments are:"
-                + " method=median, and period=X where X means number of days (X > 0).\n"
-                + "e.g: --calid-result src=Rzeszow"
-                + " date=2011-08-21/09:30,2011-08-21/10:30 freq=10\n";
-
-        msg += "\nuse jrat --help to print general jrat help message";
-
+        msg.append("freq: minimal frequency percentage of paired points with precipitation ");
+        msg.append("above used threshold (of dBZ), must be bigger then 0,\n");
+        msg.append("--calid-detail <args> using specified method to present results, available arguments are:");
+        msg.append(" method=median, and period=X where X means number of days (X > 0).\n");
+        msg.append("e.g: --calid-result src=Rzeszow");
+        msg.append(" date=2011-08-21/09:30,2011-08-21/10:30 freq=10 --calid-detail method=mean period=1\n");
+        msg.append("\nuse jrat --help to print general jrat help message");
+        /*
+*/
         System.out.println(msg);
     }
     

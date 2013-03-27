@@ -102,6 +102,10 @@ public class HDF5ParserTest {
         pm.initialize(file2);
         pdc2 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
         
+        
+        assertEquals(1.0, pdc2.getBeamwidth(), 0.0001);
+        assertEquals(0.0531, pdc2.getWavelength(), 0.0001);
+        
         int i = pdc1.getXSize();
         assertEquals("xsize in where group is wrong:", 1900, i);
         String s = pdc1.getSourceName();

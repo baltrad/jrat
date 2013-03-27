@@ -73,14 +73,16 @@ public abstract class TimeSeriesPlot {
             plot.plot();
             return true;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LogHandler.getLogs().displayMsg(
+                    e.getMessage() + " \nInstall gnuplot first",
+                    Logging.WARNING);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LogHandler.getLogs()
+                    .displayMsg("gnuplot failed to run: " + e.getMessage(),
+                            Logging.WARNING);
         } catch (InvalidAttributesException e) {
             LogHandler.getLogs().displayMsg(
-                    "PLOT: Invalid attribute: " + e.getExplanation(),
+       "PLOT: Invalid attribute: " + e.getExplanation(),
                     Logging.WARNING);
         }
         return false;

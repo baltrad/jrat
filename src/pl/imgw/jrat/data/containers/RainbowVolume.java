@@ -103,6 +103,49 @@ public class RainbowVolume implements VolumeContainer {
         }
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getWavelength()
+     */
+    @Override
+    public Double getWavelength() {
+        String wl = "";
+        if (data.getType() == RainbowDataContainer.VOLUME53)
+            wl = data.getRainbowAttributeValue("/volume/sensorinfo/wavelen", "");
+        else if (data.getType() == RainbowDataContainer.VOLUME52)
+            wl = data.getRainbowAttributeValue("/volume/radarinfo/wavelen", "");
+        try {
+            return Double.parseDouble(wl);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getPulsewidth()
+     */
+    @Override
+    public Double getPulsewidth() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getBeamwidth()
+     */
+    @Override
+    public Double getBeamwidth() {
+        String bw = "";
+        if (data.getType() == RainbowDataContainer.VOLUME53)
+            bw = data.getRainbowAttributeValue("/volume/sensorinfo/beamwidth", "");
+        else if (data.getType() == RainbowDataContainer.VOLUME52)
+            bw = data.getRainbowAttributeValue("/volume/radarinfo/beamwidth", "");
+        try {
+            return Double.parseDouble(bw);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 

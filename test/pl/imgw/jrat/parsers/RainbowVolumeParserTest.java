@@ -73,6 +73,10 @@ public class RainbowVolumeParserTest {
         assertTrue(((String) data.getAttributeValue(
                 "/volume/scan/slice:refid=0/posangle", "")).matches("0.5"));
         
+        assertEquals(1.0, vol.getBeamwidth(), 0.0001);
+        assertEquals(0.0531, vol.getWavelength(), 0.0001);
+//        assertEquals(0.0, vol.getBeamwidth(), 5.3);
+        
         ScanContainer scan = vol.getScan(1.4);
         
         Calendar cal = Calendar.getInstance();
@@ -86,6 +90,7 @@ public class RainbowVolumeParserTest {
         assertEquals(3.0, scan.getRPM(), 0.1);
         assertEquals(0.5, scan.getGain(), 0.01);
         assertEquals(-32.0, scan.getOffset(), 0.1);
+        
         
         assertEquals(0, (int)scan.getNodata());
         assertEquals(0, (int)scan.getUndetect());

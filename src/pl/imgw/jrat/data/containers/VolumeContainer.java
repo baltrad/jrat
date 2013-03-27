@@ -36,28 +36,28 @@ public interface VolumeContainer {
     /**
      * Get longitude of site location
      * 
-     * @return null if not find
+     * @return null if not found
      */
     public Double getLon();
 
     /**
      * Get latitude of site location
      * 
-     * @return null if not find
+     * @return null if not found
      */
     public Double getLat();
 
     /**
      * Get height above see level in meters of the site
      * 
-     * @return null if not find
+     * @return null if not found
      */
     public Double getHeight();
 
     /**
      * Get site name
      * 
-     * @return empty string if not find
+     * @return empty string if not found
      */
     public String getSiteName();
 
@@ -66,7 +66,7 @@ public interface VolumeContainer {
      * 
      * @param elevation
      *            as a degree e.g. 0.5
-     * @return null if not find
+     * @return null if not found
      */
     public ScanContainer getScan(double elevation);
 
@@ -75,15 +75,36 @@ public interface VolumeContainer {
     /**
      * Get time of this volume according to scan scheduler with minute precision
      * 
-     * @return null if not find
+     * @return null if not found
      */
     public Date getTime();
     
     /**
      * Get time of this volume according to scan scheduler with second precision
      * 
-     * @return null if not find
+     * @return null if not found
      */
     public Date getTimeSec();
+    
+    /**
+     * Wavelength in cm
+     * 
+     * @return null if not found
+     */
+    public Double getWavelength();
+
+    /**
+     * Pulsewidth in μs
+     * 
+     * @return null if not found
+     */
+    public Double getPulsewidth();
+
+    /**
+     * The radar’s half-power beamwidth (degrees)
+     * 
+     * @return null if not found
+     */
+    public Double getBeamwidth();
 
 }

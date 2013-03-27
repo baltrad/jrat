@@ -76,6 +76,31 @@ public class OdimH5Volume implements VolumeContainer {
         return (Double) data.getAttributeValue("/where", "height");
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getWavelength()
+     */
+    @Override
+    public Double getWavelength() {
+        
+        return (Double) data.getAttributeValue("/how", "wavelength");
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getPulsewidth()
+     */
+    @Override
+    public Double getPulsewidth() {
+        return (Double) data.getAttributeValue("/how", "pulsewidth");
+    }
+    
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getBeamwidth()
+     */
+    @Override
+    public Double getBeamwidth() {
+        return (Double) data.getAttributeValue("/how", "beamwidth");
+    }
+    
     /*
      * (non-Javadoc)
      * 
