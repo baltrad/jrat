@@ -30,8 +30,10 @@ public class CommandLineArgsParser {
     public final static String CALID_RESULT = "calid-result";
     public final static String CALID_LIST = "calid-list";
     public final static String CALID_HELP = "calid-help";
+    public final static String CALID_OPT = "calid-opt";
     public final static String CALID_RESULT_DETAIL = "calid-detail";
     public final static String CALID_RESULT_GNUPLOT = "calid-gnuplot";
+    
     
 //    public final static String D = "d";
 //    public final static String DEBUG = "debug";
@@ -121,6 +123,7 @@ public class CommandLineArgsParser {
     		"for more help use --calid-help option";
     private static final String CALID_RESULT_GNUPLOT_DESCR = "CALID gnuplot result, " +
             "for more help use --calid-help option";
+    private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter\n<arg> XML file path";
     
     private final static String SCANSUN_DESCR = "opis algorytmu i sposób użycia";
     // private final static String FORMAT_DESCR =
@@ -190,6 +193,11 @@ public class CommandLineArgsParser {
         calidResults = OptionBuilder.withDescription(CALID_RESULT_GNUPLOT_DESCR)
                 .hasArgs().withLongOpt(CALID_RESULT_GNUPLOT).create();
         options.addOption(calidResults);
+        
+        Option calidOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()
+                .withDescription(CALID_OPT_DESCR).withLongOpt(CALID_OPT)
+                .create();
+        options.addOption(calidOpt);
         
         Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasOptionalArgs()
                 .withDescription(SCANSUN_DESCR).create();

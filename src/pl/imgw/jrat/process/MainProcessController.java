@@ -69,38 +69,47 @@ public class MainProcessController {
 
     }
 
+    /**
+     * Starting main process, parsing Command line arguments and run proper
+     * processes
+     * 
+     * @return returns true if all goes well, without errors, otherwise return false
+     */
     public boolean start() {
         
         if (cmd == null) {
             return false;
         }
         
-        if(cmd.getOptions().length == 0 || cmd.hasOption(H))
+        /* display help message */
+        if(cmd.getOptions().length == 0 || cmd.hasOption(H)) {
             printHelp();
+            return true;
+        }
 
+        /* display version message */
         if (cmd.hasOption(VERSION)) {
             LogHandler.getLogs().printVersion();
             return true;
         }
         
-        if (cmd.hasOption(H)) {
-            /* nothing to do when help displayed */
-            return true;
-        }
-        
+        /* display CALID help message */
         if(cmd.hasOption(CALID_HELP)) {
             CalidParsedParameters.printHelp();
             return true;
         }
         
+        /* set input file global format */
         if (cmd.hasOption(FORMAT)) {
             GlobalParser.getInstance().setParser(cmd.getOptionValue(F));
         }
         
+        /* print CALID results */
         if (cmd.hasOption(CALID_RESULT)) {
             return CalidProcessController.processCalidResult(cmd);
         }
         
+        /* print list of available results of CALID */
         if (cmd.hasOption(CALID_LIST)) {
             return CalidProcessController.processCalidList(cmd);
         }
@@ -134,6 +143,27 @@ public class MainProcessController {
         
         FilesProcessor proc = null;
         
+        /* CALID */
+        if (cmd.hasOption(CALID)) {
+            CalidProcessController.setCalidProcessor(cmd, proc);
+        }
+
+        /* SCANSUN */
+        if (cmd.hasOption(SCANSUN)) {
+            proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
+            if (proc.isValid()) {
+                String par = "";
+                if (cmd.getOptionValue(SCANSUN) == null) {
+                    par = "no parameters";
+                } else
+                    for (String s : cmd.getOptionValues(SCANSUN)) {
+                        par += s + " ";
+                    }
+                LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par,
+                        NORMAL);
+            }
+        }
+        
         // test process, prints files name
         if (cmd.hasOption(TEST)) {
             proc = new FilesProcessor() {
@@ -158,43 +188,15 @@ public class MainProcessController {
                 }
             };
         }
-        
-        /* CALID */
-        if (cmd.hasOption(CALID)) {
-            proc = new CalidProcessor(cmd.getOptionValues(CALID));
-            if (proc.isValid()) {
-                String par = "";
-                if (cmd.getOptionValue(CALID) == null)
-                    par = "default settings";
-                else
-                    for (String s : cmd.getOptionValues(CALID)) {
-                        par += s + " ";
-                    }
-                LogHandler.getLogs().displayMsg("Starting CALID with " + par,
-                        NORMAL);
-            } else {
-                return false;
-            }
-        }
 
-        /* SCANSUN */
-        if (cmd.hasOption(SCANSUN)) {
-            proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
-            if (proc.isValid()) {
-                String par = "";
-                if (cmd.getOptionValue(SCANSUN) == null) {
-                    par = "no parameters";
-                } else
-                    for (String s : cmd.getOptionValues(SCANSUN)) {
-                        par += s + " ";
-                    }
-                LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par,
-                        NORMAL);
-            }
+        
+        if (!proc.isValid()) {
+            LogHandler.getLogs().displayMsg("No valid process has been set",
+                    WARNING);
+            return false;
         }
         
         /* =========== setting working mode =============== */
-        
         if (cmd.hasOption(WATCH)) {
             /* Starting continues mode */
             
