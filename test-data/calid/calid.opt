@@ -1,0 +1,13 @@
+<calid>
+  <pair src1="Rzeszow" src2="Brzuchania">
+    <elevation>0.5</elevation>
+    <distance>500</distance>
+    <reflectivity>3.0</reflectivity>
+    <range>200</range>
+  </pair>
+  <pair src1="Ramza" src2="Brzuchania">
+    <distance>250</distance>
+    <reflectivity>3.0</reflectivity>
+    <range>200</range>
+  </pair>
+</calid>

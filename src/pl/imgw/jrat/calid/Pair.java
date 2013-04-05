@@ -3,12 +3,9 @@
  */
 package pl.imgw.jrat.calid;
 
-import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
-import pl.imgw.jrat.data.containers.ScanContainer;
 import pl.imgw.jrat.data.containers.VolumeContainer;
 
 /**
@@ -29,7 +26,15 @@ public class Pair implements Comparable<Pair> {
     
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd/HH:mm");
 
-    public Pair(String source1, String source2) {
+    /**
+     * 
+     * @param source1
+     * @param source2
+     */
+    public Pair(String source1, String source2) throws IllegalArgumentException {
+        if (source1 == null || source2 == null)
+            throw new IllegalArgumentException(
+                    "Pair constructor failed. Source name cannot be null");
         if (!source1.isEmpty() && !source1.matches(source2)) {
             if (source2.isEmpty() || source1.compareTo(source2) > 0) {
                 this.source1 = source1;
@@ -47,10 +52,16 @@ public class Pair implements Comparable<Pair> {
      * <code>getVol2()</code> will return the other volume, and it will be
      * always the same order for the same pair.
      * 
+     * if vol1 or vol2 is null <code>IllegalArgumentException</code> is thrown
+     * 
      * @param vol1
      * @param vol2
      */
-    public Pair(VolumeContainer vol1, VolumeContainer vol2) {
+    public Pair(VolumeContainer vol1, VolumeContainer vol2) throws IllegalArgumentException{
+        if (vol1 == null || vol2 == null) {
+            throw new IllegalArgumentException(
+                    "Pair constructor failed. VolumeContaner cannot be null");
+        }
         String source1 = vol1.getSiteName();
         String source2 = vol2.getSiteName();
         if (!source1.isEmpty() && !source1.matches(source2)) {

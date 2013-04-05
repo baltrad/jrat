@@ -40,7 +40,7 @@ public class FilePatternFilterTest {
         pattern = "test-data/*.cmax test-data/*.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
-        assertEquals("number of files filtered is wrong", 7, list.size());
+        assertEquals("number of files filtered is wrong", 11, list.size());
     }
     
     @Test
@@ -67,7 +67,7 @@ public class FilePatternFilterTest {
     
     @Test
     public void parseInvalidPatternTest() {
-        pattern = "nie ma takiego pliku";
+        pattern = "this_is_not_a_file";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
         assertEquals("invalid pattern returned value", 0, list.size());

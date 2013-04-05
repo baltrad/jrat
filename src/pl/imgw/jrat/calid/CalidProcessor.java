@@ -23,11 +23,14 @@ import pl.imgw.jrat.tools.out.LogHandler;
 public class CalidProcessor implements FilesProcessor {
 
     private CalidParsedParameters params = new CalidParsedParameters();
+    private CalidContainer cc;
     private boolean valid = false;
     
     public CalidProcessor(String args[]) {
-        valid = params.initialize(args);
-        
+        if (params.initialize(args)) {
+            cc = new CalidContainer(params);
+            valid = true;
+        }
     }
     
     public boolean isValid() {
@@ -46,7 +49,7 @@ public class CalidProcessor implements FilesProcessor {
                 "CALID calculations");
 
         Pair pair = null;
-        CalidContainer cc = new CalidContainer(params);
+        
         while (pairs.hasNext()) {
             pair = pairs.next();
             ConsoleProgressBar.getProgressBar().evaluate();

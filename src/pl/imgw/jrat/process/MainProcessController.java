@@ -42,7 +42,7 @@ public class MainProcessController {
     private CommandLine cmd;
     private List<File> files = new LinkedList<File>();
     private List<File> folders = new LinkedList<File>();
-    private File root = new File(System.getProperty("user.dir"));
+    public static File root = new File(System.getProperty("user.dir"));
 
     public List<File> getFiles(){
         return files;
@@ -98,51 +98,39 @@ public class MainProcessController {
         }
         
         if (cmd.hasOption(CALID_RESULT)) {
-            CalidParsedParameters calid = new CalidParsedParameters();
-            if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
-                if (cmd.hasOption(CALID_RESULT_DETAIL)) {
-                    try {
-                        new CalidDetailedResultsPrinter(calid,
-                                cmd.getOptionValues(CALID_RESULT_DETAIL))
-                                .printResults();
-                    } catch (IllegalArgumentException e) {
-                        LogHandler.getLogs()
-                                .displayMsg(e.getMessage(), WARNING);
-                    }
-                } else if (cmd.hasOption(CALID_RESULT_GNUPLOT)) {
-                    String output = cmd.getOptionValue(CALID_RESULT_GNUPLOT);
-                    try {
-                        new CalidGnuplotResultPrinter(calid, output)
-                                .generateMeanDifferencePlots();
-                    } catch (IllegalArgumentException e) {
-                        LogHandler.getLogs()
-                                .displayMsg(e.getMessage(), WARNING);
-                    } catch (IOException e) {
-                        LogHandler.getLogs()
-                                .displayMsg("Plotting error", ERROR);
-                        LogHandler.getLogs().saveErrorLogs(this, e);
-                    }
-                } else {
-                    new CalidResultsPrinter(calid).printResults();
-                }
-                return true;
-            } else {
-                CalidParsedParameters.printHelp();
-                return false;
-            }
+            return CalidProcessController.processCalidResult(cmd);
         }
         
         if (cmd.hasOption(CALID_LIST)) {
-
-            CalidParsedParameters calid = new CalidParsedParameters();
-            if (calid.initialize(cmd.getOptionValues(CALID_LIST))) {
-                new CalidResultsPrinter(calid).printList();
-                return true;
-            } else {
-                CalidParsedParameters.printHelp();
-                return false;
-            }
+            return CalidProcessController.processCalidList(cmd);
         }
+        
+        
+        /* Loading list of files to process or setting input folder path */
+        if (cmd.hasOption(I)) {
+            FileProcessController.setInputFilesAndFolders(files, folders,
+                    cmd.getOptionValues(I));
+        }
+        
+        /* Setting output path */
+        File output = root;
+        if (cmd.hasOption(O)) {
+            FileProcessController.setOutputFile(cmd.getOptionValue(O), output);
+        }
+        
+        /* Print information about all input files */
+        if (cmd.hasOption(PRINT)) {
+            ProductInfoPrinter.print(files);
+            return true;
+        }
+        
+        /* Print image from all input files */
+        if (cmd.hasOption(PRINTIMAGE)) {
+            PrintingImageProcessController.printImage(files, output,
+                    cmd.getOptionValues(PRINTIMAGE));
+        }
+
+        /* =========== setting processes =============== */
         
         FilesProcessor proc = null;
         
@@ -169,108 +157,6 @@ public class MainProcessController {
                     return true;
                 }
             };
-        }
-        
-        
-        /* Loading list of files to process or setting input folder path*/
-        if (cmd.hasOption(I)) {
-            
-            FilePatternFilter filter = new RegexFileFilter();
-            for (String name : cmd.getOptionValues(I)) {
-                if (!name.startsWith("/")) {
-                    name = root.getPath() + "/" + name;
-                }
-                if(name.contains("*")) {
-                    files.addAll(filter.getFileList(name));
-                } else {
-                    File f = new File(name);
-                    if (f.isFile()) {
-                        files.add(f);
-                    } else if (f.isDirectory()) {
-                        folders.add(f);
-                    }
-                }
-            }
-            
-            
-            if (files.isEmpty() && folders.isEmpty()) {
-                LogHandler.getLogs().displayMsg("No such file or directory",
-                        WARNING);
-            } else {
-                ConsoleProgressBar.getProgressBar().initialize(20,
-                        files.size(),
-                        LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
-                        "Setting up files");
-                for (File f : files) {
-                    LogHandler.getLogs().displayMsg(
-                            "Input files: " + f.getPath(), NORMAL);
-                    ConsoleProgressBar.getProgressBar().evaluate();
-                }
-                for (File f : folders) {
-                    LogHandler.getLogs().displayMsg(
-                            "Input folders: " + f.getPath(), NORMAL);
-                    ConsoleProgressBar.getProgressBar().evaluate();
-                }
-                
-            }
-            String msg = "";
-            if (!files.isEmpty()) {
-                msg = files.size() + " files";
-            }
-            ConsoleProgressBar.getProgressBar().printDoneMsg(msg);
-            
-            
-        }
-        /*----------------------------------
-        
-        if(cmd.hasOption(F)) {
-            String f = cmd.getOptionValue(F);
-            if(f.matches("hdf") || f.matches("h5"))
-                format = HDF;
-            else if(f.matches("rbimg") || f.matches("rainbowimage"))
-                format = RBI;
-            else if(f.matches("rbvol") || f.matches("rainbowvol"))
-                format = RBV;
-        }
-        */
-        
-        /* Setting output file */
-        File output = root;
-        if (cmd.hasOption(O)) {
-            if (!cmd.getOptionValue(O).startsWith("/")) {
-                output = new File(root, cmd.getOptionValue(O));
-            } else {
-                output = new File(cmd.getOptionValue(O));
-            }
-            output.mkdirs();
-            LogHandler.getLogs().displayMsg("Output: " + output.getPath(), NORMAL);
-        }
-        
-        
-        if (cmd.hasOption(PRINT)) {
-            ProductInfoPrinter.print(files);
-            return true;
-        }
-        
-        if (cmd.hasOption(PRINTIMAGE)) {
-//            LogHandler.getLogs().displayMsg("Printing image from file", WARNING);
-            ImagesController ic = null;
-            ParserManager pm = new ParserManager();
-
-            pm.setParser(new DefaultParser());
-
-            for (File file : files) {
-                if (pm.initialize(file)) {
-                    ic = new ImagesController(
-                            cmd.getOptionValues(PRINTIMAGE));
-                    ic.getBuilder().setData(
-                            pm.getProduct().getArray(ic.getDatasetValue()));
-
-                    File imgout = new File(output, file.getName() + "."
-                            + ic.getFormat());
-                    ic.getBuilder().saveToFile(imgout);
-                }
-            }
         }
         
         /* CALID */
@@ -306,6 +192,8 @@ public class MainProcessController {
                         NORMAL);
             }
         }
+        
+        /* =========== setting working mode =============== */
         
         if (cmd.hasOption(WATCH)) {
             /* Starting continues mode */

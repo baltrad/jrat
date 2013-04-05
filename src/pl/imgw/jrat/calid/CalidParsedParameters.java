@@ -60,11 +60,25 @@ public class CalidParsedParameters {
 
     // private String[] par = { "0.5deg", "500m" };
 
+    /**
+     * Empty constructor
+     */
+    public CalidParsedParameters() {
+    }
+
+    public CalidParsedParameters(Double elevation, Integer distance,
+            Integer range, Double reflectivity) {
+        this.elevation = elevation;
+        this.distance = distance;
+        this.range = range;
+        this.reflectivity = reflectivity;
+    }
+    
     
     /**
      * 
      * Initializes manager and sets parameters for the algorithm, valid format
-     * is name=value
+     * for each String is name=value
      * 
      * <p>
      * <tt>ele=</tt> elevation of the scan, in degrees, the proper format for
@@ -366,8 +380,36 @@ public class CalidParsedParameters {
     /**
      * @return
      */
-    public int getMaxRange() {
+    public Integer getMaxRange() {
         return (range == null) ? DEFAULT_RANGE : range;
+    }
+
+    /**
+     * @param elevation the elevation to set
+     */
+    public void setElevation(Double elevation) {
+        this.elevation = elevation;
+    }
+
+    /**
+     * @param distance the distance to set
+     */
+    public void setDistance(Integer distance) {
+        this.distance = distance;
+    }
+
+    /**
+     * @param range the maximum range to set
+     */
+    public void setMaxRange(Integer range) {
+        this.range = range;
+    }
+
+    /**
+     * @param reflectivity the reflectivity to set
+     */
+    public void setReflectivity(Double reflectivity) {
+        this.reflectivity = reflectivity;
     }
     
 }

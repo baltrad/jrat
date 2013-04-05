@@ -45,16 +45,6 @@ public class ProcessControllerTest {
         
         assertTrue(pc.start());
         
-        
-        /*
-        args = "-i test-data/watched --test --seq 1 -v".split(" ");
-        pc = new ProcessController(args);
-        pc.start();
-        args = "-i test-data/watched test-data/calid test-data --test --watch -v".split(" ");
-        pc = new ProcessController(args);
-        pc.start();
-         */
-        
     }
 
 }

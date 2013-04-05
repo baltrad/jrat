@@ -25,7 +25,8 @@ public class CalidContainer implements Comparable<CalidContainer> {
     private ArrayList<PairedPoints> pairedPointsList = new ArrayList<PairedPoints>();
 
     private Pair pair;
-    private CalidParsedParameters params;
+    private CalidParsedParameters defaultParams;
+    private CalidParsedParameters pairParams;
     private boolean hasResults = false;
     private Date date = null;
 
@@ -80,7 +81,7 @@ public class CalidContainer implements Comparable<CalidContainer> {
      */
     public CalidContainer(Pair pair, CalidParsedParameters params) {
         this.pair = pair;
-        this.params = params;
+        this.defaultParams = params;
     }
 
     public CalidContainer(CalidParsedParameters params) {
@@ -115,6 +116,8 @@ public class CalidContainer implements Comparable<CalidContainer> {
      *            the pair to set
      */
     public void setPair(Pair pair) {
+        pairParams = CalidOptionsHanlder.getOptions().getParam(pair,
+                defaultParams);
         this.pair = pair;
     }
 
@@ -144,7 +147,7 @@ public class CalidContainer implements Comparable<CalidContainer> {
             return false;
         }
         
-        CalidComparator.receiveResults(this, date, params.getMaxRange());
+        CalidComparator.receiveResults(this, date, getParsedParameters().getMaxRange());
         
         return hasResults;
 
@@ -169,6 +172,7 @@ public class CalidContainer implements Comparable<CalidContainer> {
     }
     
     public void resetContainer() {
+        pairParams = null;
         pairedPointsList = new ArrayList<PairedPoints>();
         r1understate = 0;
         r2understate = 0;
@@ -195,14 +199,14 @@ public class CalidContainer implements Comparable<CalidContainer> {
     public Double getVerifiedElevation() {
         if (pair == null)
             return null;
-        if (params.getElevation() != null) {
+        if (getParsedParameters().getElevation() != null) {
             if (pair.hasRealVolumes()) {
-                if (pair.getVol1().getScan(params.getElevation()) == null)
+                if (pair.getVol1().getScan(getParsedParameters().getElevation()) == null)
                     return null;
-                if (pair.getVol2().getScan(params.getElevation()) == null)
+                if (pair.getVol2().getScan(getParsedParameters().getElevation()) == null)
                     return null;
             }
-            return params.getElevation();
+            return getParsedParameters().getElevation();
         }
         if (pair.hasRealVolumes()) {
             double ele1 = getLowestElevation(pair.getVol1());
@@ -363,9 +367,12 @@ public class CalidContainer implements Comparable<CalidContainer> {
      * @return the manager
      */
     public CalidParsedParameters getParsedParameters() {
-        return params;
+        if (pairParams == null)
+            return defaultParams;
+        return pairParams;
     }
 
+        
     /*
      * (non-Javadoc)
      * 
