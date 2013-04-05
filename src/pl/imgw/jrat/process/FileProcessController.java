@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
+import pl.imgw.jrat.calid.CalidOptionsHanlder;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
@@ -74,6 +75,11 @@ public class FileProcessController {
             ConsoleProgressBar.getProgressBar().printDoneMsg(msg);
             
         }
+        
+        /*
+         * Other input files/folders providers:
+         */
+        folders.addAll(CalidOptionsHanlder.getOptions().getInputFolderList());
         
     }
     

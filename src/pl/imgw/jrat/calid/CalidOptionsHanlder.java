@@ -5,13 +5,13 @@ package pl.imgw.jrat.calid;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import pl.imgw.jrat.AplicationConstans;
 import pl.imgw.jrat.tools.in.Options;
 import pl.imgw.jrat.tools.out.LogHandler;
 
@@ -30,6 +30,7 @@ public class CalidOptionsHanlder extends Options {
     private static final String CALID = "calid";
     private static final String RADAR = "radar";
     private static final String INPUT = "input";
+    private static final String NAME = "name";
     
     private static final String PAIR = "pair";
     private static final String SRC1 = "src1";
@@ -42,6 +43,7 @@ public class CalidOptionsHanlder extends Options {
     private static final String SEQ = "sequnce";
     
     private Map<String, CalidParsedParameters> params;
+    private List<File> folders;
     
     private static CalidOptionsHanlder options = new CalidOptionsHanlder();
     
@@ -71,19 +73,35 @@ public class CalidOptionsHanlder extends Options {
     public boolean isSet() {
         return doc != null;
     }
+
+    /**
+     * 
+     * @return list of input folders provided in option file, if no folders
+     *         provided the list is empty
+     */
+    public List<File> getInputFolderList(){
+        if(folders == null)
+            loadCalidRadarParameters();
+        return folders;
+    }
+    
+    /**
+     * 
+     * @param pair
+     * @return returns true if there are parameters for the pair
+     */
+    public boolean hasPair(Pair pair) {
+        if (params == null)
+            loadCalidPairsParameters();
+        return params.containsKey(getKey(pair));
+    }
     
     /**
      * @param pair
      * @return null if options file contains no parameters for the pair
      */
-    public CalidParsedParameters getParam(Pair pair) {
+    public CalidParsedParameters getPairParam(Pair pair) {
         return getParam(pair, null);
-    }
-    
-    public boolean hasPair(Pair pair) {
-        if (params == null)
-            loadCalidParameter();
-        return params.containsKey(getKey(pair));
     }
     
     /**
@@ -97,7 +115,7 @@ public class CalidOptionsHanlder extends Options {
             return null;
             
         if (params == null)
-            loadCalidParameter();
+            loadCalidPairsParameters();
 
         CalidParsedParameters param = params.get(getKey(pair));
         
@@ -123,8 +141,30 @@ public class CalidOptionsHanlder extends Options {
         return pair.getSource1() + pair.getSource2();
     }
     
-    private void loadCalidParameter() {
+    
+    private void loadCalidRadarParameters() {
+        folders = new LinkedList<File>();
+        if(doc == null)
+            return;
+        NodeList radarList = doc.getElementsByTagName(RADAR);
+        int l = radarList.getLength();
+        String val;
+        File file;
+        for (int i = 0; i < l; i++) {
+            val = getValueByName(radarList.item(i), INPUT, null);
+            if (val != null) {
+                file = new File(val);
+                if (file.isDirectory())
+                    folders.add(file);
+            }
+        }
+        
+    }
+    
+    private void loadCalidPairsParameters() {
         params = new HashMap<String, CalidParsedParameters>();
+        if(doc == null)
+            return;
         NodeList pairList = doc.getElementsByTagName(PAIR);
         int l = pairList.getLength();
         for (int i = 0; i < l; i++) {

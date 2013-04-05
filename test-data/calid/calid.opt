@@ -1,4 +1,16 @@
 <calid>
+  <radar name="Rzeszow">
+    <input>test-data/calid</input>
+  </radar>
+  <radar name="Brzuchania">
+    <input>src</input>
+  </radar>
+  <radar name="Ramza">
+    <input>bin</input>
+  </radar>
+  <radar name="Opole">
+    <input>aaaaaa</input>
+  </radar>
   <pair src1="Rzeszow" src2="Brzuchania">
     <elevation>0.5</elevation>
     <distance>500</distance>

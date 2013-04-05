@@ -3,7 +3,11 @@
  */
 package pl.imgw.jrat.calid;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -26,14 +30,14 @@ public class CalidOptionsHandlerTest {
     }
 
     @Test
-    public void loadOptionsTest() {
+    public void loadPairParametersTest() {
 
         assertTrue(CalidOptionsHanlder.getOptions().isSet());
         
         Pair pair = new Pair("Brzuchania", "Rzeszow");
-        assertTrue(CalidOptionsHanlder.getOptions().getParam(pair) != null);
+        assertTrue(CalidOptionsHanlder.getOptions().getPairParam(pair) != null);
         CalidParsedParameters params = CalidOptionsHanlder.getOptions()
-                .getParam(pair);
+                .getPairParam(pair);
         
         assertEquals(200, params.getMaxRange().intValue());
         assertEquals(500, params.getDistance().intValue());
@@ -44,10 +48,10 @@ public class CalidOptionsHandlerTest {
 //        System.out.println(params.getReflectivity());
         
         pair = new Pair("Brzuchania", "Ramza");
-        assertTrue(CalidOptionsHanlder.getOptions().getParam(pair) != null);
+        assertTrue(CalidOptionsHanlder.getOptions().getPairParam(pair) != null);
 
         params = CalidOptionsHanlder.getOptions()                
-                .getParam(pair);
+                .getPairParam(pair);
         
 //        System.out.println(params.getMaxRange());
 //        System.out.println(params.getDistance());
@@ -56,5 +60,14 @@ public class CalidOptionsHandlerTest {
 
     }
 
+    @Test
+    public void loadRadarParametersTest() {
+        List<File> list = CalidOptionsHanlder.getOptions().getInputFolderList();
+        assertTrue(!list.isEmpty());
+        for(File f : list) {
+            System.out.println("folder added: " + f);
+        }
+    }
+    
 }
 
