@@ -80,6 +80,12 @@ public class CalidOptionsHanlder extends Options {
         return getParam(pair, null);
     }
     
+    public boolean hasPair(Pair pair) {
+        if (params == null)
+            loadCalidParameter();
+        return params.containsKey(getKey(pair));
+    }
+    
     /**
      * @param pair
      * @param defaultParams
@@ -93,7 +99,7 @@ public class CalidOptionsHanlder extends Options {
         if (params == null)
             loadCalidParameter();
 
-        CalidParsedParameters param = params.get(pair.getSource1() + pair.getSource2());
+        CalidParsedParameters param = params.get(getKey(pair));
         
         if (defaultParams != null) {
             if (param.getDistance() == null)
@@ -111,6 +117,10 @@ public class CalidOptionsHanlder extends Options {
     
     public static CalidOptionsHanlder getOptions() {
         return options;
+    }
+    
+    private String getKey(Pair pair) {
+        return pair.getSource1() + pair.getSource2();
     }
     
     private void loadCalidParameter() {
@@ -184,7 +194,7 @@ public class CalidOptionsHanlder extends Options {
     }
     
     private void putParam(Pair pair, CalidParsedParameters param) {
-        params.put(pair.getSource1() + pair.getSource2(), param);
+        params.put(getKey(pair), param);
     }
     
     

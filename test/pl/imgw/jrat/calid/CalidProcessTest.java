@@ -43,10 +43,24 @@ public class CalidProcessTest {
  
     @Test
     public void runFromMainProcessTest() {
-        args = "--calid ref=3.5 -i test-data/calid/*.vol -v".split(" ");
+        //must provide all necessary options
+        args = "--calid ref=3.5 dis=500 range=200 ele=0.5 -i test-data/calid/*.vol -v".split(" ");
         MainProcessController main = new MainProcessController(args);
         assertTrue(main.start());
     }
     
+    @Test
+    public void runFromMainProcessWithOptFileTest() {
+        args = "--calid -i test-data/calid/*.vol -v --calid-opt test-data/calid/calid.opt".split(" ");
+        MainProcessController main = new MainProcessController(args);
+        assertTrue(main.start());
+    }
+    
+    @Test
+    public void runFromMainProcessWithMixedOptTest() {
+        args = "--calid ref=5.0 -i test-data/calid/*.vol -v --calid-opt test-data/calid/calid.opt".split(" ");
+        MainProcessController main = new MainProcessController(args);
+        assertTrue(main.start());
+    }
     
 }

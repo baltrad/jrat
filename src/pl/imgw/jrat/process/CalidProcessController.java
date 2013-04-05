@@ -3,11 +3,7 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_LIST;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT_DETAIL;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT_GNUPLOT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.NORMAL;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
@@ -18,6 +14,7 @@ import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
 import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
+import pl.imgw.jrat.calid.CalidOptionsHanlder;
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
@@ -78,7 +75,12 @@ public class CalidProcessController {
         }
     }
     
-    public static void setCalidProcessor(CommandLine cmd, FilesProcessor proc) {
+    public static FilesProcessor setCalidProcessor(CommandLine cmd) {
+        FilesProcessor proc;
+        if (cmd.hasOption(CALID_OPT)) {
+            CalidOptionsHanlder.getOptions().setOptionFile(
+                    cmd.getOptionValue(CALID_OPT));
+        }
         proc = new CalidProcessor(cmd.getOptionValues(CALID));
         if (proc.isValid()) {
             String par = "";
@@ -91,6 +93,7 @@ public class CalidProcessController {
             LogHandler.getLogs().displayMsg("Starting CALID with " + par,
                     NORMAL);
         }
+        return proc;
     }
     
 }

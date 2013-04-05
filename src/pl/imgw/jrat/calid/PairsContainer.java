@@ -170,7 +170,17 @@ public class PairsContainer {
             }
 
             if (vol1 != null && vol2 != null) {
-                setOfPairs.add(new Pair(vol1, vol2));
+                Pair pair = new Pair(vol1, vol2);
+                if (CalidOptionsHanlder.getOptions().isSet()) {
+                    /*
+                     * add only pairs that are provided in option file, if it
+                     * exists
+                     */
+                    if (CalidOptionsHanlder.getOptions().hasPair(pair))
+                        setOfPairs.add(pair);
+                } else {
+                    setOfPairs.add(pair);
+                }
             }
 
         }

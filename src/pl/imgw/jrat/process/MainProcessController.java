@@ -145,7 +145,7 @@ public class MainProcessController {
         
         /* CALID */
         if (cmd.hasOption(CALID)) {
-            CalidProcessController.setCalidProcessor(cmd, proc);
+            proc = CalidProcessController.setCalidProcessor(cmd);
         }
 
         /* SCANSUN */
@@ -190,7 +190,7 @@ public class MainProcessController {
         }
 
         
-        if (!proc.isValid()) {
+        if (proc == null || !proc.isValid()) {
             LogHandler.getLogs().displayMsg("No valid process has been set",
                     WARNING);
             return false;
