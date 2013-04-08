@@ -23,7 +23,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidOptionsHanlder extends Options {
+public class CalidOptionsHandler extends Options {
 
     private File optionFile = null;
     
@@ -45,12 +45,12 @@ public class CalidOptionsHanlder extends Options {
     private Map<String, CalidParsedParameters> params;
     private List<File> folders;
     
-    private static CalidOptionsHanlder options = new CalidOptionsHanlder();
+    private static CalidOptionsHandler options = new CalidOptionsHandler();
     
     private Document doc;
     
     /*private constructor*/
-    private CalidOptionsHanlder() {
+    private CalidOptionsHandler() {
     }
     
     /**
@@ -133,7 +133,7 @@ public class CalidOptionsHanlder extends Options {
         return param;
     }
     
-    public static CalidOptionsHanlder getOptions() {
+    public static CalidOptionsHandler getOptions() {
         return options;
     }
     

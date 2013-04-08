@@ -116,7 +116,7 @@ public class CalidContainer implements Comparable<CalidContainer> {
      *            the pair to set
      */
     public void setPair(Pair pair) {
-        pairParams = CalidOptionsHanlder.getOptions().getParam(pair,
+        pairParams = CalidOptionsHandler.getOptions().getParam(pair,
                 defaultParams);
         this.pair = pair;
     }

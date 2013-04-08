@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-import pl.imgw.jrat.calid.CalidOptionsHanlder;
+import pl.imgw.jrat.calid.CalidOptionsHandler;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
@@ -32,22 +32,28 @@ public class FileProcessController {
     public static void setInputFilesAndFolders(List<File> files, List<File> folders, String[] options) {
         
         FilePatternFilter filter = new RegexFileFilter();
-        for (String name : options) {
-            if (!name.startsWith("/")) {
-                name = MainProcessController.root.getPath() + "/" + name;
-            }
-            if(name.contains("*")) {
-                files.addAll(filter.getFileList(name));
-            } else {
-                File f = new File(name);
-                if (f.isFile()) {
-                    files.add(f);
-                } else if (f.isDirectory()) {
-                    folders.add(f);
+        if (options != null) {
+            for (String name : options) {
+                if (!name.startsWith("/")) {
+                    name = MainProcessController.root.getPath() + "/" + name;
+                }
+                if (name.contains("*")) {
+                    files.addAll(filter.getFileList(name));
+                } else {
+                    File f = new File(name);
+                    if (f.isFile()) {
+                        files.add(f);
+                    } else if (f.isDirectory()) {
+                        folders.add(f);
+                    }
                 }
             }
         }
         
+        /*
+         * Other input files/folders providers:
+         */
+        folders.addAll(CalidOptionsHandler.getOptions().getInputFolderList());
         
         if (files.isEmpty() && folders.isEmpty()) {
             LogHandler.getLogs().displayMsg("No such file or directory",
@@ -75,11 +81,6 @@ public class FileProcessController {
             ConsoleProgressBar.getProgressBar().printDoneMsg(msg);
             
         }
-        
-        /*
-         * Other input files/folders providers:
-         */
-        folders.addAll(CalidOptionsHanlder.getOptions().getInputFolderList());
         
     }
     

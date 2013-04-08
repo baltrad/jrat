@@ -171,12 +171,12 @@ public class PairsContainer {
 
             if (vol1 != null && vol2 != null) {
                 Pair pair = new Pair(vol1, vol2);
-                if (CalidOptionsHanlder.getOptions().isSet()) {
+                if (CalidOptionsHandler.getOptions().isSet()) {
                     /*
                      * add only pairs that are provided in option file, if it
                      * exists
                      */
-                    if (CalidOptionsHanlder.getOptions().hasPair(pair))
+                    if (CalidOptionsHandler.getOptions().hasPair(pair))
                         setOfPairs.add(pair);
                 } else {
                     setOfPairs.add(pair);

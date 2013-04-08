@@ -16,6 +16,7 @@ import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
 import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
+import pl.imgw.jrat.calid.CalidOptionsHandler;
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
@@ -114,12 +115,16 @@ public class MainProcessController {
             return CalidProcessController.processCalidList(cmd);
         }
         
+        /* set CALID option file */
+        if (cmd.hasOption(CALID_OPT)) {
+            CalidOptionsHandler.getOptions().setOptionFile(cmd.getOptionValue(CALID_OPT));
+        }
+        
         
         /* Loading list of files to process or setting input folder path */
-        if (cmd.hasOption(I)) {
-            FileProcessController.setInputFilesAndFolders(files, folders,
+        FileProcessController.setInputFilesAndFolders(files, folders,
                     cmd.getOptionValues(I));
-        }
+        
         
         /* Setting output path */
         File output = root;

@@ -3,8 +3,6 @@
  */
 package pl.imgw.jrat.calid;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -51,7 +49,8 @@ public class CalidProcessTest {
     
     @Test
     public void runFromMainProcessWithOptFileTest() {
-        args = "--calid -i test-data/calid/*.vol -v --calid-opt test-data/calid/calid.opt".split(" ");
+        System.out.println("only opt file");
+        args = "--calid -v --calid-opt test-data/calid/calid.opt".split(" ");
         MainProcessController main = new MainProcessController(args);
         assertTrue(main.start());
     }
