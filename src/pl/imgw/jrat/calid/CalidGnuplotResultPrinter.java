@@ -8,6 +8,7 @@ import static pl.imgw.jrat.tools.out.Logging.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 import pl.imgw.jrat.AplicationConstans;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
@@ -27,7 +28,7 @@ import pl.imgw.jrat.tools.out.ResultPrinterManager;
 public class CalidGnuplotResultPrinter extends CalidDetailedResultsPrinter {
 
     private File output;
-    
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     /**
      * @param params
      * @param detParams
@@ -36,13 +37,26 @@ public class CalidGnuplotResultPrinter extends CalidDetailedResultsPrinter {
     public CalidGnuplotResultPrinter(CalidParsedParameters params, String output) {
         super(params);
         if(output.isEmpty()) {
-            output = "plot.png";
+            output = params.getSource1() + params.getSource2()
+                    + sdf.format(params.getStartDate()) + ".png";
         }
         this.output = new File(output);
 
     }
 
     public void generateMeanDifferencePlots() throws IOException {
+        
+        Set<File> files = getResultsFiles();
+        if (files.size() > 1) {
+            File f = files.iterator().next();
+            files.clear();
+            files.add(f);
+        }
+        
+        if(files.isEmpty()) {
+            LogHandler.getLogs().displayMsg("No data to generate this plot", WARNING);
+            return;
+        }
         
         ConsoleProgressBar.getProgressBar().initialize(20, 5,
                 LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
@@ -54,23 +68,37 @@ public class CalidGnuplotResultPrinter extends CalidDetailedResultsPrinter {
 
         ResultPrinter pr = new FileResultPrinter(data1day);
         ResultPrinterManager.getManager().setPrinter(pr);
+        
+        
         setMethod(MEAN);
         setPeriod(1);
-        printResults();
+        if (!printResults(files)) {
+            LogHandler.getLogs().displayMsg("No data to generate this plot",
+                    WARNING);
+            return;
+        }
 
         ConsoleProgressBar.getProgressBar().evaluate();
         
         ((FileResultPrinter) pr).setFile(data5day);
         setMethod(MEAN);
         setPeriod(5);
-        printResults();
+        if (!printResults(files)) {
+            LogHandler.getLogs().displayMsg("No data to generate this plot",
+                    WARNING);
+            return;
+        }
 
         ConsoleProgressBar.getProgressBar().evaluate();
         
         ((FileResultPrinter) pr).setFile(data10day);
         setMethod(MEAN);
         setPeriod(10);
-        printResults();
+        if (!printResults(files)) {
+            LogHandler.getLogs().displayMsg("No data to generate this plot",
+                    WARNING);
+            return;
+        }
 
         ConsoleProgressBar.getProgressBar().evaluate();
         
@@ -78,14 +106,14 @@ public class CalidGnuplotResultPrinter extends CalidDetailedResultsPrinter {
                 data5day, data10day);
 
         plot.setPairsName(params.getSource1(), params.getSource2());
-        plot.setTimePeriod(params.getDate1(), params.getDate2());
+        plot.setTimePeriod(params.getStartDate(), params.getEndDate());
         plot.setYmin(-20);
         plot.setYmax(20);
         plot.setOutput(output);
         
         ConsoleProgressBar.getProgressBar().evaluate();
         
-        plot.plot();
+        if(plot.plot());
         
         data1day.delete();
         data5day.delete();

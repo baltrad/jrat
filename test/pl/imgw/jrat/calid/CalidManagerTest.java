@@ -47,8 +47,8 @@ public class CalidManagerTest {
         int dis = params.getDistance();
         double elevation = params.getElevation();
         double reflectivity = params.getReflectivity();
-        Date date1 = params.getDate1();
-        Date date2 = params.getDate2();
+        Date date1 = params.getStartDate();
+        Date date2 = params.getEndDate();
         
         assertEquals(500, dis);
         assertEquals(0.5, elevation, 0.01);
@@ -67,9 +67,9 @@ public class CalidManagerTest {
         cal.set(2012, 8, 19, 0, 0, 0);
         cal.set(Calendar.MILLISECOND, 0);
         System.out.println(date1);
-        assertTrue(params.getDate1().equals(cal.getTime()));
+        assertTrue(params.getStartDate().equals(cal.getTime()));
         cal.set(2012, 8, 19, 23, 59);
-        assertTrue(params.getDate2().equals(cal.getTime()));
+        assertTrue(params.getEndDate().equals(cal.getTime()));
         
     }
     
@@ -79,12 +79,12 @@ public class CalidManagerTest {
         int dis = params.getDistance();
         Double elevation = params.getElevation();
         double reflectivity = params.getReflectivity();
-        Date date1 = params.getDate1();
-        Date date2 = params.getDate2();
+        Date date1 = params.getStartDate();
+        Date date2 = params.getEndDate();
         
         assertEquals(0, elevation, 0.01);
-        assertTrue(params.isDate1Default());
-        assertTrue(params.isDate2Default());
+        assertTrue(params.isStartDateDefault());
+        assertTrue(params.isEndDateDefault());
         assertEquals(1000, dis);
         assertEquals(0.0, reflectivity, 0.01);
         

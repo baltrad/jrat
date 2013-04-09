@@ -35,7 +35,7 @@ public class CalidFileHandlerTest {
         assertTrue(CalidFileHandler.loadCoords(cc));
         assertEquals(90, cc.getPairedPointsList().size());
 
-        assertTrue(CalidFileHandler.loadResults(cc, calid.getDate1()));
+        assertTrue(CalidFileHandler.loadResults(cc, calid.getStartDate()));
         assertTrue(cc.hasResults());
 
     }

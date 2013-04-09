@@ -3,20 +3,20 @@
  */
 package pl.imgw.jrat.calid;
 
-import java.awt.Container;
+import static pl.imgw.jrat.calid.CalidParsedParameters.DISTANCE;
+import static pl.imgw.jrat.calid.CalidParsedParameters.ELEVATION;
+import static pl.imgw.jrat.calid.CalidParsedParameters.REFLECTIVITY;
+import static pl.imgw.jrat.calid.CalidParsedParameters.SOURCE;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
-
-import static pl.imgw.jrat.calid.CalidParsedParameters.*;
 
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
@@ -48,7 +48,11 @@ public class CalidResultsPrinter {
         this.params = params;
     }
     
-    public void printResults() {
+    /**
+     * 
+     * @return return true if printed results are not empty
+     */
+    public boolean printResults() {
         ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         headers = new HashSet<String>();
 
@@ -58,7 +62,7 @@ public class CalidResultsPrinter {
         boolean noResults = true;
         if (files.isEmpty()) {
             printer.println("# No results matching selected parameters");
-            return;
+            return false;
         }
 
         if (areParametersSet()) {
@@ -91,7 +95,7 @@ public class CalidResultsPrinter {
                             continue;
                         }
                         if (!CalidFileHandler.parseLine(line, cc,
-                                params.getDate1(), params.getDate2()))
+                                params.getStartDate(), params.getEndDate()))
                             continue;
 
                         int freq = params.getFrequency();
@@ -141,6 +145,7 @@ public class CalidResultsPrinter {
                     + " provide its src, ele, dis, ref and date");
             
         }
+        return !noResults;
     }
    
     public void printList() {
@@ -319,11 +324,16 @@ public class CalidResultsPrinter {
             if (pairname.isDirectory()) {
                 // pair name
                 String name = pairname.getName();
+                
+                /*
+                 * skip pairs which does not contains source name if they are
+                 * set
+                 */
                 if (!name.isEmpty() && !params.getSource1().isEmpty()) {
                     if (!params.getSource2().isEmpty()) {
                         if (!name.contains(params.getSource1())
                                 || !name.contains(params.getSource2()))
-                            continue;;
+                            continue;
                     } else if (!name.contains(params.getSource1())) {
                         continue;
                     }
@@ -351,7 +361,7 @@ public class CalidResultsPrinter {
     protected boolean areParametersUnset() {
         if (params.getSource1().isEmpty() && params.getSource2().isEmpty()
                 && params.isDistanceDefault() & params.isElevationDefault()
-                && params.isReflectivityDefault() & params.getDate1() == null)
+                && params.isReflectivityDefault() & params.isStartDateDefault())
             return true;
                 
         return false;
@@ -360,7 +370,7 @@ public class CalidResultsPrinter {
     protected boolean areParametersSet() {
         if (params.getSource1().isEmpty() || params.getSource2().isEmpty()
                 || params.isDistanceDefault() || params.isElevationDefault()
-                || params.isReflectivityDefault() || params.getDate1() == null)
+                || params.isReflectivityDefault() || params.getStartDate() == null)
             return false;
                 
         return true;

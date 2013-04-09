@@ -5,6 +5,7 @@ package pl.imgw.jrat.calid;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import pl.imgw.jrat.tools.out.LogHandler;
@@ -56,6 +57,7 @@ public class CalidParsedParameters {
     private String source2 = "";
     private Date start = null;
     private Date end = null;
+    private boolean defaultDate = true;
     private Integer freq = null;
 
     // private String[] par = { "0.5deg", "500m" };
@@ -82,6 +84,21 @@ public class CalidParsedParameters {
         this.reflectivity = reflectivity;
     }
     
+    /**
+     * Only basic parameters are set, which means that only most necessery
+     * params are set by user, and it is enough to identify a pair
+     * 
+     * @return
+     */
+    public boolean hasBasicParamsOnly() {
+        if (getSource1().isEmpty() || getSource2().isEmpty())
+            return false;
+
+        return (isDistanceDefault() && isElevationDefault()
+                && isEndDateDefault() && isFrequencyDefault()
+                && isReflectivityDefault() && isStartDateDefault());
+
+    }
     
     /**
      * 
@@ -164,6 +181,7 @@ public class CalidParsedParameters {
                         source1 = sources;
                 } else if (par[i].startsWith(DATE)) {
                     parseDate(par[i]);
+                    defaultDate = false;
                 } else {
                     LogHandler.getLogs().displayMsg(
                             error_msg + " (" + par[i] + ")", WARNING);
@@ -197,7 +215,7 @@ public class CalidParsedParameters {
                     error_msg + " (" + DISTANCE + getDistance() + ")", WARNING);
             return false;
         }
-        
+         
         if (getMaxRange() < 1) {
             LogHandler.getLogs().displayMsg(
                     error_msg + " (" + RANGE + getDistance() + ")", WARNING);
@@ -208,6 +226,13 @@ public class CalidParsedParameters {
             LogHandler.getLogs().displayMsg(
                     error_msg + " (" + FREQUENCY + getFrequency() + ")", WARNING);
             return false;
+        }
+        
+        if (getStartDate() == null && getEndDate() == null) {
+            Calendar cal = Calendar.getInstance();
+            end = new Date(cal.getTimeInMillis());
+            cal.add(Calendar.MONTH, -3);
+            start = new Date(cal.getTimeInMillis());
         }
         
 //        System.out.println(elevation);
@@ -366,29 +391,29 @@ public class CalidParsedParameters {
     /**
      * @return the date1
      */
-    public Date getDate1() {
+    public Date getStartDate() {
         return start;
     }
 
     /**
      * @return the date2
      */
-    public Date getDate2() {
+    public Date getEndDate() {
         return end;
     }
 
     /**
      * @return
      */
-    public boolean isDate1Default() {
-        return (start == null) ? true : false;
+    public boolean isStartDateDefault() {
+        return defaultDate;
     }
 
     /**
      * @return
      */
-    public boolean isDate2Default() {
-        return (end == null) ? true: false;
+    public boolean isEndDateDefault() {
+        return defaultDate;
     }
 
     /**

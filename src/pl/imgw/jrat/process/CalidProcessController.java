@@ -33,7 +33,18 @@ public class CalidProcessController {
     public static boolean processCalidResult(CommandLine cmd) {
         CalidParsedParameters calid = new CalidParsedParameters();
         if (calid.initialize(cmd.getOptionValues(CALID_RESULT))) {
-            if (cmd.hasOption(CALID_RESULT_DETAIL)) {
+            if (calid.hasBasicParamsOnly()) {
+                try {
+                    new CalidGnuplotResultPrinter(calid, "")
+                            .generateMeanDifferencePlots();
+                } catch (IOException e) {
+                    LogHandler.getLogs().displayMsg("Plotting error", ERROR);
+                    LogHandler.getLogs().saveErrorLogs(
+                            CalidProcessController.class, e);
+                } catch (IllegalArgumentException e) {
+                    LogHandler.getLogs().displayMsg(e.getMessage(), WARNING);
+                }
+            } else if (cmd.hasOption(CALID_RESULT_DETAIL)) {
                 try {
                     new CalidDetailedResultsPrinter(calid,
                             cmd.getOptionValues(CALID_RESULT_DETAIL))

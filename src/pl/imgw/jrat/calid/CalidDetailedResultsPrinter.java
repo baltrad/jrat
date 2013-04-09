@@ -65,22 +65,44 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         super(params);
     }
 
-    public void printResults() throws IllegalArgumentException{
+
+    /**
+     * Print results for all results file that matches Calid Parsed Parameters
+     * @return 
+     */
+    public boolean printResults() {
         if (!areParametersSet()) {
-            throw new IllegalArgumentException("set all params for CALID");
+            LogHandler.getLogs().displayMsg("Set all params for CALID",
+                    Logging.WARNING);
+            return false;
         }
+        Set<File> files = getResultsFiles();
+        return printResults(files);
+    }
+
+
+    /**
+     * Print results for given result files
+     * 
+     * @param files
+     * @return returns true if printed results are not empty
+     * @throws IllegalArgumentException
+     */
+    public boolean printResults(Set<File> files) {
+
+        boolean notEmpty = false;
+        
         ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         headers = new HashSet<String>();
         CalidContainer cc = new CalidContainer(params);
-        Set<File> files = getResultsFiles();
-
+        
         List<Double> meanRes = new ArrayList<Double>();
         List<Double> rmsRes = new ArrayList<Double>();
 //        List<Double> undRes = new ArrayList<Double>();
 //        Calendar cal0 = Calendar.getInstance();
         Calendar cal1 = Calendar.getInstance();
 //        cal0.setTime(params.getDate1());
-        cal1.setTime(params.getDate1());
+        cal1.setTime(params.getStartDate());
         cal1.add(Calendar.DATE, period);
         
         for (File f : files) {
@@ -90,9 +112,9 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
             try {
                 
                 Date fileDate = fsdf.parse(f.getName());
-                String date1 = fsdf.format(params.getDate1());
+                String date1 = fsdf.format(params.getStartDate());
                 if (fileDate.before(fsdf.parse(date1))
-                        || fileDate.after(params.getDate2())) {
+                        || fileDate.after(params.getEndDate())) {
 //                    System.out.println("omijam");
                     continue;
                 }
@@ -116,7 +138,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                         continue;
                     }
                     if (!CalidFileHandler.parseLine(line, cc,
-                            params.getDate1(), params.getDate2()))
+                            params.getStartDate(), params.getEndDate()))
                         continue;
                 
             
@@ -128,7 +150,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                     cal1.add(Calendar.DATE, period);
                 }
 
-                if (cc.getDate().after(params.getDate2())) {
+                if (cc.getDate().after(params.getEndDate())) {
                     break;
                 }
                 
@@ -151,10 +173,6 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                     cal1.add(Calendar.DATE, period);
                     if(meanRes.size() == 0)
                         continue;
-//                    cal0.add(Calendar.DATE, period);
-                    
-//                    System.out.println("nowy");
-//                    System.out.println(cal1.getTime());
                     
                     if(method.matches(MEDIAN)) {
                         printer
@@ -179,9 +197,10 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                                         );
                     }
 //                    undRes.clear();
+                    
                     meanRes.clear();
                     rmsRes.clear();
-                    
+                    notEmpty = true;
                 }
             }
                 // System.out.println(d);
@@ -195,6 +214,8 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         if(method.matches(MEDIAN)) {
             
         }
+        
+        return notEmpty;
         
     }
     
