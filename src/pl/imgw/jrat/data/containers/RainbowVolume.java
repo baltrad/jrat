@@ -381,4 +381,22 @@ public class RainbowVolume implements VolumeContainer {
         return new ArrayList<ScanContainer>(scans.values());
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getRadConstH()
+     */
+    @Override
+    public Double getRadConstH() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getRadConstV()
+     */
+    @Override
+    public Double getRadConstV() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

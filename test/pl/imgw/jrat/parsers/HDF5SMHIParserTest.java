@@ -50,7 +50,18 @@ public class HDF5SMHIParserTest {
     }
     
     //------------ volumes tests ---------------------
+    @Test
+    public void getVolTest() {
+        pm.initialize(file1);
+        OdimDataContainer data = (OdimDataContainer) pm.getProduct();
+        VolumeContainer vol = new OdimH5Volume(data);
+        assertEquals(0.9, vol.getBeamwidth(), 0.01);
+        assertEquals(0.5, vol.getPulsewidth(), 0.01);
+        assertEquals(5.35, vol.getWavelength(), 0.01);
+        assertEquals(0.5, vol.getPulsewidth(), 0.01);
         
+    }
+    
     @Test
     public void getScanTest() {
         assertTrue(pm.initialize(file1));

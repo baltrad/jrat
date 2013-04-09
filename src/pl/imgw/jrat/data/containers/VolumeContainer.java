@@ -107,4 +107,22 @@ public interface VolumeContainer {
      */
     public Double getBeamwidth();
 
+    /**
+     * Radar constant in dB for the horizontal channel. For the precise
+     * definition, see Appendix A to EUMETNET OPERA weather radar information
+     * model for implementation with the HDF5 file format
+     * 
+     * @return null if not found
+     */
+    public Double getRadConstH();
+    
+    /**
+     * Radar constant in dB for the vertival channel. For the precise
+     * definition, see Appendix A to EUMETNET OPERA weather radar information
+     * model for implementation with the HDF5 file format
+     * 
+     * @return null if not found
+     */
+    public Double getRadConstV();
+    
 }

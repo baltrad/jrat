@@ -101,6 +101,23 @@ public class OdimH5Volume implements VolumeContainer {
         return (Double) data.getAttributeValue("/how", "beamwidth");
     }
     
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getRadConstH()
+     */
+    @Override
+    public Double getRadConstH() {
+        return (Double) data.getAttributeValue("/how", "radconstH");
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.containers.VolumeContainer#getRadConstV()
+     */
+    @Override
+    public Double getRadConstV() {
+        return (Double) data.getAttributeValue("/how", "radconstV");
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -347,5 +364,6 @@ public class OdimH5Volume implements VolumeContainer {
         }
         return new ArrayList<ScanContainer>(scans.values());
     }
+
 
 }
