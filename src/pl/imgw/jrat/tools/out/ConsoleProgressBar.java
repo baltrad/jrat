@@ -110,6 +110,9 @@ public class ConsoleProgressBar {
         reset();
     }
 
+    /**
+     * Completing progress bar
+     */
     public void printDoneMsg() {
         printDoneMsg("");
     }

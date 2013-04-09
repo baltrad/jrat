@@ -66,6 +66,14 @@ public class CalidParsedParameters {
     public CalidParsedParameters() {
     }
 
+    /**
+     * Construct the object from with all given parameters
+     * 
+     * @param elevation
+     * @param distance
+     * @param range
+     * @param reflectivity
+     */
     public CalidParsedParameters(Double elevation, Integer distance,
             Integer range, Double reflectivity) {
         this.elevation = elevation;
@@ -77,8 +85,8 @@ public class CalidParsedParameters {
     
     /**
      * 
-     * Initializes manager and sets parameters for the algorithm, valid format
-     * for each String is name=value
+     * Sets all parameters from String array, valid format for each String is
+     * <tt>name=value</tt>
      * 
      * <p>
      * <tt>ele=</tt> elevation of the scan, in degrees, the proper format for
@@ -110,11 +118,17 @@ public class CalidParsedParameters {
      * @param par
      *            array of strings each representing parameters.
      *            <p>
-     *            <code>String[] par = { "0.5deg", "500m" }</code> - elevation
-     *            and distance
+     *            <code>String[] par = { "ele=0.5", "dis=500" }</code> -
+     *            elevation and distance
      *            <p>
-     *            <code>String[] par = { "0.5deg", "500m", "3.5dBZ" }</code> -
-     *            elevation, distance and reflectivity
+     *            <code>String[] par = { "ele=0.5", "dis=500", "ref=3.5" }</code>
+     *            - elevation, distance and reflectivity
+     *            <p>
+     *            if <code>par</code> is null or empty, the default parameters are set 
+     * 
+     * @return returns false only if given parameter is not valid e.g. value of
+     *         distance is negative, otherwise returns true
+     * 
      */
     public boolean initialize(String[] par) {
 
@@ -267,7 +281,7 @@ public class CalidParsedParameters {
         msg.append("jrat --calid-help print this message\n\n");
         msg.append("jrat --calid-list [<args>] list all available pairs.").append("\n<args> ");
         msg.append(src).append(" ").append(rest + "\n\n");
-        msg.append("jrat --calid-result [<args>] [-d <args>] display results.");
+        msg.append("jrat --calid-result [<args>] [-d <args>] prints results.");
         msg.append("\n<args> ");
         msg.append(date);
         msg.append(" [").append(src).append("] ");
