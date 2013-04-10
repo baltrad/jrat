@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
+import pl.imgw.jrat.calid.CalidPeriodsResultsPrinter;
 import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
 import pl.imgw.jrat.calid.CalidOptionsHandler;
 import pl.imgw.jrat.calid.CalidParsedParameters;

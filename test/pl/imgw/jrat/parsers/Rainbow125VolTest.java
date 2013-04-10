@@ -64,12 +64,12 @@ public class Rainbow125VolTest {
         RainbowVolume vol = new RainbowVolume(data);
         assertTrue(vol.isValid());
         
-        ArrayData array = vol.getScan(1.4).getArray();
-        for(int x = 0; x < array.getSizeX(); x++) {
-            System.out.println(array.getPoint(x, 102));
-        }
-        
-        System.out.println(array.getSizeX() + ", " + array.getSizeY());
+//        ArrayData array = vol.getScan(1.4).getArray();
+//        for(int x = 0; x < array.getSizeX(); x++) {
+//            System.out.println(array.getPoint(x, 102));
+//        }
+//        
+//        System.out.println(array.getSizeX() + ", " + array.getSizeY());
 
     }
     

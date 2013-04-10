@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
 
-import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
+import pl.imgw.jrat.calid.CalidPeriodsResultsPrinter;
 import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
 import pl.imgw.jrat.calid.CalidOptionsHandler;
 import pl.imgw.jrat.calid.CalidParsedParameters;
@@ -46,7 +46,7 @@ public class CalidProcessController {
                 }
             } else if (cmd.hasOption(CALID_RESULT_DETAIL)) {
                 try {
-                    new CalidDetailedResultsPrinter(calid,
+                    new CalidPeriodsResultsPrinter(calid,
                             cmd.getOptionValues(CALID_RESULT_DETAIL))
                             .printResults();
                 } catch (IllegalArgumentException e) {
@@ -81,7 +81,7 @@ public class CalidProcessController {
             new CalidResultsPrinter(calid).printList();
             return true;
         } else {
-            CalidParsedParameters.printHelp();
+            CalidParsedParameters.printHelp(); 
             return false;
         }
     }

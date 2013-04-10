@@ -232,6 +232,9 @@ public class CalidParsedParameters {
             Calendar cal = Calendar.getInstance();
             end = new Date(cal.getTimeInMillis());
             cal.add(Calendar.MONTH, -3);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
             start = new Date(cal.getTimeInMillis());
         }
         
@@ -248,30 +251,42 @@ public class CalidParsedParameters {
         String dates = s.substring(DATE.length());
         if (dates.contains(",")) {
             if (dates.split(",")[0].contains("/")) {
-                start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                start = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[0]);
             } else {
-                start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                start = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[0] + "/00:00");
             }
             if (dates.split(",")[1].contains("/")) {
-                end = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                end = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[1]);
             } else {
-                end = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+                end = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates
                         .split(",")[1] + "/23:59");
             }
         } else if (dates.contains("/")) {
-            start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates);
+            start = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates);
             end = start;
         } else {
-            start = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+            start = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates
                     + "/00:00");
-            end = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(dates
+            end = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(dates
                     + "/23:59");;
         }
     }
     
+    public boolean setParamsFromFolderName(String name) {
+        CalidParsedParameters fPar = CalidResultIOHandler
+                .getParamsFromFolderName(name);
+        if (fPar != null) {
+            range = fPar.getMaxRange();
+            distance = fPar.getDistance();
+            reflectivity = fPar.getReflectivity();
+            elevation = fPar.getElevation();
+            return true;
+        }
+        return false;
+    }
     
     private void resetAllFields() {
         elevation = null;

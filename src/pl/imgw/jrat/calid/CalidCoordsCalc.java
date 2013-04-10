@@ -90,7 +90,7 @@ public class CalidCoordsCalc {
                     "CALID: Radars are too far from each other"
                             + " and have no overlapping points",
                     Logging.WARNING);
-            CalidFileHandler.saveCoords(cc);
+            CalidResultIOHandler.saveCoords(cc);
             return false;
         }
 
@@ -185,7 +185,7 @@ public class CalidCoordsCalc {
         }
         // CalidCoords[] rb = rayBins.toArray(new CalidCoords[0]);
         cc.setPairedPointsList(pairedPointsList);
-        CalidFileHandler.saveCoords(cc);
+        CalidResultIOHandler.saveCoords(cc);
         return true;
     }
 

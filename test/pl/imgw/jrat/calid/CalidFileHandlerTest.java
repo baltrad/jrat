@@ -32,12 +32,13 @@ public class CalidFileHandlerTest {
         calid.initialize(par);
 
         CalidContainer cc = new CalidContainer(calid);
-        assertTrue(CalidFileHandler.loadCoords(cc));
+        assertTrue(CalidResultIOHandler.loadCoords(cc));
         assertEquals(90, cc.getPairedPointsList().size());
 
-        assertTrue(CalidFileHandler.loadResults(cc, calid.getStartDate()));
+        assertTrue(CalidResultIOHandler.loadResults(cc, calid.getStartDate()));
         assertTrue(cc.hasResults());
 
     }
+
 
 }

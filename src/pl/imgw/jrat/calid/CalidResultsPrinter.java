@@ -57,7 +57,7 @@ public class CalidResultsPrinter {
         headers = new HashSet<String>();
 
         CalidContainer cc = new CalidContainer(params);
-        Set<File> files = getResultsFiles();
+        Set<File> files = CalidResultFileGetter.getResultFiles(params);
 //        List<Date> dates;
         boolean noResults = true;
         if (files.isEmpty()) {
@@ -94,7 +94,7 @@ public class CalidResultsPrinter {
                         if (line.startsWith("#")) {
                             continue;
                         }
-                        if (!CalidFileHandler.parseLine(line, cc,
+                        if (!CalidResultIOHandler.parseLine(line, cc,
                                 params.getStartDate(), params.getEndDate()))
                             continue;
 
@@ -152,7 +152,7 @@ public class CalidResultsPrinter {
         
         headers = new HashSet<String>();
         
-        Set<File> files = getResultsFiles();
+        Set<File> files = CalidResultFileGetter.getResultFiles(params);
         
         if (files.isEmpty()) {
             System.out.println("No results matching selected parameters");
@@ -219,7 +219,7 @@ public class CalidResultsPrinter {
                     continue;
                 }
                 try {
-                    date = CalidFileHandler.CALID_DATE_TIME_FORMAT.parse(line
+                    date = CalidResultIOHandler.CALID_DATE_TIME_FORMAT.parse(line
                             .split(" ")[0]);
                 } catch (ParseException e) {
                     continue;
@@ -311,10 +311,10 @@ public class CalidResultsPrinter {
      * 
      * @return files are sorted
      */
-    protected Set<File> getResultsFiles() {
+    protected Set<File> getResueltsFiles() {
         Set<File> results = new TreeSet<File>();
 
-        File folder = new File(CalidFileHandler.getCalidPath());
+        File folder = new File(CalidResultIOHandler.getCalidPath());
         
         if(!folder.isDirectory()) {
             return results;
@@ -363,7 +363,7 @@ public class CalidResultsPrinter {
                 && params.isDistanceDefault() & params.isElevationDefault()
                 && params.isReflectivityDefault() & params.isStartDateDefault())
             return true;
-                
+               
         return false;
     }
     

@@ -43,7 +43,7 @@ import pl.imgw.jrat.tools.out.XMLHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidFileHandler {
+public class CalidResultIOHandler {
 
     private static final String COORDSFILE = "coords.xml";
     private static final String RESULTSFILE = "results";
@@ -80,13 +80,10 @@ public class CalidFileHandler {
     }
 
     /**
-     * Receives path name to CALID results folder specified by given parameters,
-     * different for every pair, distance, elevation and reflectivity
+     * Receives path name for CALID results folder specified by given parameters
      * 
-     * @param pair
-     * @param distance
-     * @param elevation
-     * @param reflectivity
+     * @param cc
+     * 
      * @return
      */
     public static String getCalidPath(CalidContainer cc) {
@@ -94,6 +91,9 @@ public class CalidFileHandler {
         Double elevation = cc.getVerifiedElevation();
         double reflectivity = cc.getParsedParameters().getReflectivity();
         int distance = cc.getParsedParameters().getDistance();
+        int range = cc.getParsedParameters().getMaxRange();
+        
+//        System.out.println(elevation + " " + reflectivity + " " + distance + " " + range);
         
         String src1 = cc.getPair().getSource1().replaceAll("[^A-Za-z0-9]", "");;
         String src2 = cc.getPair().getSource2().replaceAll("[^A-Za-z0-9]", "");;
@@ -101,9 +101,8 @@ public class CalidFileHandler {
 //        pairsName = cc.getPair().getSource1()
 //                + cc.getPair().getSource2();
 
-        String distele = distance + "_" + elevation + "_" + reflectivity;
-
-        String folder = "calid/" + src1 + src2 + "/" + distele;
+        String folder = "calid/" + src1 + src2 + "/"
+                + getFolderName(distance, elevation, reflectivity, range);
 
         if(ETC.isEmpty()) {
             new File(folder).mkdirs();
@@ -112,6 +111,62 @@ public class CalidFileHandler {
         new File(ETC, folder).mkdirs();
 
         return new File(ETC, folder).getPath();
+    }
+    
+    /**
+     * 
+     * @param params
+     * @return calid results folder name
+     */
+    public static String getFolderName(CalidParsedParameters params) {
+        double reflectivity = params.getReflectivity();
+        int distance = params.getDistance();
+        Double elevation = params.getElevation();
+        Integer range = params.getMaxRange();
+        return getFolderName(distance, elevation, reflectivity, range);
+    }
+
+    /**
+     * 
+     * @param distance
+     * @param elevation
+     * @param reflectivity
+     * @param range
+     * @return calid results folder name
+     */
+    public static String getFolderName(int distance, double elevation,
+            double reflectivity, int range) {
+        return distance + "_" + elevation + "_" + reflectivity + "_" + range;
+    }
+    
+    /**
+     * 
+     * @param folderName
+     * 
+     * @return null if <code>folderName</code> is not a valid calid results folder
+     */
+    public static CalidParsedParameters getParamsFromFolderName(
+            String folderName) {
+        CalidParsedParameters params = null;
+        String[] sPar = folderName.split("_");
+        if (sPar != null && sPar.length == 4) {
+
+            int distance;
+            Double elevation;
+            double reflectivity;
+            Integer range;
+            try {
+                distance = Integer.parseInt(sPar[0]);
+                elevation = Double.parseDouble(sPar[1]);
+                reflectivity = Double.parseDouble(sPar[2]);
+                range = Integer.parseInt(sPar[3]);
+                
+                params = new CalidParsedParameters(elevation, distance, range,
+                        reflectivity);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return params;
     }
     
     /**

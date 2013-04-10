@@ -25,7 +25,7 @@ import pl.imgw.jrat.tools.out.ResultPrinterManager;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidGnuplotResultPrinter extends CalidDetailedResultsPrinter {
+public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
 
     private File output;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -46,12 +46,7 @@ public class CalidGnuplotResultPrinter extends CalidDetailedResultsPrinter {
 
     public void generateMeanDifferencePlots() throws IOException {
         
-        Set<File> files = getResultsFiles();
-        if (files.size() > 1) {
-            File f = files.iterator().next();
-            files.clear();
-            files.add(f);
-        }
+        Set<File> files = CalidResultFileGetter.getResultFiles(params);
         
         if(files.isEmpty()) {
             LogHandler.getLogs().displayMsg("No data to generate this plot", WARNING);

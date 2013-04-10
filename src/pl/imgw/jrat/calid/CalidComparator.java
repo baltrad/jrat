@@ -83,7 +83,7 @@ public class CalidComparator {
         // "Calculating overlapping points for: " + pair.getSource1()
         // + " and " + pair.getSource2(), LogHandler.WARNING);
 
-        if(!CalidFileHandler.loadCoords(cc)) {
+        if(!CalidResultIOHandler.loadCoords(cc)) {
             CalidCoordsCalc ccc = new CalidCoordsCalc(cc, maxRange);
             ccc.calculateCoords();
         }
@@ -104,9 +104,9 @@ public class CalidComparator {
         ScanContainer scan2 = cc.getPair().getVol2().getScan(elevation);
         
         
-        if (!CalidFileHandler.loadResults(cc, date)) {
+        if (!CalidResultIOHandler.loadResults(cc, date)) {
             compare(cc, scan1, scan2, cc.getParsedParameters().getReflectivity());
-            CalidFileHandler.saveResults(cc);
+            CalidResultIOHandler.saveResults(cc);
 
         }
 

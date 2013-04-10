@@ -29,7 +29,7 @@ import pl.imgw.jrat.tools.out.ResultPrinterManager;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
+public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
 
     private static final String METHOD = "method=";
     public static final String MEDIAN = "median";
@@ -38,12 +38,12 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
     private static final String PERIOD = "period=";
     
     private String method = "";
-    private int period = 1;
+    private int periodLength = 1;
     
     /**
      * @param params
      */
-    public CalidDetailedResultsPrinter(CalidParsedParameters params, String[] detParams) {
+    public CalidPeriodsResultsPrinter(CalidParsedParameters params, String[] detParams) {
         super(params);
         
         for (String p : detParams) {
@@ -51,7 +51,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                 method = p.substring(METHOD.length());
             } else if (p.startsWith(PERIOD)) {
                 try {
-                    period = Integer.parseInt(p.substring(PERIOD.length()));
+                    periodLength = Integer.parseInt(p.substring(PERIOD.length()));
                 } catch (NumberFormatException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -61,7 +61,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         
     }
     
-    public CalidDetailedResultsPrinter(CalidParsedParameters params) {
+    public CalidPeriodsResultsPrinter(CalidParsedParameters params) {
         super(params);
     }
 
@@ -76,7 +76,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                     Logging.WARNING);
             return false;
         }
-        Set<File> files = getResultsFiles();
+        Set<File> files = CalidResultFileGetter.getResultFiles(params);
         return printResults(files);
     }
 
@@ -94,16 +94,16 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
         
         ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         headers = new HashSet<String>();
-        CalidContainer cc = new CalidContainer(params);
+        CalidContainer pairData = new CalidContainer(params);
         
         List<Double> meanRes = new ArrayList<Double>();
         List<Double> rmsRes = new ArrayList<Double>();
 //        List<Double> undRes = new ArrayList<Double>();
 //        Calendar cal0 = Calendar.getInstance();
-        Calendar cal1 = Calendar.getInstance();
+        Calendar endOfThePeriod = Calendar.getInstance();
 //        cal0.setTime(params.getDate1());
-        cal1.setTime(params.getStartDate());
-        cal1.add(Calendar.DATE, period);
+        endOfThePeriod.setTime(params.getStartDate());
+        endOfThePeriod.add(Calendar.DATE, periodLength);
         
         for (File f : files) {
             
@@ -113,9 +113,12 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                 
                 Date fileDate = fsdf.parse(f.getName());
                 String date1 = fsdf.format(params.getStartDate());
+                
+//                System.out.println("file date=" + fileDate);
+//                System.out.println("params date=" + date1);
+                
                 if (fileDate.before(fsdf.parse(date1))
                         || fileDate.after(params.getEndDate())) {
-//                    System.out.println("omijam");
                     continue;
                 }
                 
@@ -137,73 +140,73 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
                     if (line.startsWith("#")) {
                         continue;
                     }
-                    if (!CalidFileHandler.parseLine(line, cc,
+                    if (!CalidResultIOHandler.parseLine(line, pairData,
                             params.getStartDate(), params.getEndDate()))
                         continue;
-                
-            
-                
-//                System.out.println("d=" + d);
-                
-                while(cc.getDate().after(cal1.getTime())) {
-//                    cal0.add(Calendar.DATE, period);
-                    cal1.add(Calendar.DATE, period);
-                }
 
-                if (cc.getDate().after(params.getEndDate())) {
-                    break;
-                }
-                
-                
-                int freq = params.getFrequency();
-                Double mean = cc.getMean(freq);
-                Double rms = cc.getRMS(freq);
-//                Double und =  ((double)(cc.getR1understate() + cc
-//                        .getR2understate()) / cc.getPairedPointsList().size());
-//                System.out.println("und=" + und + " date=" + d + " " + cal1.getTime());
-                
-                if(mean != null)
-                    meanRes.add(mean);
-                if(rms != null)
-                    rmsRes.add(rms);
-//                if(und != null)
-//                    undRes.add(und);
-                
-                if (!cc.getDate().before(cal1.getTime())) {
-                    cal1.add(Calendar.DATE, period);
-                    if(meanRes.size() == 0)
-                        continue;
-                    
-                    if(method.matches(MEDIAN)) {
-                        printer
-                                .println(sdf.format(cc.getDate())
-                                        + "\t"
-                                        + getMedianResult(meanRes)
-                                        + "\t"
-                                        + getMedianResult(rmsRes)
-//                                        + "\t"
-//                                        + getMedianResult(undRes)
-                                        );
-                                        
-                    } else if (method.matches(MEAN)) {
-                        printer
-                                .println(sdf.format(cc.getDate())
-                                        + "\t"
-                                        + getMeanResult(meanRes)
-                                        + "\t"
-                                        + getMeanResult(rmsRes)
-//                                        + "\t"
-//                                        + getMeanResult(undRes)
-                                        );
+                    /*
+                     * if pair data date is after period end time, quite the loop
+                     */
+                    if (pairData.getDate().after(params.getEndDate())) {
+                        break;
                     }
-//                    undRes.clear();
-                    
-                    meanRes.clear();
-                    rmsRes.clear();
-                    notEmpty = true;
+
+                    boolean periodChanged = false;
+
+                    /*
+                     * updating period window time
+                     */
+                    while (pairData.getDate().after(endOfThePeriod.getTime())) {
+                        // cal0.add(Calendar.DATE, period);
+                        endOfThePeriod.add(Calendar.DATE, periodLength);
+                        periodChanged = true;
+                    }
+
+                    /*
+                     * if period window time has been changed, print results
+                     */
+                    if (periodChanged && !meanRes.isEmpty()) {
+                        // endOfThePeriod.add(Calendar.DATE, periodLength);
+                        if (meanRes.size() == 0)
+                            continue;
+
+                        if (method.matches(MEDIAN)) {
+                            printer.println(sdf.format(pairData.getDate())
+                                    + "\t" + getMedianResult(meanRes) + "\t"
+                                    + getMedianResult(rmsRes)
+                            // + "\t"
+                            // + getMedianResult(undRes)
+                            );
+
+                        } else if (method.matches(MEAN)) {
+                            printer.println(sdf.format(pairData.getDate())
+                                    + "\t" + getMeanResult(meanRes) + "\t"
+                                    + getMeanResult(rmsRes)
+                            // + "\t"
+                            // + getMeanResult(undRes)
+                            );
+                        }
+                        // undRes.clear();
+
+                        meanRes.clear();
+                        rmsRes.clear();
+                        notEmpty = true;
+                    }
+
+                    int freq = params.getFrequency();
+                    Double mean = pairData.getMean(freq);
+                    Double rms = pairData.getRMS(freq);
+                    // Double und = ((double)(cc.getR1understate() + cc
+                    // .getR2understate()) / cc.getPairedPointsList().size());
+
+                    if (mean != null)
+                        meanRes.add(mean);
+                    if (rms != null)
+                        rmsRes.add(rms);
+                    // if(und != null)
+                    // undRes.add(und);
+
                 }
-            }
-                // System.out.println(d);
             } catch (FileNotFoundException e) {
                 LogHandler.getLogs().displayMsg(
                         "CALID: Results file not found: " + f,
@@ -264,7 +267,7 @@ public class CalidDetailedResultsPrinter extends CalidResultsPrinter {
      * @param period the period to set
      */
     public void setPeriod(int period) {
-        this.period = period;
+        this.periodLength = period;
     }
     
     
