@@ -56,30 +56,32 @@ public class FileProcessController {
         folders.addAll(CalidOptionsHandler.getOptions().getInputFolderList());
         
         if (files.isEmpty() && folders.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No such file or directory",
+            LogHandler.getLogs().displayMsg("No input",
                     WARNING);
         } else {
-            ConsoleProgressBar.getProgressBar().initialize(20,
-                    files.size(),
+            ConsoleProgressBar.getProgressBar().initialize(20, files.size(),
                     LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
                     "Setting up files");
+            StringBuilder msg = new StringBuilder();
+            msg.append("Input files:");
             for (File f : files) {
-                LogHandler.getLogs().displayMsg(
-                        "Input files: " + f.getPath(), NORMAL);
-                ConsoleProgressBar.getProgressBar().evaluate();
+                msg.append(" ").append(f.getPath());
             }
+            LogHandler.getLogs().displayMsg(msg.toString(), NORMAL);
+            ConsoleProgressBar.getProgressBar().evaluate();
+            msg = new StringBuilder("Input folders:");
             for (File f : folders) {
-                LogHandler.getLogs().displayMsg(
-                        "Input folders: " + f.getPath(), NORMAL);
-                ConsoleProgressBar.getProgressBar().evaluate();
+                msg.append(" ").append(f.getPath());
             }
-            
-            String msg = "";
+            LogHandler.getLogs().displayMsg(msg.toString(), NORMAL);
+            ConsoleProgressBar.getProgressBar().evaluate();
+
+            msg = new StringBuilder();
             if (!files.isEmpty()) {
-                msg = files.size() + " files";
+                msg.append(files.size()).append(" files");
             }
-            ConsoleProgressBar.getProgressBar().printDoneMsg(msg);
-            
+            ConsoleProgressBar.getProgressBar().printDoneMsg(msg.toString());
+
         }
         
     }

@@ -50,7 +50,9 @@ public abstract class Options {
             DOMParser parser = new DOMParser();
             parser.parse(getOptionFile().getPath());
             doc = parser.getDocument();
-
+            LogHandler.getLogs().displayMsg(
+                    "Parsing options file: " + getOptionFile(),
+                    LogHandler.NORMAL);
         } catch (Exception e) {
             LogHandler.getLogs().displayMsg(
                     "Parsing options file: " + getOptionFile() + " FAILED",

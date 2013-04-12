@@ -142,6 +142,7 @@ public class MainProcessController {
         if (cmd.hasOption(PRINTIMAGE)) {
             PrintingImageProcessController.printImage(files, output,
                     cmd.getOptionValues(PRINTIMAGE));
+            return true;
         }
 
         /* =========== setting processes =============== */

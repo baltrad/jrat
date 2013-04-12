@@ -19,6 +19,10 @@ import pl.imgw.jrat.data.arrays.FloatDataArray;
 import pl.imgw.jrat.data.arrays.RawByteDataArray;
 import pl.imgw.jrat.data.containers.DataContainer;
 import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
@@ -31,7 +35,7 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class OdimH5Parser implements FileParser {
+public class OdimH5Parser implements FileParser, VolumeParser {
 
     public final static String FLOAT_SYMBOL = "FLOAT";
     public final static String INT_SYMBOL = "INTEGER";
@@ -151,6 +155,14 @@ public class OdimH5Parser implements FileParser {
     @Override
     public DataContainer getProduct() {
         return h5data;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.VolumeParser#getVolume()
+     */
+    @Override
+    public VolumeContainer getVolume() {
+        return new OdimH5Volume(h5data);
     }
 
 }

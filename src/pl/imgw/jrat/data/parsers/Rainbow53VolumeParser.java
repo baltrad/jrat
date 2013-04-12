@@ -28,6 +28,8 @@ import pl.imgw.jrat.data.containers.DataContainer;
 import pl.imgw.jrat.data.containers.RainbowBlobContainer;
 import pl.imgw.jrat.data.containers.RainbowBlobHandler;
 import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
@@ -38,7 +40,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class Rainbow53VolumeParser implements FileParser {
+public class Rainbow53VolumeParser implements FileParser, VolumeParser {
 
     private static final String BLOBID = "blobid";
 
@@ -395,6 +397,14 @@ public class Rainbow53VolumeParser implements FileParser {
             e.printStackTrace();
         }
         return params;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.VolumeParser#getVolume()
+     */
+    @Override
+    public VolumeContainer getVolume() {
+        return new RainbowVolume(data);
     }
 
 }

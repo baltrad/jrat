@@ -152,10 +152,19 @@ public class CalidOptionsHandler extends Options {
         File file;
         for (int i = 0; i < l; i++) {
             val = getValueByName(radarList.item(i), INPUT, null);
+            
             if (val != null) {
                 file = new File(val);
-                if (file.isDirectory())
+                if (file.isDirectory()) {
                     folders.add(file);
+                    LogHandler.getLogs().displayMsg(
+                            "Adding folder: " + file + " for CALID watch",
+                            LogHandler.NORMAL);
+                } else {
+                    LogHandler.getLogs().displayMsg(
+                            "Given input: " + file + " is not a folder",
+                            LogHandler.WARNING);
+                }
             }
         }
         

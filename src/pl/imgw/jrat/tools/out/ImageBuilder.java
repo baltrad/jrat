@@ -44,9 +44,13 @@ public class ImageBuilder {
     private int ySize = 0;
     private double nodata = 999999;
     private double nodetected = 999999;
-    private String format = "PNG";
+    private String format = "PNG"; //default format
     private List<PointText> points = new ArrayList<PointText>();
 
+    /**
+     * 
+     * @param file
+     */
     public void saveToFile(File file) {
         try {
             ImageIO.write(create(), format, file);
@@ -61,11 +65,39 @@ public class ImageBuilder {
         }
     }
     
+    /**
+     * adding text to the image
+     * 
+     * @param x
+     *            x coordinate of the image where text will be added
+     * @param y
+     *            y coordinate of the image where text will be added
+     * @param text
+     *            text to be added
+     * @param color
+     *            color of the text to be added
+     * @return
+     */
     public ImageBuilder addPoint(int x, int y, String text, Color color) {
         points.add(new PointText(x, y, text, color));
         return this;
     }
 
+    /**
+     * adding text to the image
+     * 
+     * @param x
+     *            x coordinate of the image where text will be added
+     * @param y
+     *            y coordinate of the image where text will be added
+     * @param text
+     *            text to be added
+     * @param color
+     *            color of the text to be added
+     * @param font
+     *            font of the text to be added
+     * @return
+     */
     public ImageBuilder addPoint(int x, int y, String text, Color color, Font font) {
         points.add(new PointText(x, y, text, color, font));
         return this;
@@ -148,7 +180,7 @@ public class ImageBuilder {
      */
     private void reset() {
         description = "";
-        scale = null;
+//        scale = null;
         background = null;
         foreground = null;
         data = null;
@@ -157,7 +189,7 @@ public class ImageBuilder {
         mask = null;
         transparency = 255;
         darker = false;
-        nodata = 999999;
+//        nodata = 999999;
         nodetected = 999999;
         points = new ArrayList<PointText>();
     }

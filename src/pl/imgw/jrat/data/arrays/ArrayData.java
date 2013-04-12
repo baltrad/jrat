@@ -92,20 +92,17 @@ public abstract class ArrayData {
     public abstract double getPoint(int x, int y);
 
     /**
-     * Setting value in the array in point (x, y). If x or y is out of bounds it
-     * returns false, otherwise it returns true
-     * 
-     * @param x
-     * @param y
-     * @param value
-     * @return true if successful, false if x or y is out of bounds
-    public abstract boolean setPoint(int x, int y, double value);
+     * X-dimension (range bin)
+     * @return
      */
-
     public int getSizeX() {
         return sizeX;
     }
 
+    /**
+     * Y-dimension (azimuth gate)
+     * @return
+     */
     public int getSizeY() {
         return sizeY;
     }

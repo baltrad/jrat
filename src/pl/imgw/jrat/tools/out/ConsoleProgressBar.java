@@ -103,7 +103,7 @@ public class ConsoleProgressBar {
      */
     public void printDoneMsg(String endMsg) {
         if (show) {
-            String progress = getProgress(maxValue + 1);
+            String progress = getProgress(maxValue);
             System.out.print(msg + "\tdone\t|" + progress + "| " + endMsg);
             System.out.print("\n");
         }

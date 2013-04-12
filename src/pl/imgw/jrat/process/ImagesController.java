@@ -38,7 +38,7 @@ public class ImagesController {
      *            Supported fields are: format, scale, dataset and nodata
      */
     public ImagesController(String args[]) {
-        format = "png";
+        format = "";
         String scale = "";
         String nodata = "";
         dataset = "";
@@ -58,52 +58,34 @@ public class ImagesController {
         
         
         /* receiving nodata */
-        try {
-            double nd = Double.parseDouble(nodata);
-            builder.setNoDataValue(nd);
-        } catch (NumberFormatException e) {
-            LogHandler.getLogs().displayMsg(
-                    "Value: '" + nodata + "' for " + NODATA + " is incorrect",
-                    WARNING);
-            nodata = "";
+        if (!nodata.isEmpty()) {
+            try {
+                double nd = Double.parseDouble(nodata);
+                builder.setNoDataValue(nd);
+            } catch (NumberFormatException e) {
+                LogHandler.getLogs().displayMsg(
+                        "Value: '" + nodata + "' for " + NODATA
+                                + " is incorrect", WARNING);
+                nodata = "";
+            }
         }
+        
         /* receiving format */
         if(!format.isEmpty()) {
             builder.setFormat(format);
         }
         
         /* receiving scale */
-        if(!scale.isEmpty()) {
-            if(scale.matches("rb")) {
-                builder.setScale(ColorScales.getRBScale());
-            } else if (scale.contains("gray")) {
-                if (scale.contains("[") && scale.contains("]")) {
-                    try {
-                        String[] param = scale.substring(
-                                scale.indexOf("[") + 1, scale.indexOf("]"))
-                                .split(",");
 
-                        if (param.length != 2) {
-                            LogHandler
-                                    .getLogs()
-                                    .displayMsg(
-                                            "Argument: '"
-                                                    + scale
-                                                    + "' for "
-                                                    + SCALE
-                                                    + " is incomplete, setting default gray scale",
-                                            WARNING);
-                        } else {
-                            int start = Integer
-                                    .parseInt(removeDigits(param[0]));
-                            int max = Integer
-                                    .parseInt(removeDigits(param[1]));
+        if (scale.matches("rb")) {
+            builder.setScale(ColorScales.getRBScale());
+        } else if (scale.contains("gray")) {
+            if (scale.contains("[") && scale.contains("]")) {
+                try {
+                    String[] param = scale.substring(scale.indexOf("[") + 1,
+                            scale.indexOf("]")).split(",");
 
-                            System.out.println(start + " " + max);
-                            
-                            builder.setScale(ColorScales.getGrayScale(start, max));
-                        }
-                    } catch (NumberFormatException e) {
+                    if (param.length != 2) {
                         LogHandler
                                 .getLogs()
                                 .displayMsg(
@@ -111,26 +93,52 @@ public class ImagesController {
                                                 + scale
                                                 + "' for "
                                                 + SCALE
-                                                + " is incorrect, setting default gray scale",
+                                                + " is incomplete, setting default gray scale",
                                         WARNING);
-                        scale = "";
+                    } else {
+                        int start = Integer.parseInt(removeDigits(param[0]));
+                        int max = Integer.parseInt(removeDigits(param[1]));
+
+                        System.out.println(start + " " + max);
+
+                        builder.setScale(ColorScales.getGrayScale(start, max));
                     }
-                } else {
-                    builder.setScale(ColorScales.getGray256Scale());
+                } catch (NumberFormatException e) {
+                    LogHandler
+                            .getLogs()
+                            .displayMsg(
+                                    "Argument: '"
+                                            + scale
+                                            + "' for "
+                                            + SCALE
+                                            + " is incorrect, setting default gray scale",
+                                    WARNING);
+                    scale = "";
                 }
+            } else {
+                builder.setScale(ColorScales.getGray256Scale());
             }
+
         }
-            
+
     }
     
     public ImageBuilder getBuilder() {
         return builder;
     }
     
+    /**
+     * 
+     * @return returns empty String if not set
+     */
     public String getDatasetValue() {
         return dataset;
     }
     
+    /**
+     * 
+     * @return returns empty String if not set
+     */
     public String getFormat() {
         return format;
     }

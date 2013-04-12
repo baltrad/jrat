@@ -20,7 +20,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class ParserManager {
     
-    FileParser parser = null;
+    private FileParser parser = null;
     
     public void setParser(FileParser parser) {
         this.parser = parser;
