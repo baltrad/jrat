@@ -28,7 +28,10 @@ public class ArrayFilePrinter {
         int xSize = array.getSizeX();
         int ySize = array.getSizeY();
 
+//        System.out.println("start printing " + outputFile);
+        
         try {
+            
             if (!outputFile.exists())
                 outputFile.createNewFile();
             pw = new PrintWriter(new FileOutputStream(outputFile, false), true);
