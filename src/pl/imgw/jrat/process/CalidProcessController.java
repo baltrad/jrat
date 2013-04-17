@@ -14,7 +14,7 @@ import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.calid.CalidDetailedResultsPrinter;
 import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
-import pl.imgw.jrat.calid.CalidOptionsHanlder;
+import pl.imgw.jrat.calid.CalidOptionsHandler;
 import pl.imgw.jrat.calid.CalidParsedParameters;
 import pl.imgw.jrat.calid.CalidProcessor;
 import pl.imgw.jrat.calid.CalidResultsPrinter;
@@ -78,7 +78,7 @@ public class CalidProcessController {
     public static FilesProcessor setCalidProcessor(CommandLine cmd) {
         FilesProcessor proc;
         if (cmd.hasOption(CALID_OPT)) {
-            CalidOptionsHanlder.getOptions().setOptionFile(
+            CalidOptionsHandler.getOptions().setOptionFile(
                     cmd.getOptionValue(CALID_OPT));
         }
         proc = new CalidProcessor(cmd.getOptionValues(CALID));

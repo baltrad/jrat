@@ -26,17 +26,17 @@ public class CalidOptionsHandlerTest {
 
     {
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
-        CalidOptionsHanlder.getOptions().setOptionFile("test-data/calid/calid.opt");
+        CalidOptionsHandler.getOptions().setOptionFile("test-data/calid/calid.opt");
     }
 
     @Test
     public void loadPairParametersTest() {
 
-        assertTrue(CalidOptionsHanlder.getOptions().isSet());
+        assertTrue(CalidOptionsHandler.getOptions().isSet());
         
         Pair pair = new Pair("Brzuchania", "Rzeszow");
-        assertTrue(CalidOptionsHanlder.getOptions().getPairParam(pair) != null);
-        CalidParsedParameters params = CalidOptionsHanlder.getOptions()
+        assertTrue(CalidOptionsHandler.getOptions().getPairParam(pair) != null);
+        CalidParsedParameters params = CalidOptionsHandler.getOptions()
                 .getPairParam(pair);
         
         assertEquals(200, params.getMaxRange().intValue());
@@ -48,9 +48,9 @@ public class CalidOptionsHandlerTest {
 //        System.out.println(params.getReflectivity());
         
         pair = new Pair("Brzuchania", "Ramza");
-        assertTrue(CalidOptionsHanlder.getOptions().getPairParam(pair) != null);
+        assertTrue(CalidOptionsHandler.getOptions().getPairParam(pair) != null);
 
-        params = CalidOptionsHanlder.getOptions()                
+        params = CalidOptionsHandler.getOptions()                
                 .getPairParam(pair);
         
 //        System.out.println(params.getMaxRange());
@@ -62,7 +62,7 @@ public class CalidOptionsHandlerTest {
 
     @Test
     public void loadRadarParametersTest() {
-        List<File> list = CalidOptionsHanlder.getOptions().getInputFolderList();
+        List<File> list = CalidOptionsHandler.getOptions().getInputFolderList();
         assertTrue(!list.isEmpty());
         for(File f : list) {
             System.out.println("folder added: " + f);

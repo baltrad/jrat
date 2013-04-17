@@ -15,129 +15,133 @@ import pl.imgw.jrat.AplicationConstans;
 import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
- *
- *  Astract class for options handler.
- *
- *
+ * 
+ * Astract class for options handler.
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
 public abstract class Options {
 
-    /**
-     * Print sample option file
-     */
-    public abstract void printHelp();
-    
-    /**
-     * Pointing to option file (xml format)
-     * @return
-     */
-    protected abstract File getOptionFile();
+	/**
+	 * Print sample option file
+	 */
+	public abstract void printHelp();
 
-    /**
-     * This method reads options from XML file and return XML document object.
-     * 
-     * @return null if option file does not exist or is not well formatted
-     */
-    protected Document loadOptions() {
-       
-        if (getOptionFile() == null || !getOptionFile().exists())
-            return null;
+	/**
+	 * Pointing to option file (xml format)
+	 * 
+	 * @return
+	 */
+	protected abstract File getOptionFile();
 
-        Document doc = null;
-        try {
-            DOMParser parser = new DOMParser();
-            parser.parse(getOptionFile().getPath());
-            doc = parser.getDocument();
+	/**
+	 * This method reads options from XML file and return XML document object.
+	 * 
+	 * @return null if option file does not exist or is not well formatted
+	 */
+	protected Document loadOptions() {
 
-        } catch (Exception e) {
-            LogHandler.getLogs().displayMsg(
-                    "Parsing options file: " + getOptionFile() + " FAILED",
-                    LogHandler.ERROR);
-            return null;
-        }
-        return doc;
-    }
-    
-    /**
-     * Helper method
-     * 
-     * @param doc
-     * @param argName
-     * @return
-     */
-    protected String getElementByName(Document doc, String argName) {
+		if (getOptionFile() == null || !getOptionFile().exists())
+			return null;
 
-        NodeList nodeList = null;
-        nodeList = doc.getElementsByTagName(argName);
-        return nodeList.item(0).getFirstChild().getNodeValue();
-        
-    }
-    
-    /**
-     * Method retrieves attribute's value. Attribute is identified by its parent
-     * Element and its name.
-     * 
-     * @param node
-     *            root element
-     * @param elemName
-     *            name of the parent Element
-     * @param atrName
-     *            name of the attribute
-     * @return attribute value
-     */
-    protected String getValueByName(Node node, String elemName,
-            String atrName) {
+		Document doc = null;
+		try {
+			DOMParser parser = new DOMParser();
+			parser.parse(getOptionFile().getPath());
+			doc = parser.getDocument();
 
-        if(node == null)
-            return null;
-        
-        String value = null;
-        int type = node.getNodeType();
-        if (type == Node.DOCUMENT_NODE) {
-            value = getValueByName(((Document) node).getDocumentElement(),
-                    elemName, atrName);
-        }
-        if (type == Node.ELEMENT_NODE) {
+		} catch (Exception e) {
+			LogHandler.getLogs().displayMsg(
+					"Parsing options file: " + getOptionFile() + " FAILED",
+					LogHandler.ERROR);
+			return null;
+		}
+		return doc;
+	}
 
-            if (elemName != null && atrName != null && node.getNodeName().equals(elemName)) {
-                NamedNodeMap attrs = node.getAttributes();
-                for (int i = 0; i < attrs.getLength(); i++) {
-                    value = getValueByName(attrs.item(i), elemName, atrName);
-                    if (value != null) {
-                        return value;
-                    }
-                }
-            } else if (elemName != null && atrName == null && node.getNodeName().equals(elemName)
-                    && node.hasChildNodes()) {
-                return node.getFirstChild().getNodeValue();
+	/**
+	 * Helper method
+	 * 
+	 * @param doc
+	 * @param argName
+	 * @return
+	 */
+	protected String getElementByName(Document doc, String argName) {
 
-            } else if(elemName == null && atrName != null) {
-                if(!node.hasAttributes())
-                    return null;
-                
-                return getValueByName(node.getAttributes().getNamedItem(atrName), null, atrName);
-            }
-            if (node.hasChildNodes()) {
-                NodeList children = node.getChildNodes();
-                for (int i = 0; i < children.getLength(); i++) {
-                    value = getValueByName(children.item(i), elemName, atrName);
-                    if (value != null) {
-                        return value;
-                    }
-                }
-            }
-        } else if (type == Node.ATTRIBUTE_NODE) {
+		NodeList nodeList = null;
+		nodeList = doc.getElementsByTagName(argName);
+		return nodeList.item(0).getFirstChild().getNodeValue();
 
-            if (node.getNodeName().equals(atrName)) {
-                return value = node.getNodeValue();
-            }
-        }
+	}
 
-        return value;
-    }
-    
-    
+	/**
+	 * Method retrieves attribute's value. Attribute is identified by its parent
+	 * Element and its name.
+	 * 
+	 * @param node
+	 *            root element
+	 * @param elemName
+	 *            name of the parent Element
+	 * @param atrName
+	 *            name of the attribute
+	 * @return attribute value
+	 */
+	protected String getValueByName(Node node, String elemName, String atrName) {
+
+		if (node == null)
+			return null;
+
+		String value = null;
+		int type = node.getNodeType();
+
+		if (type == Node.DOCUMENT_NODE) {
+			value = getValueByName(((Document) node).getDocumentElement(),
+					elemName, atrName);
+		}
+
+		if (type == Node.ELEMENT_NODE) {
+
+			if (elemName != null && atrName != null
+					&& node.getNodeName().equals(elemName)) {
+				NamedNodeMap attrs = node.getAttributes();
+				for (int i = 0; i < attrs.getLength(); i++) {
+					value = getValueByName(attrs.item(i), elemName, atrName);
+					if (value != null) {
+						return value;
+					}
+				}
+			} else if (elemName != null && atrName == null
+					&& node.getNodeName().equals(elemName)
+					&& node.hasChildNodes()) {
+				return node.getFirstChild().getNodeValue();
+
+			} else if (elemName == null && atrName != null) {
+				if (!node.hasAttributes())
+					return null;
+
+				return getValueByName(node.getAttributes()
+						.getNamedItem(atrName), null, atrName);
+			}
+
+			if (node.hasChildNodes()) {
+				NodeList children = node.getChildNodes();
+				for (int i = 0; i < children.getLength(); i++) {
+					value = getValueByName(children.item(i), elemName, atrName);
+					if (value != null) {
+						return value;
+					}
+				}
+			}
+		} else if (type == Node.ATTRIBUTE_NODE) {
+
+			if (node.getNodeName().equals(atrName)) {
+				return value = node.getNodeValue();
+			}
+		}
+
+		return value;
+	}
 
 }
