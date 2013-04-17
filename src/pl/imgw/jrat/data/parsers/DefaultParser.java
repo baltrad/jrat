@@ -6,6 +6,11 @@ package pl.imgw.jrat.data.parsers;
 import java.io.File;
 
 import pl.imgw.jrat.data.containers.DataContainer;
+import pl.imgw.jrat.data.containers.OdimDataContainer;
+import pl.imgw.jrat.data.containers.OdimH5Volume;
+import pl.imgw.jrat.data.containers.RainbowDataContainer;
+import pl.imgw.jrat.data.containers.RainbowVolume;
+import pl.imgw.jrat.data.containers.VolumeContainer;
 
 /**
  * 
@@ -15,7 +20,7 @@ import pl.imgw.jrat.data.containers.DataContainer;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class DefaultParser implements FileParser {
+public class DefaultParser implements FileParser, VolumeParser {
 
     private Rainbow53VolumeParser rbvol = new Rainbow53VolumeParser();
     private Rainbow53ImageParser rbimg = new Rainbow53ImageParser();
@@ -130,4 +135,22 @@ public class DefaultParser implements FileParser {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.VolumeParser#getVolume()
+     */
+    @Override
+    public VolumeContainer getVolume() {
+        if (format == RBV) {
+            RainbowVolume vol = new RainbowVolume(
+                    (RainbowDataContainer) rbvol.getProduct());
+            return (vol.isValid()) ? vol : null;
+        }
+        if (format == HDF) {
+            OdimH5Volume vol = new OdimH5Volume(
+                    (OdimDataContainer) odim.getProduct());
+            return (vol.isValid()) ? vol : null;
+        }
+        return null;
+    }
+    
 }

@@ -146,7 +146,6 @@ public class MainProcessController {
         }
 
         /* =========== setting processes =============== */
-        
         FilesProcessor proc = null;
         
         /* CALID */
@@ -254,11 +253,6 @@ public class MainProcessController {
         }
         
         return false;
-    }
-
-    public static void main(String[] args) {
-        MainProcessController pc = new MainProcessController(args);
-        pc.start();
     }
 
 }

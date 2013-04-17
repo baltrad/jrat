@@ -43,6 +43,17 @@ public class GlobalParser {
         return parser;
     }
     
+    /**
+     * 
+     * @return <b>null</b> if no volume parser is set
+     */
+    public VolumeParser getVolumeParser() {
+        if(parser instanceof VolumeParser)
+            return (VolumeParser) parser;
+        return null;
+    }
+    
+    
     public void setParser(String format) {
         if (format.matches(Format.ODIM.name)) {
             parser = new OdimH5Parser();

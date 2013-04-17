@@ -50,7 +50,7 @@ public class CalidProcessTest {
     @Test
     public void runFromMainProcessWithOptFileTest() {
         System.out.println("only opt file");
-        args = "--calid -v --calid-opt test-data/calid/calid.opt".split(" ");
+        args = "--calid -v --calid-opt test-data/calid/calid.opt -i test-data/calid/*.vol -v".split(" ");
         MainProcessController main = new MainProcessController(args);
         assertTrue(main.start());
     }

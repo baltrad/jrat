@@ -16,8 +16,10 @@ import pl.imgw.jrat.data.containers.RainbowDataContainer;
 import pl.imgw.jrat.data.containers.RainbowVolume;
 import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
+import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.Rainbow53VolumeParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.data.parsers.VolumeParser;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.Logging;
 
@@ -52,7 +54,7 @@ public class CalidContainerTest {
     @Test
     public void fullInitializationTest() {
         
-        File dir = new File(AplicationConstans.ETC + "/calid/RzeszowBrzuchania/500_0.5_5.0/");
+        File dir = new File(AplicationConstans.ETC + "/calid/RzeszowBrzuchania/500_0.5_5.0_200/");
         
         for(File f : dir.listFiles())
             f.delete();
@@ -68,7 +70,6 @@ public class CalidContainerTest {
         pm.initialize(b);
         RainbowDataContainer data2 = (RainbowDataContainer) pm.getProduct();
         RainbowVolume vol2 = new RainbowVolume(data2);
-        
         
         
         Pair pair = new Pair(vol1, vol2);
@@ -90,12 +91,11 @@ public class CalidContainerTest {
     }
     
     private Pair getPair() {
-        ParserManager pm = new ParserManager();
-        pm.setParser(new DefaultParser());
-        pm.initialize(new File("test-data/calid", "T_PAGZ41_C_SOWR_20110922004019.h5"));
-        VolumeContainer vol1 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
-        pm.initialize(new File("test-data/calid", "T_PAGZ44_C_SOWR_20110922004021.h5"));
-        VolumeContainer vol2 = new OdimH5Volume((OdimDataContainer) pm.getProduct());
+        VolumeParser parser = GlobalParser.getInstance().getVolumeParser();
+        parser.initialize(new File("test-data/calid", "T_PAGZ41_C_SOWR_20110922004019.h5"));
+        VolumeContainer vol1 = parser.getVolume();
+        parser.initialize(new File("test-data/calid", "T_PAGZ44_C_SOWR_20110922004021.h5"));
+        VolumeContainer vol2 = parser.getVolume();
         return new Pair(vol1, vol2);
     }
     

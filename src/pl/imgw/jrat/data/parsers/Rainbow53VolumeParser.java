@@ -40,7 +40,7 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class Rainbow53VolumeParser implements FileParser, VolumeParser {
+public class Rainbow53VolumeParser implements VolumeParser {
 
     private static final String BLOBID = "blobid";
 

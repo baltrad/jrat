@@ -35,7 +35,7 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class OdimH5Parser implements FileParser, VolumeParser {
+public class OdimH5Parser implements VolumeParser {
 
     public final static String FLOAT_SYMBOL = "FLOAT";
     public final static String INT_SYMBOL = "INTEGER";
@@ -162,7 +162,8 @@ public class OdimH5Parser implements FileParser, VolumeParser {
      */
     @Override
     public VolumeContainer getVolume() {
-        return new OdimH5Volume(h5data);
+        OdimH5Volume vol = new OdimH5Volume(h5data);
+        return (vol.isValid()) ? vol : null;
     }
 
 }

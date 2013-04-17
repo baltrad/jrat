@@ -13,8 +13,12 @@ import pl.imgw.jrat.data.containers.VolumeContainer;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public interface VolumeParser {
+public interface VolumeParser extends FileParser {
 
+    /**
+     * 
+     * @return <b>null</b> if parsed data is not a valid polar volume
+     */
     public VolumeContainer getVolume();
     
 }

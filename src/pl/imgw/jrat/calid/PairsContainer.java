@@ -22,6 +22,7 @@ import pl.imgw.jrat.data.containers.VolumeContainer;
 import pl.imgw.jrat.data.parsers.FileParser;
 import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.data.parsers.VolumeParser;
 import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 
 /**
@@ -44,7 +45,7 @@ public class PairsContainer {
     private Iterator<Date> dateItr;
     
 
-    private FileParser parser = GlobalParser.getInstance().getParser();
+    private VolumeParser parser = GlobalParser.getInstance().getVolumeParser();
     
     private int size = 0;
     
@@ -59,8 +60,8 @@ public class PairsContainer {
 
 //        fileNameDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         
-        ParserManager manager = new ParserManager();
-        manager.setParser(GlobalParser.getInstance().getParser());
+//        ParserManager manager = new ParserManager();
+//        manager.setParser(GlobalParser.getInstance().getParser());
 
         segregated = new TreeMap<Date, Set<File>>();
 
@@ -150,23 +151,11 @@ public class PairsContainer {
             VolumeContainer vol1 = null;
             VolumeContainer vol2 = null;
             if (parser.initialize(f1)) {
-                if (parser.getProduct() instanceof RainbowDataContainer) {
-                    vol1 = new RainbowVolume(
-                            (RainbowDataContainer) parser.getProduct());
-                } else if (parser.getProduct() instanceof OdimDataContainer) {
-                    vol1 = new OdimH5Volume(
-                            (OdimDataContainer) parser.getProduct());
-                }
+                vol1 = parser.getVolume();
             }
 
             if (parser.initialize(f2)) {
-                if (parser.getProduct() instanceof RainbowDataContainer) {
-                    vol2 = new RainbowVolume(
-                            (RainbowDataContainer) parser.getProduct());
-                } else if (parser.getProduct() instanceof OdimDataContainer) {
-                    vol2 = new OdimH5Volume(
-                            (OdimDataContainer) parser.getProduct());
-                }
+                vol2 = parser.getVolume();
             }
 
             if (vol1 != null && vol2 != null) {
