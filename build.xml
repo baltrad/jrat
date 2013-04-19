@@ -69,9 +69,9 @@ long with the jrat.  If not, see http://www.gnu.org/licenses.
             <fileset dir="${lib.native.dir}" includes="**"/>  
         </copy>
         <echo file="${install.prefix}/${app.name}/${bin.dir}/jrat">#!/bin/sh
-java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -XX:MaxPermSize=512m -Duser.timezone=UTC \
+java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -Xmx256m -XX:MaxPermSize=256m -Duser.timezone=UTC \
 -jar ${install.prefix}/${app.name}/${share.dir}/${app.name}.jar $@</echo>
-		<echo file="${install.prefix}/${app.name}/${bin.dir}/jrat.bat">java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -XX:MaxPermSize=512m -Duser.timezone=UTC -jar ${install.prefix}/${app.name}/${share.dir}/${app.name}.jar %*</echo>
+		<echo file="${install.prefix}/${app.name}/${bin.dir}/jrat.bat">java -Dnative.libpath=${install.prefix}/${app.name}/${lib.native.dir} -Xmx256m -XX:MaxPermSize=256m -Duser.timezone=UTC -jar ${install.prefix}/${app.name}/${share.dir}/${app.name}.jar %*</echo>
         <chmod file="${install.prefix}/${app.name}/${bin.dir}/jrat" perm="755" />
          <echo file="${install.prefix}/${app.name}/${share.dir}/before">#!/bin/sh
 PATH=$PATH:${install.prefix}/${app.name}/${bin.dir}
