@@ -42,7 +42,7 @@ public class CalidContainerTest {
         
         LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
         
-        par = "ele=0.5 dis=500 ref=5.0 range=250".split(" ");
+        par = "ele=0.5 dis=500 ref=5.0 range=200".split(" ");
         manager.initialize(par);
         cont = new CalidContainer(manager);
         assertTrue(!cont.initialize());

@@ -7,7 +7,7 @@ package pl.imgw.jrat.scansun;
 import org.apache.commons.math3.special.Erf;
 
 import pl.imgw.jrat.scansun.ScansunOptionsHandler.RadarParsedParameters;
-import sun.security.action.GetLongAction;
+//import sun.security.action.GetLongAction;
 import static pl.imgw.jrat.scansun.ScansunConstants.*;
 
 /**

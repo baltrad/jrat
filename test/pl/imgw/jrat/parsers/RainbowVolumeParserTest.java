@@ -126,6 +126,7 @@ public class RainbowVolumeParserTest {
     
     @Test
     public void isValidFileTest() {
+        pm.initialize(rb53file);
         assertTrue("this is not a rainbow file", pm.isValid(rb53file));
         
     }
@@ -133,8 +134,8 @@ public class RainbowVolumeParserTest {
     @Test
     public void isValid52VolumeTest() {
         
-        assertTrue("this is not a rainbow 5.2 file", pm.isValid(rb52file));
         assertTrue(pm.initialize(rb52file));
+        assertTrue("this is not a rainbow 5.2 file", pm.isValid(rb52file));
         RainbowVolume vol = new RainbowVolume((RainbowDataContainer) pm.getProduct());
         assertEquals(453.0, vol.getHeight(), 0.01);
         assertEquals(20.079720, vol.getLon(), 0.01);

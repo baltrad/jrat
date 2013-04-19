@@ -84,6 +84,7 @@ public class Rainbow53ImageParser implements FileParser{
     @Override
     public boolean initialize(File file) {
         
+        data = null;
         if (file == null) {
             return false;
         }
@@ -100,7 +101,6 @@ public class Rainbow53ImageParser implements FileParser{
             fileInputStream = new FileInputStream(file);
             XMLStreamReader xml = XMLInputFactory.newInstance()
                     .createXMLStreamReader(fileInputStream);
-            data = null;
             String type = "";
 
             HashSet<Param> params = new HashSet<Param>();

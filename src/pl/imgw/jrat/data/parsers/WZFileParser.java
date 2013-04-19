@@ -94,6 +94,8 @@ public class WZFileParser implements FileParser {
      */
     @Override
     public boolean initialize(File file) {
+        data = null;
+        
         if (file == null) {
             return false;
         }

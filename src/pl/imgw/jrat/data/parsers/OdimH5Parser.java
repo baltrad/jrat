@@ -71,6 +71,8 @@ public class OdimH5Parser implements VolumeParser {
     @Override
     public boolean initialize(File file) {
        
+        h5data = new OdimDataContainer();
+        
         if(!isValid(file)) {
             LogHandler.getLogs().displayMsg("'" + file.getName()
                     + "' is not a valid HDF5 file", WARNING);
@@ -79,7 +81,6 @@ public class OdimH5Parser implements VolumeParser {
         
         try {
             reader = HDF5Factory.openForReading(file);
-            h5data = new OdimDataContainer();
             h5data.setReader(reader);
             LogHandler.getLogs().displayMsg("File " + file.getName() + " initialized",
                     NORMAL);

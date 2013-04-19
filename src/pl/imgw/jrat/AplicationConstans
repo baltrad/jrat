@@ -14,10 +14,10 @@ package pl.imgw.jrat;
 public class AplicationConstans {
 
     public static final String DATE = "@DATE@";
-
     public static final String LOG = "@LOG@";
     public static final String ETC = "@ETC@";
     public static final String TMP = "@TMP@";
+    public static final String DATA = "@DATA@";
     public final static String VERSION = "0.08 beta"; 
     public final static String APS_NAME = "jrat";
     public final static String APS_DESC = "Java Radar data Analyzing Tool";

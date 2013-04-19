@@ -22,13 +22,12 @@ import pl.imgw.jrat.data.containers.VolumeContainer;
  */
 public class DefaultParser implements FileParser, VolumeParser {
 
-	private Rainbow53VolumeParser rbvol = new Rainbow53VolumeParser();
-	private Rainbow53ImageParser rbimg = new Rainbow53ImageParser();
-	private OdimH5Parser odim = new OdimH5Parser();
-	private WZFileParser wz = new WZFileParser();
-	private WZStatsParser wzstat = new WZStatsParser();
-	private IntArrayParser intarray = new IntArrayParser();
-	private File file = null;
+	private Rainbow53VolumeParser rbvol;
+	private Rainbow53ImageParser rbimg;
+	private OdimH5Parser odim;
+	private WZFileParser wz;
+	private WZStatsParser wzstat;
+	private IntArrayParser intarray;
 
 	private final int HDF = 0;
 	private final int RBI = 1;
@@ -45,7 +44,9 @@ public class DefaultParser implements FileParser, VolumeParser {
 	 */
 	@Override
 	public boolean isValid(File file) {
-		this.file = file;
+		
+	    initializeParsers();
+	    
 		if (odim.isValid(file)) {
 			format = HDF;
 			return true;
@@ -77,6 +78,15 @@ public class DefaultParser implements FileParser, VolumeParser {
 		return false;
 	}
 
+	private void initializeParsers() {
+	    rbvol = new Rainbow53VolumeParser();
+	    rbimg = new Rainbow53ImageParser();
+	    odim = new OdimH5Parser();
+	    wz = new WZFileParser();
+	    wzstat = new WZStatsParser();
+	    intarray = new IntArrayParser();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -85,10 +95,12 @@ public class DefaultParser implements FileParser, VolumeParser {
 	@Override
 	public boolean initialize(File file) {
 
-		// if (odim.isValid(file)) {
-		// format = HDF;
-		// return odim.initialize(file);
-		// }
+	    initializeParsers();
+	    
+        if (odim.isValid(file)) {
+            format = HDF;
+            return odim.initialize(file);
+        }
 		if (rbvol.isValid(file)) {
 			format = RBV;
 			return rbvol.initialize(file);
@@ -141,13 +153,11 @@ public class DefaultParser implements FileParser, VolumeParser {
     @Override
     public VolumeContainer getVolume() {
         if (format == RBV) {
-            RainbowVolume vol = new RainbowVolume(
-                    (RainbowDataContainer) rbvol.getProduct());
+            VolumeContainer vol = rbvol.getVolume();
             return (vol.isValid()) ? vol : null;
         }
         if (format == HDF) {
-            OdimH5Volume vol = new OdimH5Volume(
-                    (OdimDataContainer) odim.getProduct());
+            VolumeContainer vol = odim.getVolume();
             return (vol.isValid()) ? vol : null;
         }
         return null;

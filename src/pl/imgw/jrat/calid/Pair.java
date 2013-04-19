@@ -80,8 +80,10 @@ public class Pair implements Comparable<Pair> {
 
         Date d1 = vol1.getTime();
         Date d2 = vol2.getTime();
-        if (d1.equals(d2))
+        
+        if (d1.equals(d2)) {
             this.date = d1;
+        }
     }
 
     public boolean hasRealVolumes() {

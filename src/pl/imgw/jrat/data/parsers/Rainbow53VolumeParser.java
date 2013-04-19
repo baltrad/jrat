@@ -46,7 +46,7 @@ public class Rainbow53VolumeParser implements VolumeParser {
 
     private RainbowBlobHandler rp;
     private HashMap<Integer, RainbowBlobContainer> blobs;
-    private RainbowDataContainer data = null;
+    private DataContainer data = null;
 
     private static final String VOLUME = "volume";
     private static final String SLICE = "slice";
@@ -100,6 +100,8 @@ public class Rainbow53VolumeParser implements VolumeParser {
     @Override
     public boolean initialize(File file) {
 
+        RainbowDataContainer data = new RainbowDataContainer();
+        
         if (file == null) {
             return false;
         }
@@ -132,7 +134,7 @@ public class Rainbow53VolumeParser implements VolumeParser {
                 return false;
             }
             
-            data = new RainbowDataContainer();
+            
             data.setAttribues(rp.getDoc());
             data.setType(type);
             
@@ -145,12 +147,14 @@ public class Rainbow53VolumeParser implements VolumeParser {
                 int refid = itr.next();
                 Param p = params.get(refid);
                 try {
-                    min = data.getRainbowAttributeValue(
-                            "/volume/scan/slice:refid=" + refid
-                                    + "/slicedata/rawdata", "min");
-                    max = data.getRainbowAttributeValue(
-                            "/volume/scan/slice:refid=" + refid
-                                    + "/slicedata/rawdata", "max");
+                    min = ((RainbowDataContainer) data)
+                            .getRainbowAttributeValue(
+                                    "/volume/scan/slice:refid=" + refid
+                                            + "/slicedata/rawdata", "min");
+                    max = ((RainbowDataContainer) data)
+                            .getRainbowAttributeValue(
+                                    "/volume/scan/slice:refid=" + refid
+                                            + "/slicedata/rawdata", "max");
                     mind = Double.parseDouble(min);
                     maxd = Double.parseDouble(max);
                     maxd = (maxd - mind) / 254;
@@ -212,6 +216,8 @@ public class Rainbow53VolumeParser implements VolumeParser {
         // getProduct().getArrayList().size());
         LogHandler.getLogs().displayMsg(
                 "File " + file.getName() + " initialized", NORMAL);
+        
+        this.data = data;
         return true;
     }
 
@@ -404,7 +410,7 @@ public class Rainbow53VolumeParser implements VolumeParser {
      */
     @Override
     public VolumeContainer getVolume() {
-        return new RainbowVolume(data);
+        return new RainbowVolume((RainbowDataContainer) data);
     }
 
 }
