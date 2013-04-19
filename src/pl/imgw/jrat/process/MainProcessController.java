@@ -4,29 +4,18 @@
 package pl.imgw.jrat.process;
 
 import static pl.imgw.jrat.process.CommandLineArgsParser.*;
-import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
 import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-import pl.imgw.jrat.calid.CalidPeriodsResultsPrinter;
-import pl.imgw.jrat.calid.CalidGnuplotResultPrinter;
 import pl.imgw.jrat.calid.CalidOptionsHandler;
 import pl.imgw.jrat.calid.CalidParsedParameters;
-import pl.imgw.jrat.calid.CalidProcessor;
-import pl.imgw.jrat.calid.CalidResultsPrinter;
-import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.GlobalParser;
-import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.scansun.ScansunProcessor;
-import pl.imgw.jrat.tools.in.FilePatternFilter;
-import pl.imgw.jrat.tools.in.RegexFileFilter;
-import pl.imgw.jrat.tools.out.ConsoleProgressBar;
 import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.ProductInfoPrinter;
 
