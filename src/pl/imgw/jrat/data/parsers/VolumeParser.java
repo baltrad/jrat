@@ -21,4 +21,7 @@ public interface VolumeParser extends FileParser {
      */
     public VolumeContainer getVolume();
     
+    
+    public boolean isPolarVolume();
+    
 }

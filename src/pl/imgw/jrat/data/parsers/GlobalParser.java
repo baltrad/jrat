@@ -45,7 +45,7 @@ public class GlobalParser {
     
     /**
      * 
-     * @return <b>null</b> if no volume parser is set
+     * @return <b>null</b> if not a volume parser is set
      */
     public VolumeParser getVolumeParser() {
         if(parser instanceof VolumeParser)

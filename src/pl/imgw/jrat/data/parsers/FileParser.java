@@ -33,9 +33,9 @@ public interface FileParser {
     public boolean initialize(File file);
         
     /**
-     * Receiving datase
-     * @return
+     * Receiving dataset
+     * @return <b>null</b> if cannot open the file
      */
-    public DataContainer getProduct();
+    public DataContainer getData();
 
 }

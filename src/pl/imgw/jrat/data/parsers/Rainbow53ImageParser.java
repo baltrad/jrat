@@ -291,7 +291,7 @@ public class Rainbow53ImageParser implements FileParser{
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public DataContainer getProduct() {
+    public DataContainer getData() {
         return data;
     }
     

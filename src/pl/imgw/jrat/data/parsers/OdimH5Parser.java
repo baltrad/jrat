@@ -154,7 +154,7 @@ public class OdimH5Parser implements VolumeParser {
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public DataContainer getProduct() {
+    public DataContainer getData() {
         return h5data;
     }
 
@@ -165,6 +165,14 @@ public class OdimH5Parser implements VolumeParser {
     public VolumeContainer getVolume() {
         OdimH5Volume vol = new OdimH5Volume(h5data);
         return (vol.isValid()) ? vol : null;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.VolumeParser#isPolarVolume()
+     */
+    @Override
+    public boolean isPolarVolume() {
+        return new OdimH5Volume(h5data).isValid();
     }
 
 }

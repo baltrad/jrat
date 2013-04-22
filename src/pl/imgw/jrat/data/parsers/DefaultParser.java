@@ -131,19 +131,19 @@ public class DefaultParser implements FileParser, VolumeParser {
 	 * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
 	 */
 	@Override
-	public DataContainer getProduct() {
+	public DataContainer getData() {
 		if (format == HDF)
-			return odim.getProduct();
+			return odim.getData();
 		if (format == RBV)
-			return rbvol.getProduct();
+			return rbvol.getData();
 		if (format == RBI)
-			return rbimg.getProduct();
+			return rbimg.getData();
 		if (format == WZ)
-			return wz.getProduct();
+			return wz.getData();
 		if (format == WZSTAT)
-			return wzstat.getProduct();
+			return wzstat.getData();
 		if (format == INTARRAY)
-			return intarray.getProduct();
+			return intarray.getData();
 		return null;
 	}
 
@@ -161,6 +161,22 @@ public class DefaultParser implements FileParser, VolumeParser {
             return (vol.isValid()) ? vol : null;
         }
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.VolumeParser#isPolarVolume()
+     */
+    @Override
+    public boolean isPolarVolume() {
+        if (format == RBV) {
+            VolumeContainer vol = rbvol.getVolume();
+            return vol == null ? false : vol.isValid();
+        }
+        if (format == HDF) {
+            VolumeContainer vol = odim.getVolume();
+            return vol == null ? false : vol.isValid();
+        }
+        return false;
     }
     
 }

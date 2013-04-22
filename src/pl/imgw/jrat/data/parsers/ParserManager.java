@@ -45,7 +45,7 @@ public class ParserManager {
         if(!isSet()) {
             return null;
         }
-        return parser.getProduct();
+        return parser.getData();
     }
     
     public boolean isValid(File file) {

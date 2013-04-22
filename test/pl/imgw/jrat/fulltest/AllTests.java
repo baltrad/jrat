@@ -18,13 +18,13 @@ import pl.imgw.jrat.controller.ProcessControllerTest;
 import pl.imgw.jrat.data.ByteDataContainerTest;
 import pl.imgw.jrat.data.DoubleDataContainerTest;
 import pl.imgw.jrat.data.FloatDataContainerTest;
+import pl.imgw.jrat.oldparsers.HDF5ParserTest;
+import pl.imgw.jrat.oldparsers.HDF5SMHIParserTest;
+import pl.imgw.jrat.oldparsers.IntArrayParserTest;
+import pl.imgw.jrat.oldparsers.RainbowCMAXParserTest;
+import pl.imgw.jrat.oldparsers.RainbowVolumeParserTest;
+import pl.imgw.jrat.oldparsers.WZParserTest;
 import pl.imgw.jrat.output.LogHandlerTest;
-import pl.imgw.jrat.parsers.HDF5ParserTest;
-import pl.imgw.jrat.parsers.HDF5SMHIParserTest;
-import pl.imgw.jrat.parsers.IntArrayParserTest;
-import pl.imgw.jrat.parsers.RainbowCMAXParserTest;
-import pl.imgw.jrat.parsers.RainbowVolumeParserTest;
-import pl.imgw.jrat.parsers.WZParserTest;
 import pl.imgw.jrat.tools.in.FilePatternFilterTest;
 
 /**

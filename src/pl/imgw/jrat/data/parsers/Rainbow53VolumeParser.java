@@ -171,39 +171,6 @@ public class Rainbow53VolumeParser implements VolumeParser {
                 array.setOffset(mind);
                 data.getArrayList().put(p.blobidraw + "", array);
             }
-            /*
-            Iterator<Integer> itr = params.keySet().iterator();
-            while (itr.hasNext()) {
-                Param p = params.get(itr.next());
-                byte[][] infDataBuff = rp.inflateDataSection(
-                        blobs.get(p.blobidraw), p.bins, p.rays, p.depthraw);
-                byte[][] infRayInfo = rp.inflateDataSection(
-                        blobs.get(p.blobidray), p.rays, 1, p.depthray);
-
-                // System.out.println("depth=" + p.depthraw + ", " +
-                // p.depthray);
-
-                int shiftX = rp.firstAzimuth(blobs.get(p.blobidray)
-                        .getDataBuffer(), p.rays);
-                ;
-                // System.out.println("shift=" + shiftX);
-
-                // System.out.println("size=" + infRayInfo.length + ", " +
-                // infRayInfo[0].length + " shift=" + shiftX);
-
-                RawByteDataArrayWithTransposition array = new RawByteDataArrayWithTransposition(
-                        infDataBuff);
-                array.setGain(0.5);
-                array.setOffset(-31.5);
-                array.setXShift(shiftX);
-                array.setTranspose(true);
-                data.getArrayList().put(p.blobidraw + "", array);
-            }
-*/
-//            if (data != null && rp != null) {
-//                data.setAttribues(rp.parseXML());
-//                data.setType(RainbowDataContainer.VOLUME);
-//            }
 
         } catch (FileNotFoundException e) {
             LogHandler.getLogs().displayMsg(
@@ -212,8 +179,6 @@ public class Rainbow53VolumeParser implements VolumeParser {
             return false;
         }
 
-        // System.out.println("ilosc blobow: " +
-        // getProduct().getArrayList().size());
         LogHandler.getLogs().displayMsg(
                 "File " + file.getName() + " initialized", NORMAL);
         
@@ -227,7 +192,7 @@ public class Rainbow53VolumeParser implements VolumeParser {
      * @see pl.imgw.jrat.data.parsers.FileParser#getProduct()
      */
     @Override
-    public DataContainer getProduct() {
+    public DataContainer getData() {
         return data;
     }
 
@@ -410,7 +375,16 @@ public class Rainbow53VolumeParser implements VolumeParser {
      */
     @Override
     public VolumeContainer getVolume() {
-        return new RainbowVolume((RainbowDataContainer) data);
+        VolumeContainer vol = new RainbowVolume((RainbowDataContainer) data);
+        return vol.isValid() ? vol : null;
+    }
+
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.data.parsers.VolumeParser#isPolarVolume()
+     */
+    @Override
+    public boolean isPolarVolume() {
+        return new RainbowVolume((RainbowDataContainer) data).isValid();
     }
 
 }

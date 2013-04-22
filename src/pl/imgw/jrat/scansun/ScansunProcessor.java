@@ -57,15 +57,15 @@ public class ScansunProcessor implements FilesProcessor {
 
 			parser.initialize(f);
 
-			if (parser.getProduct() instanceof RainbowDataContainer) {
+			if (parser.getData() instanceof RainbowDataContainer) {
 				sc = ScansunManager.getScansunManager().calculate(
 						new RainbowVolume(
-								(RainbowDataContainer) parser.getProduct()),
+								(RainbowDataContainer) parser.getData()),
 						params);
-			} else if (parser.getProduct() instanceof OdimDataContainer) {
+			} else if (parser.getData() instanceof OdimDataContainer) {
 				sc = ScansunManager.getScansunManager().calculate(
 						new OdimH5Volume(
-								(OdimDataContainer) parser.getProduct()),
+								(OdimDataContainer) parser.getData()),
 						params);
 			}
 
