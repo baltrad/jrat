@@ -19,374 +19,358 @@ import org.jgnuplot.*;
 
 public class ScansunPlot {
 
-	private Plot plot;
+    private Plot plot;
 
-	enum GnuplotTerminal {
-		POSTSCRIPT(Terminal.POSTSCRIPT), PNG(Terminal.PNG);
+    enum GnuplotTerminal {
+	POSTSCRIPT(Terminal.POSTSCRIPT), PNG(Terminal.PNG);
 
-		private String terminal;
+	private String terminal;
 
-		private GnuplotTerminal(String terminal) {
-			this.terminal = terminal;
-		}
-
-		public String getTerminal() {
-			return terminal;
-		}
+	private GnuplotTerminal(String terminal) {
+	    this.terminal = terminal;
 	}
 
-	enum GnuplotMonoColor {
-		MONO("mono"), COLOR("color");
+	public String getTerminal() {
+	    return terminal;
+	}
+    }
 
-		private String mc;
+    enum GnuplotMonoColor {
+	MONO("mono"), COLOR("color");
 
-		private GnuplotMonoColor(String mc) {
-			this.mc = mc;
-		}
+	private String mc;
 
-		public String toString() {
-			return mc;
-		}
+	private GnuplotMonoColor(String mc) {
+	    this.mc = mc;
 	}
 
-	enum GnuplotColors {
-		GRAY("gray"), RED("red"), GREEN("green"), MAROON("#8B0000"), BLACK(
-				"black"), BROWN("brown"), SALMON("salmon");
+	public String toString() {
+	    return mc;
+	}
+    }
 
-		private String color;
+    enum GnuplotColors {
+	GRAY("gray"), RED("red"), GREEN("green"), MAROON("#8B0000"), BLACK("black"), BROWN("brown"), SALMON("salmon");
 
-		private GnuplotColors(String color) {
-			this.color = color;
-		}
+	private String color;
 
-		public String toString() {
-			return color;
-		}
+	private GnuplotColors(String color) {
+	    this.color = color;
 	}
 
-	enum GnuplotCoordinates {
-		FIRST("first"), GRAPH("graph"), SCREEN("screen");
+	public String toString() {
+	    return color;
+	}
+    }
 
-		private String coordinates;
+    enum GnuplotCoordinates {
+	FIRST("first"), GRAPH("graph"), SCREEN("screen");
 
-		private GnuplotCoordinates(String coordinates) {
-			this.coordinates = coordinates;
-		}
+	private String coordinates;
 
-		public String toString() {
-			return coordinates;
-		}
+	private GnuplotCoordinates(String coordinates) {
+	    this.coordinates = coordinates;
 	}
 
-	enum GnuplotFgBg {
-		FRONT("front"), BEHIND("behind");
+	public String toString() {
+	    return coordinates;
+	}
+    }
 
-		private String fb;
+    enum GnuplotFgBg {
+	FRONT("front"), BEHIND("behind");
 
-		private GnuplotFgBg(String fb) {
-			this.fb = fb;
-		}
+	private String fb;
 
-		public String toString() {
-			return fb;
-		}
+	private GnuplotFgBg(String fb) {
+	    this.fb = fb;
 	}
 
-	enum GnuplotArrow {
-		NOHEAD("nohead");
+	public String toString() {
+	    return fb;
+	}
+    }
 
-		private String type;
+    enum GnuplotArrow {
+	NOHEAD("nohead");
 
-		private GnuplotArrow(String type) {
-			this.type = type;
-		}
+	private String type;
 
-		public String toString() {
-			return type;
-		}
+	private GnuplotArrow(String type) {
+	    this.type = type;
 	}
 
-	public ScansunPlot() {
-		plot = new Plot();
-
-		Plot.setGnuplotExecutable("gnuplot");
-		Plot.setPlotDirectory(AplicationConstans.TMP);
+	public String toString() {
+	    return type;
 	}
+    }
 
-	public void setOutput(GnuplotTerminal terminal, String outputFileName,
-			String size, GnuplotMonoColor color, String extra) {
+    public ScansunPlot() {
+	plot = new Plot();
 
-		plot.setOutput(terminal.getTerminal(), outputFileName, size);
+	Plot.setGnuplotExecutable("gnuplot");
+	Plot.setPlotDirectory(AplicationConstans.TMP);
+    }
 
-		String cmd = new String("set terminal ");
-		cmd += terminal.getTerminal() + " ";
-		cmd += color + " ";
-		cmd += extra + " ";
+    public void setOutput(GnuplotTerminal terminal, String outputFileName, String size, GnuplotMonoColor color,
+	    String extra) {
 
-		plot.addExtra(cmd);
-	}
+	plot.setOutput(terminal.getTerminal(), outputFileName, size);
 
-	public void setTitle(String title, String subTitle, String font,
-			int fontSize) {
+	String cmd = new String("set terminal ");
+	cmd += terminal.getTerminal() + " ";
+	cmd += color + " ";
+	cmd += extra + " ";
 
-		String plotTitle = title + "\\n {/*0.6" + subTitle + "}";
-		plot.setTitle(plotTitle);
-		plot.addExtra("set title font '" + font + "," + fontSize + "'");
+	plot.addExtra(cmd);
+    }
 
-	}
+    public void setTitle(String title, String subTitle, String font, int fontSize) {
 
-	public void setKey(String position, double spacing, String font,
-			int fontSize) {
-		String cmd = new String();
-		cmd += position + " ";
-		cmd += "spacing " + spacing + " ";
-		cmd += "font '" + font + "," + fontSize + "'";
-		plot.setKey(cmd);
-	}
+	String plotTitle = title + "\\n {/*0.6" + subTitle + "}";
+	plot.setTitle(plotTitle);
+	plot.addExtra("set title font '" + font + "," + fontSize + "'");
 
-	public void setSquare() {
-		plot.addExtra("set size square");
-	}
+    }
 
-	public void setTics(GnuplotFgBg fb) {
-		String cmd = new String("set tics");
-		cmd += " " + fb;
+    public void setKey(String position, double spacing, String font, int fontSize) {
+	String cmd = new String();
+	cmd += position + " ";
+	cmd += "spacing " + spacing + " ";
+	cmd += "font '" + font + "," + fontSize + "'";
+	plot.setKey(cmd);
+    }
 
-		plot.addExtra(cmd);
-	}
+    public void setSquare() {
+	plot.addExtra("set size square");
+    }
 
-	public void setXLabel(String label, String font, int fontSize) {
-		plot.setXLabel(label);
-		String cmd = new String("set xlabel");
-		cmd += " font '" + font + "," + fontSize + "' ";
-		plot.addExtra(cmd);
-	}
+    public void setTics(GnuplotFgBg fb) {
+	String cmd = new String("set tics");
+	cmd += " " + fb;
 
-	public void setXLabel(String label, String font, int fontSize,
-			double xOffset, double yOffset) {
-		plot.setXLabel(label);
-		String cmd = new String("set xlabel");
-		cmd += " font '" + font + "," + fontSize + "' ";
-		cmd += "offset " + xOffset + "," + yOffset;
-		plot.addExtra(cmd);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setXRange(double xmin, double xmax) {
-		plot.setXRange(xmin, xmax);
-	}
+    public void setXLabel(String label, String font, int fontSize) {
+	plot.setXLabel(label);
+	String cmd = new String("set xlabel");
+	cmd += " font '" + font + "," + fontSize + "' ";
+	plot.addExtra(cmd);
+    }
 
-	public void setXTics(double delta, String font, int fontSize) {
-		String cmd = new String();
-		cmd += delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
+    public void setXLabel(String label, String font, int fontSize, double xOffset, double yOffset) {
+	plot.setXLabel(label);
+	String cmd = new String("set xlabel");
+	cmd += " font '" + font + "," + fontSize + "' ";
+	cmd += "offset " + xOffset + "," + yOffset;
+	plot.addExtra(cmd);
+    }
 
-		plot.setXTics(cmd);
-	}
+    public void setXRange(double xmin, double xmax) {
+	plot.setXRange(xmin, xmax);
+    }
 
-	public void setXTics(double delta, String font, int fontSize, int rotateBy) {
-		String cmd = new String();
-		cmd += delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
-		if (rotateBy == 90)
-			cmd += "rotate";
-		else
-			cmd += "rotate by " + rotateBy;
+    public void setXTics(double delta, String font, int fontSize) {
+	String cmd = new String();
+	cmd += delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
 
-		plot.setXTics(cmd);
-	}
+	plot.setXTics(cmd);
+    }
 
-	public void setXTics(double xmin, double delta, String font, int fontSize) {
-		String cmd = new String();
-		cmd += xmin + "," + delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
+    public void setXTics(double delta, String font, int fontSize, int rotateBy) {
+	String cmd = new String();
+	cmd += delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
+	if (rotateBy == 90)
+	    cmd += "rotate";
+	else
+	    cmd += "rotate by " + rotateBy;
 
-		plot.setXTics(cmd);
-	}
+	plot.setXTics(cmd);
+    }
 
-	public void setXTics(double xmin, double delta, String font, int fontSize,
-			int rotateBy) {
-		String cmd = new String();
-		cmd += xmin + "," + delta + " ";
-		cmd += delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
-		if (rotateBy == 90)
-			cmd += "rotate";
-		else
-			cmd += "rotate by " + rotateBy;
+    public void setXTics(double xmin, double delta, String font, int fontSize) {
+	String cmd = new String();
+	cmd += xmin + "," + delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
 
-		plot.setXTics(cmd);
-	}
+	plot.setXTics(cmd);
+    }
 
-	public void setFormatX(String FormatSpecifier) {
-		String cmd = new String("set format x");
-		cmd += " \"" + FormatSpecifier + "\"";
+    public void setXTics(double xmin, double delta, String font, int fontSize, int rotateBy) {
+	String cmd = new String();
+	cmd += xmin + "," + delta + " ";
+	cmd += delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
+	if (rotateBy == 90)
+	    cmd += "rotate";
+	else
+	    cmd += "rotate by " + rotateBy;
 
-		plot.addExtra(cmd);
-	}
+	plot.setXTics(cmd);
+    }
 
-	public void setYLabel(String label, String font, int fontSize) {
-		plot.setYLabel(label);
-		String cmd = new String("set ylabel");
-		cmd += " font '" + font + "," + fontSize + "' ";
-		plot.addExtra(cmd);
-	}
+    public void setFormatX(String FormatSpecifier) {
+	String cmd = new String("set format x");
+	cmd += " \"" + FormatSpecifier + "\"";
 
-	public void setYRange(double ymin, double ymax) {
-		plot.setYRange(ymin, ymax);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setYTics(double delta, String font, int fontSize) {
-		String cmd = new String();
-		cmd += delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
+    public void setYLabel(String label, String font, int fontSize) {
+	plot.setYLabel(label);
+	String cmd = new String("set ylabel");
+	cmd += " font '" + font + "," + fontSize + "' ";
+	plot.addExtra(cmd);
+    }
 
-		plot.setYTics(cmd);
-	}
+    public void setYRange(double ymin, double ymax) {
+	plot.setYRange(ymin, ymax);
+    }
 
-	public void setYTics(double delta, String font, int fontSize, int rotateBy) {
-		String cmd = new String();
-		cmd += delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
-		if (rotateBy == 90)
-			cmd += "rotate";
-		else
-			cmd += "rotate by " + rotateBy;
+    public void setYTics(double delta, String font, int fontSize) {
+	String cmd = new String();
+	cmd += delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
 
-		plot.setYTics(cmd);
-	}
+	plot.setYTics(cmd);
+    }
 
-	public void setYTics(double ymin, double delta, String font, int fontSize) {
-		String cmd = new String();
-		cmd += ymin + "," + delta + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
+    public void setYTics(double delta, String font, int fontSize, int rotateBy) {
+	String cmd = new String();
+	cmd += delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
+	if (rotateBy == 90)
+	    cmd += "rotate";
+	else
+	    cmd += "rotate by " + rotateBy;
 
-		plot.setYTics(cmd);
-	}
+	plot.setYTics(cmd);
+    }
 
-	public void setMYTics(int i) {
-		plot.setMYTics(((Integer) i).toString());
-	}
+    public void setYTics(double ymin, double delta, String font, int fontSize) {
+	String cmd = new String();
+	cmd += ymin + "," + delta + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
 
-	public void setFormatY(String FormatSpecifier) {
-		String cmd = new String("set format y");
-		cmd += " \"" + FormatSpecifier + "\"";
+	plot.setYTics(cmd);
+    }
 
-		plot.addExtra(cmd);
-	}
+    public void setMYTics(int i) {
+	plot.setMYTics(((Integer) i).toString());
+    }
 
-	public void setGrid(String tics, int lineType, double lineWidth,
-			GnuplotColors color) {
-		String cmd = new String();
-		cmd += tics + " ";
-		cmd += "lt " + lineType + " ";
-		cmd += "lw " + lineWidth + " ";
-		cmd += "lc rgb '" + color + "'";
+    public void setFormatY(String FormatSpecifier) {
+	String cmd = new String("set format y");
+	cmd += " \"" + FormatSpecifier + "\"";
 
-		plot.setGrid(cmd);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setStyleFillSolid(double density) {
-		String cmd = new String("set style fill solid");
-		cmd += " " + density;
+    public void setGrid(String tics, int lineType, double lineWidth, GnuplotColors color) {
+	String cmd = new String();
+	cmd += tics + " ";
+	cmd += "lt " + lineType + " ";
+	cmd += "lw " + lineWidth + " ";
+	cmd += "lc rgb '" + color + "'";
 
-		plot.addExtra(cmd);
-	}
+	plot.setGrid(cmd);
+    }
 
-	public void setLabel(String label, GnuplotCoordinates xCoordinates,
-			double xPosition, GnuplotCoordinates yCoordinates,
-			double yPosition, String font, int fontSize) {
-		String cmd = new String("set label");
-		cmd += " \"" + label + "\" front ";
-		cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates
-				+ " " + yPosition + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
+    public void setStyleFillSolid(double density) {
+	String cmd = new String("set style fill solid");
+	cmd += " " + density;
 
-		plot.addExtra(cmd);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setLabelCenter(String label, GnuplotCoordinates xCoordinates,
-			double xPosition, GnuplotCoordinates yCoordinates,
-			double yPosition, String font, int fontSize) {
-		String cmd = new String("set label");
-		cmd += " \"" + label + "\" center front ";
-		cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates
-				+ " " + yPosition + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
+    public void setLabel(String label, GnuplotCoordinates xCoordinates, double xPosition,
+	    GnuplotCoordinates yCoordinates, double yPosition, String font, int fontSize) {
+	String cmd = new String("set label");
+	cmd += " \"" + label + "\" front ";
+	cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates + " " + yPosition + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
 
-		plot.addExtra(cmd);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setLabel(String label, GnuplotCoordinates xCoordinates,
-			double xPosition, GnuplotCoordinates yCoordinates,
-			double yPosition, String font, int fontSize, int rotateBy,
-			GnuplotColors color) {
-		String cmd = new String("set label");
-		cmd += " \"" + label + "\" center front ";
-		cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates
-				+ " " + yPosition + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
-		cmd += "rotate by " + rotateBy + " ";
-		cmd += "textcolor rgb '" + color + "'";
+    public void setLabelCenter(String label, GnuplotCoordinates xCoordinates, double xPosition,
+	    GnuplotCoordinates yCoordinates, double yPosition, String font, int fontSize) {
+	String cmd = new String("set label");
+	cmd += " \"" + label + "\" center front ";
+	cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates + " " + yPosition + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
 
-		plot.addExtra(cmd);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setLabelCenter(String label, GnuplotCoordinates xCoordinates,
-			double xPosition, GnuplotCoordinates yCoordinates,
-			double yPosition, String font, int fontSize, int rotateBy,
-			GnuplotColors color) {
-		String cmd = new String("set label");
-		cmd += " \"" + label + "\" center front ";
-		cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates
-				+ " " + yPosition + " ";
-		cmd += "font '" + font + "," + fontSize + "' ";
-		cmd += "rotate by " + rotateBy + " ";
-		cmd += "textcolor rgb '" + color + "'";
+    public void setLabel(String label, GnuplotCoordinates xCoordinates, double xPosition,
+	    GnuplotCoordinates yCoordinates, double yPosition, String font, int fontSize, int rotateBy,
+	    GnuplotColors color) {
+	String cmd = new String("set label");
+	cmd += " \"" + label + "\" center front ";
+	cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates + " " + yPosition + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
+	cmd += "rotate by " + rotateBy + " ";
+	cmd += "textcolor rgb '" + color + "'";
 
-		plot.addExtra(cmd);
-	}
+	plot.addExtra(cmd);
+    }
 
-	public void setArrow(GnuplotCoordinates x1Coordinates, double x1,
-			GnuplotCoordinates y1Coordinates, double y1,
-			GnuplotCoordinates x2Coordinates, double x2,
-			GnuplotCoordinates y2Coordinates, double y2, GnuplotFgBg fb,
-			GnuplotArrow arrowType, int lineType, GnuplotColors color) {
+    public void setLabelCenter(String label, GnuplotCoordinates xCoordinates, double xPosition,
+	    GnuplotCoordinates yCoordinates, double yPosition, String font, int fontSize, int rotateBy,
+	    GnuplotColors color) {
+	String cmd = new String("set label");
+	cmd += " \"" + label + "\" center front ";
+	cmd += "at " + xCoordinates + " " + xPosition + ", " + yCoordinates + " " + yPosition + " ";
+	cmd += "font '" + font + "," + fontSize + "' ";
+	cmd += "rotate by " + rotateBy + " ";
+	cmd += "textcolor rgb '" + color + "'";
 
-		String cmd = new String("set arrow");
-		cmd += " from ";
-		cmd += x1Coordinates + " " + x1 + ", " + y1Coordinates + " " + y1 + " ";
-		cmd += " to ";
-		cmd += x2Coordinates + " " + x2 + ", " + y2Coordinates + " " + y2 + " ";
-		cmd += fb + " ";
-		cmd += arrowType + " ";
-		cmd += "lt " + lineType + " ";
-		cmd += "lc rgb '" + color + "'";
+	plot.addExtra(cmd);
+    }
 
-		plot.addExtra(cmd);
-	}
+    public void setArrow(GnuplotCoordinates x1Coordinates, double x1, GnuplotCoordinates y1Coordinates, double y1,
+	    GnuplotCoordinates x2Coordinates, double x2, GnuplotCoordinates y2Coordinates, double y2, GnuplotFgBg fb,
+	    GnuplotArrow arrowType, int lineType, GnuplotColors color) {
 
-	public void setParametric() {
-		plot.setParametric();
-	}
+	String cmd = new String("set arrow");
+	cmd += " from ";
+	cmd += x1Coordinates + " " + x1 + ", " + y1Coordinates + " " + y1 + " ";
+	cmd += " to ";
+	cmd += x2Coordinates + " " + x2 + ", " + y2Coordinates + " " + y2 + " ";
+	cmd += fb + " ";
+	cmd += arrowType + " ";
+	cmd += "lt " + lineType + " ";
+	cmd += "lc rgb '" + color + "'";
 
-	public void addVariable(String name, double value) {
-		String cmd = new String();
-		cmd += name + "=" + value;
+	plot.addExtra(cmd);
+    }
 
-		plot.addExtra(cmd);
-	}
+    public void setParametric() {
+	plot.setParametric();
+    }
 
-	public void addExtra(String cmd) {
-		plot.addExtra(cmd);
-	}
+    public void addVariable(String name, double value) {
+	String cmd = new String();
+	cmd += name + "=" + value;
 
-	public void pushGraph(Graph graph) {
-		plot.pushGraph(graph);
+	plot.addExtra(cmd);
+    }
 
-	}
+    public void addExtra(String cmd) {
+	plot.addExtra(cmd);
+    }
 
-	public void plot() throws IOException, InterruptedException {
-		plot.plot();
-	}
+    public void pushGraph(Graph graph) {
+	plot.pushGraph(graph);
+
+    }
+
+    public void plot() throws IOException, InterruptedException {
+	plot.plot();
+    }
 
 }

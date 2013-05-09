@@ -4,8 +4,9 @@
 
 package pl.imgw.jrat.scansun;
 
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 
@@ -38,6 +39,15 @@ public class ScansunDay implements Comparable<ScansunDay> {
 
     public Integer getYear() {
 	return year;
+    }
+
+    public Integer getDayOfYear() {
+	Calendar cal = Calendar.getInstance();
+	cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+	cal.set(Calendar.MONTH, month);
+	cal.set(Calendar.YEAR, year);
+
+	return cal.get(Calendar.DAY_OF_YEAR);
     }
 
     @Override
@@ -77,6 +87,7 @@ public class ScansunDay implements Comparable<ScansunDay> {
 		&& (year == days.year || (year != null && year.equals(days.year)));
     }
 
+    @Override
     public int hashCode() {
 	int hash = 7;
 	hash = 31 * hash + (dayOfMonth == null ? 0 : dayOfMonth.hashCode());
@@ -85,6 +96,7 @@ public class ScansunDay implements Comparable<ScansunDay> {
 	return hash;
     }
 
+    @Override
     public String toString() {
 
 	Calendar cal = Calendar.getInstance();
@@ -95,15 +107,6 @@ public class ScansunDay implements Comparable<ScansunDay> {
 	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 	return sdf.format(cal.getTime());
-    }
-
-    public Integer getDayOfYear() {
-	Calendar cal = Calendar.getInstance();
-	cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-	cal.set(Calendar.MONTH, month);
-	cal.set(Calendar.YEAR, year);
-
-	return cal.get(Calendar.DAY_OF_YEAR);
     }
 
 }

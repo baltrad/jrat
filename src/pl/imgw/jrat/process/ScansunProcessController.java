@@ -8,13 +8,19 @@ import static pl.imgw.jrat.tools.out.Logging.ERROR;
 import static pl.imgw.jrat.tools.out.Logging.NORMAL;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.scansun.ScansunProcessor;
 import pl.imgw.jrat.scansun.ScansunOptionsHandler;
-import pl.imgw.jrat.scansun.ScansunResultParsedParameters;
+import pl.imgw.jrat.scansun.ScansunResultsParsedParameters;
 
 import pl.imgw.jrat.scansun.ScansunResultsPrinter;
 import pl.imgw.jrat.scansun.ScansunGnuplotResultsPrinter;
@@ -31,92 +37,73 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class ScansunProcessController {
 
-	public static boolean processScansunResult(CommandLine cmd) {
-		ScansunResultParsedParameters scansunResult = new ScansunResultParsedParameters();
+    public static boolean processScansunResult(CommandLine cmd) {
+	ScansunResultsParsedParameters scansunResults = new ScansunResultsParsedParameters();
 
-		if (scansunResult.initialize(cmd.getOptionValues(SCANSUN_RESULT))) {
-
-			if (cmd.hasOption(SCANSUN_OPT)) {
-				ScansunOptionsHandler.getOptions().setOptionFile(
-						cmd.getOptionValue(SCANSUN_OPT));
-
-				if (!ScansunOptionsHandler.getOptions().loadRadarParameters()) {
-					LogHandler.getLogs().displayMsg(
-							"SCANSUN: loading radar parameters error", ERROR);
-				}
-
-			} else if (!cmd.hasOption(SCANSUN_OPT)) {
-				if (!ScansunOptionsHandler.getOptions().loadRadarParameters()) {
-					LogHandler
-							.getLogs()
-							.displayMsg(
-									"SCANSUN: no parameters file in input - calculations without power calibration",
-									WARNING);
-				}
-			}
-
-			if (cmd.hasOption(SCANSUN_RESULT_GNUPLOT)) {
-				try {
-					new ScansunGnuplotResultsPrinter(scansunResult)
-							.generatePlots();
-				} catch (IllegalArgumentException e) {
-					LogHandler.getLogs().displayMsg(e.getMessage(), WARNING);
-					LogHandler.getLogs().displayMsg("SCANSUN: Plotting error",
-							ERROR);
-					LogHandler.getLogs().saveErrorLogs(
-							CalidProcessController.class, e);
-				}
-			} else {
-				try {
-					new ScansunResultsPrinter(scansunResult).printResults();
-				} catch (IllegalArgumentException e) {
-					LogHandler.getLogs().displayMsg(e.getMessage(), WARNING);
-				}
-			}
-
-			return true;
-		} else {
-			ScansunResultParsedParameters.printHelp();
-			return false;
-		}
+	if (cmd.hasOption(SCANSUN_OPT)) {
+	    if (!ScansunOptionsHandler.withOptFileHandling(cmd)) {
+		return false;
+	    }
 	}
 
-	public static FilesProcessor setScansunProcessor(CommandLine cmd) {
-		FilesProcessor proc;
+	if (!cmd.hasOption(SCANSUN_OPT)) {
+	    if (!ScansunOptionsHandler.withoutOptFileHandling()) {
+		return false;
+	    }
+	}
 
-		if (cmd.hasOption(SCANSUN_OPT)) {
-			ScansunOptionsHandler.getOptions().setOptionFile(
-					cmd.getOptionValue(SCANSUN_OPT));
+	if (scansunResults.initialize(cmd.getOptionValues(SCANSUN_RESULT))) {
 
-			if (!ScansunOptionsHandler.getOptions().loadRadarParameters()) {
-				LogHandler.getLogs().displayMsg(
-						"SCANSUN: loading radar parameters error", ERROR);
-			}
-
-		} else if (!cmd.hasOption(SCANSUN_OPT)) {
-			if (!ScansunOptionsHandler.getOptions().loadRadarParameters()) {
-				LogHandler
-						.getLogs()
-						.displayMsg(
-								"SCANSUN: no parameters file in input - calculations without power calibration",
-								WARNING);
-			}
+	    if (cmd.hasOption(SCANSUN_RESULT_GNUPLOT)) {
+		try {
+		    new ScansunGnuplotResultsPrinter(scansunResults).generatePlots();
+		} catch (IllegalArgumentException e) {
+		    LogHandler.getLogs().displayMsg(e.getMessage(), WARNING);
+		    LogHandler.getLogs().displayMsg("SCANSUN: Plotting error", ERROR);
+		    LogHandler.getLogs().saveErrorLogs(CalidProcessController.class, e);
 		}
-
-		proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
-		if (proc.isValid()) {
-			String par = "";
-			if (cmd.getOptionValue(SCANSUN) == null) {
-				par = "no parameters";
-			} else
-				for (String s : cmd.getOptionValues(SCANSUN)) {
-					par += s + " ";
-				}
-			LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par,
-					NORMAL);
+	    } else {
+		try {
+		    new ScansunResultsPrinter(scansunResults).printResults();
+		} catch (IllegalArgumentException e) {
+		    LogHandler.getLogs().displayMsg(e.getMessage(), WARNING);
 		}
+	    }
 
+	    return true;
+	} else {
+	    ScansunResultsParsedParameters.printHelp();
+	    return false;
+	}
+    }
+
+    public static FilesProcessor setScansunProcessor(CommandLine cmd) {
+	FilesProcessor proc;
+
+	if (cmd.hasOption(SCANSUN_OPT)) {
+	    if (!ScansunOptionsHandler.withOptFileHandling(cmd)) {
+		proc = null;
 		return proc;
+	    }
 	}
+
+	if (!cmd.hasOption(SCANSUN_OPT)) {
+	    if (!ScansunOptionsHandler.withoutOptFileHandling()) {
+		proc = null;
+		return proc;
+	    }
+	}
+
+	proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
+	if (proc.isValid()) {
+	    String par = "";
+	    for (String s : cmd.getOptionValues(SCANSUN)) {
+		par += s + " ";
+	    }
+	    LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par, NORMAL);
+	}
+
+	return proc;
+    }
 
 }

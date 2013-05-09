@@ -24,32 +24,29 @@ public class SingleRunProcessor implements Runnable {
     private List<File> files;
     private FilesProcessor proc;
     private boolean valid = false;
-    
 
     /**
      * 
      */
-    public SingleRunProcessor(FilesProcessor proc, List<File> folders,
-            List<File> files) {
-        
-        
-        for (File folder : folders) {
-            files.addAll(Arrays.asList(folder.listFiles()));
-        }
-        
-        if (files.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No input files specified", WARNING);
-            return;
-        }
-        this.files = files;
-        this.proc = proc;
-        valid = true;
+    public SingleRunProcessor(FilesProcessor proc, List<File> folders, List<File> files) {
+
+	for (File folder : folders) {
+	    files.addAll(Arrays.asList(folder.listFiles()));
+	}
+
+	if (files.isEmpty()) {
+	    LogHandler.getLogs().displayMsg("No input files specified", WARNING);
+	    return;
+	}
+	this.files = files;
+	this.proc = proc;
+	valid = true;
     }
 
     public boolean isValid() {
-        return valid;
+	return valid;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -57,16 +54,13 @@ public class SingleRunProcessor implements Runnable {
      */
     @Override
     public void run() {
-        if (proc == null)
-            return;
-        
-        else
-            LogHandler.getLogs()
-                    .displayMsg(
-                            "Single run process started with: "
-                                    + proc.getProcessName(), NORMAL);
+	if (proc == null)
+	    return;
 
-        proc.processFile(files);
+	else
+	    LogHandler.getLogs().displayMsg("Single run process started with: " + proc.getProcessName(), NORMAL);
+
+	proc.processFile(files);
 
     }
 
