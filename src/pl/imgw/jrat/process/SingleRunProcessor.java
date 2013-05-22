@@ -61,7 +61,6 @@ public class SingleRunProcessor implements Runnable {
 	    LogHandler.getLogs().displayMsg("Single run process started with: " + proc.getProcessName(), NORMAL);
 
 	proc.processFile(files);
-
     }
 
 }

@@ -34,7 +34,6 @@ public class ScansunOptionsHandler extends Options {
     private static final String RADAR = "radar";
     private static final String NAME = "name";
 
-    private static final String UNIT = "unit";
     private static final String WAVELENGTH = "wavelength";
     private static final String BEAMWIDTH = "beamwidth";
     private static final String DIELECTRICFACTOR = "dielectricfactor";

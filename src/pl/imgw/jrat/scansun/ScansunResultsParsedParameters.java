@@ -4,7 +4,6 @@
 
 package pl.imgw.jrat.scansun;
 
-import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_OPTFILE_NAME;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 import pl.imgw.jrat.scansun.ScansunConstants.Sites;
 import pl.imgw.jrat.tools.out.LogHandler;

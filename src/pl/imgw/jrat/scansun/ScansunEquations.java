@@ -7,7 +7,6 @@ package pl.imgw.jrat.scansun;
 import org.apache.commons.math3.special.Erf;
 
 import pl.imgw.jrat.scansun.ScansunEvent.PulseDuration;
-import pl.imgw.jrat.scansun.ScansunPowerFitSolver.ScansunPowerFitSolution;
 
 import static pl.imgw.jrat.scansun.ScansunConstants.*;
 

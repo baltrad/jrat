@@ -19,6 +19,11 @@ import pl.imgw.jrat.scansun.ScansunEvent.PulseDuration;
 
 public class ScansunEventsContainer extends HashSet<ScansunEvent> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public ScansunEventsContainer() {
     }
 

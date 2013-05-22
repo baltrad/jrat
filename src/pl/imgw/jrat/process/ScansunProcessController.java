@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
+import pl.imgw.jrat.scansun.ScansunDRAOSolarFlux;
 import pl.imgw.jrat.scansun.ScansunProcessor;
 import pl.imgw.jrat.scansun.ScansunOptionsHandler;
 import pl.imgw.jrat.scansun.ScansunResultsParsedParameters;
@@ -48,6 +49,18 @@ public class ScansunProcessController {
 
 	if (!cmd.hasOption(SCANSUN_OPT)) {
 	    if (!ScansunOptionsHandler.withoutOptFileHandling()) {
+		return false;
+	    }
+	}
+
+	if (cmd.hasOption(SCANSUN_DRAO)) {
+	    if (!ScansunDRAOSolarFlux.withDRAOFileHandling(cmd)) {
+		return false;
+	    }
+	}
+
+	if (!cmd.hasOption(SCANSUN_DRAO)) {
+	    if (!ScansunDRAOSolarFlux.withoutDRAOFileHandling()) {
 		return false;
 	    }
 	}

@@ -6,8 +6,6 @@ package pl.imgw.jrat.scansun;
 import static pl.imgw.jrat.tools.out.Logging.WARNING;
 import pl.imgw.jrat.tools.out.LogHandler;
 
-import static pl.imgw.jrat.scansun.ScansunConstants.*;
-
 /**
  * 
  * /Class description/
@@ -89,8 +87,8 @@ public class ScansunParsedParameters {
 	    return false;
 	}
 
-	if (getMeanPowerFactor() < 0 || getMeanPowerFactor() > 0.1) {
-	    LogHandler.getLogs().displayMsg(errorMsg + " (" + MEAN_POWER_WIDTH_FACTOR + getMeanPowerFactor() + ")", WARNING);
+	if (getMeanPowerWidthFactor() < 0 || getMeanPowerWidthFactor() > 1) {
+	    LogHandler.getLogs().displayMsg(errorMsg + " (" + MEAN_POWER_WIDTH_FACTOR + getMeanPowerWidthFactor() + ")", WARNING);
 	    return false;
 	}
 
@@ -125,7 +123,7 @@ public class ScansunParsedParameters {
 	return angleDifference;
     }
 
-    public double getMeanPowerFactor() {
+    public double getMeanPowerWidthFactor() {
 	return meanPowerWidthFactor;
     }
 

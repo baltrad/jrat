@@ -7,8 +7,6 @@ import static pl.imgw.jrat.tools.out.Logging.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
-import java.util.SortedSet;
 
 import org.jgnuplot.Axes;
 import org.jgnuplot.Graph;
@@ -142,7 +140,7 @@ public class ScansunGnuplotScatterplotPrinter extends ScansunGnuplotResultsPrint
 
 	plot.plot();
 
-	// data.delete();
+	data.delete();
 
 	LogHandler.getLogs().displayMsg("New plot generated: scatterplot for " + siteName, NORMAL);
     }

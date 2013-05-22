@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pl.imgw.jrat.scansun.ScansunEvent.PulseDuration;
-import pl.imgw.jrat.scansun.ScansunPowerFitSolver.ScansunPowerFitSolution;
 
 /**
  * 

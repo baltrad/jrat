@@ -212,7 +212,7 @@ public class ScansunGnuplotDetectionHistogramPrinter extends ScansunGnuplotResul
 
 	plot.plot();
 
-	// data.delete();
+	data.delete();
 
 	LogHandler.getLogs().displayMsg("New plot generated: detection histogram for " + siteName, NORMAL);
     }

@@ -4,9 +4,6 @@
 
 package pl.imgw.jrat.scansun;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.math3.linear.*;
 
 /**

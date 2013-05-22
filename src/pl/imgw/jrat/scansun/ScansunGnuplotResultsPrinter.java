@@ -3,8 +3,12 @@
  */
 package pl.imgw.jrat.scansun;
 
+import static pl.imgw.jrat.tools.out.Logging.NORMAL;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -40,8 +44,9 @@ public class ScansunGnuplotResultsPrinter extends ScansunResultsPrinter {
 	    // params).generatePlot();
 	    if (ScansunOptionsHandler.getOptions().getRadarParsedParameters(siteName).areParametersProper()) {
 		new ScansunGnuplotSolarFluxPlotPrinter(siteName, params).generatePlot();
+	    } else {
+		LogHandler.getLogs().displayMsg("SCANSUN: skipping creation of solar flux plot for " + siteName, NORMAL);
 	    }
 	}
     }
-
 }
