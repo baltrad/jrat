@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<scansun>
+<radar name="Brzuchania">
+	<wavelength unit="cm">5.300</wavelength>
+	<beamwidth unit="deg">0.94</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">45.46</antgain>
+	<power unit="kW">236.709747 237.508209</power>
+	<pulselength unit="microsec">0.830 2.020</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">0.23</txloss>
+	<rxloss unit="dB">1.54</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Gdansk">
+	<wavelength unit="cm">5.309</wavelength>
+	<beamwidth unit="deg">0.94</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">44.5</antgain>
+	<power unit="kW">257.693115 256.763885</power>
+	<pulselength unit="microsec">0.824 2.030</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">0.92</txloss>
+	<rxloss unit="dB">2.1</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Legionowo">
+	<wavelength unit="cm">5.291</wavelength>
+	<beamwidth unit="deg">1.00</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">44.5</antgain>
+	<power unit="kW">244.6420 249.8500</power>
+	<pulselength unit="microsec">0.880 2.020</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">0.98</txloss>
+	<rxloss unit="dB">2.05</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Pastewnik">
+	<wavelength unit="cm">5.319</wavelength>
+	<beamwidth unit="deg">0.95</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">45.45</antgain>
+	<power unit="kW">249.3600 255.1300</power>
+	<pulselength unit="microsec">0.490 2.010</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">0.44</txloss>
+	<rxloss unit="dB">2.18</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Poznan">
+	<wavelength unit="cm">5.281</wavelength>
+	<beamwidth unit="deg">1.00</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">45.0</antgain>
+	<power unit="kW">234.0000 260.0000</power>
+	<pulselength unit="microsec">0.800 2.000</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">1.1</txloss>
+	<rxloss unit="dB">1.6</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Ramza">
+	<wavelength unit="cm">5.319</wavelength>
+	<beamwidth unit="deg">0.98</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">45.6</antgain>
+	<power unit="kW">241.5800 245.2700</power>
+	<pulselength unit="microsec">0.490 2.020</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">0.11</txloss>
+	<rxloss unit="dB">1.61</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Rzeszow">
+	<wavelength unit="cm">5.310</wavelength>
+	<beamwidth unit="deg">0.94</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">45.52</antgain>
+	<power unit="kW">256.648987 254.539352</power>
+	<pulselength unit="microsec">0.800 2.000</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">1.1</txloss>
+	<rxloss unit="dB">1.45</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+<radar name="Swidwin">
+	<wavelength unit="cm">5.300</wavelength>
+	<beamwidth unit="deg">1.00</beamwidth>
+	<dielectricfactor unit="dB">0.93</dielectricfactor>
+	<antgain unit="dBi">45.52</antgain>
+	<power unit="kW">232.899353 232.128662</power>
+	<pulselength unit="microsec">0.776 1.920</pulselength>	
+	<radomeloss unit="dB">0.2</radomeloss>
+	<txloss unit="dB">1.21</txloss>
+	<rxloss unit="dB">1.95</rxloss>
+	<bandwidth unit="MHz">1.5 0.6</bandwidth>
+</radar>
+</scansun>
