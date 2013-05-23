@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat.scansun;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -100,7 +102,7 @@ public class ScansunManager {
 
 		    meanPower = calculateMeanSolarPower(powerByBin);
 
-		    int binCount = calculateBinCount(scan, rayNumber, binMin, meanPower, powerByBin);
+		    int binCount = calculateBinCount(params, scan, rayNumber, binMin, meanPower, powerByBin);
 
 		    if (isBinCountAboveThreshold(params, bins, binMin, binCount)) {
 			isSolarRay = true;
@@ -156,6 +158,7 @@ public class ScansunManager {
     private boolean isReflectivityIncreasing(ScanContainer scan, int rayNumber, int binMin) {
 
 	int bins = scan.getNBins();
+
 	/*
 	 * try { String filename = "test.dat"; FileWriter fout = new
 	 * FileWriter(filename);
@@ -239,7 +242,7 @@ public class ScansunManager {
 	return (sum / powerByBin.length);
     }
 
-    private int calculateBinCount(ScanContainer scan, int rayNumber, int binMin, double meanPower, double[] powerByBin) {
+    private int calculateBinCount(ScansunParsedParameters params, ScanContainer scan, int rayNumber, int binMin, double meanPower, double[] powerByBin) {
 
 	int count = 0;
 
@@ -248,7 +251,7 @@ public class ScansunManager {
 	    double dBZ = scan.getArray().getPoint(binNumber, rayNumber);
 
 	    if (dBZ > scan.getOffset()) {
-		if (Math.abs((powerByBin[i] - meanPower) / meanPower) < 1.0) // TODO
+		if (Math.abs((powerByBin[i] - meanPower) / meanPower) < params.getMeanPowerWidthFactor())
 		    count++;
 	    }
 	}
