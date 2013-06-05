@@ -30,8 +30,8 @@ public class PrintingImageTest {
 
     @Test
     public void printImageTest() {
-        File h5 = new File("test-data", "2vol.h5");
-        File rb5 = new File("test-data", "1.vol");
+        File h5 = new File("test-data/pair", "T_PAGZ44_C_SOWR_20111010031022.h5");
+        File rb5 = new File("test-data/pair", "2013051810500000dBZ.vol");
         String[] args = {"format=txt"};
         
         List<File> files = new LinkedList<File>();

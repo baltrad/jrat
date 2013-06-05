@@ -11,6 +11,7 @@ import org.jgnuplot.Plot;
 import org.jgnuplot.Terminal;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 /**
@@ -25,7 +26,7 @@ public class GNUPlotTest {
 
     File f = new File("test-data", "plot.png");
     
-    @Test
+    @Test @Ignore
     public void printSimplePlot() {
         
         Plot.setGnuplotExecutable("gnuplot");

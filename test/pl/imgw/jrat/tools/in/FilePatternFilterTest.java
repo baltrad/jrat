@@ -28,39 +28,39 @@ public class FilePatternFilterTest {
     @Test
     public void getFileListFromRegexPatternTest() {
         
-        pattern = "test-data/*.cmax";
+        pattern = "test-data/pair/*.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
-        assertEquals("number of files filtered is wrong", 3, list.size());
+        assertEquals("number of files filtered is wrong", 9, list.size());
     }
     
     @Test
     public void getFileListFromMultiplyRegexPatternsTest() {
         
-        pattern = "test-data/*.cmax test-data/*.vol";
+        pattern = "test-data/pair/*.h5 test-data/pair/*.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
-        assertEquals("number of files filtered is wrong", 11, list.size());
+        assertEquals("number of files filtered is wrong", 14, list.size());
     }
     
     @Test
     public void getFileListWithDateInTheBegginingOfFileNameTest() {
-        pattern = "test-data/*dBZ.vol";
+        pattern = "test-data/pair/*00dBZ.vol";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
         String dateFromFile = sdf.format(filter.getDate(list.get(0)));
-        String dateGiven = "201110312320";
+        String dateGiven = "201110100300";
         assertTrue("reading date failed", dateFromFile.matches(dateGiven));
         
     }
     
     @Test
     public void getFileListWithDateInTheMiddleOfFileNameTest() {
-        pattern = "test-data/*.h5";
+        pattern = "test-data/pair/T_PAGZ48*";
         filter = new RegexFileFilter();
         list = filter.getFileList(pattern);
         String dateFromFile = sdf.format(filter.getDate(list.get(1)));
-        String dateGiven = "201109111340";
+        String dateGiven = "201110100310";
         assertTrue("reading date failed", dateFromFile.matches(dateGiven));
         
     }

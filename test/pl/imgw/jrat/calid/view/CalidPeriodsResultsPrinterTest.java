@@ -75,6 +75,8 @@ public class CalidPeriodsResultsPrinterTest {
         printer.printResults(files);
         Scanner s = new Scanner(f);
         s.nextLine();
+        s.nextLine();
+        s.nextLine();
         String mean1 = s.nextLine();
         assertEquals("2013-05-11;03:10", mean1.split("\t")[0]);
         assertEquals("0.77", mean1.split("\t")[1]);

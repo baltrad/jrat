@@ -9,6 +9,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import pl.imgw.jrat.calid.view.CalidMeanDifferencePlot;
@@ -35,7 +36,7 @@ public class CalidPlotTest {
     File data10day = new File("test-data/calid/pozleg_f10a10");
     File output = new File("test-data/calid", "plot.png");
     
-    @Test
+    @Test @Ignore
     public void meanDifferencePlotTest() {
         
         CalidMeanDifferencePlot plot = new CalidMeanDifferencePlot(data1day, data5day, data10day);
