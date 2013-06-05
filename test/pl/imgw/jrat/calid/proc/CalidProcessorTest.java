@@ -49,7 +49,7 @@ public class CalidProcessorTest {
                 "2012060317401700dBZ.vol"), new File("test-data/calid",
                 "2012060317402900dBZ.vol"));
         String[] args = ("date=2013-03-18,2013-03-30 Rzeszow,Brzuchania "
-                + "ele=0.5 dis=500 range=200 ref=3.5 freq=10").split(" ");
+                + "ele=0.5 dis=500 range=200 ref=3.0 freq=10").split(" ");
         proc = new CalidProcessor(args);
     }
     
@@ -71,10 +71,10 @@ public class CalidProcessorTest {
     /**
      * Test method for {@link pl.imgw.jrat.calid.proc.CalidProcessor#processFile(java.util.List)}.
      */
-    @Test
+    @Test @Ignore
     public void shouldProcessFile() {
         File results = new File(AplicationConstans.ETC,
-                "calid/RzeszowBrzuchania/500_0.5_3.5_200/20120603.results");
+                "calid/RzeszowBrzuchania/500_0.5_3.0_200/20120603.results");
         results.delete();
         proc.processFile(files);
         assertTrue(results.isFile());
