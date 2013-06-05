@@ -3,15 +3,15 @@
  */
 package pl.imgw.jrat.scansun;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
-
 import java.io.File;
-import java.util.*;
+import java.util.List;
 
-import pl.imgw.jrat.data.containers.*;
+import pl.imgw.jrat.data.PolarData;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.process.FilesProcessor;
-import pl.imgw.jrat.tools.out.*;
+import pl.imgw.util.ConsoleProgressBar;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -22,17 +22,16 @@ import pl.imgw.jrat.tools.out.*;
  * 
  */
 public class ScansunProcessor implements FilesProcessor {
-
+    private static Log log = LogManager.getLogger();
 	private DefaultParser parser;
 	private ScansunParsedParameters params;
 
-	private boolean valid = false;
 
 	public ScansunProcessor(String[] args) {
 		parser = new DefaultParser();
 
 		params = ScansunParsedParameters.getParams();
-		valid = params.initialize(args);
+		params.initialize(args);
 	}
 
 	/*
@@ -43,38 +42,28 @@ public class ScansunProcessor implements FilesProcessor {
 	@Override
 	public void processFile(List<File> files) {
 
-		ConsoleProgressBar.getProgressBar().initialize(20, files.size(),
-				LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
-				"SCANSUN calculations");
+		LogManager.getProgBar().initialize(20, files.size(), "SCANSUN calculations");
 
 		ScansunContainer sc = new ScansunContainer();
 		int fileCount = 0;
 
 		for (File f : files) {
-			LogHandler.getLogs().displayMsg(
+			log.printMsg(
 					"Scanning file (" + (fileCount + 1) + " of " + files.size()
-							+ "): " + f.getName(), NORMAL);
+							+ "): " + f.getName(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
-			parser.initialize(f);
-
-			if (parser.getData() instanceof RainbowDataContainer) {
-				sc = ScansunManager.getScansunManager().calculate(
-						new RainbowVolume(
-								(RainbowDataContainer) parser.getData()),
-						params);
-			} else if (parser.getData() instanceof OdimDataContainer) {
-				sc = ScansunManager.getScansunManager().calculate(
-						new OdimH5Volume(
-								(OdimDataContainer) parser.getData()),
-						params);
-			}
+			parser.parse(f);
+			PolarData vol = parser.getPolarData();
+			
+            sc = ScansunManager.getScansunManager().calculate(vol, params);
 
 			sc.save();
 			sc.resetContainer();
 			fileCount++;
+			LogManager.getProgBar().evaluate();
 		}
 
-		ConsoleProgressBar.getProgressBar().printDoneMsg();
+		LogManager.getProgBar().complete();
 	}
 
 	/*
@@ -88,15 +77,6 @@ public class ScansunProcessor implements FilesProcessor {
 		return "SCANSUN Process";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see pl.imgw.jrat.process.FilesProcessor#isValid()
-	 */
-	@Override
-	public boolean isValid() {
-		// TODO Auto-generated method stub
-		return valid;
-	}
+
 
 }

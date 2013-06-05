@@ -10,15 +10,11 @@ import java.util.Date;
 
 import javax.naming.directory.InvalidAttributesException;
 
-import org.jgnuplot.Axes;
-import org.jgnuplot.Graph;
 import org.jgnuplot.Plot;
-import org.jgnuplot.Style;
-import org.jgnuplot.Terminal;
 
 import pl.imgw.jrat.AplicationConstans;
-import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -33,18 +29,20 @@ import pl.imgw.jrat.tools.out.Logging;
  */
 public abstract class TimeSeriesPlot {
 
+    private static Log log = LogManager.getLogger();
+
     static {
         Plot.setGnuplotExecutable("gnuplot");
         File f = new File(AplicationConstans.TMP);
-        if(!f.exists()) {
+        if (!f.exists()) {
             f.mkdirs();
         }
-        
+
         Plot.setPlotDirectory(AplicationConstans.TMP);
     }
 
     private SimpleDateFormat gnudate = new SimpleDateFormat("yyyy-MM-dd");
-    
+
     protected int ymin;
     protected int ymax;
     protected String output = "newplot";
@@ -54,36 +52,32 @@ public abstract class TimeSeriesPlot {
     protected Plot plot;
 
     public abstract void setPlot() throws InvalidAttributesException;
-    
+
     private String xformat = "%d.%m";
-    
+
     public boolean plot() {
 
         plot = new Plot();
-        
+
         plot.setTitle(title.append("\\n").append(period).toString());
         plot.setYRange(ymin, ymax);
         plot.setXData("time");
         plot.setTimeFormat("%Y-%m-%d");
         plot.setFormatX(xformat);
 
-
         try {
             setPlot();
             plot.plot();
             return true;
         } catch (IOException e) {
-            LogHandler.getLogs().displayMsg(
-                    e.getMessage() + " \nInstall gnuplot first",
-                    Logging.WARNING);
+            log.printMsg(e.getMessage() + " \nInstall gnuplot first",
+                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
         } catch (InterruptedException e) {
-            LogHandler.getLogs()
-                    .displayMsg("gnuplot failed to run: " + e.getMessage(),
-                            Logging.WARNING);
+            log.printMsg("gnuplot failed to run: " + e.getMessage(),
+                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
         } catch (InvalidAttributesException e) {
-            LogHandler.getLogs().displayMsg(
-       "PLOT: Invalid attribute: " + e.getExplanation(),
-                    Logging.WARNING);
+            log.printMsg("PLOT: Invalid attribute: " + e.getExplanation(),
+                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
         }
         return false;
     }
@@ -109,7 +103,7 @@ public abstract class TimeSeriesPlot {
      *            the output to set
      */
     public void setOutput(File output) {
-        if(output != null)
+        if (output != null)
             this.output = output.getAbsolutePath();
     }
 
@@ -120,13 +114,13 @@ public abstract class TimeSeriesPlot {
     public void setTitle(String title) {
         this.title.append(title);
     }
-    
+
     public void setTimePeriod(Date from, Date to) {
         period.append("From ").append(gnudate.format(from)).append(" to ")
                 .append(gnudate.format(to));
         if (to.getTime() - from.getTime() > 10368000000l)
             xformat = "%b";
-        
+
     }
 
 }

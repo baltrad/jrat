@@ -32,8 +32,8 @@ public class CommandLineArgsParser {
 	public final static String CALID_LIST = "calid-list";
 	public final static String CALID_HELP = "calid-help";
 	public final static String CALID_OPT = "calid-opt";
-	public final static String CALID_RESULT_DETAIL = "calid-detail";
-	public final static String CALID_RESULT_GNUPLOT = "calid-gnuplot";
+//	public final static String CALID_RESULT_DETAIL = "calid-detail";
+	public final static String CALID_PLOT = "calid-plot";
 
 	// public final static String D = "d";
 	// public final static String DEBUG = "debug";
@@ -122,10 +122,12 @@ public class CommandLineArgsParser {
 
 	private final static String CALID_RESULT_DESCR = "handle CALID results\n<arg>";
 	private final static String CALID_LIST_DESCR = "print list of available CALID results\n<arg>";
-	private static final String CALID_RESULT_DETAIL_DESCR = "CALID detailed result, "
+//	private static final String CALID_RESULT_DETAIL_DESCR = "CALID detailed result, "
+//			+ "for more help use --calid-help option";
+	
+	private static final String CALID_PLOT_DESCR = "CALID plot result, "
 			+ "for more help use --calid-help option";
-	private static final String CALID_RESULT_GNUPLOT_DESCR = "CALID gnuplot result, "
-			+ "for more help use --calid-help option";
+	
 	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter\n<arg> XML file path";
 
 	private final static String SCANSUN_DESCR = "find solar rays in radar obseravtions\n"
@@ -192,13 +194,13 @@ public class CommandLineArgsParser {
 
 		options.addOption(null, CALID_HELP, false, CALID_HELP_DESCR);
 
-		calidResults = OptionBuilder.withDescription(CALID_RESULT_DETAIL_DESCR)
-				.hasArgs().withLongOpt(CALID_RESULT_DETAIL).create();
-		options.addOption(calidResults);
+//		calidResults = OptionBuilder.withDescription(CALID_RESULT_DETAIL_DESCR)
+//				.hasArgs().withLongOpt(CALID_RESULT_DETAIL).create();
+//		options.addOption(calidResults);
 
 		calidResults = OptionBuilder
-				.withDescription(CALID_RESULT_GNUPLOT_DESCR).hasArgs()
-				.withLongOpt(CALID_RESULT_GNUPLOT).create();
+				.withDescription(CALID_PLOT_DESCR).hasArgs()
+				.withLongOpt(CALID_PLOT).create();
 		options.addOption(calidResults);
 
 		Option calidOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()

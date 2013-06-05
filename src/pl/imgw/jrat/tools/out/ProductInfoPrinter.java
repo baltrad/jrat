@@ -19,7 +19,7 @@ import pl.imgw.jrat.data.parsers.ParserManager;
  */
 public class ProductInfoPrinter {
 
-    public static void print(List<File> files) {
+    public static void print(List<File> files, boolean extended) {
         ParserManager parser = new ParserManager();
         parser.setParser(GlobalParser.getInstance().getParser());
         
@@ -32,7 +32,7 @@ public class ProductInfoPrinter {
             
             System.out.println("\nInformation about file: " + f.getName());
             
-            if (LogHandler.getLogs().getVerbose() > Logging.PROGRESS_BAR_ONLY)
+            if (extended)
                 parser.getProduct().printAllAttributes();
             else
                 parser.getProduct().printGeneralIfnormation();
@@ -42,7 +42,7 @@ public class ProductInfoPrinter {
         }
         
         if(printed) {
-            if (LogHandler.getLogs().getVerbose() == Logging.PROGRESS_BAR_ONLY)
+            if (extended)
                 System.out.println("\nTo print detailed information use -v parameter");
         }
         

@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat.output;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,8 +12,8 @@ import java.util.List;
 import org.junit.Test;
 
 import pl.imgw.jrat.process.PrintingImageProcessController;
-import pl.imgw.jrat.tools.out.LogHandler;
-import static org.junit.Assert.*;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -23,7 +25,7 @@ import static org.junit.Assert.*;
  */
 public class PrintingImageTest {
     {
-        LogHandler.getLogs().setLoggingVerbose(LogHandler.ALL_MSG);
+        LogManager.getInstance().setLogMode(Log.MODE_VERBOSE);
     }
 
     @Test

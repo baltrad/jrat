@@ -3,11 +3,13 @@
  */
 package pl.imgw.jrat.scansun;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 import pl.imgw.jrat.scansun.ScansunConstants.PulseDuration;
-import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -17,6 +19,8 @@ import pl.imgw.jrat.tools.out.Logging;
  * 
  */
 public class ScansunContainer {
+    
+    private static Log log = LogManager.getLogger();
 
 	private ArrayList<ScansunEvent> list;
 	private Integer listSize;
@@ -48,21 +52,21 @@ public class ScansunContainer {
 	public void save() {
 
 		if (!this.hasResults) {
-			LogHandler.getLogs().displayMsg("SCANSUN: no results found",
-					Logging.WARNING);
+			log.printMsg("SCANSUN: no results found",
+					Log.TYPE_WARNING, Log.MODE_VERBOSE);
 			return;
 		}
 
 		Iterator<ScansunEvent> itr = list.iterator();
 		while (itr.hasNext()) {
 			if (!ScansunFileHandler.saveResult(itr.next())) {
-				LogHandler.getLogs().displayMsg("SCANSUN: Cannot save result",
-						LogHandler.ERROR);
+				log.printMsg("SCANSUN: Cannot save result",
+						Log.TYPE_ERROR, Log.MODE_VERBOSE);
 			}
 		}
 
-		LogHandler.getLogs().displayMsg("SCANSUN: Saving results completed",
-				LogHandler.NORMAL);
+		log.printMsg("SCANSUN: Saving results completed",
+				Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 	}
 
 	public void resetContainer() {

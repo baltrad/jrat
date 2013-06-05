@@ -30,21 +30,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import pl.imgw.jrat.data.arrays.ArrayData;
-import pl.imgw.jrat.data.arrays.RawByteDataArray;
-import pl.imgw.jrat.data.containers.DataContainer;
-import pl.imgw.jrat.data.containers.RainbowDataContainer;
-import pl.imgw.jrat.data.containers.WZDataContainer;
+import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.UnsignedByteArray;
+import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.data.parsers.DefaultParser;
 import pl.imgw.jrat.data.parsers.IntArrayParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
+import pl.imgw.jrat.data.rainbow.XMLDataContainer;
 import pl.imgw.jrat.tools.out.ClipboardHandler;
 import pl.imgw.jrat.tools.out.ColorScales;
 import pl.imgw.jrat.tools.out.ImageBuilder;
-import pl.imgw.jrat.tools.out.LogHandler;
-import static pl.imgw.jrat.tools.out.Logging.*;
-import pl.imgw.jrat.tools.out.LogsType;
 import pl.imgw.jrat.tools.out.MapColor;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -222,21 +221,21 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         Set<MapColor> scale = ColorScales.getRedScale(1, 3);
         if (data instanceof WZDataContainer) {
             nodata = ((WZDataContainer) data).getNodata()
-                    * ((RawByteDataArray) loadedArray).getGain()
-                    + ((RawByteDataArray) loadedArray).getOffset();
+                    * ((UnsignedByteArray) loadedArray).getGain()
+                    + ((UnsignedByteArray) loadedArray).getOffset();
             undetected = ((WZDataContainer) data).getBelowth()
-                    * ((RawByteDataArray) loadedArray).getGain()
-                    + ((RawByteDataArray) loadedArray).getOffset();
+                    * ((UnsignedByteArray) loadedArray).getGain()
+                    + ((UnsignedByteArray) loadedArray).getOffset();
 
-            double min = ((RawByteDataArray) loadedArray).getOffset() + 2
-                    * ((RawByteDataArray) loadedArray).getGain();
-            double step = 5 * ((RawByteDataArray) loadedArray).getGain();
+            double min = ((UnsignedByteArray) loadedArray).getOffset() + 2
+                    * ((UnsignedByteArray) loadedArray).getGain();
+            double step = 5 * ((UnsignedByteArray) loadedArray).getGain();
             scale = ColorScales.getRedScale(min, step);
             fg = new File("overlay", "wz_fg.png");
-        } else if (data instanceof RainbowDataContainer) {
+        } else if (data instanceof XMLDataContainer) {
             scale = ColorScales.getRBScale();
             if(par.contains("flag")) {
-                ((RawByteDataArray) loadedArray).setGain(0);
+                ((UnsignedByteArray) loadedArray).setGain(0);
                 scale = ColorScales.getGrayScale(0, 1);
             }
             fg = null;
@@ -275,26 +274,6 @@ public class DisplayPanel extends Container implements ActionListener, MouseList
         .setScale(scale)
         .hasCaption(true)
         .create();
-    }
-
-    public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(WARNING);
-        JFrame frame = new JFrame("Radar data viewer - beta version");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DisplayPanel displayPane = new DisplayPanel();
-        displayPane.setFrame(frame);
-        
-        File f = new File("/home/lwojtas/Desktop/tvp", "data45alt.txt");
-        ParserManager pm = new ParserManager();
-        pm.setParser(new IntArrayParser());
-        pm.initialize(f);
-
-        displayPane.setData(pm.getProduct(), "deta");
-        frame.setContentPane(displayPane);
-//        frame.setResizable(false);
-      
-        frame.pack();
-        frame.setVisible(true);
     }
 
     /**

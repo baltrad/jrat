@@ -6,21 +6,13 @@ package pl.imgw.jrat.tools.in;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pl.imgw.jrat.data.containers.DataContainer;
-import pl.imgw.jrat.data.containers.OdimDataContainer;
-import pl.imgw.jrat.data.containers.OdimH5Volume;
-import pl.imgw.jrat.data.containers.RainbowDataContainer;
-import pl.imgw.jrat.data.containers.RainbowVolume;
-import pl.imgw.jrat.data.containers.VolumeContainer;
-import pl.imgw.jrat.data.parsers.DefaultParser;
-import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.process.MainProcessController;
-import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.jrat.data.DataContainer;
+import pl.imgw.jrat.data.PolarData;
+import pl.imgw.jrat.data.parsers.GlobalParser;
+import pl.imgw.jrat.data.parsers.VolumeParser;
 
 /**
  * 
@@ -36,33 +28,26 @@ public class FileSegregatorByDateAndSource {
 
     public void setInputFiles(List<File> files) {
 
-        ParserManager manager = new ParserManager();
-        manager.setParser(new DefaultParser());
+        VolumeParser parser = GlobalParser.getInstance().getVolumeParser();
 
         for (File f : files) {
-//            System.out.println(f);
-            if (manager.initialize(f)) {
-                DataContainer data = manager.getProduct();
+            // System.out.println(f);
+            if (parser.parse(f)) {
                 Date date = RegexFileFilter.getDate(f);
                 // System.out.println("1 " + date);
                 String source = "";
 
-                VolumeContainer vol = null;
-                if (data instanceof OdimDataContainer) {
-                    vol = new OdimH5Volume((OdimDataContainer) data);
-                } else if (data instanceof RainbowDataContainer) {
-                    vol = new RainbowVolume((RainbowDataContainer) data);
-                }
-                if (vol != null && vol.isValid()) {
+                PolarData vol = parser.getPolarData();
+                if (vol != null) {
                     source = vol.getSiteName();
-                    if (!source.isEmpty() && data != null) {
+                    if (!source.isEmpty()) {
                         HashMap<String, DataContainer> map = seg.get(date);
                         if (map == null) {
                             map = new HashMap<String, DataContainer>();
                         }
-//                        System.out.println("1 " + source);
-//                        System.out.println("2 " + date);
-                        map.put(source, data);
+                        // System.out.println("1 " + source);
+                        // System.out.println("2 " + date);
+                        map.put(source, parser.getData());
                         seg.put(date, map);
                     }
                 }
@@ -70,32 +55,17 @@ public class FileSegregatorByDateAndSource {
             }
         }
         /*
-        Iterator<Date> i = seg.keySet().iterator();
-        while (i.hasNext()) {
-            Date d = i.next();
-//            System.out.println(d);
-            Iterator<String> it = seg.get(d).keySet().iterator();
-            System.out.println("time=" + d);
-            while (it.hasNext()) {
-                String s = it.next();
-                System.out.println("source=" + s);
-            }
-        }
-        */
+         * Iterator<Date> i = seg.keySet().iterator(); while (i.hasNext()) {
+         * Date d = i.next(); // System.out.println(d); Iterator<String> it =
+         * seg.get(d).keySet().iterator(); System.out.println("time=" + d);
+         * while (it.hasNext()) { String s = it.next();
+         * System.out.println("source=" + s); } }
+         */
 
     }
 
-    public Map<Date, HashMap<String, DataContainer>> getList(){
+    public Map<Date, HashMap<String, DataContainer>> getList() {
         return seg;
-    }
-    
-    public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(Logging.SILENT);
-        args = new String[] { "-i", "test-data/comp/*", "test-data/*.vol", "-v" };
-        MainProcessController proc = new MainProcessController(args);
-        proc.start();
-        FileSegregatorByDateAndSource seg = new FileSegregatorByDateAndSource();
-        seg.setInputFiles(proc.getFiles());
     }
 
 }

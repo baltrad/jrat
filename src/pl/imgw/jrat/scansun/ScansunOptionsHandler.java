@@ -3,20 +3,18 @@
  */
 package pl.imgw.jrat.scansun;
 
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
-
 import java.io.File;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import pl.imgw.jrat.scansun.ScansunConstants.PulseDuration;
-import pl.imgw.jrat.scansun.ScansunConstants.PulsePolarization;
 import pl.imgw.jrat.tools.in.Options;
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -28,172 +26,174 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class ScansunOptionsHandler extends Options {
 
-	private static final String SCANSUN = "scansun";
-	private static final String RADAR = "radar";
-	private static final String NAME = "name";
+    private static Log log = LogManager.getLogger();
 
-	private static final String UNIT = "unit";
-	private static final String WAVELENGTH = "wavelength";
-	private static final String BEAMWIDTH = "beamwidth";
-	private static final String DIELECTRICFACTOR = "dielectricfactor";
-	private static final String ANTGAIN = "antgain";
-	private static final String POWER = "power";
-	private static final String PULSELENGTH = "pulselength";
-	private static final String RADOMELOSS = "radomeloss";
-	private static final String TXLOSS = "txloss";
-	private static final String RXLOSS = "rxloss";
-	private static final String BANDWIDTH = "bandwidth";
+    private static final String SCANSUN = "scansun";
+    private static final String RADAR = "radar";
+    private static final String NAME = "name";
 
-	/* private constructor */
-	private ScansunOptionsHandler() {
-	}
+    private static final String UNIT = "unit";
+    private static final String WAVELENGTH = "wavelength";
+    private static final String BEAMWIDTH = "beamwidth";
+    private static final String DIELECTRICFACTOR = "dielectricfactor";
+    private static final String ANTGAIN = "antgain";
+    private static final String POWER = "power";
+    private static final String PULSELENGTH = "pulselength";
+    private static final String RADOMELOSS = "radomeloss";
+    private static final String TXLOSS = "txloss";
+    private static final String RXLOSS = "rxloss";
+    private static final String BANDWIDTH = "bandwidth";
 
-	private File optionFile = null;
-	private Document doc;
-	private Map<String, RadarParsedParameters> radarParams = new HashMap<String, RadarParsedParameters>();
+    /* private constructor */
+    private ScansunOptionsHandler() {
+    }
 
-	private static ScansunOptionsHandler options = new ScansunOptionsHandler();
+    private File optionFile = null;
+    private Document doc;
+    private Map<String, RadarParsedParameters> radarParams = new HashMap<String, RadarParsedParameters>();
 
-	@Override
-	protected File getOptionFile() {
-		return optionFile;
-	}
+    private static ScansunOptionsHandler options = new ScansunOptionsHandler();
 
-	public static ScansunOptionsHandler getOptions() {
-		return options;
-	}
+    @Override
+    protected File getOptionFile() {
+        return optionFile;
+    }
 
-	class RadarParsedParameters {
-		private double wavelength;
-		private double dielectricFactor;
-		private double antennaGain;
-		private double radomeloss;
-		private double beamwidth;
-		private Map<PulseDuration, Double> power;
-		private Map<PulseDuration, Double> pulselength;
-		private double txloss;
-		private double rxloss;
-		private Map<PulseDuration, Double> bandwidth;
+    public static ScansunOptionsHandler getOptions() {
+        return options;
+    }
 
-		public double getWavelength() {
-			return wavelength;
-		}
+    class RadarParsedParameters {
+        private double wavelength;
+        private double dielectricFactor;
+        private double antennaGain;
+        private double radomeloss;
+        private double beamwidth;
+        private Map<PulseDuration, Double> power;
+        private Map<PulseDuration, Double> pulselength;
+        private double txloss;
+        private double rxloss;
+        private Map<PulseDuration, Double> bandwidth;
 
-		public double getDielectricFactor() {
-			return dielectricFactor;
-		}
+        public double getWavelength() {
+            return wavelength;
+        }
 
-		public double getAntennaGain() {
-			return antennaGain;
-		}
+        public double getDielectricFactor() {
+            return dielectricFactor;
+        }
 
-		public double getRadomeLoss() {
-			return radomeloss;
-		}
+        public double getAntennaGain() {
+            return antennaGain;
+        }
 
-		public double getBeamwidth() {
-			return beamwidth;
-		}
+        public double getRadomeLoss() {
+            return radomeloss;
+        }
 
-		public double getPower(PulseDuration pd) {
-			return power.get(pd);
-		}
+        public double getBeamwidth() {
+            return beamwidth;
+        }
 
-		public double getPulseLength(PulseDuration pd) {
-			return pulselength.get(pd);
-		}
+        public double getPower(PulseDuration pd) {
+            return power.get(pd);
+        }
 
-		public double getTxloss() {
-			return txloss;
-		}
+        public double getPulseLength(PulseDuration pd) {
+            return pulselength.get(pd);
+        }
 
-		public double getRxloss() {
-			return rxloss;
-		}
+        public double getTxloss() {
+            return txloss;
+        }
 
-		public double getBandwidth(PulseDuration pd) {
-			return bandwidth.get(pd);
-		}
-	}
+        public double getRxloss() {
+            return rxloss;
+        }
 
-	public RadarParsedParameters getRadarParsedParameters(String siteName) {
-		return options.radarParams.get(siteName);
-	}
+        public double getBandwidth(PulseDuration pd) {
+            return bandwidth.get(pd);
+        }
+    }
 
-	private static HashMap<PulseDuration, Double> parseMap(Node node,
-			String nodeName) {
-		HashMap<PulseDuration, Double> map = new HashMap<PulseDuration, Double>();
-		map.put(PulseDuration.SHORT, Double.parseDouble(options.getValueByName(
-				node, nodeName, null).split(" ")[0]));
-		map.put(PulseDuration.LONG, Double.parseDouble(options.getValueByName(
-				node, nodeName, null).split(" ")[1]));
+    public RadarParsedParameters getRadarParsedParameters(String siteName) {
+        return options.radarParams.get(siteName);
+    }
 
-		return map;
-	}
+    private static HashMap<PulseDuration, Double> parseMap(Node node,
+            String nodeName) {
+        HashMap<PulseDuration, Double> map = new HashMap<PulseDuration, Double>();
+        map.put(PulseDuration.SHORT, Double.parseDouble(options.getValueByName(
+                node, nodeName, null).split(" ")[0]));
+        map.put(PulseDuration.LONG, Double.parseDouble(options.getValueByName(
+                node, nodeName, null).split(" ")[1]));
 
-	public boolean loadRadarParameters() {
-		if (doc == null)
-			return false;
+        return map;
+    }
 
-		if (!doc.getDocumentElement().getNodeName().equals(SCANSUN)) {
-			LogHandler.getLogs().displayMsg(
-					"SCANSUN: loading radar parameters error", ERROR);
-		}
+    public boolean loadRadarParameters() {
+        if (doc == null)
+            return false;
 
-		NodeList radarNodeList = doc.getElementsByTagName(RADAR);
-		for (int i = 0; i < radarNodeList.getLength(); i++) {
-			RadarParsedParameters p = new RadarParsedParameters();
-			p.wavelength = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), WAVELENGTH, null));
+        if (!doc.getDocumentElement().getNodeName().equals(SCANSUN)) {
+            log.printMsg("SCANSUN: loading radar parameters error",
+                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
+        }
 
-			p.beamwidth = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), BEAMWIDTH, null));
+        NodeList radarNodeList = doc.getElementsByTagName(RADAR);
+        for (int i = 0; i < radarNodeList.getLength(); i++) {
+            RadarParsedParameters p = new RadarParsedParameters();
+            p.wavelength = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), WAVELENGTH, null));
 
-			p.dielectricFactor = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), DIELECTRICFACTOR, null));
-			p.antennaGain = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), ANTGAIN, null));
+            p.beamwidth = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), BEAMWIDTH, null));
 
-			p.power = parseMap(radarNodeList.item(i), POWER);
-			p.pulselength = parseMap(radarNodeList.item(i), PULSELENGTH);
-			p.radomeloss = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), RADOMELOSS, null));
+            p.dielectricFactor = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), DIELECTRICFACTOR, null));
+            p.antennaGain = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), ANTGAIN, null));
 
-			p.txloss = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), TXLOSS, null));
-			p.rxloss = Double.parseDouble(options.getValueByName(
-					radarNodeList.item(i), RXLOSS, null));
-			p.bandwidth = parseMap(radarNodeList.item(i), BANDWIDTH);
+            p.power = parseMap(radarNodeList.item(i), POWER);
+            p.pulselength = parseMap(radarNodeList.item(i), PULSELENGTH);
+            p.radomeloss = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), RADOMELOSS, null));
 
-			radarParams.put(
-					options.getValueByName(radarNodeList.item(i), RADAR, NAME),
-					p);
-		}
+            p.txloss = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), TXLOSS, null));
+            p.rxloss = Double.parseDouble(options.getValueByName(
+                    radarNodeList.item(i), RXLOSS, null));
+            p.bandwidth = parseMap(radarNodeList.item(i), BANDWIDTH);
 
-		return true;
-	}
+            radarParams.put(
+                    options.getValueByName(radarNodeList.item(i), RADAR, NAME),
+                    p);
+        }
 
-	/**
-	 * 
-	 * @param filename
-	 */
-	public void setOptionFile(String filename) {
-		File file = new File(filename);
-		if (file.isFile()) {
-			optionFile = file;
-			doc = options.loadOptions();
-		}
-	}
+        return true;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see pl.imgw.jrat.tools.in.Options#printHelp()
-	 */
-	@Override
-	public void printHelp() {
-		// TODO Auto-generated method stub
+    /**
+     * 
+     * @param filename
+     */
+    public void setOptionFile(String filename) {
+        File file = new File(filename);
+        if (file.isFile()) {
+            optionFile = file;
+            doc = options.loadOptions();
+        }
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see pl.imgw.jrat.tools.in.Options#printHelp()
+     */
+    @Override
+    public void printHelp() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

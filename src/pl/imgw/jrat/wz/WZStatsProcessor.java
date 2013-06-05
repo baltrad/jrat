@@ -3,8 +3,6 @@
  */
 package pl.imgw.jrat.wz;
 
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,13 +18,11 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import pl.imgw.jrat.data.arrays.RawByteDataArray;
-import pl.imgw.jrat.data.containers.WZDataContainer;
+import pl.imgw.jrat.data.UnsignedByteArray;
+import pl.imgw.jrat.data.WZDataContainer;
 import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.WZFileParser;
 import pl.imgw.jrat.process.FileWatchingProcess;
 import pl.imgw.jrat.process.FilesProcessor;
-import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  *
@@ -45,7 +41,7 @@ public class WZStatsProcessor implements FilesProcessor {
     private ParserManager pm = new ParserManager();
     
     public WZStatsProcessor() {
-        pm.setParser(new WZFileParser());
+        pm.setParser(null);
     }
     
     /* (non-Javadoc)
@@ -88,7 +84,7 @@ public class WZStatsProcessor implements FilesProcessor {
         while (i.hasNext()) {
             newArray = null;
             String name = i.next();
-            RawByteDataArray array = (RawByteDataArray) data.getArray(name);
+            UnsignedByteArray array = (UnsignedByteArray) data.getArray(name);
             int xmax = array.getSizeX();
             int ymax = array.getSizeY();
             for (int x = 0; x < xmax; x++) {
@@ -162,42 +158,6 @@ public class WZStatsProcessor implements FilesProcessor {
         }
     }
     
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(ERROR);
-        WZStatsProcessor proc = new WZStatsProcessor();
-        proc.setDest(new File("/home/lwojtas/Desktop"));
-        List<File> files = new LinkedList<File>();
-        files.add(new File("test-data/watched"));
-        FileWatchingProcess fw = new FileWatchingProcess(proc, files);
-        
-//        SequentialProcess sp = new SequentialProcess(proc, new File("test-data/watched"), 1);
-        Thread t = new Thread(fw);
-        t.start();
-        
-        /*
-        int[][] a = loadArray(new File("/home/lwojtas/workspace/jrat",
-                "FL0-FL100_WZ"));
-        RawByteDataContainer data = new RawByteDataContainer();
-        data.setIntData(a);
-        BufferedImage img = new ImageBuilder()
-                .setData(data)
-                .setNoDataValue(-1)
-                .setNoDetectedValue(-1)
-                .setScale(ColorScales.getGrayScale(10))
-                .create();
-        try {
-            ImageIO.write(img, "gif", new File("/home/lwojtas/workspace/jrat",
-                    "FL0-FL100_WZ.gif"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-         */
-
-    }
 
     /* (non-Javadoc)
      * @see pl.imgw.jrat.process.FilesProcessor#getProcessName()
@@ -206,15 +166,6 @@ public class WZStatsProcessor implements FilesProcessor {
     public String getProcessName() {
         // TODO Auto-generated method stub
         return "WZ Statistics";
-    }
-
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.process.FilesProcessor#isValid()
-     */
-    @Override
-    public boolean isValid() {
-        // TODO Auto-generated method stub
-        return false;
     }
 
 }

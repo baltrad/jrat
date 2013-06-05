@@ -5,8 +5,8 @@ package pl.imgw.jrat.wz;
 
 import javax.swing.JFrame;
 
-import pl.imgw.jrat.tools.out.LogHandler;
-import static pl.imgw.jrat.tools.out.Logging.*;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -22,7 +22,7 @@ public class WZViewer {
      * @param args
      */
     public static void main(String[] args) {
-        LogHandler.getLogs().setLoggingVerbose(SILENT);
+        LogManager.getInstance().setLogMode(Log.MODE_SILENT);
         JFrame frame = new JFrame("Radar data viewer - beta version");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DisplayPanel displayPane = new DisplayPanel();

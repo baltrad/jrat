@@ -3,8 +3,29 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.*;
-import static pl.imgw.jrat.tools.out.Logging.*;
+import static pl.imgw.jrat.AplicationConstans.APS_DESC;
+import static pl.imgw.jrat.AplicationConstans.DATE;
+import static pl.imgw.jrat.AplicationConstans.REL_DATE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_HELP;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_LIST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_OPT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_PLOT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.F;
+import static pl.imgw.jrat.process.CommandLineArgsParser.FORMAT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.H;
+import static pl.imgw.jrat.process.CommandLineArgsParser.I;
+import static pl.imgw.jrat.process.CommandLineArgsParser.O;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
+import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
+import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -12,12 +33,15 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-import pl.imgw.jrat.calid.CalidOptionsHandler;
-import pl.imgw.jrat.calid.CalidParsedParameters;
+import pl.imgw.jrat.AplicationConstans;
+import pl.imgw.jrat.calid.data.CalidParametersFileHandler;
+import pl.imgw.jrat.calid.data.CalidParametersParser;
+import pl.imgw.jrat.calid.proc.CalidController;
 import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.scansun.ScansunProcessor;
-import pl.imgw.jrat.tools.out.LogHandler;
 import pl.imgw.jrat.tools.out.ProductInfoPrinter;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -29,6 +53,7 @@ import pl.imgw.jrat.tools.out.ProductInfoPrinter;
  */
 public class MainProcessController {
 
+    private static Log log = LogManager.getLogger();
     private CommandLine cmd;
     private List<File> files = new LinkedList<File>();
     private List<File> folders = new LinkedList<File>();
@@ -50,12 +75,12 @@ public class MainProcessController {
         
         if (cmd.hasOption(QUIET)) {
 //            System.out.println("ustawia quiet");
-            LogHandler.getLogs().setLoggingVerbose(SILENT);
+            LogManager.getInstance().setLogMode(Log.MODE_SILENT);
         } else if (cmd.hasOption(VERBOSE)) {
 //            System.out.println("ustawia verbose");
-            LogHandler.getLogs().setLoggingVerbose(ALL_MSG);
+            LogManager.getInstance().setLogMode(Log.MODE_VERBOSE);
         } else
-            LogHandler.getLogs().setLoggingVerbose(PROGRESS_BAR_ONLY);
+            LogManager.getInstance().setLogMode(Log.MODE_NORMAL);
 
     }
 
@@ -71,6 +96,12 @@ public class MainProcessController {
             return false;
         }
         
+        /* Setting output path */
+        File output = root;
+        if (cmd.hasOption(O)) {
+            FileProcessController.setOutputFile(cmd.getOptionValue(O), output);
+        }
+        
         /* display help message */
         if(cmd.getOptions().length == 0 || cmd.hasOption(H)) {
             printHelp();
@@ -78,14 +109,14 @@ public class MainProcessController {
         }
 
         /* display version message */
-        if (cmd.hasOption(VERSION)) {
-            LogHandler.getLogs().printVersion();
+        if (cmd.hasOption(AplicationConstans.VERSION)) {
+            printVersion();
             return true;
         }
         
         /* display CALID help message */
         if(cmd.hasOption(CALID_HELP)) {
-            CalidParsedParameters.printHelp();
+            CalidParametersParser.printHelp();
             return true;
         }
         
@@ -96,17 +127,27 @@ public class MainProcessController {
         
         /* print CALID results */
         if (cmd.hasOption(CALID_RESULT)) {
-            return CalidProcessController.processCalidResult(cmd);
+            CalidController.processResult(cmd);
+            return true;
+        }
+
+        /* print list of available results of CALID */
+        if (cmd.hasOption(CALID_LIST)) {
+            CalidController.processList(cmd);
+            return true;
         }
         
         /* print list of available results of CALID */
-        if (cmd.hasOption(CALID_LIST)) {
-            return CalidProcessController.processCalidList(cmd);
+        if (cmd.hasOption(CALID_PLOT)) {
+            
+            CalidController.processPlot(cmd, output);
+            return true;
         }
-        
+
         /* set CALID option file */
         if (cmd.hasOption(CALID_OPT)) {
-            CalidOptionsHandler.getOptions().setOptionFile(cmd.getOptionValue(CALID_OPT));
+            CalidParametersFileHandler.getOptions().setOptionFile(
+                    cmd.getOptionValue(CALID_OPT));
         }
         
         
@@ -115,15 +156,9 @@ public class MainProcessController {
                     cmd.getOptionValues(I));
         
         
-        /* Setting output path */
-        File output = root;
-        if (cmd.hasOption(O)) {
-            FileProcessController.setOutputFile(cmd.getOptionValue(O), output);
-        }
-        
         /* Print information about all input files */
         if (cmd.hasOption(PRINT)) {
-            ProductInfoPrinter.print(files);
+            ProductInfoPrinter.print(files, cmd.hasOption(VERBOSE));
             return true;
         }
         
@@ -139,13 +174,13 @@ public class MainProcessController {
         
         /* CALID */
         if (cmd.hasOption(CALID)) {
-            proc = CalidProcessController.setCalidProcessor(cmd);
+            proc = CalidController.setCalidProcessor(cmd);
         }
 
         /* SCANSUN */
         if (cmd.hasOption(SCANSUN)) {
             proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
-            if (proc.isValid()) {
+            
                 String par = "";
                 if (cmd.getOptionValue(SCANSUN) == null) {
                     par = "no parameters";
@@ -153,9 +188,9 @@ public class MainProcessController {
                     for (String s : cmd.getOptionValues(SCANSUN)) {
                         par += s + " ";
                     }
-                LogHandler.getLogs().displayMsg("Starting SCANSUN with: " + par,
-                        NORMAL);
-            }
+                log.printMsg("Starting SCANSUN with: " + par,
+                        Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+            
         }
         
         // test process, prints files name
@@ -164,9 +199,9 @@ public class MainProcessController {
                 @Override
                 public void processFile(List<File> files) {
                     for (File file : files)
-                        LogHandler.getLogs().displayMsg("" + file, SILENT);
-                    if(files.isEmpty())
-                        LogHandler.getLogs().displayMsg("No files to process", SILENT);
+                        log.printMsg("" + file, Log.MODE_SILENT);
+                    if (files.isEmpty())
+                        log.printMsg("No files to process", Log.MODE_SILENT);
                 }
 
                 @Override
@@ -175,18 +210,14 @@ public class MainProcessController {
                     return "TEST process";
                 }
 
-                @Override
-                public boolean isValid() {
-                    // TODO Auto-generated method stub
-                    return true;
-                }
+                
             };
         }
 
         
-        if (proc == null || !proc.isValid()) {
-            LogHandler.getLogs().displayMsg("No valid process has been set",
-                    WARNING);
+        if (proc == null) {
+            log.printMsg("No valid process has been set",
+                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
             return false;
         }
         
@@ -199,16 +230,17 @@ public class MainProcessController {
             if (!watcher.isValid())
                 return false;
             
-            if(!FolderManager.continueWithDeletingFiles(folders)){
-                // decline to delete files, exiting
-                return true;
-            }
+            if (!cmd.hasOption(QUIET))
+                if (!FolderManager.continueWithDeletingFiles(folders)) {
+                    // decline to delete files, exiting
+                    return true;
+                }
 
             Thread t = new Thread(watcher);
             t.start();
             if (t.isAlive()) {
-                LogHandler.getLogs().displayMsg("Watching process started",
-                        NORMAL);
+                log.printMsg("Watching process started",
+                        Log.TYPE_NORMAL, Log.MODE_VERBOSE);
                 return true;
             }
         } else if (cmd.hasOption(SEQ)) {
@@ -219,11 +251,11 @@ public class MainProcessController {
 
             if (!seq.isValid())
                 return false;
-
-            if(!FolderManager.continueWithDeletingFiles(folders)) {
-                // decline to delete files, exiting
-                return true;
-            }
+            if (!cmd.hasOption(QUIET))
+                if (!FolderManager.continueWithDeletingFiles(folders)) {
+                    // decline to delete files, exiting
+                    return true;
+                }
             
             Thread t = new Thread(seq);
             t.start();
@@ -244,4 +276,10 @@ public class MainProcessController {
         return false;
     }
 
+    public void printVersion() {
+        log.printMsg(APS_DESC + "\nversion:\t" + AplicationConstans.VERSION
+                + "\nreleased date:\t" + REL_DATE + "\ncompiled on:\t" + DATE,
+                Log.MODE_SILENT);
+    }
+    
 }

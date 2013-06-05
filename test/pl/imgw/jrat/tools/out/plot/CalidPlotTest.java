@@ -8,13 +8,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.junit.Test;
 
-import pl.imgw.jrat.calid.CalidMeanDifferencePlot;
-import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.jrat.calid.view.CalidMeanDifferencePlot;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -29,7 +28,7 @@ public class CalidPlotTest {
     private SimpleDateFormat gnudate = new SimpleDateFormat("yyyy-MM-dd");
     
     static {
-        LogHandler.getLogs().setLoggingVerbose(Logging.ALL_MSG);
+        LogManager.getInstance().setLogMode(Log.MODE_VERBOSE);
     }
     File data1day = new File("test-data/calid/pozleg_f10a1");
     File data5day = new File("test-data/calid/pozleg_f10a5");

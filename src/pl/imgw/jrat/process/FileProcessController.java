@@ -3,34 +3,30 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.process.CommandLineArgsParser.O;
-import static pl.imgw.jrat.tools.out.Logging.NORMAL;
-import static pl.imgw.jrat.tools.out.Logging.PROGRESS_BAR_ONLY;
-import static pl.imgw.jrat.tools.out.Logging.WARNING;
-
 import java.io.File;
 import java.util.List;
 
-import org.apache.commons.cli.CommandLine;
-
-import pl.imgw.jrat.calid.CalidOptionsHandler;
+import pl.imgw.jrat.calid.data.CalidParametersFileHandler;
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
-import pl.imgw.jrat.tools.out.ConsoleProgressBar;
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
 public class FileProcessController {
 
-    public static void setInputFilesAndFolders(List<File> files, List<File> folders, String[] options) {
-        
+    private static Log log = LogManager.getLogger();
+
+    public static void setInputFilesAndFolders(List<File> files,
+            List<File> folders, String[] options) {
+
         FilePatternFilter filter = new RegexFileFilter();
         if (options != null) {
             for (String name : options) {
@@ -49,43 +45,41 @@ public class FileProcessController {
                 }
             }
         }
-        
+
         /*
          * Other input files/folders providers:
          */
-        folders.addAll(CalidOptionsHandler.getOptions().getInputFolderList());
-        
+        folders.addAll(CalidParametersFileHandler.getOptions().getInputFolderList());
+
         if (files.isEmpty() && folders.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No input",
-                    WARNING);
+            log.printMsg("No input", Log.TYPE_WARNING, Log.MODE_VERBOSE);
         } else {
-            ConsoleProgressBar.getProgressBar().initialize(20, files.size(),
-                    LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
+            LogManager.getProgBar().initialize(20, files.size(),
                     "Setting up files");
             StringBuilder msg = new StringBuilder();
             msg.append("Input files:");
             for (File f : files) {
                 msg.append(" ").append(f.getPath());
             }
-            LogHandler.getLogs().displayMsg(msg.toString(), NORMAL);
-            ConsoleProgressBar.getProgressBar().evaluate();
+            log.printMsg(msg.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+            LogManager.getProgBar().evaluate();
             msg = new StringBuilder("Input folders:");
             for (File f : folders) {
                 msg.append(" ").append(f.getPath());
             }
-            LogHandler.getLogs().displayMsg(msg.toString(), NORMAL);
-            ConsoleProgressBar.getProgressBar().evaluate();
+            log.printMsg(msg.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+            LogManager.getProgBar().evaluate();
 
             msg = new StringBuilder();
             if (!files.isEmpty()) {
                 msg.append(files.size()).append(" files");
             }
-            ConsoleProgressBar.getProgressBar().printDoneMsg(msg.toString());
+            LogManager.getProgBar().complete(msg.toString());
 
         }
-        
+
     }
-    
+
     public static void setOutputFile(String option, File output) {
         if (!option.startsWith("/")) {
             output = new File(MainProcessController.root, option);
@@ -93,7 +87,8 @@ public class FileProcessController {
             output = new File(option);
         }
         output.mkdirs();
-        LogHandler.getLogs().displayMsg("Output: " + output.getPath(), NORMAL);
+        log.printMsg("Output: " + output.getPath(), Log.TYPE_NORMAL,
+                Log.MODE_VERBOSE);
     }
-    
+
 }

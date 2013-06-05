@@ -3,26 +3,18 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.PROGRESS_BAR_ONLY;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pl.imgw.jrat.data.arrays.ArrayData;
-import pl.imgw.jrat.data.containers.DataContainer;
-import pl.imgw.jrat.data.containers.ImageContainer;
-import pl.imgw.jrat.data.containers.ScanContainer;
-import pl.imgw.jrat.data.containers.VolumeContainer;
-import pl.imgw.jrat.data.containers.WZDataContainer;
-import pl.imgw.jrat.data.parsers.DefaultParser;
+import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.data.DataContainer;
 import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.ParserManager;
 import pl.imgw.jrat.tools.out.ArrayFilePrinter;
-import pl.imgw.jrat.tools.out.ConsoleProgressBar;
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -43,14 +35,13 @@ public class PrintingImageProcessController {
     public static void printImage(List<File> files, File output,
             String[] options) {
 
-        // LogHandler.getLogs().displayMsg("Printing image from file", WARNING);
+        // log.displayMsg("Printing image from file", WARNING);
         ImagesController ic = null;
         ParserManager pm = new ParserManager();
 
         pm.setParser(GlobalParser.getInstance().getParser());
 
-        ConsoleProgressBar.getProgressBar().initialize(20, files.size(),
-                LogHandler.getLogs().getVerbose() == PROGRESS_BAR_ONLY,
+        LogManager.getProgBar().initialize(20, files.size(),
                 "Printing images...");
         
         for (File file : files) {
@@ -75,9 +66,9 @@ public class PrintingImageProcessController {
                 continue;
             
             printToFile(ic, out, prod);
-            ConsoleProgressBar.getProgressBar().evaluate();
+            LogManager.getProgBar().evaluate();
         }
-        ConsoleProgressBar.getProgressBar().printDoneMsg("done");
+        LogManager.getProgBar().complete("done");
 
     }
 
@@ -109,27 +100,6 @@ public class PrintingImageProcessController {
                 
                 ArrayFilePrinter.printTXT(data.get(name),  out);
             }
-        }
-    }
-    
-    /**
-     * @param output
-     * @param ic
-     * @param file
-     */
-    private static void printToFile(ImagesController ic, File output,
-            ArrayData array, String outputName) {
-
-        
-        
-        File imgout = new File(output, outputName);
-        System.out.println(outputName);
-        if (ic.getFormat().toLowerCase().matches("png")) {
-            ic.getBuilder().setData(array);
-            ic.getBuilder().saveToFile(imgout);
-            
-        } else if (ic.getFormat().toLowerCase().matches("txt")) {
-            ArrayFilePrinter.printTXT(array, imgout);
         }
     }
     

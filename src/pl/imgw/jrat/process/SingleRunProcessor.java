@@ -3,13 +3,12 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -21,24 +20,25 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class SingleRunProcessor implements Runnable {
 
+    private static Log log = LogManager.getLogger();
+
     private List<File> files;
     private FilesProcessor proc;
     private boolean valid = false;
-    
 
     /**
      * 
      */
     public SingleRunProcessor(FilesProcessor proc, List<File> folders,
             List<File> files) {
-        
-        
+
         for (File folder : folders) {
             files.addAll(Arrays.asList(folder.listFiles()));
         }
-        
+
         if (files.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No input files specified", WARNING);
+            log.printMsg("No input files specified", Log.TYPE_WARNING,
+                    Log.MODE_VERBOSE);
             return;
         }
         this.files = files;
@@ -49,7 +49,7 @@ public class SingleRunProcessor implements Runnable {
     public boolean isValid() {
         return valid;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -59,12 +59,11 @@ public class SingleRunProcessor implements Runnable {
     public void run() {
         if (proc == null)
             return;
-        
+
         else
-            LogHandler.getLogs()
-                    .displayMsg(
-                            "Single run process started with: "
-                                    + proc.getProcessName(), NORMAL);
+            log.printMsg(
+                    "Single run process started with: " + proc.getProcessName(),
+                    Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
         proc.processFile(files);
 

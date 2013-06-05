@@ -4,20 +4,27 @@
 
 package pl.imgw.jrat.scansun;
 
-import static pl.imgw.jrat.AplicationConstans.*;
-import static pl.imgw.jrat.scansun.ScansunConstants.*;
-import static pl.imgw.jrat.tools.out.Logging.ERROR;
+import static pl.imgw.jrat.AplicationConstans.DATA;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_DATE_SEPARATOR;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_DATE_TIME_FORMAT_LONG;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_DRAO_SOLARFLUXFILE_BASENAME;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_DRAO_SOLARFLUXFILE_EXT;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_RESULTSFILE_DELIMITER;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.*;
-import java.util.regex.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pl.imgw.jrat.tools.in.FilePatternFilter;
 import pl.imgw.jrat.tools.in.RegexFileFilter;
-import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.Logging;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -30,6 +37,7 @@ import pl.imgw.jrat.tools.out.Logging;
 
 public class ScansunDRAOSolarFlux {
 
+    private static Log log = LogManager.getLogger();
 	private static ScansunDRAOSolarFlux manager = new ScansunDRAOSolarFlux();
 
 	public static ScansunDRAOSolarFlux getManager() {
@@ -70,8 +78,8 @@ public class ScansunDRAOSolarFlux {
 			String[] words = line.split(SCANSUN_RESULTSFILE_DELIMITER);
 
 			if (words.length != header.length) {
-				LogHandler.getLogs().displayMsg(
-						"SCANSUN: ScansunDRAOSolarFlux parseLine error", ERROR);
+				log.printMsg(
+						"SCANSUN: ScansunDRAOSolarFlux parseLine error", Log.TYPE_ERROR, Log.MODE_VERBOSE);
 				return;
 			}
 			try {
@@ -84,11 +92,10 @@ public class ScansunDRAOSolarFlux {
 				adjustedFlux = Double.parseDouble(words[5]);
 				URSIFlux = Double.parseDouble(words[6]);
 			} catch (ParseException e) {
-				LogHandler
-						.getLogs()
-						.displayMsg(
+				log
+						.printMsg(
 								"SCANSUN: ScansunDRAOSolarFlux parseLine wrong format: ",
-								Logging.WARNING);
+								Log.TYPE_WARNING, Log.MODE_VERBOSE);
 				return;
 			}
 		}
@@ -129,8 +136,8 @@ public class ScansunDRAOSolarFlux {
 		}
 
 		if (filename == null || i != 1) {
-			LogHandler.getLogs().displayMsg(
-					"SCANSUN: DRAO results file problem.", Logging.ERROR);
+			log.printMsg(
+					"SCANSUN: DRAO results file problem.", Log.TYPE_ERROR, Log.MODE_VERBOSE);
 		}
 
 		File file = null;
@@ -142,15 +149,15 @@ public class ScansunDRAOSolarFlux {
 		}
 
 		if (file == null) {
-			LogHandler.getLogs().displayMsg(
-					"SCANSUN: DRAO results file problem.", Logging.ERROR);
+			log.printMsg(
+					"SCANSUN: DRAO results file problem.", Log.TYPE_ERROR, Log.MODE_VERBOSE);
 		}
 
 		int beginIndex = SCANSUN_DRAO_SOLARFLUXFILE_BASENAME.length() + 1;
 		int endIndex = beginIndex + 8;
 		String date = file.getName().substring(beginIndex, endIndex);
-		LogHandler.getLogs().displayMsg(
-				"SCANSUN: DRAO results file date is " + date, Logging.NORMAL);
+		log.printMsg(
+				"SCANSUN: DRAO results file date is " + date, Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 		try {
 			Scanner scanner = new Scanner(file);
 

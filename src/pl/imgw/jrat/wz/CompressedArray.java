@@ -9,8 +9,8 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import pl.imgw.jrat.data.arrays.ArrayData;
-import pl.imgw.jrat.data.arrays.RawByteDataArray;
+import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.jrat.data.UnsignedByteArray;
 
 /**
  * 
@@ -146,7 +146,7 @@ public class CompressedArray extends ArrayData {
      */
     @Override
     public short getRawIntPoint(int x, int y) {
-        RawByteDataArray data = new RawByteDataArray(decompress(
+        UnsignedByteArray data = new UnsignedByteArray(decompress(
                 compressedArray, sizeX, sizeY));
         return data.getRawIntPoint(x, y);
     }
@@ -174,7 +174,7 @@ public class CompressedArray extends ArrayData {
      */
     @Override
     public byte getRawBytePoint(int x, int y) {
-        RawByteDataArray data = new RawByteDataArray(decompress(
+        UnsignedByteArray data = new UnsignedByteArray(decompress(
                 compressedArray, sizeX, sizeY));
         return data.getRawBytePoint(x, y);
     }
@@ -202,9 +202,14 @@ public class CompressedArray extends ArrayData {
      */
     @Override
     public double getPoint(int x, int y) {
-        RawByteDataArray data = new RawByteDataArray(decompress(
+        UnsignedByteArray data = new UnsignedByteArray(decompress(
                 compressedArray, sizeX, sizeY));
         return data.getPoint(x, y);
+    }
+
+
+    public void setNoDataValue(double nodata) {
+        this.nodata = nodata;
     }
 
     /*

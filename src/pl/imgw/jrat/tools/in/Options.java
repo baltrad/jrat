@@ -11,8 +11,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import pl.imgw.jrat.AplicationConstans;
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -24,6 +24,8 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public abstract class Options {
 
+    protected static Log log = LogManager.getLogger();
+    
     /**
      * Print sample option file
      */
@@ -50,13 +52,13 @@ public abstract class Options {
             DOMParser parser = new DOMParser();
             parser.parse(getOptionFile().getPath());
             doc = parser.getDocument();
-            LogHandler.getLogs().displayMsg(
+            log.printMsg(
                     "Parsing options file: " + getOptionFile(),
-                    LogHandler.NORMAL);
+                    Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         } catch (Exception e) {
-            LogHandler.getLogs().displayMsg(
+            log.printMsg(
                     "Parsing options file: " + getOptionFile() + " FAILED",
-                    LogHandler.ERROR);
+                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
             return null;
         }
         return doc;

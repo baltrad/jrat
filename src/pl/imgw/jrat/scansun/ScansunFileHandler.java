@@ -3,11 +3,21 @@
  */
 package pl.imgw.jrat.scansun;
 
-import static pl.imgw.jrat.AplicationConstans.*;
-import static pl.imgw.jrat.scansun.ScansunConstants.*;
+import static pl.imgw.jrat.AplicationConstans.ETC;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_DATE_FORMAT;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_FOLDER;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_RESULTSFILE_BASENAME;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_RESULTSFILE_DELIMITER;
+import static pl.imgw.jrat.scansun.ScansunConstants.SCANSUN_RESULTSFILE_EXT;
 
-import pl.imgw.jrat.tools.out.LogHandler;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -18,6 +28,8 @@ import java.io.*;
  */
 public class ScansunFileHandler {
 
+    private static Log log = LogManager.getLogger();
+    
 	private ScansunFileHandler() {
 	}
 
@@ -68,16 +80,16 @@ public class ScansunFileHandler {
 					.toStringWithDelimiter(SCANSUN_RESULTSFILE_DELIMITER));
 
 		} catch (FileNotFoundException e) {
-			LogHandler.getLogs().displayMsg(
+			log.printMsg(
 					"SCANSUN: Cannot create result file in path "
 							+ file.getAbsolutePath() + "\n" + e.getMessage(),
-					LogHandler.ERROR);
+					Log.TYPE_ERROR, Log.MODE_VERBOSE);
 			return false;
 		} catch (IOException e) {
-			LogHandler.getLogs().displayMsg(
+			log.printMsg(
 					"SCANSUN: Cannot create result file in path "
 							+ file.getAbsolutePath() + "\n" + e.getMessage(),
-					LogHandler.ERROR);
+					Log.TYPE_ERROR, Log.MODE_VERBOSE);
 			return false;
 		} finally {
 			if (pw != null) {

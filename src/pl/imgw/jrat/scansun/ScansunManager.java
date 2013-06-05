@@ -3,19 +3,15 @@
  */
 package pl.imgw.jrat.scansun;
 
-import pl.imgw.jrat.data.arrays.RainbowVolumeDataArray;
-import pl.imgw.jrat.data.containers.ScanContainer;
-import pl.imgw.jrat.data.containers.VolumeContainer;
+import java.util.Calendar;
+import java.util.Date;
 
-import pl.imgw.jrat.tools.out.LogHandler;
-import static pl.imgw.jrat.tools.out.Logging.*;
-
-import java.util.*;
-
+import pl.imgw.jrat.data.PolarData;
+import pl.imgw.jrat.data.ScanContainer;
+import pl.imgw.jrat.data.rainbow.RainbowScanArray;
 import pl.imgw.jrat.scansun.ScansunConstants.PulseDuration;
-import pl.imgw.jrat.scansun.ScansunConstants.Sites;
-import pl.imgw.jrat.scansun.ScansunEquations;
-import pl.imgw.jrat.scansun.ScansunConstants;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -27,6 +23,7 @@ import pl.imgw.jrat.scansun.ScansunConstants;
  */
 public class ScansunManager {
 
+    private static Log log = LogManager.getLogger();
 	private boolean valid = false;
 
 	private ScansunManager() {
@@ -42,19 +39,18 @@ public class ScansunManager {
 	/**
 	 * @param product
 	 */
-	public ScansunContainer calculate(VolumeContainer vol,
+	public ScansunContainer calculate(PolarData vol,
 			ScansunParsedParameters params) {
 
 		ScansunContainer sc = new ScansunContainer();
 
-		LogHandler
-				.getLogs()
-				.displayMsg(
+		log
+				.printMsg(
 						"Volume file info: site="
 								+ vol.getSiteName()
 								+ " date="
 								+ ScansunConstants.SCANSUN_DATE_TIME_FORMAT_LONG.format(vol
-										.getTimeSec()), NORMAL);
+										.getTimeSec()), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
 		for (ScanContainer scan : vol.getAllScans()) {
 
@@ -71,7 +67,7 @@ public class ScansunManager {
 
 			for (int rayNumber = 0; rayNumber < rays; rayNumber++) {
 
-				double rayAzimuth = ((RainbowVolumeDataArray) scan.getArray())
+				double rayAzimuth = ((RainbowScanArray) scan.getArray())
 						.getAzimuth(rayNumber);
 
 				int deltaSeconds = (int) Math.floor(rayNumber
@@ -90,10 +86,10 @@ public class ScansunManager {
 
 				if (Math.sqrt(e * e + a * a) < params.getAngleDifference()) {
 
-					LogHandler.getLogs().displayMsg(
+					log.printMsg(
 							"Event found: " + rayDate.toString()
 									+ " elevation = " + scan.getElevation()
-									+ " azimuth = " + rayAzimuth, NORMAL);
+									+ " azimuth = " + rayAzimuth, Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
 					boolean isSolarRay = false;
 					double meanSolarPower = 0.0;
@@ -112,13 +108,13 @@ public class ScansunManager {
 							if (binCount > params.getThresholdFraction()
 									* (bins - binMin)) {
 								isSolarRay = true;
-								LogHandler.getLogs().displayMsg(
+								log.printMsg(
 										"Solar ray found: "
 												+ rayDate.toString()
 												+ " elevation = "
 												+ scan.getElevation()
 												+ " azimuth = " + rayAzimuth,
-										NORMAL);
+										Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 							} else {
 								meanSolarPower = 0.0;
 							}
