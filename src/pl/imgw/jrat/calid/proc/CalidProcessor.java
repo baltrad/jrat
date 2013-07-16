@@ -39,15 +39,16 @@ public class CalidProcessor implements FilesProcessor {
     public CalidProcessor(String args[]) throws CalidException {
         manager = new CalidComparatorManager();
         try {
-//            cc = new CalidSingleResultContainer();
-            
-            CalidParameters params = CalidParametersParser.getParser().parseParameters(args);
+            // cc = new CalidSingleResultContainer();
+
+            CalidParameters params = CalidParametersParser.getParser()
+                    .parseParameters(args);
             manager.setParsedParameters(params);
-            
+
             Map<String, CalidParameters> optionFileParams = CalidParametersFileHandler
                     .getOptions().getParametersForAllPairs();
             manager.setOptionFileParameters(optionFileParams);
-            
+
         } catch (CalidException e) {
             throw e;
         }
@@ -61,24 +62,25 @@ public class CalidProcessor implements FilesProcessor {
      */
     @Override
     public void processFile(List<File> files) {
-        
+
         PairsContainer pairs = new PairsContainer(files);
-        LogManager.getProgBar().initialize(20, pairs.getSize(),
-                "CALID calculations");
+        
+//        LogManager.getProgBar().initialize(20, pairs.getSize(),
+//                "CALID calculations");
 
         PolarVolumesPair pair = null;
-        
+
         while (pairs.hasNext()) {
             pair = pairs.next();
-            LogManager.getProgBar().evaluate();
+//            LogManager.getProgBar().evaluate();
 
             log.printMsg("CALID: process: " + pair, Log.TYPE_NORMAL,
                     Log.MODE_VERBOSE);
-            
+
             manager.compare(pair);
         }
 
-        LogManager.getProgBar().complete();
+//        LogManager.getProgBar().complete();
     }
 
     /*
