@@ -106,6 +106,9 @@ public class SequentialProcess implements Runnable {
                 }
 
                 cal.add(Calendar.MINUTE, interval);
+                
+                System.gc();
+                
             } else {
                 try {
                     Thread.sleep(1000);

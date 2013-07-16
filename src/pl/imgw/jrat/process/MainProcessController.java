@@ -6,25 +6,7 @@ package pl.imgw.jrat.process;
 import static pl.imgw.jrat.AplicationConstans.APS_DESC;
 import static pl.imgw.jrat.AplicationConstans.DATE;
 import static pl.imgw.jrat.AplicationConstans.REL_DATE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_HELP;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_LIST;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_OPT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_PLOT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.F;
-import static pl.imgw.jrat.process.CommandLineArgsParser.FORMAT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.H;
-import static pl.imgw.jrat.process.CommandLineArgsParser.I;
-import static pl.imgw.jrat.process.CommandLineArgsParser.O;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
-import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
-import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN;
-import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
-import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
-import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
+import static pl.imgw.jrat.process.CommandLineArgsParser.*;
 import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
 
 import java.io.File;
@@ -109,7 +91,7 @@ public class MainProcessController {
         }
 
         /* display version message */
-        if (cmd.hasOption(AplicationConstans.VERSION)) {
+        if (cmd.hasOption(VERSION)) {
             printVersion();
             return true;
         }
@@ -277,9 +259,9 @@ public class MainProcessController {
     }
 
     public void printVersion() {
-        log.printMsg(APS_DESC + "\nversion:\t" + AplicationConstans.VERSION
+        log.printMsg("\n" + APS_DESC + "\nversion:\t" + AplicationConstans.VERSION
                 + "\nreleased date:\t" + REL_DATE + "\ncompiled on:\t" + DATE,
-                Log.MODE_SILENT);
+                Log.TYPE_NORMAL, Log.MODE_SILENT);
     }
     
 }
