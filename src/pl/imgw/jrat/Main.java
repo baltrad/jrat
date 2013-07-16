@@ -39,6 +39,8 @@ public class Main {
         if (!pc.start()) {
             System.out.println("JRAT: failed");
         }
+        LogManager.getInstance();
+        System.out.println(LogManager.getFileLogger().getErrorFolder());
     }
 
 }
