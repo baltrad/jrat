@@ -79,7 +79,8 @@ public class CalidProcessor implements FilesProcessor {
 
             manager.compare(pair);
         }
-
+        
+        pairs = null;
 //        LogManager.getProgBar().complete();
     }
 
