@@ -33,7 +33,7 @@ import pl.imgw.jrat.data.parsers.VolumeParser;
 public class PairsContainer {
 
 //    private Set<Pair> pairs = new TreeSet<Pair>();
-    private Map<Date, Set<File>> segregated;
+    private Map<Date, Set<PolarData>> segregated;
     private Set<PolarVolumesPair> setOfPairs = new HashSet<PolarVolumesPair>();;
     
     private Iterator<PolarVolumesPair> pairItr = setOfPairs.iterator();
@@ -57,24 +57,33 @@ public class PairsContainer {
 //        ParserManager manager = new ParserManager();
 //        manager.setParser(GlobalParser.getInstance().getParser());
 
-        segregated = new TreeMap<Date, Set<File>>();
+        segregated = new TreeMap<Date, Set<PolarData>>();
 
         Date date;
         
         for (File f : files) {
-            date = parseDateFromFileName(f.getName());
-            if (date != null) {
-                Set<File> singles = segregated.get(date);
+            PolarData vol = null;
+            if (parser.parse(f)) {
+                vol = parser.getPolarData();
+            } else {
+                continue;
+            }
 
-                if (singles == null)
-                    singles = new HashSet<File>();
-                singles.add(f);
+            date = vol.getTime();
+//            date = parseDateFromFileName(f.getName());
+            if (date != null) {
+                Set<PolarData> singles = segregated.get(date);
+
+                if (singles == null) {
+                    singles = new HashSet<PolarData>();
+                }
+
+                singles.add(vol);
                 segregated.put(date, singles);
             }
         }
 
         dateItr = segregated.keySet().iterator();
-        
         setSize();
         
     }
@@ -122,28 +131,18 @@ public class PairsContainer {
 
 //        System.out.println(date);
         
-        Set<File> files = segregated.get(date);
-        Set<Set<File>> pairsOfFiles = combine(files);
+        Set<PolarData> files = segregated.get(date);
+        Set<Set<PolarData>> pairsOfFiles = combine(files);
         if (pairsOfFiles == null)
             return;
-        Iterator<Set<File>> pairedFilesItr = pairsOfFiles.iterator();
+        Iterator<Set<PolarData>> pairedFilesItr = pairsOfFiles.iterator();
         while (pairedFilesItr.hasNext()) {
-            Set<File> pairedFile = pairedFilesItr.next();
-            Iterator<File> itr = pairedFile.iterator();
+            Set<PolarData> pairedFile = pairedFilesItr.next();
+            Iterator<PolarData> itr = pairedFile.iterator();
             
-            File f1 = itr.next();
-            File f2 = itr.next();
+            PolarData vol1 = itr.next();
+            PolarData vol2 = itr.next();
             
-            PolarData vol1 = null;
-            PolarData vol2 = null;
-            if (parser.parse(f1)) {
-                vol1 = parser.getPolarData();
-            }
-
-            if (parser.parse(f2)) {
-                vol2 = parser.getPolarData();
-            }
-
             if (vol1 != null && vol2 != null) {
                 PolarVolumesPair pair = new PolarVolumesPair(vol1, vol2);
                 if (CalidParametersFileHandler.getOptions().isSet()) {
@@ -187,7 +186,7 @@ public class PairsContainer {
      */
     private void setSize() {
         int size = 0;
-        Iterator<Set<File>> itr = segregated.values().iterator();
+        Iterator<Set<PolarData>> itr = segregated.values().iterator();
         while (itr.hasNext()) {
             size += combination(itr.next().size());
         }
@@ -256,15 +255,15 @@ public class PairsContainer {
      * @param set
      * @return
      */
-    private Set<Set<File>> combine(Set<File> set) {
-        Set<Set<File>> c = new HashSet<Set<File>>();
+    private Set<Set<PolarData>> combine(Set<PolarData> set) {
+        Set<Set<PolarData>> c = new HashSet<Set<PolarData>>();
         if (set.size() == 2) {
             c.add(set);
             return c;
         } else if(set.size() > 2) {
-            for (File o : set) {
+            for (PolarData o : set) {
                 // make a copy of the array
-                HashSet<File> rest = new HashSet<File>(set);
+                HashSet<PolarData> rest = new HashSet<PolarData>(set);
                 // remove the object
                 rest.remove(o);
                 c.addAll(shuffle(o, rest));
@@ -282,10 +281,10 @@ public class PairsContainer {
      * @param set
      * @return
      */
-    private HashSet<HashSet<File>> shuffle(File s, HashSet<File> set) {
-        HashSet<HashSet<File>> newList = new HashSet<HashSet<File>>();
-        for (File o : set) {
-            HashSet<File> parts = new HashSet<File>();
+    private HashSet<HashSet<PolarData>> shuffle(PolarData s, HashSet<PolarData> set) {
+        HashSet<HashSet<PolarData>> newList = new HashSet<HashSet<PolarData>>();
+        for (PolarData o : set) {
+            HashSet<PolarData> parts = new HashSet<PolarData>();
             parts.add(o);
             parts.add(s);
             newList.add(parts);
