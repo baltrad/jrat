@@ -72,6 +72,7 @@ public class CalidComparator {
                 }
             } else if (val1 >= params.getReflectivity()
                     && val2 >= params.getReflectivity()) {
+                System.out.println(val1 + ", " + val2 + ", ref=" + params.getReflectivity());
                 coords.setDifference(val1 - val2);
             }
         }
