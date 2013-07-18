@@ -73,7 +73,7 @@ public class CalidCoordsLoader extends CalidDataHandler {
                     + ", " + xmlfile + " is not a valid XML format");
         }
 
-        String msg = "Loading coordinates (" + xmlfile + ")";
+        String msg = "Loading coordinates (" + xmlfile + "): ";
 
         ArrayList<PairedPoint> pairedPointsList = new ArrayList<PairedPoint>();
 

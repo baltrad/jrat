@@ -23,7 +23,6 @@ import pl.imgw.jrat.data.parsers.VolumeParser;
  */
 public class VolumeProcessorManager implements FilesProcessor {
 
-    public static final String NAME = "Multi Volume processor";
     private Set<VolumesProcessor> processes = new HashSet<VolumesProcessor>();
     private VolumeParser parser = GlobalParser.getInstance().getVolumeParser();
     private List<PolarData> volumes = new LinkedList<PolarData>();
@@ -59,8 +58,10 @@ public class VolumeProcessorManager implements FilesProcessor {
      */
     @Override
     public String getProcessName() {
-        // TODO Auto-generated method stub
-        return NAME;
+        String name = "";
+        for(VolumesProcessor s : processes)
+            name += (s + ", ");
+        return name;
     }
 
 }
