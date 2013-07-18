@@ -51,7 +51,8 @@ public class PairsContainerTest {
         
         File folder = new File("test-data/pair");
         files = Arrays.asList(folder.listFiles());
-        pairs = new PairsContainer(files);
+        pairs = new PairsContainer();
+        pairs.setFiles(files);
     }
 
     /**
@@ -69,7 +70,8 @@ public class PairsContainerTest {
         files = new ArrayList<File>();
         files.add(new File("test-data/pair", "2011101003002600dBZ.vol"));
         files.add(new File("test-data/pair", "2011101003002700dBZ.vol"));
-        pairs = new PairsContainer(files);
+        pairs = new PairsContainer();
+        pairs.setFiles(files);
         assertTrue(pairs.hasNext());
     }
     
@@ -81,7 +83,8 @@ public class PairsContainerTest {
         files = new ArrayList<File>();
         files.add(new File("test-data/pair", "2011101003002600dBZ.vol"));
         files.add(new File("test-data/pair", "2011101003002700dBZ.vol"));
-        pairs = new PairsContainer(files);
+        pairs = new PairsContainer();
+        pairs.setFiles(files);
         assertNotNull(pairs.next());
         assertTrue(!pairs.hasNext());
     }

@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,48 +46,8 @@ public class PairsContainer {
     
     private String fileNameDatePattern = "yyyyMMddHHmm";
     private SimpleDateFormat fileNameDateFormat = new SimpleDateFormat(fileNameDatePattern);
-    
-    /**
-     * 
-     * @param files only valid volume files will be parsed and used to create pairs.
-     */
-    public PairsContainer(List<File> files) {
+    private List<PolarData> volumes;
 
-//        fileNameDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        
-//        ParserManager manager = new ParserManager();
-//        manager.setParser(GlobalParser.getInstance().getParser());
-
-        segregated = new TreeMap<Date, Set<PolarData>>();
-
-        Date date;
-        
-        for (File f : files) {
-            PolarData vol = null;
-            if (parser.parse(f)) {
-                vol = parser.getPolarData();
-            } else {
-                continue;
-            }
-
-            date = vol.getTime();
-//            date = parseDateFromFileName(f.getName());
-            if (date != null) {
-                Set<PolarData> singles = segregated.get(date);
-
-                if (singles == null) {
-                    singles = new HashSet<PolarData>();
-                }
-
-                singles.add(vol);
-                segregated.put(date, singles);
-            }
-        }
-
-        dateItr = segregated.keySet().iterator();
-        setSize();
-        
-    }
 
     /**
      * @param name
@@ -292,4 +253,49 @@ public class PairsContainer {
         return newList;
     }
 
+    /**
+     * @param vol
+     */
+    public void setVolumes(List<PolarData> volumes) {
+        this.volumes = volumes;
+        initialize();
+        
+    }
+
+
+    public void setFiles(List<File> files) {
+        List<PolarData> volumes = new LinkedList<PolarData>();
+        for (File f : files) {
+            PolarData vol = null;
+            if (parser.parse(f)) {
+                vol = parser.getPolarData();
+                volumes.add(vol);
+            }
+        }
+        setVolumes(volumes);
+    }
+
+    private void initialize() {
+        segregated = new TreeMap<Date, Set<PolarData>>();
+        Date date;
+        for (PolarData vol : volumes) {
+
+            date = vol.getTime();
+//            date = parseDateFromFileName(f.getName());
+            if (date != null) {
+                Set<PolarData> singles = segregated.get(date);
+
+                if (singles == null) {
+                    singles = new HashSet<PolarData>();
+                }
+
+                singles.add(vol);
+                segregated.put(date, singles);
+            }
+        }
+
+        dateItr = segregated.keySet().iterator();
+        setSize();
+    }
+    
 }

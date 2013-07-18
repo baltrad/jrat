@@ -13,7 +13,9 @@ import pl.imgw.jrat.calid.data.CalidParametersFileHandler;
 import pl.imgw.jrat.calid.data.CalidParametersParser;
 import pl.imgw.jrat.calid.data.PairsContainer;
 import pl.imgw.jrat.calid.data.PolarVolumesPair;
+import pl.imgw.jrat.data.PolarData;
 import pl.imgw.jrat.process.FilesProcessor;
+import pl.imgw.jrat.process.VolumesProcessor;
 import pl.imgw.util.Log;
 import pl.imgw.util.LogManager;
 
@@ -25,7 +27,7 @@ import pl.imgw.util.LogManager;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public class CalidProcessor implements FilesProcessor {
+public class CalidProcessor implements FilesProcessor, VolumesProcessor {
 
     /**
      * 
@@ -35,6 +37,8 @@ public class CalidProcessor implements FilesProcessor {
     private static Log log = LogManager.getLogger();
 
     private CalidComparatorManager manager;
+    
+    private PairsContainer pairs;
 
     public CalidProcessor(String args[]) throws CalidException {
         manager = new CalidComparatorManager();
@@ -55,6 +59,17 @@ public class CalidProcessor implements FilesProcessor {
 
     }
 
+    /* (non-Javadoc)
+     * @see pl.imgw.jrat.process.VolumesProcessor#processVolumes(java.util.List)
+     */
+    @Override
+    public void processVolumes(List<PolarData> vol) {
+        pairs = new PairsContainer();
+        pairs.setVolumes(vol);
+        process();
+        
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -62,12 +77,13 @@ public class CalidProcessor implements FilesProcessor {
      */
     @Override
     public void processFile(List<File> files) {
+        pairs = new PairsContainer();
+        pairs.setFiles(files);
+        process();
 
-        PairsContainer pairs = new PairsContainer(files);
-        
-//        LogManager.getProgBar().initialize(20, pairs.getSize(),
-//                "CALID calculations");
+    }
 
+    private void process() {
         PolarVolumesPair pair = null;
 
         while (pairs.hasNext()) {
@@ -79,11 +95,10 @@ public class CalidProcessor implements FilesProcessor {
 
             manager.compare(pair);
         }
-        
         pairs = null;
-//        LogManager.getProgBar().complete();
+        
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -93,5 +108,7 @@ public class CalidProcessor implements FilesProcessor {
     public String getProcessName() {
         return CALID_PROCESS_NAME;
     }
+
+
 
 }
