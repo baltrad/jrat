@@ -124,6 +124,8 @@ public class CalidCoordsLoader extends CalidDataHandler {
             }
         }
 
+        System.out.println("number of points:" + pairedPointsList.size());
+        
         return pairedPointsList;
 
     }
