@@ -73,8 +73,7 @@ public class CalidCoordsLoader extends CalidDataHandler {
                     + ", " + xmlfile + " is not a valid XML format");
         }
 
-        log.printMsg("Loading coordinates from file: " + xmlfile,
-                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+        String msg = "Loading coordinates (" + xmlfile + ")";
 
         ArrayList<PairedPoint> pairedPointsList = new ArrayList<PairedPoint>();
 
@@ -124,7 +123,8 @@ public class CalidCoordsLoader extends CalidDataHandler {
             }
         }
 
-        System.out.println("number of points:" + pairedPointsList.size());
+        msg += pairedPointsList.size() + " points";
+        log.printMsg(msg, Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         
         return pairedPointsList;
 
