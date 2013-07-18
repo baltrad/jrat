@@ -119,7 +119,7 @@ public class PolarVolumesPair extends RadarsPair {
     }
     
     public String toString() {
-        return "PAIR [" + sdf.format(date) + "] [" + source1 + " and " + source2 + "]";
+        return "PAIR [" + sdf.format(date) + "] [" + vol1.getSiteName() + " and " + vol2.getSiteName() + "]";
     }
 
     
