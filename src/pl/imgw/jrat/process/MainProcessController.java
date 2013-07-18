@@ -152,11 +152,13 @@ public class MainProcessController {
         }
 
         /* =========== setting processes =============== */
+        VolumeProcessorManager volProc = new VolumeProcessorManager();
         FilesProcessor proc = null;
         
         /* CALID */
         if (cmd.hasOption(CALID)) {
             proc = CalidController.setCalidProcessor(cmd);
+            volProc.addProcess((VolumesProcessor) proc);
         }
 
         /* SCANSUN */
@@ -207,7 +209,7 @@ public class MainProcessController {
         if (cmd.hasOption(WATCH)) {
             /* Starting continues mode */
             
-            FileWatchingProcess watcher = new FileWatchingProcess(proc, folders);
+            FileWatchingProcess watcher = new FileWatchingProcess(volProc, folders);
 
             if (!watcher.isValid())
                 return false;
@@ -228,7 +230,7 @@ public class MainProcessController {
         } else if (cmd.hasOption(SEQ)) {
             /* Starting sequence mode */
             
-            SequentialProcess seq = new SequentialProcess(proc, folders,
+            SequentialProcess seq = new SequentialProcess(volProc, folders,
                     cmd.getOptionValue(SEQ));
 
             if (!seq.isValid())
