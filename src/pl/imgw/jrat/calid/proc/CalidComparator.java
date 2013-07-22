@@ -13,6 +13,7 @@ import pl.imgw.jrat.calid.data.CalidResultLoader;
 import pl.imgw.jrat.calid.data.CalidSingleResultContainer;
 import pl.imgw.jrat.calid.data.PairedPoint;
 import pl.imgw.jrat.calid.data.PolarVolumesPair;
+import pl.imgw.jrat.data.OutOfBoundsException;
 import pl.imgw.jrat.data.ScanContainer;
 import pl.imgw.util.Log;
 import pl.imgw.util.LogManager;
@@ -60,11 +61,15 @@ public class CalidComparator {
         Iterator<PairedPoint> itr = points.iterator();
         while (itr.hasNext()) {
             PairedPoint coords = itr.next();
-            System.out.println("wspolzedne:" + coords);
-            double val1 = scan1.getArray().getPoint(coords.getBin1(),
-                    coords.getRay1());
-            double val2 = scan2.getArray().getPoint(coords.getBin2(),
-                    coords.getRay2());
+            double val1 = 0, val2 = 0;
+            try {
+                val1 = scan1.getArray().getPoint(coords.getBin1(),
+                        coords.getRay1());
+                val2 = scan2.getArray().getPoint(coords.getBin2(),
+                        coords.getRay2());
+            } catch (OutOfBoundsException e) {
+                continue;
+            }
             if (val1 == scan1.getOffset() || val2 == scan2.getOffset()) {
                 if (val1 >= params.getReflectivity()) {
                     results.r2understated();

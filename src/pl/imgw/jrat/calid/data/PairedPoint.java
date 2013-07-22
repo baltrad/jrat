@@ -87,7 +87,7 @@ public class PairedPoint {
 
         String str = "";
         
-        str += "(" + ray1 + ", " + bin1 + ")\t(" + ray2 + ", " + bin2
+        str += "(" + bin1 + ", " + ray1 + ")\t(" + bin2 + ", " + ray2
                 + ")";
         
         if (coord1 != null && coord2 != null) {
