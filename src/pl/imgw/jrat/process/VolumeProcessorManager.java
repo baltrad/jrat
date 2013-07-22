@@ -49,14 +49,11 @@ public class VolumeProcessorManager implements FilesProcessor {
         Date newdate = null;
         boolean next = false;
         
-        System.out.println("wielkosc: " + files.size());
-        
         for (File f : files) {
             
             try {
                 newdate = parseDate(f);
                 if(!newdate.equals(olddate)) {
-                    System.out.println("pasuje");
                     next = true;
                 }
                 else

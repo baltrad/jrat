@@ -63,7 +63,7 @@ public class CalidControllerTest {
     /**
      * Test method for {@link pl.imgw.jrat.calid.proc.CalidController#processResult(java.lang.String[])}.
      */
-    @Test(expected=CalidException.class)
+    @Test(expected=CalidException.class) @Ignore
     public void shouldntProcessResult() {
         args = "".split(" ");
         CalidController.processResult(args);
