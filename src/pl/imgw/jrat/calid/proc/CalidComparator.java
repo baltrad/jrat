@@ -60,6 +60,7 @@ public class CalidComparator {
         Iterator<PairedPoint> itr = points.iterator();
         while (itr.hasNext()) {
             PairedPoint coords = itr.next();
+            System.out.println("wspolzedne:" + coords);
             double val1 = scan1.getArray().getPoint(coords.getBin1(),
                     coords.getRay1());
             double val2 = scan2.getArray().getPoint(coords.getBin2(),
