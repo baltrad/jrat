@@ -64,7 +64,7 @@ public class CalidComparatorTest {
         
     }
     
-    @Test @Ignore
+    @Test
     public void shouldGetResults2() {
         VolumeParser parser = GlobalParser.getInstance().getVolumeParser();
         parser.parse(new File("test-data/calid/RzeszolLwow", "2013071914501700dBZ.vol"));
@@ -73,7 +73,7 @@ public class CalidComparatorTest {
         PolarData vol2 = parser.getPolarData();
         PolarVolumesPair pair = new PolarVolumesPair(vol1, vol2);
         
-        CalidSingleResultContainer result = new CalidSingleResultContainer(params, pair);
+        CalidSingleResultContainer result = new CalidSingleResultContainer(rzelwow, pair);
         CalidComparator.putResult(result);
                 
         assertNotNull(result);
