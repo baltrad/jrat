@@ -50,8 +50,8 @@ public class CalidResultsPrinter {
         try {
             pp = CalidParametersParser.getParser().parsePairAndParameters(args);
         } catch (CalidException e) {
-//            CalidParametersParser.printHelp();
-            throw e;
+            CalidParametersParser.printHelp();
+//            throw e;
         }
         this.params = pp.getParameters();
 //        log.printMsg(params.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);

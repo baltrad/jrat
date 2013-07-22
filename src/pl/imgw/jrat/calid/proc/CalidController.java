@@ -52,6 +52,9 @@ public class CalidController {
     }
     
     public static void processResult(CommandLine cmd) {
+        if(cmd.getOptionValues(CALID_RESULT) == null) {
+            return;
+        }
         processResult(cmd.getOptionValues(CALID_RESULT));
     }
     

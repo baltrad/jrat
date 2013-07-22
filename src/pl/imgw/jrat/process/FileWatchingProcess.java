@@ -42,6 +42,9 @@ public class FileWatchingProcess implements Runnable {
     private List<File> files = new LinkedList<File>();
     // private File[] watchedPath = null;
 
+    private static int counter = 0;
+    private static final int CYCLE_LENGHT = 50;
+    
     private boolean valid = false;
 
     public FileWatchingProcess(FilesProcessor proc, List<File> watchedPathList) {
@@ -137,6 +140,9 @@ public class FileWatchingProcess implements Runnable {
                         if (input.delete())
                             log.printMsg(input.getName() + " deleted.",
                                     Log.TYPE_WARNING, Log.MODE_VERBOSE);
+                        counter++;
+                        if(counter == CYCLE_LENGHT)
+                            System.gc();
 
                     }
                 }
