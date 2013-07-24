@@ -63,10 +63,15 @@ public class CalidController {
     protected static void processResult(String[] args) {
 
         Integer period = getPeriod(args);
-        if (period == null)
-            new CalidSingleResultPrinter(args).printResults();
-        else
-            new CalidPeriodsResultsPrinter(args, period).printResults();
+        try {
+            if (period == null)
+                new CalidSingleResultPrinter(args).printResults();
+            else
+                new CalidPeriodsResultsPrinter(args, period).printResults();
+        } catch (CalidException e) {
+            log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
+            CalidParametersParser.printHelp();
+        }
 
     }
     

@@ -447,7 +447,7 @@ public class CalidParametersParser {
         // log.displayMsg("CALID algorytm usage:\n",
         // Logging.SILENT);
 
-        String src = "src=Source1[,Source2]";
+        String src = "Source1[,Source2]";
         String date = "date=Start[,End]";
         String rest = "[ele=] [dis=] [range=] [ref=]";
 
@@ -484,7 +484,7 @@ public class CalidParametersParser {
         msg.append("above used threshold (of dBZ), must be bigger then 0,\n");
         msg.append("--calid-detail <args> using specified method to present results, available arguments are:");
         msg.append(" method=median, and period=X where X means number of days (X > 0).\n");
-        msg.append("e.g: --calid-result src=Rzeszow");
+        msg.append("e.g: --calid-result Rzeszow");
         msg.append(" date=2011-08-21/09:30,2011-08-21/10:30 freq=10 --calid-detail method=mean period=1\n");
         msg.append("\nuse jrat --help to print general jrat help message");
         /*

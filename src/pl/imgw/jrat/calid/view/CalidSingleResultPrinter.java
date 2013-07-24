@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
+import pl.imgw.jrat.calid.CalidException;
 import pl.imgw.jrat.calid.data.CalidPairAndParameters;
 import pl.imgw.jrat.calid.data.CalidResultLoader;
 import pl.imgw.jrat.calid.data.CalidSingleResultContainer;
@@ -29,7 +30,7 @@ import pl.imgw.util.Log;
  */
 public class CalidSingleResultPrinter extends CalidResultsPrinter {
 
-    public CalidSingleResultPrinter(String[] args) {
+    public CalidSingleResultPrinter(String[] args) throws CalidException{
         super(args);
     }
     

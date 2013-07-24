@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+import pl.imgw.jrat.calid.CalidException;
 import pl.imgw.jrat.calid.data.CalidResultLoader;
 import pl.imgw.jrat.calid.data.CalidSingleResultContainer;
 import pl.imgw.jrat.calid.data.CalidStatistics;
@@ -37,7 +38,7 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
     public static final String MEAN = "mean";
     private Integer period = null;
 
-    public CalidPeriodsResultsPrinter(String[] calidargs, int period) {
+    public CalidPeriodsResultsPrinter(String[] calidargs, int period) throws CalidException{
         super(calidargs);
         this.period = period;
     }
