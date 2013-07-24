@@ -16,6 +16,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import pl.imgw.jrat.calid.view.CalidResultsPrinter;
+import pl.imgw.jrat.process.MainProcessController;
 import pl.imgw.jrat.tools.out.FileResultPrinter;
 import pl.imgw.jrat.tools.out.ResultPrinter;
 import pl.imgw.jrat.tools.out.ResultPrinterManager;
@@ -109,5 +110,5 @@ public class CalidResultsPrinterTest {
         assertEquals(1, i);
 
     }
-
+    
 }

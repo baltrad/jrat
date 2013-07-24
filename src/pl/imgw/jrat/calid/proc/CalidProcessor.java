@@ -17,6 +17,7 @@ import pl.imgw.jrat.data.PolarData;
 import pl.imgw.jrat.process.FilesProcessor;
 import pl.imgw.jrat.process.VolumesProcessor;
 import pl.imgw.util.Log;
+import pl.imgw.util.LogFile;
 import pl.imgw.util.LogManager;
 
 /**
@@ -35,6 +36,7 @@ public class CalidProcessor implements FilesProcessor, VolumesProcessor {
     private static final String CALID_PROCESS_NAME = "CALID Process";
 
     private static Log log = LogManager.getLogger();
+    private static LogFile logFile = LogManager.getFileLogger();
 
     private CalidComparatorManager manager;
     
@@ -88,15 +90,20 @@ public class CalidProcessor implements FilesProcessor, VolumesProcessor {
 
         while (pairs.hasNext()) {
             pair = pairs.next();
-//            LogManager.getProgBar().evaluate();
+            // LogManager.getProgBar().evaluate();
 
             log.printMsg("CALID: process: " + pair, Log.TYPE_NORMAL,
                     Log.MODE_VERBOSE);
 
-            manager.compare(pair);
+            try {
+                manager.compare(pair);
+            } catch (CalidException e) {
+                logFile.saveErrorLogs(CalidProcessor.class.getName(),
+                        e.getMessage());
+            }
         }
         pairs = null;
-        
+
     }
     
     /*
@@ -108,7 +115,5 @@ public class CalidProcessor implements FilesProcessor, VolumesProcessor {
     public String getProcessName() {
         return CALID_PROCESS_NAME;
     }
-
-
 
 }

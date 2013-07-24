@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 import pl.imgw.jrat.data.PolarData;
 import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.VolumeParser;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogFile;
+import pl.imgw.util.LogManager;
 
 /**
  *
@@ -36,6 +39,7 @@ public class VolumeProcessorManager implements FilesProcessor {
     private static final String DATE_PATTERN = "yyyyMMddHHmm";
     private SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
     
+    private static LogFile log = LogManager.getFileLogger();
     
     /* (non-Javadoc)
      * @see pl.imgw.jrat.process.FilesProcessor#processFile(java.util.List)
@@ -77,8 +81,13 @@ public class VolumeProcessorManager implements FilesProcessor {
             
         }
         
-        for(VolumesProcessor proc : processes) {
-            proc.processVolumes(volumes);
+        for (VolumesProcessor proc : processes) {
+            try {
+                proc.processVolumes(volumes);
+            } catch (Exception e) {
+                log.saveErrorLogs(VolumeProcessorManager.class.getName(),
+                        e.getMessage());
+            }
         }
         
         

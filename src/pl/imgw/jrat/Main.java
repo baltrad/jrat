@@ -36,8 +36,13 @@ public class Main {
         // LogHandler.getLogs().setRecentFileLogs(recFile, 0);
         //
         MainProcessController pc = new MainProcessController(args);
-        if (!pc.start()) {
-            System.out.println("JRAT: failed");
+        try {
+            if (!pc.start()) {
+                System.out.println("JRAT: failed");
+            }
+        } catch (Exception e) {
+            LogManager.getFileLogger().saveErrorLogs(e.getCause().toString(),
+                    e.getMessage());
         }
         LogManager.getInstance();
     }

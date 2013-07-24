@@ -40,6 +40,9 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         if (output == null) {
             this.output = new File(pair.getSource1() + pair.getSource2()
                     + sdf.format(params.getStartRangeDate()) + ".png");
+        }else if(output.isDirectory()) {
+            this.output = new File(output, pair.getSource1() + pair.getSource2()
+                    + sdf.format(params.getStartRangeDate()) + ".png");
         } else
             this.output = output;
 

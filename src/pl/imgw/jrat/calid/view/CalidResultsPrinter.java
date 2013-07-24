@@ -21,6 +21,7 @@ import pl.imgw.jrat.calid.data.RadarsPair;
 import pl.imgw.jrat.tools.out.ResultPrinter;
 import pl.imgw.jrat.tools.out.ResultPrinterManager;
 import pl.imgw.util.Log;
+import pl.imgw.util.LogFile;
 import pl.imgw.util.LogManager;
 /**
  *
@@ -33,31 +34,42 @@ import pl.imgw.util.LogManager;
 public class CalidResultsPrinter {
 
     protected static Log log = LogManager.getLogger();
+    protected static LogFile logFile = LogManager.getFileLogger();
     
-    protected CalidParameters params;
+    protected CalidParameters params = new CalidParameters();
     protected RadarsPair pair;
     protected Scanner scanner;
     
-    protected Set<String> headers;
+    protected Set<String> headers = new HashSet<String>();;
     
     protected SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd;HH:mm");
     protected SimpleDateFormat fsdf = new SimpleDateFormat("yyyyMMdd");
     
     protected ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
     
-    public CalidResultsPrinter(String[] args) {
+   /**
+    * 
+    * @param args
+    * @throws CalidException
+    */
+    public CalidResultsPrinter(String[] args) throws CalidException {
         CalidPairAndParameters pp = null;
-        try {
-            pp = CalidParametersParser.getParser().parsePairAndParameters(args);
-        } catch (CalidException e) {
-            CalidParametersParser.printHelp();
-//            throw e;
+        if (args != null) {
+
+            try {
+                pp = CalidParametersParser.getParser().parsePairAndParameters(
+                        args);
+            } catch (CalidException e) {
+//                CalidParametersParser.printHelp();
+                throw e;
+            }
+            this.params = pp.getParameters();
+            // log.printMsg(params.toString(), Log.TYPE_NORMAL,
+            // Log.MODE_VERBOSE);
+            this.pair = pp.getPair();
+            // log.printMsg(pair.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         }
-        this.params = pp.getParameters();
-//        log.printMsg(params.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
-        this.pair = pp.getPair();
-//        log.printMsg(pair.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
-        
+
     }
     
     /**
@@ -70,7 +82,7 @@ public class CalidResultsPrinter {
     
     public void printList() {
         
-        headers = new HashSet<String>();
+        headers.clear();
         
         Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
         
@@ -79,8 +91,7 @@ public class CalidResultsPrinter {
             return;
         }
 
-        if (!pair.getSource1().isEmpty() || !pair.getSource1().isEmpty()
-                ) {
+        if (pair != null && (pair.hasOnlyOneSource() || pair.hasBothSources())) {
             /* all parameters are provided and printing list of dates */
 
             printer.println("Printing list of available results...\n");
@@ -102,20 +113,17 @@ public class CalidResultsPrinter {
                 printer.println("\t" + n + " results all together in database.");
 
         } else {
-            /* printing list of available reuslts pairs */
-
+            
             printer.println("Printing results list...\n");
 
             for (File f : files) {
                 printResultsHeader(f);
             }
 
-            printer
-                    .println("\nNumber of pairs matching selected parameters: "
-                            + headers.size());
-            printer
-                    .println("To print list of available dates for any particular pair"
-                            + " provide its src, ele, dis and ref");
+            printer.println("\nNumber of pairs matching selected parameters: "
+                    + headers.size());
+            printer.println("To print list of available dates for any particular pair"
+                    + " provide its src, ele, dis and ref");
 
         }
     }

@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 
 import pl.imgw.jrat.calid.CalidException;
+import pl.imgw.jrat.calid.data.CalidParametersParser;
 import pl.imgw.jrat.calid.view.CalidGnuplotResultPrinter;
 import pl.imgw.jrat.calid.view.CalidPeriodsResultsPrinter;
 import pl.imgw.jrat.calid.view.CalidResultsPrinter;
@@ -53,6 +54,7 @@ public class CalidController {
     
     public static void processResult(CommandLine cmd) {
         if(cmd.getOptionValues(CALID_RESULT) == null) {
+            CalidParametersParser.printHelp();
             return;
         }
         processResult(cmd.getOptionValues(CALID_RESULT));
@@ -73,7 +75,11 @@ public class CalidController {
     }
     
     protected static void processList(String[] args) {
-        new CalidResultsPrinter(args).printList();
+        CalidResultsPrinter printer = new CalidResultsPrinter(args);
+        printer.printList();
+//        if(args != null)
+//        else
+//            printer.printListOfAllPairs();
     }
     
     
@@ -83,9 +89,9 @@ public class CalidController {
             if (s.startsWith(PERIOD)) {
 
                 try {
-                    
-                    period = Integer.parseInt(s.substring(
-                            PERIOD.length(), s.length()));
+
+                    period = Integer.parseInt(s.substring(PERIOD.length(),
+                            s.length()));
                     if (period > 0)
                         return period;
                     else
