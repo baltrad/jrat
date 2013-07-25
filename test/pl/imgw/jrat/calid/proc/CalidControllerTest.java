@@ -36,7 +36,7 @@ import pl.imgw.util.LogManager;
 public class CalidControllerTest {
 
     {
-        LogManager.getInstance().setLogger(new ConsolePrinter(Log.MODE_SILENT));
+        LogManager.getInstance().setLogger(new ConsolePrinter(Log.MODE_VERBOSE));
 
     }
     
@@ -63,10 +63,11 @@ public class CalidControllerTest {
     /**
      * Test method for {@link pl.imgw.jrat.calid.proc.CalidController#processResult(java.lang.String[])}.
      */
-    @Test(expected=CalidException.class) @Ignore
+    @Test
     public void shouldntProcessResult() {
         args = "".split(" ");
         CalidController.processResult(args);
+        /* should only print help info */
     }
     
     /**
@@ -75,14 +76,13 @@ public class CalidControllerTest {
      */
     @Test
     public void shouldProcessResultByPair() throws FileNotFoundException {
-        args = new String[]{ "Swidwin,Gdansk" };
-        
+        args = new String[]{ "Swidwin,Gdansk", "date=2013-04-01,2013-04-30" };
         CalidController.processResult(args);
         Scanner s = new Scanner(f);
         int i = 0;
         while (s.hasNextLine()) {
             String a = s.nextLine();
-//            System.out.println(a);
+            System.out.println(a);
             if (!a.isEmpty() && !a.startsWith("#"))
                 i++;
         }
@@ -156,7 +156,8 @@ public class CalidControllerTest {
      */
     @Test
     public void shouldProcessListByPair() throws FileNotFoundException {
-        args = "Swidwin,Gdansk".split(" ");
+        System.out.println("tutaj");
+        args = "date=2013-04-01,2013-04-05".split(" ");
         CalidController.processList(args);
         Scanner s = new Scanner(f);
         int i = 0;
@@ -166,7 +167,7 @@ public class CalidControllerTest {
             if (!a.isEmpty() && !a.startsWith("#"))
                 i++;
         }
-        assertEquals(30, i);
+        assertEquals(12, i);
         s.close();
     }
 
@@ -176,7 +177,7 @@ public class CalidControllerTest {
      */
     @Test
     public void shouldProcessListBySrc() throws FileNotFoundException {
-        args = "Swidwin".split(" ");
+        args = "date=2013-04-01,2013-04-30 Swidwin".split(" ");
         CalidController.processList(args);
         Scanner s = new Scanner(f);
         int i = 0;

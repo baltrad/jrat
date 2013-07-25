@@ -35,7 +35,7 @@ public class CalidStatistics {
             }
         }
         if (size == 0)
-            return null;
+            return 0.0;
 
         return new Double(round(sum / size, 2));
     }
@@ -86,7 +86,7 @@ public class CalidStatistics {
 
         // System.out.println("aray size=" + array.size());
         if (array.size() == 0) {
-            return null;
+            return 0.0;
         }
 
         if (array.size() == 1) {
@@ -120,7 +120,7 @@ public class CalidStatistics {
             }
         }
         if (size == 0)
-            return null;
+            return 0.0;
 
         return round(Math.sqrt(rms / size), 2);
     }

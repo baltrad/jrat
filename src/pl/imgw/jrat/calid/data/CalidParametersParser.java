@@ -133,6 +133,8 @@ public class CalidParametersParser {
                 setFrequency(params, par[i].substring(FREQUENCY.length()));
             } else if (par[i].startsWith(DATE)) {
                 setDates(params, par[i].substring(DATE.length()));
+            } else if (par[i].startsWith(PERIOD)) {
+                ;
             } else if (par[i].contains("=")) {
                 log.printMsg(error_msg + " (" + par[i] + ")", Log.TYPE_WARNING,
                         Log.MODE_VERBOSE);
@@ -141,7 +143,7 @@ public class CalidParametersParser {
             }
 
         }
-
+        log.printMsg("Parsed parameters: " + params, Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         return params;
         
     }
@@ -161,35 +163,12 @@ public class CalidParametersParser {
         }
 
         for (int i = 0; i < par.length; i++) {
-
-            if (par[i].isEmpty()) {
-                throw new CalidException(error_msg + ": string " + i
-                        + " is empty");
-            }
-
-            if (par[i].startsWith(ELEVATION)) {
-                setElevation(params, par[i].substring(ELEVATION.length()));
-            } else if (par[i].startsWith(DISTANCE)) {
-                setDistance(params, par[i].substring(DISTANCE.length()));
-            } else if (par[i].startsWith(RANGE)) {
-                setRange(params, par[i].substring(RANGE.length()));
-            } else if (par[i].startsWith(REFLECTIVITY)) {
-                setReflectivity(params, par[i].substring(REFLECTIVITY.length()));
-            } else if (par[i].startsWith(FREQUENCY)) {
-                setFrequency(params, par[i].substring(FREQUENCY.length()));
-            } else if (par[i].startsWith(DATE)) {
-                setDates(params, par[i].substring(DATE.length()));
-            } else if (par[i].startsWith(PERIOD)) {
-                ;
-            } else if (par[i].contains("=")) {
-                log.printMsg(error_msg + " (" + par[i] + ")", Log.TYPE_WARNING,
-                        Log.MODE_VERBOSE);
-                throw new CalidException("Cannot parse parameter: " + par[i]);
-            } else {
+            if(!par[i].contains("=")) {
                 pair = setSources(par[i]);
+                log.printMsg(pair.toString(), Log.TYPE_NORMAL, Log.MODE_VERBOSE);
             }
         }
-
+        params = parseParameters(par);
         return new CalidPairAndParameters(params, pair);
         
     }
@@ -303,7 +282,7 @@ public class CalidParametersParser {
             throw new CalidException(frequency + " is ont a valid elevation value");
         }
 
-        if (frequency == null || frequency < 1 || frequency > 100) {
+        if (frequency == null || frequency < 0 || frequency > 100) {
             throw new CalidException(frequency + " is ont a valid frequency value");
         }
 
@@ -452,40 +431,46 @@ public class CalidParametersParser {
         String rest = "[ele=] [dis=] [range=] [ref=]";
 
         StringBuilder msg = new StringBuilder("CALID algorytm usage:\n");
-        msg.append("jrat --calid <args> -i files/folder(s) [-v] start comparison\n");
+        msg.append("jrat --calid [<args>] [-i files/folder(s)] [-v] [--calid-opt file]\n" +
+        		"\tstart comparison\n\t");
         msg.append("<args> ");
         msg.append(rest);
-        msg.append("\n");
-        msg.append("ele: elevation angle in degrees, from -10.0 to 90.0\n");
+        msg.append(" default options for every pair\n\t");
+        msg.append("ele: elevation angle in degrees, from -10.0 to 90.0\n\t");
         msg.append("dis: minimal distance between two overlapping points in meters,");
-        msg.append(" must be bigger then 0,\n");
-        msg.append("range: maximum radar range for overlapping points, (range > 1)\n");
-        msg.append("ref: minimal reflectivity (dBZ)\n\n");
-        msg.append("e.g.  jrat --calid ele=0.5 dis=500 ref=3.5 ");
-        msg.append("-i T_PAGZ48_C_SOWR_20120109233027.h5 T_PAGZ44_C_SOWR_20120109233016.h5 -v\n\n");
-        msg.append("jrat --calid-help print this message\n\n");
-        msg.append("jrat --calid-list [<args>] list all available pairs.")
-                .append("\n<args> ");
+        msg.append(" must be bigger then 0,\n\t");
+        msg.append("range: maximum radar range for overlapping points, (range > 1)\n\t");
+        msg.append("ref: minimal reflectivity (dBZ)\n\t");
+        msg.append("--calid-opt file: use this file to set options for each pair separately\n\t");
+        msg.append("e.g. jrat --calid-opt /opt/baltrad/jrat/etc/calid/radgen_calid.opt " +
+        		"--calid ele=0.5 dis=500 ref=3.0 --seq=10\n\n");
+        
+        msg.append("jrat --calid-list [<args>]\n\tlist all available pairs")
+                .append("\n\t<args> ");
         msg.append(src).append(" ").append(rest + "\n\n");
-        msg.append("jrat --calid-result [<args>] [-d <args>] prints results.");
-        msg.append("\n<args> ");
+        
+        msg.append("jrat --calid-result [<args>] [-d <args>]\n\tprints results");
+        msg.append("\n\t<args> ");
         msg.append(date);
         msg.append(" [").append(src).append("] ");
         msg.append(rest);
-        msg.append(" [freq=Z]\n");
+        msg.append(" [freq=Z]\n\t");
         msg.append("date: sets range of time, if only starting date is selected then only ");
-        msg.append("this date data is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional,\n");
-        msg.append("src: source name\n");
+        msg.append("this date data is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional,\n\t");
+        msg.append("src: source name\n\n");
+        
+        msg.append("jrat --calid-plot [<args>] Source1,Source2\n\tlist all available pairs")
+        .append("\n\t<args>");
+        msg.append(rest);
+        msg.append("\n");
+        msg.append("\n");
+        
+        
+        msg.append("jrat --calid-help print this message\n\n");
         // + "ele: elevation angle in degrees, from -10.0 to 90.0\n"
         // +
         // "dis: minimal distance between paired points in meters, must be bigger then 0,\n"
         // + "ref: minimal reflectivity (dBZ)\n"
-        msg.append("freq: minimal frequency percentage of paired points with precipitation ");
-        msg.append("above used threshold (of dBZ), must be bigger then 0,\n");
-        msg.append("--calid-detail <args> using specified method to present results, available arguments are:");
-        msg.append(" method=median, and period=X where X means number of days (X > 0).\n");
-        msg.append("e.g: --calid-result Rzeszow");
-        msg.append(" date=2011-08-21/09:30,2011-08-21/10:30 freq=10 --calid-detail method=mean period=1\n");
         msg.append("\nuse jrat --help to print general jrat help message");
         /*
 */

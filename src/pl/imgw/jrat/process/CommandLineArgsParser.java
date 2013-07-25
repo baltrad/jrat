@@ -128,7 +128,8 @@ public class CommandLineArgsParser {
 	private static final String CALID_PLOT_DESCR = "CALID plot result, "
 			+ "for more help use --calid-help option";
 	
-	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter\n<arg> XML file path";
+	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter, " +
+			"must be use with --calid\n<file> XML file path";
 
 	private final static String SCANSUN_DESCR = "find solar rays in radar obseravtions\n"
 			+ "<args> [hmin=] [rmin=] [tf=] [ad=] [tw=] [awe=] [awa=]";
@@ -180,7 +181,7 @@ public class CommandLineArgsParser {
 				.withDescription(SEQ_DESCR).create();
 		options.addOption(seq);
 
-		Option calid = OptionBuilder.withLongOpt(CALID).hasOptionalArgs()
+		Option calid = OptionBuilder.withLongOpt(CALID).hasArgs()
 				.withDescription(CALID_DESCR).create();
 		options.addOption(calid);
 

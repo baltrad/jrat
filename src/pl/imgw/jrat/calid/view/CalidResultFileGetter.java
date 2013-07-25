@@ -113,7 +113,7 @@ public class CalidResultFileGetter {
                 // parameters
                 for (File file : parameters.listFiles()) {
                     if (file.isFile() && file.getName().endsWith("results")) {
-                        if (params.isStartDateDefault() || keep(file, params))
+                        if (keep(file, params))
                             results.add(file);
                     }
                 }

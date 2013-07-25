@@ -3,6 +3,7 @@
  */
 package pl.imgw.jrat.calid.data;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -198,14 +199,15 @@ public class CalidParameters {
      */
     @Override
     public String toString() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd/HH:ss");
         StringBuffer msg = new StringBuffer();
         msg.append("elevation=" + getElevation());
         msg.append(", distance=" + getDistance());
         msg.append(", range=" + getMaxRange());
         msg.append(", reflectivity=" + getReflectivity());
         msg.append(", frequency=" + getFrequency());
-        msg.append(", start date=" + getStartRangeDate());
-        msg.append(", end date=" + getEndRangeDate());
+        msg.append(", start date=" + format.format(getStartRangeDate()));
+        msg.append(", end date=" + format.format(getEndRangeDate()));
         return msg.toString();
     }
     

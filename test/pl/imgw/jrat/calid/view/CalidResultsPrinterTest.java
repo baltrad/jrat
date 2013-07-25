@@ -38,7 +38,7 @@ public class CalidResultsPrinterTest {
             + "ele=0.5 dis=500 range=200 ref=3.0").split(" ");
 
     {
-        LogManager.getInstance().setLogger(new ConsolePrinter(Log.MODE_SILENT));
+        LogManager.getInstance().setLogger(new ConsolePrinter(Log.MODE_VERBOSE));
 
     }
 
@@ -81,7 +81,7 @@ public class CalidResultsPrinterTest {
 
     }
 
-    @Test
+    @Test @Ignore
     public void shouldPrintResults() throws FileNotFoundException {
         args = "ele=0.5 dis=500 ref=3.0 date=2013-04-01/06:10 Poznan,Swidwin"
                 .split(" ");

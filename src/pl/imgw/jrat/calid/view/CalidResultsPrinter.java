@@ -60,7 +60,6 @@ public class CalidResultsPrinter {
                 pp = CalidParametersParser.getParser().parsePairAndParameters(
                         args);
             } catch (CalidException e) {
-//                CalidParametersParser.printHelp();
                 throw e;
             }
             this.params = pp.getParameters();
@@ -91,7 +90,7 @@ public class CalidResultsPrinter {
             return;
         }
 
-        if (pair != null && (pair.hasOnlyOneSource() || pair.hasBothSources())) {
+//        if (pair != null ) {
             /* all parameters are provided and printing list of dates */
 
             printer.println("Printing list of available results...\n");
@@ -101,7 +100,7 @@ public class CalidResultsPrinter {
                 
                 printResultsHeader(f);
                     
-                int a = printResultsDateNumber(f);
+                int a = printNumberOfResultsByDate(f);
                 if (a < 1) {
                     continue;
                 }
@@ -112,7 +111,7 @@ public class CalidResultsPrinter {
             if (n > 1)
                 printer.println("\t" + n + " results all together in database.");
 
-        } else {
+        /*} else {
             
             printer.println("Printing results list...\n");
 
@@ -124,8 +123,8 @@ public class CalidResultsPrinter {
                     + headers.size());
             printer.println("To print list of available dates for any particular pair"
                     + " provide its src, ele, dis and ref");
-
         }
+         */
     }
     
     protected void setDates(File f, Set<Date> set) {
@@ -163,7 +162,7 @@ public class CalidResultsPrinter {
 
     }
     
-    protected int printResultsDateNumber(File f) {
+    protected int printNumberOfResultsByDate(File f) {
         ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         // printer.println(f);
         String date = "";
