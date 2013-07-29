@@ -66,6 +66,11 @@ public class CalidProcessor implements FilesProcessor, VolumesProcessor {
      */
     @Override
     public void processVolumes(List<PolarData> vol) {
+        if(vol.size() < 2) {
+            log.printMsg("Need at least two volumes for a pair ", Log.TYPE_WARNING,
+                    Log.MODE_VERBOSE);
+            return;
+        }
         pairs = new PairsContainer();
         pairs.setVolumes(vol);
         process();
@@ -79,6 +84,11 @@ public class CalidProcessor implements FilesProcessor, VolumesProcessor {
      */
     @Override
     public void processFile(List<File> files) {
+        if(files.size() < 2) {
+            log.printMsg("Need at least two files for a pair ", Log.TYPE_WARNING,
+                    Log.MODE_VERBOSE);
+            return;
+        }
         pairs = new PairsContainer();
         pairs.setFiles(files);
         process();

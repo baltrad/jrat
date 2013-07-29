@@ -75,7 +75,6 @@ public class VolumeProcessorManager implements FilesProcessor {
             } 
             PolarData vol = null;
             if (parser.parse(f)) {
-                System.out.println("dodano plik: " + f);
                 vol = parser.getPolarData();
                 volumes.add(vol);
             }
