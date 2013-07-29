@@ -82,40 +82,18 @@ public class CalidResultsPrinter {
     public void printList() {
         
         headers.clear();
-        
+
         Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
-        
+
         if (files.isEmpty()) {
             printer.println("No results matching selected parameters");
             return;
         }
 
-//        if (pair != null ) {
-            /* all parameters are provided and printing list of dates */
-
-            printer.println("Printing list of available results between "
+        if (params.isStartDateDefault() && params.isEndDateDefault()) {
+            printer.println("Printing list of pairs with results between "
                     + sdf.format(params.getStartRangeDate()) + " and "
                     + sdf.format(params.getEndRangeDate()));
-            int n = 0;
-            for (File f : files) {
-
-                
-                printResultsHeader(f);
-                    
-                int a = printNumberOfResultsByDate(f);
-                if (a < 1) {
-                    continue;
-                }
-//                String msg = f.getName().split("\\.")[0] + " number of dates: " + a;
-//                printer.println("\t" + msg);
-                n += a;
-            }
-            if (n > 1)
-                printer.println("\t" + n + " results all together in database.");
-/*
-        } else {
-            
-            printer.println("Printing results list...\n");
 
             for (File f : files) {
                 printResultsHeader(f);
@@ -125,8 +103,25 @@ public class CalidResultsPrinter {
                     + headers.size());
             printer.println("To print list of available dates for any particular pair"
                     + " provide its src, ele, dis and ref");
+        } else {
+
+            printer.println("Printing list of available results between "
+                    + sdf.format(params.getStartRangeDate()) + " and "
+                    + sdf.format(params.getEndRangeDate()));
+            int n = 0;
+            for (File f : files) {
+
+                printResultsHeader(f);
+
+                int a = printNumberOfResultsByDate(f);
+                if (a < 1) {
+                    continue;
+                }
+                n += a;
+            }
+            if (n > 1)
+                printer.println("\t" + n + " results all together in database.");
         }
-         */
     }
     
     protected void setDates(File f, Set<Date> set) {
