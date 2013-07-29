@@ -76,7 +76,7 @@ public class CalidResultsPrinterTest {
             if (!a.startsWith("#"))
                 i++;
         }
-        assertEquals(4, i);
+        assertEquals(3, i);
         s.close();
 
     }
