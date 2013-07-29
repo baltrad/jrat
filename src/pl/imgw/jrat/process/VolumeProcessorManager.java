@@ -105,7 +105,7 @@ public class VolumeProcessorManager implements FilesProcessor {
     public String getProcessName() {
         String name = "";
         for(VolumesProcessor s : processes)
-            name += (s + ", ");
+            name += (s.getProcessName() + ", ");
         return name;
     }
 

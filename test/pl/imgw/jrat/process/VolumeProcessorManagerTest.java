@@ -32,9 +32,20 @@ public class VolumeProcessorManagerTest {
         
         @Override
         public void processVolumes(List<PolarData> vol) {
-            System.out.println("dziala");
             for(PolarData data : vol)
                 System.out.println(data.getSiteName() + ", date: " + data.getTime());
+        }
+
+        @Override
+        public void processFile(List<File> files) {
+            for(File f : files)
+                System.out.println(f);
+            
+        }
+
+        @Override
+        public String getProcessName() {
+            return "vol test proc";
         }
     };
     

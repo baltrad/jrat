@@ -247,8 +247,9 @@ public class MainProcessController {
                 return true;
             }
         } else {
-            SingleRunProcessor single = new SingleRunProcessor(proc, folders,
+            SingleRunProcessor single = new SingleRunProcessor(volProc, folders,
                     files);
+            
             if (!single.isValid())
                 return false;
             // shouldn't be run as a separate thread, this is why I'm using

@@ -100,6 +100,9 @@ public class CalidProcessor implements FilesProcessor, VolumesProcessor {
             } catch (CalidException e) {
                 logFile.saveErrorLogs(CalidProcessor.class.getName(),
                         e.getMessage());
+            } catch (Exception e) {
+                logFile.saveErrorLogs(CalidProcessor.class.getName(),
+                        e.getMessage());
             }
         }
         pairs = null;

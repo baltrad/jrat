@@ -58,7 +58,7 @@ public class MainProcessControllerTest {
     @Test @Ignore
     public void shouldQuickPrintResult() {
         System.out.println("start");
-        args = "--calid-result Swidwin date=2013-04-01 freq=0 -v".split(" ");
+        args = "--calid-result Swidwin date=2013-04-01 freq =0 -v".split(" ");
         MainProcessController proc = new MainProcessController(args);
         proc.start();
         System.out.println("koniec");
@@ -71,6 +71,7 @@ public class MainProcessControllerTest {
         proc.start();
         System.out.println("koniec");
     }
+    
     @Test @Ignore
     public void shouldGeneratePlotByDate() {
         System.out.println("start");
@@ -80,4 +81,12 @@ public class MainProcessControllerTest {
         System.out.println("koniec");
     }
     
+    @Test
+    public void shouldNotHangWithYearsThatAreNotInDB() {
+        System.out.println("start");
+        args = "--calid-result Pastewnik date=2010 -v".split(" ");
+        MainProcessController proc = new MainProcessController(args);
+        proc.start();
+        System.out.println("koniec");
+    }
 }

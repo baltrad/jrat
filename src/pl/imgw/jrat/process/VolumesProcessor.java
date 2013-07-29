@@ -15,7 +15,7 @@ import pl.imgw.jrat.data.PolarData;
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public interface VolumesProcessor {
+public interface VolumesProcessor extends FilesProcessor{
 
     void processVolumes(List<PolarData> vol);
     
