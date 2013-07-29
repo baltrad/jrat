@@ -71,15 +71,27 @@ public class VolumeProcessorManager implements FilesProcessor {
                     proc.processVolumes(volumes);
                 }
                 volumes.clear();
-                System.gc();
+//                System.gc();
             } 
             PolarData vol = null;
             if (parser.parse(f)) {
+                System.out.println("dodano plik: " + f);
                 vol = parser.getPolarData();
                 volumes.add(vol);
             }
             
         }
+        
+//        for (VolumesProcessor proc : processes) {
+//            try {
+//                proc.processVolumes(volumes);
+//            } catch (Exception e) {
+//                log.saveErrorLogs(VolumeProcessorManager.class.getName(),
+//                        e.getMessage());
+//            }
+//        }
+        
+        
         
     }
     
