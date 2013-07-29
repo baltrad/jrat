@@ -30,9 +30,9 @@ public class MainProcessControllerTest {
     /**
      * Test method for {@link pl.imgw.jrat.process.MainProcessController#start()}.
      */
-    @Test @Ignore
+    @Test
     public void shouldStartWithCalidList() {
-        args = "--calid-list".split(" ");
+        args = "--calid-list Swidwin".split(" ");
         main = new MainProcessController(args);
         assertTrue(main.start());
         

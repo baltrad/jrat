@@ -93,7 +93,9 @@ public class CalidResultsPrinter {
 //        if (pair != null ) {
             /* all parameters are provided and printing list of dates */
 
-            printer.println("Printing list of available results...\n");
+            printer.println("Printing list of available results between "
+                    + sdf.format(params.getStartRangeDate()) + " and "
+                    + sdf.format(params.getEndRangeDate()));
             int n = 0;
             for (File f : files) {
 
@@ -110,8 +112,8 @@ public class CalidResultsPrinter {
             }
             if (n > 1)
                 printer.println("\t" + n + " results all together in database.");
-
-        /*} else {
+/*
+        } else {
             
             printer.println("Printing results list...\n");
 
