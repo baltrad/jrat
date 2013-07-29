@@ -86,7 +86,8 @@ public class CalidResultsPrinter {
         Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
 
         if (files.isEmpty()) {
-            printer.println("No results matching selected parameters");
+            printer.println("No results between " + sdf.format(params.getStartRangeDate()) + " and "
+                    + sdf.format(params.getEndRangeDate()));
             return;
         }
 
@@ -102,7 +103,7 @@ public class CalidResultsPrinter {
             printer.println("\nNumber of pairs matching selected parameters: "
                     + headers.size());
             printer.println("To print list of available dates for any particular pair"
-                    + " provide its src, ele, dis and ref");
+                    + " add date= parameter with correct date value");
         } else {
 
             printer.println("Printing list of available results between "

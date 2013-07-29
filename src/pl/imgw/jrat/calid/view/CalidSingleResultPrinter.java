@@ -40,41 +40,29 @@ public class CalidSingleResultPrinter extends CalidResultsPrinter {
      */
     public boolean printResults() {
         
-        log.printMsg("Printing results", Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+//        log.printMsg("Printing results", Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         
         ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
         headers = new HashSet<String>();
 
-//        CalidSingleResultContainer results = new CalidSingleResultContainer(params, pair);
-//        cc.setParsedParameters(params);
-        
         Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
-//        List<Date> dates;
         boolean noResults = true;
         if (files.isEmpty()) {
-            printer.println("# No results matching selected parameters");
+            printer.println("# No results matching selected parameters between " + sdf.format(params.getStartRangeDate()) + " and "
+                    + sdf.format(params.getEndRangeDate()));
             return false;
         }
 
-//        if (!areParametersSet()) {
-//            printList();
-//            System.out.println("To print results for any particular pair"
-//                    + " provide its src, ele, dis, ref and date");
-//        }
-//        System.out.println("tutaj");
+        printer.println("Printing results for period between "
+                + sdf.format(params.getStartRangeDate()) + " and "
+                + sdf.format(params.getEndRangeDate()));
 
         boolean printHeader = true;
 
-//        printHorizontalLine();
-        
         for (File f : files) {
 
             printResultsHeader(f);
             StringBuilder header = new StringBuilder();
-
-//            header.append("#");
-
-
 
             header.append("#\tdate \t\tfreq \tmean \tRMS"
                     + " \tmedian \tr1under \tr2under\n");
