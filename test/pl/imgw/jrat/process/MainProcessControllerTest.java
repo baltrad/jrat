@@ -84,7 +84,7 @@ public class MainProcessControllerTest {
     @Test
     public void shouldNotHangWithYearsThatAreNotInDB() {
         System.out.println("start");
-        args = "--calid-result Pastewnik date=2010 -v".split(" ");
+        args = "--calid ele=0.5 -i test-data/calid/2010100305000900dBZ.vol test-data/calid/2010100305002900dBZ.vol -v".split(" ");
         MainProcessController proc = new MainProcessController(args);
         proc.start();
         System.out.println("koniec");
