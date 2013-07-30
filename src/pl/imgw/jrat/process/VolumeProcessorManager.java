@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 import pl.imgw.jrat.data.PolarData;
 import pl.imgw.jrat.data.parsers.GlobalParser;
 import pl.imgw.jrat.data.parsers.VolumeParser;
-import pl.imgw.util.Log;
 import pl.imgw.util.LogFile;
 import pl.imgw.util.LogManager;
 
@@ -123,7 +122,7 @@ public class VolumeProcessorManager implements FilesProcessor {
 //            System.out.println(matcher.group());
             return sdf.parse(matcher.group().substring(0, 12));
         }
-        return null;
+        throw new ParseException("This is not a date file name", 0);
     }
     
     Comparator<File> fileWithDate = new Comparator<File>() {
