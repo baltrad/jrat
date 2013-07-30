@@ -5,6 +5,8 @@ package pl.imgw.jrat.process;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -32,7 +34,7 @@ public class MainProcessControllerTest {
      */
     @Test
     public void shouldStartWithCalidList() {
-        args = "--calid-plot Swidwin date=2013-04 -v".split(" ");
+        args = "--calid-plot Swidwin,Gdansk date=2013-04".split(" ");
         main = new MainProcessController(args);
         assertTrue(main.start());
         
@@ -89,4 +91,5 @@ public class MainProcessControllerTest {
         proc.start();
         System.out.println("koniec");
     }
+        
 }

@@ -73,6 +73,7 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
         boolean notEmpty = false;
 
         ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
+        
         headers = new HashSet<String>();
 
         List<Double> meanRes = null;

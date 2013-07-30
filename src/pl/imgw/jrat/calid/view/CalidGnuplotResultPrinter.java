@@ -29,7 +29,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
     private static Log log = LogManager.getLogger();
 
     private File output;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    private SimpleDateFormat shortDateFormat = new SimpleDateFormat("yyyyMMdd");
 
     /**
      * @param params
@@ -43,10 +43,10 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         }
         if (output == null) {
             this.output = new File(pair.getSource1() + pair.getSource2()
-                    + sdf.format(params.getStartRangeDate()) + ".png");
+                    + shortDateFormat.format(params.getStartRangeDate()) + ".png");
         }else if(output.isDirectory()) {
             this.output = new File(output, pair.getSource1() + pair.getSource2()
-                    + sdf.format(params.getStartRangeDate()) + ".png");
+                    + shortDateFormat.format(params.getStartRangeDate()) + ".png");
         } else
             this.output = output;
 
@@ -58,10 +58,15 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
 
         if (files.isEmpty()) {
             log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_VERBOSE);
+                    Log.MODE_SILENT);
             return;
         }
 
+        printer.println("# Results between "
+                + sdf.format(params.getStartRangeDate()) + " and "
+                + sdf.format(params.getEndRangeDate()) + " for freq >="
+                + params.getFrequency());
+        
         // ConsoleProgressBar.getProgressBar().initialize(20, 5,
         // log.getVerbose() == SPARE, "Plot generating");
 
