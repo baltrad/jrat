@@ -58,9 +58,7 @@ public class VolumeProcessorManager implements FilesProcessor {
         
         Date newdate = null;
         boolean next = false;
-        
         for (File f : files) {
-            
             try {
                 newdate = parseDate(f);
                 if(!newdate.equals(olddate)) {
@@ -89,14 +87,15 @@ public class VolumeProcessorManager implements FilesProcessor {
             
         }
         
-//        for (VolumesProcessor proc : processes) {
-//            try {
-//                proc.processVolumes(volumes);
-//            } catch (Exception e) {
-//                log.saveErrorLogs(VolumeProcessorManager.class.getName(),
-//                        e.getMessage());
-//            }
-//        }
+        //last time (needed for processing last bunch of files)
+        for (VolumesProcessor proc : processes) {
+            try {
+                proc.processVolumes(volumes);
+            } catch (Exception e) {
+                log.saveErrorLogs(VolumeProcessorManager.class.getName(),
+                        e.getMessage());
+            }
+        }
         
         
         
