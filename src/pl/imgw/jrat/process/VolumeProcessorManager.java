@@ -49,7 +49,13 @@ public class VolumeProcessorManager implements FilesProcessor {
         volumes.clear();
         Collections.sort(files, fileWithDate);
         
-        Date olddate = new Date();
+        Date olddate = null;
+        try {
+            olddate = parseDate(files.get(0));
+        } catch (ParseException e1) {
+            olddate = new Date();
+        }
+        
         Date newdate = null;
         boolean next = false;
         
@@ -66,6 +72,13 @@ public class VolumeProcessorManager implements FilesProcessor {
             } catch (ParseException e) {
                 next = false;
             }
+            
+            PolarData vol = null;
+            if (parser.parse(f)) {
+                vol = parser.getPolarData();
+                volumes.add(vol);
+            }
+            
             if(next) {
                 for(VolumesProcessor proc : processes) {
                     proc.processVolumes(volumes);
@@ -73,11 +86,6 @@ public class VolumeProcessorManager implements FilesProcessor {
                 volumes.clear();
 //                System.gc();
             } 
-            PolarData vol = null;
-            if (parser.parse(f)) {
-                vol = parser.getPolarData();
-                volumes.add(vol);
-            }
             
         }
         

@@ -32,7 +32,7 @@ public class MainProcessControllerTest {
     /**
      * Test method for {@link pl.imgw.jrat.process.MainProcessController#start()}.
      */
-    @Test
+    @Test @Ignore
     public void shouldStartWithCalidList() {
         args = "--calid-plot Swidwin,Gdansk date=2013-04 -v".split(" ");
         main = new MainProcessController(args);
@@ -91,5 +91,5 @@ public class MainProcessControllerTest {
         proc.start();
         System.out.println("koniec");
     }
-        
+    
 }

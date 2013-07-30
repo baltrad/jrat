@@ -143,7 +143,7 @@ public class CalidParametersParser {
             }
 
         }
-        log.printMsg("Parsed parameters: " + params, Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+        log.printMsg("Parsed parameters:\n" + params, Log.TYPE_NORMAL, Log.MODE_NORMAL);
         return params;
         
     }

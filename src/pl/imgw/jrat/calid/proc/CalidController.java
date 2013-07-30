@@ -203,15 +203,15 @@ public class CalidController {
             return null;
         }
 
-        String par = "";
-        if (cmd.getOptionValue(CALID) == null)
-            par = "default settings";
-        else
-            for (String s : cmd.getOptionValues(CALID)) {
-                par += s + " ";
-            }
-        log.printMsg("Starting CALID with " + par, Log.TYPE_NORMAL,
-                Log.MODE_VERBOSE);
+//        String par = "";
+//        if (cmd.getOptionValue(CALID) == null)
+//            par = "default settings";
+//        else
+//            for (String s : cmd.getOptionValues(CALID)) {
+//                par += s + " ";
+//            }
+//        log.printMsg("Starting CALID with " + par, Log.TYPE_NORMAL,
+//                Log.MODE_VERBOSE);
 
         return proc;
     }
