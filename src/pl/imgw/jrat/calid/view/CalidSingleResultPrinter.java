@@ -48,17 +48,19 @@ public class CalidSingleResultPrinter extends CalidResultsPrinter {
         Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
         boolean noResults = true;
         if (files.isEmpty()) {
-            printer.println("# No results matching selected parameters between "
+            log.printMsg("# No results matching selected parameters between "
                     + sdf.format(params.getStartRangeDate())
                     + " and "
-                    + sdf.format(params.getEndRangeDate()));
+                    + sdf.format(params.getEndRangeDate()), Log.TYPE_WARNING,
+                    Log.MODE_NORMAL);
             return false;
         }
 
-        printer.println("# Results between "
+        log.printMsg("# Results between "
                 + sdf.format(params.getStartRangeDate()) + " and "
                 + sdf.format(params.getEndRangeDate()) + " for freq >="
-                + params.getFrequency());
+                + params.getFrequency(), Log.TYPE_WARNING,
+                Log.MODE_NORMAL);
 
         boolean printHeader = true;
 

@@ -58,14 +58,15 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
 
         if (files.isEmpty()) {
             log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_SILENT);
+                    Log.MODE_NORMAL);
             return;
         }
 
-        printer.println("# Results between "
+        log.printMsg("# Results between "
                 + sdf.format(params.getStartRangeDate()) + " and "
                 + sdf.format(params.getEndRangeDate()) + " for freq >="
-                + params.getFrequency());
+                + params.getFrequency(), Log.TYPE_WARNING,
+                Log.MODE_NORMAL);
         
         // ConsoleProgressBar.getProgressBar().initialize(20, 5,
         // log.getVerbose() == SPARE, "Plot generating");
@@ -80,7 +81,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         setPeriod(1);
         if (!printResults(files)) {
             log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_VERBOSE);
+                    Log.MODE_NORMAL);
             return;
         }
 
@@ -90,7 +91,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         setPeriod(5);
         if (!printResults(files)) {
             log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_VERBOSE);
+                    Log.MODE_NORMAL);
             return;
         }
 
@@ -100,7 +101,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         setPeriod(10);
         if (!printResults(files)) {
             log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_VERBOSE);
+                    Log.MODE_NORMAL);
             return;
         }
 
@@ -126,7 +127,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         // ConsoleProgressBar.getProgressBar().printDoneMsg();
 
         log.printMsg("New plot generated: " + output, Log.TYPE_NORMAL,
-                Log.MODE_VERBOSE);
+                Log.MODE_NORMAL);
 
     }
 
