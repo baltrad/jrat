@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import pl.imgw.jrat.AplicationConstans;
+import pl.imgw.jrat.calid.CalidException;
 import pl.imgw.jrat.tools.out.FileResultPrinter;
 import pl.imgw.jrat.tools.out.ResultPrinter;
 import pl.imgw.jrat.tools.out.ResultPrinterManager;
@@ -35,8 +36,11 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
      * @param detParams
      * @throws IOException
      */
-    public CalidGnuplotResultPrinter(String[] args, File output) {
+    public CalidGnuplotResultPrinter(String[] args, File output) throws CalidException{
         super(args, 1);
+        if(pair.hasOnlyOneSource()) {
+            throw new CalidException("Must provide both sources");
+        }
         if (output == null) {
             this.output = new File(pair.getSource1() + pair.getSource2()
                     + sdf.format(params.getStartRangeDate()) + ".png");

@@ -32,7 +32,7 @@ public class MainProcessControllerTest {
      */
     @Test
     public void shouldStartWithCalidList() {
-        args = "--calid-result Poznan,Legionowo date=2013-07-27".split(" ");
+        args = "--calid-plot Swidwin date=2013-04 -v".split(" ");
         main = new MainProcessController(args);
         assertTrue(main.start());
         

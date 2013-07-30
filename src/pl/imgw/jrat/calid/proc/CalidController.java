@@ -45,6 +45,8 @@ public class CalidController {
         try {
             new CalidGnuplotResultPrinter(args, output)
                     .generateMeanDifferencePlots();
+        } catch (CalidException e) {
+            log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
         } catch (IllegalArgumentException e) {
             log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
         } catch (IOException e) {
