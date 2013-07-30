@@ -202,11 +202,21 @@ public class CalidParameters {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd/HH:ss");
         StringBuffer msg = new StringBuffer();
         msg.append("elevation=" + getElevation());
-        msg.append(", distance=" + getDistance());
-        msg.append(", range=" + getMaxRange());
-        msg.append(", reflectivity=" + getReflectivity());
-        msg.append(", frequency=" + getFrequency());
-        msg.append(", start date=" + format.format(getStartRangeDate()));
+        if (isElevationDefault())
+            msg.append(" (default)");
+        msg.append("\ndistance=" + getDistance());
+        if (isDistanceDefault())
+            msg.append(" (default)");
+        msg.append("\nrange=" + getMaxRange());
+        if (isMaxRangeDefault())
+            msg.append(" (default)");
+        msg.append("\nreflectivity=" + getReflectivity());
+        if (isReflectivityDefault())
+            msg.append(" (default)");
+        msg.append("\nfrequency=" + getFrequency());
+        if (isFrequencyDefault())
+            msg.append(" (default)");
+        msg.append("\nstart date=" + format.format(getStartRangeDate()));
         msg.append(", end date=" + format.format(getEndRangeDate()));
         return msg.toString();
     }

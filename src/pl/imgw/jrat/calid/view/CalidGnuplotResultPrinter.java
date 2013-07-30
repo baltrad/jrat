@@ -65,7 +65,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         log.printMsg("# Results between "
                 + sdf.format(params.getStartRangeDate()) + " and "
                 + sdf.format(params.getEndRangeDate()) + " for freq >="
-                + params.getFrequency(), Log.TYPE_WARNING,
+                + params.getFrequency(), Log.TYPE_NORMAL,
                 Log.MODE_NORMAL);
         
         // ConsoleProgressBar.getProgressBar().initialize(20, 5,

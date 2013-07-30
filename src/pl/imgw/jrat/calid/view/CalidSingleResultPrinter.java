@@ -59,7 +59,7 @@ public class CalidSingleResultPrinter extends CalidResultsPrinter {
         log.printMsg("# Results between "
                 + sdf.format(params.getStartRangeDate()) + " and "
                 + sdf.format(params.getEndRangeDate()) + " for freq >="
-                + params.getFrequency(), Log.TYPE_WARNING,
+                + params.getFrequency(), Log.TYPE_NORMAL,
                 Log.MODE_NORMAL);
 
         boolean printHeader = true;
