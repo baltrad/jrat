@@ -58,7 +58,6 @@ public class VolumeProcessorManager implements FilesProcessor {
         Date newdate = null;
         boolean next = false;
         for (File f : files) {
-            System.out.println("file: " + f);
             try {
                 newdate = parseDate(f);
                 if(!newdate.equals(olddate)) {
