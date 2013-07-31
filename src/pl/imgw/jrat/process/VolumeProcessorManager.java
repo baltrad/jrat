@@ -61,8 +61,6 @@ public class VolumeProcessorManager implements FilesProcessor {
             System.out.println("file: " + f);
             try {
                 newdate = parseDate(f);
-                System.out.println("newdate: " + newdate);
-                System.out.println("olddate: " + olddate);
                 if(!newdate.equals(olddate)) {
                     next = true;
                 }
@@ -75,7 +73,6 @@ public class VolumeProcessorManager implements FilesProcessor {
             
             
             if(next) {
-                System.out.println("process: " + volumes.size());
                 for(VolumesProcessor proc : processes) {
                     proc.processVolumes(volumes);
                 }
