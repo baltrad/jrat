@@ -34,7 +34,7 @@ public class MainProcessControllerTest {
      */
     @Test
     public void shouldStartWithCalidList() {
-        args = "--calid ele=0.5 -i . -v".split(" ");
+        args = "--calid ele=0.5 -i test-data/calid -v".split(" ");
         main = new MainProcessController(args);
         assertTrue(main.start());
         

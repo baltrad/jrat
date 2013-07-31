@@ -58,8 +58,11 @@ public class VolumeProcessorManager implements FilesProcessor {
         Date newdate = null;
         boolean next = false;
         for (File f : files) {
+            System.out.println("file: " + f);
             try {
                 newdate = parseDate(f);
+                System.out.println("newdate: " + newdate);
+                System.out.println("olddate: " + olddate);
                 if(!newdate.equals(olddate)) {
                     next = true;
                 }
@@ -70,23 +73,25 @@ public class VolumeProcessorManager implements FilesProcessor {
                 next = false;
             }
             
+            
+            if(next) {
+                System.out.println("process: " + volumes.size());
+                for(VolumesProcessor proc : processes) {
+                    proc.processVolumes(volumes);
+                }
+                volumes.clear();
+//                System.gc();
+            }
+            
             PolarData vol = null;
             if (parser.parse(f)) {
                 vol = parser.getPolarData();
                 volumes.add(vol);
             }
             
-            if(next) {
-                for(VolumesProcessor proc : processes) {
-                    proc.processVolumes(volumes);
-                }
-                volumes.clear();
-//                System.gc();
-            } 
-            
         }
         
-        //last time (needed for processing last bunch of files)
+        //needed for processing last bunch of files
         for (VolumesProcessor proc : processes) {
             try {
                 proc.processVolumes(volumes);
@@ -141,7 +146,7 @@ public class VolumeProcessorManager implements FilesProcessor {
             }
             if(s1 != null && s2 != null)
                 return s1.compareTo(s2);
-            return 0;
+            return o1.compareTo(o2);
         }
     };
     
