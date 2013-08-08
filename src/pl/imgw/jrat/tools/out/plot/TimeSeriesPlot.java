@@ -66,7 +66,7 @@ public abstract class TimeSeriesPlot {
         plot.setTimeFormat("%Y-%m-%d");
         plot.setFormatX(xformat);
         if(median != null)
-            plot.setKey("box 5 inside left top title \"Daily median = " + median + "\";");
+            plot.setKey("title \"Daily median = " + median + "\";");
 
         try {
             setPlot();
