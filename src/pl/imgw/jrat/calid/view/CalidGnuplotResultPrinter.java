@@ -129,8 +129,12 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
 
         // ConsoleProgressBar.getProgressBar().printDoneMsg();
 
-        log.printMsg("New plot generated: " + output, Log.TYPE_NORMAL,
+        if(output.exists())
+            log.printMsg("New plot generated: " + output, Log.TYPE_NORMAL,
                 Log.MODE_NORMAL);
+        else
+            log.printMsg("Fail to generate plot: " + output, Log.TYPE_WARNING,
+                    Log.MODE_NORMAL);
 
     }
 
