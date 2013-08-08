@@ -86,7 +86,7 @@ public class CalidControllerTest {
             if (!a.isEmpty() && !a.startsWith("#"))
                 i++;
         }
-        assertEquals(1148, i);
+        assertEquals(1147, i);
         s.close();
     }
 
@@ -126,7 +126,7 @@ public class CalidControllerTest {
             if (!a.isEmpty() && !a.startsWith("#"))
                 i++;
         }
-        assertEquals(69, i);
+        assertEquals(68, i);
         s.close();
     }
     
@@ -146,7 +146,7 @@ public class CalidControllerTest {
             if (!a.isEmpty() && !a.startsWith("#"))
                 i++;
         }
-        assertEquals(330, i);
+        assertEquals(329, i);
         s.close();
     }
     

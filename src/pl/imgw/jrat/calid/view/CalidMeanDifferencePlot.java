@@ -63,6 +63,7 @@ public class CalidMeanDifferencePlot extends TimeSeriesPlot {
         
         plot.setOutput(Terminal.PNG, output);
 
+        
     }
 
     public void setPairsName(String pair1, String pair2) {

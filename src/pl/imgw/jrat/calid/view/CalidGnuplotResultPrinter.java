@@ -85,6 +85,8 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
             return;
         }
 
+        Double median = getMedianResult();
+        
         // ConsoleProgressBar.getProgressBar().evaluate();
 
         ((FileResultPrinter) pr).setFile(data5day);
@@ -115,6 +117,7 @@ public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
         plot.setYmin(-20);
         plot.setYmax(20);
         plot.setOutput(output);
+        plot.setMedian(median);
 
 
         if (plot.plot())

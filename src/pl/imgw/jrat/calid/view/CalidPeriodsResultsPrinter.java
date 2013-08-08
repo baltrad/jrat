@@ -37,6 +37,7 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
     public static final String MEDIAN = "median";
     public static final String MEAN = "mean";
     private Integer period = null;
+    private List<Double> median;
 
     public CalidPeriodsResultsPrinter(String[] calidargs, int period) throws CalidException{
         super(calidargs);
@@ -78,6 +79,7 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
 
         List<Double> meanRes = null;
         List<Double> rmsRes = null;
+        median = new ArrayList<Double>();
         Calendar endOfThePeriod = null;
         boolean printHeader = true;
         
@@ -156,27 +158,14 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
                         if (meanRes.size() == 0)
                             continue;
 
-                        /*
-                        if (method.matches(MEDIAN)) {
-                            printer.println(sdf.format(results.getResultDate())
-                                    + "\t"
-                                    + getMedianResult(meanRes)
-                                    + "\t"
-                                    + getMedianResult(rmsRes)
-                            );
-*/
-//                        } else if (method.matches(MEAN)) {
+                        
                         if (printHeader) {
                             printer.print(header.toString());
                             printHeader = false;
                         }
-                            printer.println(sdf.format(results.getResultDate())
-                                    + "\t"
-                                    + getMeanResult(meanRes)
-                                    + "\t"
-                                    + getMeanResult(rmsRes)
-                            );
-//                        }
+                        printer.println(sdf.format(results.getResultDate())
+                                + "\t" + getMeanResult(meanRes) + "\t"
+                                + getMeanResult(rmsRes));
 
                         meanRes.clear();
                         rmsRes.clear();
@@ -187,8 +176,10 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
                     Double mean = CalidStatistics.getMean(results, freq);
                     Double rms = CalidStatistics.getRMS(results, freq);
 
-                    if (mean != null)
+                    if (mean != null) {
+                        median.add(mean);
                         meanRes.add(mean);
+                    }
                     if (rms != null)
                         rmsRes.add(rms);
 
@@ -204,24 +195,24 @@ public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
 
     }
 
-    private Double getMedianResult(List<Double> list) {
-
-        if (list.size() == 0) {
-            return 0.0;
+    public Double getMedianResult() {
+        
+        if (median  == null || median.size() == 0) {
+            return null;
         }
 
-        if (list.size() == 1) {
-            return list.get(0);
+        if (median.size() == 1) {
+            return median.get(0);
         }
 
-        Collections.sort(list);
-        int middle = list.size() / 2;
+        Collections.sort(median);
+        int middle = median.size() / 2;
 
-        if (list.size() % 2 == 1) {
-            return list.get(middle);
+        if (median.size() % 2 == 1) {
+            return median.get(middle);
             // return array.get(middle);
         } else {
-            return round((list.get(middle - 1) + list.get(middle)) / 2.0, 3);
+            return round((median.get(middle - 1) + median.get(middle)) / 2.0, 3);
         }
     }
 

@@ -48,6 +48,7 @@ public abstract class TimeSeriesPlot {
     protected String output = "newplot";
     protected StringBuilder title = new StringBuilder();
     protected StringBuilder period = new StringBuilder();
+    Double median = null;
 
     protected Plot plot;
 
@@ -64,6 +65,8 @@ public abstract class TimeSeriesPlot {
         plot.setXData("time");
         plot.setTimeFormat("%Y-%m-%d");
         plot.setFormatX(xformat);
+        if(median != null)
+            plot.setKey("box 5 inside left top title \"Daily median = " + median + "\";");
 
         try {
             setPlot();
@@ -105,6 +108,10 @@ public abstract class TimeSeriesPlot {
     public void setOutput(File output) {
         if (output != null)
             this.output = output.getAbsolutePath();
+    }
+    
+    public void setMedian(Double median) {
+        this.median = median;
     }
 
     /**
