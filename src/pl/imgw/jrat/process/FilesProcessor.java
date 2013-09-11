@@ -20,6 +20,6 @@ public interface FilesProcessor {
     
     public String getProcessName();
     
-    public boolean isValid();
+//    public boolean isValid();
     
 }

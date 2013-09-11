@@ -14,6 +14,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
+
 /**
  * 
  * Handles options' file
@@ -25,10 +28,12 @@ import org.w3c.dom.NodeList;
 @SuppressWarnings("deprecation")
 public class XMLHandler {
 
+    private static Log log = LogManager.getLogger();
+
     // XML settings
     private static final String XML_VERSION = "1.0";
     private static final String XML_ENCODING = "UTF-8";
-    
+
     /**
      * 
      * This method reads options from XML file and return XML document object
@@ -36,51 +41,40 @@ public class XMLHandler {
      * @param msgl
      * @param verbose
      * @return XML document
-     *
-    public static Document loadOptions(boolean verbose) {
-
-        Document doc = null;
-        try {
-            DOMParser parser = new DOMParser();
-            parser.parse(OPTION_XML_FILE);
-            doc = parser.getDocument();
-            MessageLogger.showMessage("Parsing options file: " + OPTION_XML_FILE,
-                    verbose);
-        } catch (Exception e) {
-            MessageLogger.showMessage("Failed to parse options file: " + e.getMessage(),
-                    true);
-        }
-        return doc;
-    }
-
-    /**
      * 
-     * This method reads Baltrad Feeder options from XML document
+     *         public static Document loadOptions(boolean verbose) {
+     * 
+     *         Document doc = null; try { DOMParser parser = new DOMParser();
+     *         parser.parse(OPTION_XML_FILE); doc = parser.getDocument();
+     *         MessageLogger.showMessage("Parsing options file: " +
+     *         OPTION_XML_FILE, verbose); } catch (Exception e) {
+     *         MessageLogger.showMessage("Failed to parse options file: " +
+     *         e.getMessage(), true); } return doc; }
+     * 
+     *         /**
+     * 
+     *         This method reads Baltrad Feeder options from XML document
      * 
      * @param doc
      * @return
-     *
-    public static RadarOptions[] getRadarOptions(Document doc) {
+     * 
+     *         public static RadarOptions[] getRadarOptions(Document doc) {
+     * 
+     *         NodeList radarList = doc.getElementsByTagName("radar"); int
+     *         counter = radarList.getLength(); RadarOptions[] options = new
+     *         RadarOptions[counter];
+     * 
+     *         for (int i = 0; i < counter; i++) {
+     * 
+     *         options[i] = new RadarOptions();
+     * 
+     *         options[i].setRadarName(radarList.item(i).getAttributes()
+     *         .getNamedItem(NAME).getNodeValue()); options[i]
+     *         .setDir(getValueByName(radarList.item(i), DIRECTORY, null));
+     * 
+     *         } return options; }
+     */
 
-        NodeList radarList = doc.getElementsByTagName("radar");
-        int counter = radarList.getLength();
-        RadarOptions[] options = new RadarOptions[counter];
-
-        for (int i = 0; i < counter; i++) {
-
-            options[i] = new RadarOptions();
-
-            options[i].setRadarName(radarList.item(i).getAttributes()
-                    .getNamedItem(NAME).getNodeValue());
-            options[i]
-                    .setDir(getValueByName(radarList.item(i), DIRECTORY, null));
-
-        }
-        return options;
-    }
-
-*/
-    
     /**
      * Helper method
      * 
@@ -97,25 +91,26 @@ public class XMLHandler {
 
     /**
      * If attribute not found, return empty string.
+     * 
      * @param node
      * @param atrName
      * @return
      */
     public static String getAttributeValue(Node node, String atrName) {
         String value = "";
-        
-        if(node.hasAttributes()) {
+
+        if (node.hasAttributes()) {
             NamedNodeMap attributes = node.getAttributes();
-            for(int i = 0; i < attributes.getLength(); i++) {
-                if(attributes.item(i).getNodeName().matches(atrName)) {
+            for (int i = 0; i < attributes.getLength(); i++) {
+                if (attributes.item(i).getNodeName().matches(atrName)) {
                     value = attributes.item(i).getNodeValue();
                 }
             }
         }
-        
+
         return value;
     }
-    
+
     /**
      * Method retrieves attribute's value of RAINBOW metadata header. Attribute
      * is identified by its parent Element and its name.
@@ -171,22 +166,23 @@ public class XMLHandler {
         return value;
     }
 
-    public static Document loadXML(String filename) {
+    public static Document loadXML(File file) {
 
-        if (!new File(filename).exists()) {
-            LogHandler.getLogs().displayMsg("XML: File not found: " + filename,
-                    LogHandler.WARNING);
+        if (!file.exists()) {
+            log.printMsg("XML file not found: " + file, Log.TYPE_WARNING,
+                    Log.MODE_VERBOSE);
             return null;
         }
-        
+
         Document doc = null;
         try {
             DOMParser parser = new DOMParser();
-            parser.parse(filename);
+            parser.parse(file.getPath());
             doc = parser.getDocument();
-  
+
         } catch (Exception e) {
-            LogHandler.getLogs().displayMsg(e.getLocalizedMessage(), Logging.ERROR);
+            log.printMsg(e.getLocalizedMessage(), Log.TYPE_ERROR,
+                    Log.MODE_VERBOSE);
         }
         return doc;
     }
@@ -211,34 +207,13 @@ public class XMLHandler {
             serializer.setOutputCharStream(fw);
             serializer.serialize(doc);
             fw.close();
-            LogHandler.getLogs().displayMsg("XML: Data saved to " + fileName, LogHandler.NORMAL);
+            log.printMsg("XML: Data saved to " + fileName, Log.TYPE_NORMAL,
+                    Log.MODE_VERBOSE);
         } catch (Exception e) {
-            LogHandler.getLogs().displayMsg("Error while saving XML file: "
-                    + e.getMessage(), Logging.ERROR);
+            log.printMsg("Error while saving XML file: " + e.getMessage(),
+                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
         }
 
     }
-    public static void main(String[] args) {
-        String home = "/home/lwojtas/poligon/jrat/prezentacja/pairs";
-        String file = "rzeleg.xml";
-        Document doc = loadXML(new File(home, file).getPath());
-        NodeList list = doc.getChildNodes();
-        NodeList pairs = list.item(0).getChildNodes();
-        for(int i = 0; i < pairs.getLength(); i++) {
-            if(!pairs.item(i).hasAttributes()) {
-                continue;
-            }
-            NamedNodeMap points = pairs.item(i).getAttributes();
-//            System.out.println(points.getLength());
-            System.out.println("999.0  1002");
-            System.out.println("    " + points.item(6).getNodeValue() + "\t" + points.item(5).getNodeValue() + "  2");
-//            System.out.println("    " + points.item(2).getNodeValue() + "\t" + points.item(1).getNodeValue() + "  2");
-//            for(int n = 0; n < points.getLength(); n++) {
-////                System.out.println(n + " " + points.item(n).getNodeName());
-//            }
-            
-            
-        }
-    }
-    
+
 }

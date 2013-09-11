@@ -3,23 +3,19 @@
  */
 package pl.imgw.jrat.tools.out;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import pl.imgw.jrat.data.arrays.ArrayData;
-import pl.imgw.jrat.data.parsers.OdimH5Parser;
-import pl.imgw.jrat.data.parsers.ParserManager;
-import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
+import pl.imgw.jrat.data.ArrayData;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -31,6 +27,8 @@ import pl.imgw.jrat.data.parsers.Rainbow53ImageParser;
  */
 public class ImageBuilder {
 
+    private static Log log = LogManager.getLogger();
+    
     private String description = "";
     private Set<MapColor> scale = null;
     private File background = null;
@@ -44,28 +42,60 @@ public class ImageBuilder {
     private int ySize = 0;
     private double nodata = 999999;
     private double nodetected = 999999;
-    private String format = "PNG";
+    private String format = "PNG"; //default format
     private List<PointText> points = new ArrayList<PointText>();
 
+    /**
+     * 
+     * @param file
+     */
     public void saveToFile(File file) {
         try {
             ImageIO.write(create(), format, file);
-            LogHandler.getLogs().displayMsg(
+            log.printMsg(
                     "Saving image to file: '" + file.getCanonicalFile() + "' complete",
-                    NORMAL);
+                    Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         } catch (Exception e) {
-            LogHandler.getLogs().displayMsg(
+            log.printMsg(
                     "Saving image to file: '" + file + "' failed",
-                    WARNING);
-            LogHandler.getLogs().displayMsg(e.getMessage(), ERROR);
+                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
+            log.printMsg(e.getMessage(), Log.TYPE_ERROR, Log.MODE_VERBOSE);
         }
     }
     
+    /**
+     * adding text to the image
+     * 
+     * @param x
+     *            x coordinate of the image where text will be added
+     * @param y
+     *            y coordinate of the image where text will be added
+     * @param text
+     *            text to be added
+     * @param color
+     *            color of the text to be added
+     * @return
+     */
     public ImageBuilder addPoint(int x, int y, String text, Color color) {
         points.add(new PointText(x, y, text, color));
         return this;
     }
 
+    /**
+     * adding text to the image
+     * 
+     * @param x
+     *            x coordinate of the image where text will be added
+     * @param y
+     *            y coordinate of the image where text will be added
+     * @param text
+     *            text to be added
+     * @param color
+     *            color of the text to be added
+     * @param font
+     *            font of the text to be added
+     * @return
+     */
     public ImageBuilder addPoint(int x, int y, String text, Color color, Font font) {
         points.add(new PointText(x, y, text, color, font));
         return this;
@@ -148,7 +178,7 @@ public class ImageBuilder {
      */
     private void reset() {
         description = "";
-        scale = null;
+//        scale = null;
         background = null;
         foreground = null;
         data = null;
@@ -157,7 +187,7 @@ public class ImageBuilder {
         mask = null;
         transparency = 255;
         darker = false;
-        nodata = 999999;
+//        nodata = 999999;
         nodetected = 999999;
         points = new ArrayList<PointText>();
     }
@@ -168,8 +198,8 @@ public class ImageBuilder {
      */
     public BufferedImage create() throws IllegalArgumentException {
         if (data == null) {
-            LogHandler.getLogs()
-                    .displayMsg("Must specify data", ERROR);
+            log
+                    .printMsg("Must specify data", Log.TYPE_ERROR, Log.MODE_VERBOSE);
             throw new IllegalArgumentException("No data to create image.");
         }
 
@@ -191,61 +221,6 @@ public class ImageBuilder {
         reset();
         return img.getImg();
     }
-
-    public static void main(String[] args) {
-        
-        ParserManager pm = new ParserManager();
-        BufferedImage img;
-        ArrayData data;
-        
-        LogHandler.getLogs().setLoggingVerbose(ERROR);
-        File file = new File("test-data", "1img.hdf");
-        File bg = new File("test-data", "bg.png");
-        File fg = new File("test-data", "fg.png");
-        pm.setParser(new OdimH5Parser());
-        pm.initialize(file);
-        double nodata = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "nodata");
-        double undetect = (Double) pm.getProduct().getAttributeValue("/dataset1/what", "undetect");
-//        double nodata = 0;
-        
-        data = pm.getProduct().getArray("dataset1");
-        img = new ImageBuilder()
-                .setData(data)
-                .setBackground(bg)
-                .setForeground(fg)
-//                .setDarker(true)
-//                .setTransparency(0)
-                .setScale(ColorScales.getODCScale())
-                .setNoDataValue(nodata)
-                .setNoDetectedValue(undetect)
-                .create();
-        try {
-            ImageIO.write(img, "PNG", new File("test-data", "imagebuilder1.png"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        File rfile = new File("test-data", "2012032609103300dBZ.cmax");
-        pm.setParser(new Rainbow53ImageParser());
-        pm.initialize(rfile);
-        data = pm.getProduct().getArray("datamap");
-        ArrayData mask = pm.getProduct().getArray("flagmap");
-        img = new ImageBuilder()
-                // .setDarker(true)
-                .setData(data)
-                .setMask(mask)
-                .setTransparency(128).setScale(ColorScales.getRBScale())
-                .create();
-        try {
-            ImageIO.write(img, "PNG", new File("test-data", "imagebuilder2.png"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }    
-    
 
     class PointText{
         

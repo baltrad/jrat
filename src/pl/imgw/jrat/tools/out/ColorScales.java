@@ -325,9 +325,9 @@ public class ColorScales {
         this.scale = scale;
     }
 
-    private static double raw2dbz(double x) {
-        return 0.5 * x - 31.5;
-    }
+//    private static double raw2dbz(double x) {
+//        return 0.5 * x - 31.5;
+//    }
 
     public static void main(String[] args) {
 

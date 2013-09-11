@@ -3,14 +3,15 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 import name.pachler.nio.file.ClosedWatchServiceException;
 import name.pachler.nio.file.FileSystems;
@@ -20,7 +21,6 @@ import name.pachler.nio.file.StandardWatchEventKind;
 import name.pachler.nio.file.WatchEvent;
 import name.pachler.nio.file.WatchKey;
 import name.pachler.nio.file.WatchService;
-import pl.imgw.jrat.tools.out.LogHandler;
 
 /**
  * 
@@ -32,28 +32,30 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class FileWatchingProcess implements Runnable {
 
+    private static Log log = LogManager.getLogger();
+
     private WatchService watchSvc = FileSystems.getDefault().newWatchService();
     private HashMap<String, Long> fileTimeMap = new HashMap<String, Long>();
     private HashMap<WatchKey, String> pathMap = new HashMap<WatchKey, String>();
 
     private FilesProcessor proc = null;
     private List<File> files = new LinkedList<File>();
-//    private File[] watchedPath = null;
+    // private File[] watchedPath = null;
 
     private boolean valid = false;
-    
+
     public FileWatchingProcess(FilesProcessor proc, List<File> watchedPathList) {
         if (watchedPathList == null || watchedPathList.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No valid folders to watch.",
-                    WARNING);
+            log.printMsg("No valid folders to watch.", Log.TYPE_WARNING,
+                    Log.MODE_VERBOSE);
             return;
         }
         this.proc = proc;
-//        this.watchedPath = watchedPath;
+        // this.watchedPath = watchedPath;
         Path path = null;
         try {
             for (File file : watchedPathList) {
-                if(!file.isDirectory())
+                if (!file.isDirectory())
                     continue;
                 path = Paths.get(file.getPath());
                 WatchKey key = path.register(watchSvc,
@@ -62,27 +64,23 @@ public class FileWatchingProcess implements Runnable {
                 pathMap.put(key, file.getPath());
             }
         } catch (UnsupportedOperationException uox) {
-            LogHandler.getLogs().displayMsg("file watching not supported!",
-                    ERROR);
-            LogHandler.getLogs().saveErrorLogs(FileWatchingProcess.class.getName(),
-                    uox.getMessage());
+            log.printMsg("file watching not supported!", Log.TYPE_ERROR,
+                    Log.MODE_VERBOSE);
 
         } catch (IOException iox) {
-            LogHandler.getLogs().displayMsg(
-                    "I/O errors while watching " + path, ERROR);
-            LogHandler.getLogs().saveErrorLogs(FileWatchingProcess.class.getName(),
-                    iox.getMessage());
+            log.printMsg("I/O errors while watching " + path, Log.TYPE_ERROR,
+                    Log.MODE_VERBOSE);
 
         }
 
         valid = true;
-        
+
     }
 
     public boolean isValid() {
         return valid;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -93,13 +91,13 @@ public class FileWatchingProcess implements Runnable {
         if (proc == null || pathMap.isEmpty()) {
             return;
         }
-        
-        LogHandler.getLogs().displayMsg(
-                "Watching process started with: " + proc.getProcessName(),
-                NORMAL);
-        
+
+        log.printMsg("Watching process started with: " + proc.getProcessName(),
+                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+
         for (String path : pathMap.values()) {
-            LogHandler.getLogs().displayMsg("Start watching " + path, NORMAL);
+            log.printMsg("Start watching " + path, Log.TYPE_NORMAL,
+                    Log.MODE_VERBOSE);
         }
         while (true) {
 
@@ -113,10 +111,8 @@ public class FileWatchingProcess implements Runnable {
                 continue;
             } catch (ClosedWatchServiceException cwse) {
                 // other thread closed watch service
-                LogHandler.getLogs().displayMsg(
-                        "watch service closed, terminating", ERROR);
-                LogHandler.getLogs().saveErrorLogs(FileWatchingProcess.class.getName(),
-                        cwse.getMessage());
+                log.printMsg("watch service closed, terminating",
+                        Log.TYPE_ERROR, Log.MODE_VERBOSE);
                 break;
             }
 
@@ -133,32 +129,26 @@ public class FileWatchingProcess implements Runnable {
                         itr = fileTimeMap.keySet().iterator();
                         File input = new File(key);
 
-                        LogHandler.getLogs().displayMsg(
-                                "New file: " + input.getName(),
-                                NORMAL);
+                        log.printMsg("New file: " + input.getName(),
+                                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
                         files.add(input);
                         proc.processFile(files);
                         files.clear();
                         if (input.delete())
-                            LogHandler.getLogs().displayMsg(
-                                    input.getName() + " deleted.", WARNING);
-                        
+                            log.printMsg(input.getName() + " deleted.",
+                                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
+
                     }
                 }
                 if (fileTimeMap.isEmpty()) {
                     try {
                         signalledKey = watchSvc.take();
                     } catch (ClosedWatchServiceException e1) {
-                        LogHandler.getLogs().displayMsg(
-                                "watch service closed, terminating",
-                                ERROR);
-                        LogHandler.getLogs().saveErrorLogs(
-                                FileWatchingProcess.class.getName(), e1.getMessage());
+                        log.printMsg("watch service closed, terminating",
+                                Log.TYPE_ERROR, Log.MODE_VERBOSE);
                     } catch (InterruptedException e1) {
-                        LogHandler.getLogs().displayMsg(
-                                "watch service interrupted", ERROR);
-                        LogHandler.getLogs().saveErrorLogs(
-                                FileWatchingProcess.class.getName(), e1.getMessage());
+                        log.printMsg("watch service interrupted",
+                                Log.TYPE_ERROR, Log.MODE_VERBOSE);
                     }
                 } else {
                     continue;

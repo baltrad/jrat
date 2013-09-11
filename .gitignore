@@ -8,3 +8,5 @@ dist/*
 etc/*
 test-data/log*
 install.sh
+/bin
+jrat/tmp*

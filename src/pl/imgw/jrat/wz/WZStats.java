@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pl.imgw.jrat.process.FileWatchingProcess;
-import pl.imgw.jrat.tools.out.LogHandler;
-import static pl.imgw.jrat.tools.out.Logging.*;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class WZStats {
         files.add(file);
         File dest = new File(args[1]);
         if (file.exists() && dest.exists()) {
-            LogHandler.getLogs().setLoggingVerbose(ERROR);
+            LogManager.getInstance().setLogMode(Log.MODE_SILENT);
             WZStatsProcessor proc = new WZStatsProcessor();
             proc.setDest(dest);
             FileWatchingProcess fw = new FileWatchingProcess(proc, files);

@@ -37,7 +37,7 @@ public class ResultPrinterManager {
     private ResultPrinterManager() {}
 
     /**
-     * @return the manager
+     * @return the calculator
      */
     public static ResultPrinterManager getManager() {
         return manager;

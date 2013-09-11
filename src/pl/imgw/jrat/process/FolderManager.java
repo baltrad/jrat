@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import pl.imgw.jrat.tools.out.LogHandler;
-import pl.imgw.jrat.tools.out.Logging;
-
 /**
  *
  *  /Class description/
@@ -22,11 +19,9 @@ import pl.imgw.jrat.tools.out.Logging;
  */
 public class FolderManager {
 
+    
     public static boolean continueWithDeletingFiles(List<File> folders) {
         
-        if (LogHandler.getLogs().getVerbose() == LogHandler.SILENT)
-            return true;
-
         String msg = "Folder is not empty, all files will be deleted after processing. Continue? ";
 
         boolean ask = false;
@@ -54,10 +49,6 @@ public class FolderManager {
             e.printStackTrace();
         }
         return false;
-    }
-    
-    public static void main(String[] args) {
-        continueWithDeletingFiles(null);
     }
     
 }

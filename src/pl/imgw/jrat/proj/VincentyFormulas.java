@@ -35,9 +35,9 @@ public class VincentyFormulas {
      * latitude/longitude using Vincenty inverse formula for ellipsoids
      * 
      * @param p1
-     *            Coordinates of the first point
+     *            GnuplotCoordinates of the first point
      * @param p2
-     *            Coordinates of the second point
+     *            GnuplotCoordinates of the second point
      * @return Distance in meters, null if formula failed, -1 if no co-incident points
      */
     public static Double dist(Point2D.Double p1, Point2D.Double p2) {

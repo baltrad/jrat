@@ -3,17 +3,15 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -24,6 +22,8 @@ import pl.imgw.jrat.tools.out.LogHandler;
  * 
  */
 public class SequentialProcess implements Runnable {
+
+    private static Log log = LogManager.getLogger();
 
     private List<File> folders;
     private List<File> files = new LinkedList<File>();
@@ -46,8 +46,8 @@ public class SequentialProcess implements Runnable {
             String seqValue) {
 
         if (folders.isEmpty()) {
-            LogHandler.getLogs().displayMsg("No valid folders specified.",
-                    WARNING);
+            log.printMsg("No valid folders specified.", Log.TYPE_WARNING,
+                    Log.MODE_VERBOSE);
             return;
         }
         this.proc = proc;
@@ -55,9 +55,8 @@ public class SequentialProcess implements Runnable {
         try {
             interval = Integer.parseInt(seqValue);
         } catch (NumberFormatException e) {
-            LogHandler.getLogs().displayMsg(
-                    "Incorrect value for seqence time interval",
-                    LogHandler.ERROR);
+            log.printMsg("Incorrect value for seqence time interval",
+                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
             proc = null;
         }
         cal = Calendar.getInstance();
@@ -72,7 +71,7 @@ public class SequentialProcess implements Runnable {
     public boolean isValid() {
         return valid;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -83,16 +82,14 @@ public class SequentialProcess implements Runnable {
         if (proc == null) {
             return;
         }
-        if(folders.isEmpty()) {
-            LogHandler
-                    .getLogs().displayMsg(
-                            "No input folders for sequential process specified",
-                            SILENT);
+        if (folders.isEmpty()) {
+            log.printMsg("No input folders for sequential process specified",
+                    Log.TYPE_WARNING, Log.MODE_SILENT);
             return;
         }
-        LogHandler.getLogs().displayMsg(
+        log.printMsg(
                 "Sequential process started with: " + proc.getProcessName(),
-                NORMAL);
+                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
         while (true) {
             if (cal.getTime().before(new Date(System.currentTimeMillis()))) {
                 files.clear();
@@ -104,19 +101,20 @@ public class SequentialProcess implements Runnable {
 
                 for (File f : files) {
                     if (f.delete())
-                        LogHandler.getLogs().displayMsg(
-                                f.getName() + " deleted.", WARNING);
+                        log.printMsg(f.getName() + " deleted.",
+                                Log.TYPE_WARNING, Log.MODE_VERBOSE);
                 }
-                
+
                 cal.add(Calendar.MINUTE, interval);
+                
+                System.gc();
+                
             } else {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    LogHandler.getLogs().displayMsg(
-                            "Process '" + proc.getProcessName()
-                                    + "' interupted", ERROR);
-                    LogHandler.getLogs().saveErrorLogs(this, e);
+                    log.printMsg("Process '" + proc.getProcessName()
+                            + "' interupted", Log.TYPE_ERROR, Log.MODE_VERBOSE);
                 }
             }
         }

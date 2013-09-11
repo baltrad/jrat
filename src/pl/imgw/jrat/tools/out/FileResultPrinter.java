@@ -67,6 +67,13 @@ public class FileResultPrinter implements ResultPrinter {
         pw.printf(str);
     }
     
-    
+    /* (non-Javadoc)
+     * @see java.lang.Object#finalize()
+     */
+    @Override
+    protected void finalize() throws Throwable {
+        closeFile();
+        super.finalize();
+    }
 
 }

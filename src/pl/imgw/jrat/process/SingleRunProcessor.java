@@ -3,13 +3,12 @@
  */
 package pl.imgw.jrat.process;
 
-import static pl.imgw.jrat.tools.out.Logging.*;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import pl.imgw.jrat.tools.out.LogHandler;
+import pl.imgw.util.Log;
+import pl.imgw.util.LogManager;
 
 /**
  * 
@@ -21,46 +20,54 @@ import pl.imgw.jrat.tools.out.LogHandler;
  */
 public class SingleRunProcessor implements Runnable {
 
-    private List<File> files;
-    private FilesProcessor proc;
-    private boolean valid = false;
+	private static Log log = LogManager.getLogger();
 
-    /**
+	private List<File> files;
+	private FilesProcessor proc;
+	private boolean valid = false;
+
+	/**
      * 
      */
-    public SingleRunProcessor(FilesProcessor proc, List<File> folders, List<File> files) {
+	public SingleRunProcessor(FilesProcessor proc, List<File> folders,
+			List<File> files) {
 
-	for (File folder : folders) {
-	    files.addAll(Arrays.asList(folder.listFiles()));
+		for (File folder : folders) {
+			files.addAll(Arrays.asList(folder.listFiles()));
+		}
+
+		if (files.isEmpty()) {
+			log.printMsg("No input files specified", Log.TYPE_WARNING,
+					Log.MODE_VERBOSE);
+			return;
+		}
+
+		this.files = files;
+		this.proc = proc;
+		valid = true;
 	}
 
-	if (files.isEmpty()) {
-	    LogHandler.getLogs().displayMsg("No input files specified", WARNING);
-	    return;
+	public boolean isValid() {
+		return valid;
 	}
-	this.files = files;
-	this.proc = proc;
-	valid = true;
-    }
 
-    public boolean isValid() {
-	return valid;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		if (proc == null)
+			return;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    @Override
-    public void run() {
-	if (proc == null)
-	    return;
+		else
+			log.printMsg(
+					"Single run process started with: " + proc.getProcessName(),
+					Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
-	else
-	    LogHandler.getLogs().displayMsg("Single run process started with: " + proc.getProcessName(), NORMAL);
+		proc.processFile(files);
 
-	proc.processFile(files);
-    }
+	}
 
 }

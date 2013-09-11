@@ -7,8 +7,6 @@ package pl.imgw.jrat.projection;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-import pl.imgw.jrat.tools.out.LogHandler;
-
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
 
@@ -76,13 +74,11 @@ public class ProjectionUtility {
 
         projection = getProjection(projectionParameters);
         if (projection == null) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(), "projectToLocal: projection is null!!!");
             return null;
         }
 
         pointCartesian = projectToCartesian(pointGeo, projection);
         if (pointCartesian == null) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(), "projectToLocal: pointCartesian is null!!!");
             return null;
         }
         xLT = leftTopImageCorner.getX();
@@ -90,8 +86,6 @@ public class ProjectionUtility {
         xRD = rightDownImageCorner.getX();
         yRD = rightDownImageCorner.getY();
         if (((xRD - xLT) <= 0.0) || (yRD - yLT) >= 0.0) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(), "projectToLocal: illegal left top or right down image corners: leftTopImageCorner: " +
-                                                                            leftTopImageCorner.toString() + ", rightDownImageCorner: " + rightDownImageCorner.toString());
             return null;
         }
 
@@ -148,7 +142,6 @@ public class ProjectionUtility {
 
         projection = getProjection(projectionParameters);
         if (projection == null) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(), "projectToGeographical: projection is null!!!");
             return null;
         }
 
@@ -167,15 +160,11 @@ public class ProjectionUtility {
         // scaling to Cartesian coordinates
         xCartesian = leftTopImageCorner.getX() + (new Double(pointLoc.getX()) / new Double(imageWidth) * (rightDownImageCorner.getX() - leftTopImageCorner.getX()));
         if ((xCartesian.doubleValue() < leftTopImageCorner.getX()) || (xCartesian.doubleValue() > rightDownImageCorner.getX())) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(),
-                "projectToGeographical: horizontal coordinate (x) of given point (pointGeo: " + pointLoc.toString() + ") is out of image bounds!!!");
             return null;
         }
 
         yCartesian = leftTopImageCorner.getY() + (new Double(pointLoc.getY()) / new Double(imageHeight) * (rightDownImageCorner.getY() - leftTopImageCorner.getY()));
         if ((yCartesian.doubleValue() < rightDownImageCorner.getY()) || (yCartesian.doubleValue() > leftTopImageCorner.getY())) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(),
-                "projectToGeographical: vertical coordinate (y) of given point (pointLoc: " + pointLoc.toString() + ") is out of image bounds!!!");
             return null;
         }
 
@@ -243,7 +232,6 @@ public class ProjectionUtility {
 
         projection = ProjectionFactory.fromPROJ4Specification(projectionParameters);
         if (projection == null) {
-            LogHandler.getLogs().saveErrorLogs(ProjectionUtility.class.getName(), "getProjection: could not find projection using projectionParameters!!!");
             return null;
         }
         projection.initialize();
