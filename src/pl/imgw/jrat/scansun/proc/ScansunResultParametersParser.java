@@ -3,6 +3,8 @@
  */
 package pl.imgw.jrat.scansun.proc;
 
+import java.io.File;
+
 import pl.imgw.jrat.scansun.ScansunException;
 import pl.imgw.jrat.scansun.data.ScansunResultParameters;
 import pl.imgw.jrat.scansun.data.ScansunSite;
@@ -22,6 +24,8 @@ public class ScansunResultParametersParser {
 	private static Log log = LogManager.getLogger();
 
 	private static final String SITENAME = "sitename=";
+	private static final String RESULTFOLDER = "result-dir=";
+
 	private static final String errorMsg = "SCANSUN results: Arguments are incorrect";
 
 	private static ScansunResultParametersParser parser = new ScansunResultParametersParser();
@@ -48,8 +52,9 @@ public class ScansunResultParametersParser {
 				throw new ScansunException(errorMsg + ": string " + i
 						+ " is empty");
 			}
-
-			if (par[i].startsWith(SITENAME)) {
+			if (par[i].startsWith(RESULTFOLDER)) {
+				setResultfolder(params, par[i].substring(RESULTFOLDER.length()));
+			} else if (par[i].startsWith(SITENAME)) {
 				setSiteName(params, par[i].substring(SITENAME.length()));
 			} else if (par[i].contains("=")) {
 				log.printMsg(errorMsg + " (" + par[i] + ")", Log.TYPE_WARNING,
@@ -75,4 +80,14 @@ public class ScansunResultParametersParser {
 		params.setSite(siteName);
 	}
 
+	private void setResultfolder(ScansunResultParameters params, String word) {
+		File folder = new File(word);
+
+		if (folder == null || !folder.isDirectory()) {
+			throw new ScansunException(folder.getAbsolutePath()
+					+ " is ont a result folder");
+		}
+
+		params.setResultFolder(folder);
+	}
 }

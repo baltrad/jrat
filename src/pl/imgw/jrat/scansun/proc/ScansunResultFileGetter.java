@@ -28,11 +28,10 @@ public class ScansunResultFileGetter {
 		return getResultFiles(folder);
 	}
 
-	protected static Set<File> getResultFiles(File folder) {
+	public static Set<File> getResultFiles(File folder) {
 
 		Set<File> results = new TreeSet<File>();
 
-		// skip not-folders
 		if (!folder.isDirectory())
 			return results;
 

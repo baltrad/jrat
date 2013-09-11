@@ -96,7 +96,8 @@ public class ScansunResultsPrinter {
 		}
 
 		this.params = params;
-		this.files = ScansunResultFileGetter.getResultFiles();
+		this.files = ScansunResultFileGetter.getResultFiles(params
+				.getResultFolder());
 		this.eventsContainer = ScansunResultContainer.readEvents(files);
 		this.sitedays = eventsContainer.getSitedays();
 	}

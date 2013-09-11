@@ -3,6 +3,10 @@
  */
 package pl.imgw.jrat.scansun.data;
 
+import java.io.File;
+
+import pl.imgw.jrat.scansun.proc.ScansunDataHandler;
+
 /**
  * 
  * /Class description/
@@ -17,6 +21,7 @@ public class ScansunResultParameters {
 
 	private ScansunSite site;
 	private boolean allAvailableSites = true;
+	private File resultFolder = new File(ScansunDataHandler.getScansunPath());
 
 	public ScansunResultParameters() {
 
@@ -42,4 +47,13 @@ public class ScansunResultParameters {
 	public boolean allAvailableSites() {
 		return allAvailableSites;
 	}
+
+	public void setResultFolder(File resultFolder) {
+		this.resultFolder = resultFolder;
+	}
+
+	public File getResultFolder() {
+		return resultFolder;
+	}
+
 }
