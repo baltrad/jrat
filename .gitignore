@@ -10,3 +10,5 @@ test-data/log*
 install.sh
 /bin
 jrat/tmp*
+jrat/etc/scansun/*.results
+jrat/etc/scansun/*.png
