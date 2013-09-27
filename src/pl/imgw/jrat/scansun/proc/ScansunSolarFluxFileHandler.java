@@ -35,7 +35,7 @@ public class ScansunSolarFluxFileHandler {
 
 	private File datafile = null;
 
-	public static final String SOLARFLUXFILE_BASENAME = "DRAO_10.7cm_solar_flux";
+	public static final String SOLARFLUXFILE_BASENAME = "DRAO-solar-flux-table";
 	public static final String SOLARFLUXFILE_EXT = "data";
 	public static final String SOLARFLUXFILE_DELIMITER = ";";
 
@@ -48,27 +48,9 @@ public class ScansunSolarFluxFileHandler {
 		return handler;
 	}
 
-	public void setDatafile(String folderName) throws ScansunException {
+	public void setDatafile(String fileName) throws ScansunException {
 
-		File folder = new File(folderName);
-
-		File[] files = folder.listFiles(new FilenameFilter() {
-			String solarFluxDataFileRegex = SOLARFLUXFILE_BASENAME + "_"
-					+ "\\d{8}" + "." + SOLARFLUXFILE_EXT;
-			Pattern pattern = Pattern.compile(solarFluxDataFileRegex);
-
-			@Override
-			public boolean accept(File dir, String name) {
-				return pattern.matcher(name).matches();
-			}
-		});
-
-		if (files.length != 1) {
-			log.printMsg("SCANSUN: more than one DRAO file in input",
-					Log.TYPE_ERROR, Log.MODE_VERBOSE);
-		}
-
-		File solarFluxDataFile = files[0];
+		File solarFluxDataFile = new File(fileName);
 
 		if (solarFluxDataFile.isFile()) {
 			datafile = solarFluxDataFile;
@@ -84,11 +66,11 @@ public class ScansunSolarFluxFileHandler {
 
 	private boolean isDatafileProper() {
 
-		int beginIndex = SOLARFLUXFILE_BASENAME.length() + 1;
-		int endIndex = beginIndex + 8;
-		String date = datafile.getName().substring(beginIndex, endIndex);
-		log.printMsg("SCANSUN: DRAO solar flux file date is: " + date,
-				Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+		// int beginIndex = SOLARFLUXFILE_BASENAME.length() + 1;
+		// int endIndex = beginIndex + 8;
+		// String date = datafile.getName().substring(beginIndex, endIndex);
+		// log.printMsg("SCANSUN: DRAO solar flux file date is: " + date,
+		// Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
 		boolean result = true;
 
@@ -140,7 +122,7 @@ public class ScansunSolarFluxFileHandler {
 					.parseLine(line, new ScansunSolarFluxObservationFactory(),
 							SOLARFLUXFILE_DELIMITER);
 
-			if (solarFluxObservation.getDate().equals(day)) {
+			if (solarFluxObservation.getFluxdate().equals(day)) {
 				sfos.add(solarFluxObservation);
 			}
 		}
@@ -155,7 +137,7 @@ public class ScansunSolarFluxFileHandler {
 		int n = 0;
 
 		for (ScansunSolarFluxObservation sfo : solarFluxObservationsFinder(day)) {
-			solarFlux += sfo.getObservedFlux();
+			solarFlux += sfo.getFluxobsflux();
 			n++;
 		}
 
@@ -167,7 +149,7 @@ public class ScansunSolarFluxFileHandler {
 		int n = 0;
 
 		for (ScansunSolarFluxObservation sfo : solarFluxObservationsFinder(day)) {
-			solarFlux += sfo.getAdjustedFlux();
+			solarFlux += sfo.getFluxadjflux();
 			n++;
 		}
 

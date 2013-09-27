@@ -29,13 +29,13 @@ public class ScansunSolarFluxObservation implements LineParseable {
 
 	public static final String DELIMITER = ";";
 
-	private static final String DATE = "date";
-	private static final String TIME = "time";
-	private static final String JULIAN_DAY = "julianDay";
-	private static final String CARRINGTON_ROTATION = "carringtonRotation";
-	private static final String OBSERVED_FLUX = "observedFlux";
-	private static final String ADJUSTED_FLUX = "adjustedFlux";
-	private static final String URSI_FLUX = "ursiFlux";
+	private static final String FLUXDATE = "fluxdate";
+	private static final String FLUXTIME = "fluxtime";
+	private static final String FLUXJULIAN = "fluxjulian";
+	private static final String FLUXCARRINGTON = "fluxcarrington";
+	private static final String FLUXOBSFLUX = "fluxobsflux";
+	private static final String FLUXADJFLUX = "fluxadjflux";
+	private static final String FLUXURSI = "fluxursi";
 
 	private ScansunSolarFluxObservation() {
 
@@ -45,7 +45,7 @@ public class ScansunSolarFluxObservation implements LineParseable {
 		this.date = date;
 	}
 
-	public LocalDate getDate() {
+	public LocalDate getFluxdate() {
 		return date;
 	}
 
@@ -53,7 +53,7 @@ public class ScansunSolarFluxObservation implements LineParseable {
 		this.time = time;
 	}
 
-	public LocalTime getTime() {
+	public LocalTime getFluxtime() {
 		return time;
 	}
 
@@ -61,7 +61,7 @@ public class ScansunSolarFluxObservation implements LineParseable {
 		this.julianDay = julianDay;
 	}
 
-	public double getJulianDay() {
+	public double getFluxjulian() {
 		return julianDay;
 	}
 
@@ -73,7 +73,7 @@ public class ScansunSolarFluxObservation implements LineParseable {
 		return carringtonRotation;
 	}
 
-	public double getObservedFlux() {
+	public double getFluxobsflux() {
 		return observedFlux;
 	}
 
@@ -81,7 +81,7 @@ public class ScansunSolarFluxObservation implements LineParseable {
 		this.observedFlux = observedFlux;
 	}
 
-	public double getAdjustedFlux() {
+	public double getFluxadjflux() {
 		return adjustedFlux;
 	}
 
@@ -116,13 +116,13 @@ public class ScansunSolarFluxObservation implements LineParseable {
 	public String lineHeader(String delimiter) {
 		StringBuilder header = new StringBuilder();
 
-		header.append(DATE + delimiter);
-		header.append(TIME + delimiter);
-		header.append(JULIAN_DAY + delimiter);
-		header.append(CARRINGTON_ROTATION + delimiter);
-		header.append(OBSERVED_FLUX + delimiter);
-		header.append(ADJUSTED_FLUX + delimiter);
-		header.append(URSI_FLUX);
+		header.append(FLUXDATE + delimiter);
+		header.append(FLUXTIME + delimiter);
+		header.append(FLUXJULIAN + delimiter);
+		header.append(FLUXCARRINGTON + delimiter);
+		header.append(FLUXOBSFLUX + delimiter);
+		header.append(FLUXADJFLUX + delimiter);
+		header.append(FLUXURSI);
 
 		return header.toString();
 	}
