@@ -20,53 +20,48 @@ import pl.imgw.util.LogManager;
  */
 public class SingleRunProcessor implements Runnable {
 
-    private static Log log = LogManager.getLogger();
+	private static Log log = LogManager.getLogger();
 
-    private List<File> files;
-    private FilesProcessor proc;
-    private boolean valid = false;
+	private List<File> files;
+	private FilesProcessor proc;
+	private boolean valid = false;
 
-    /**
+	/**
      * 
      */
-    public SingleRunProcessor(FilesProcessor proc, List<File> folders,
-            List<File> files) {
+	public SingleRunProcessor(FilesProcessor proc, List<File> folders,
+			List<File> files) {
 
-        for (File folder : folders) {
-            files.addAll(Arrays.asList(folder.listFiles()));
-        }
+		for (File folder : folders) {
+			files.addAll(Arrays.asList(folder.listFiles()));
+		}
 
-        if (files.isEmpty()) {
-            log.printMsg("No input files specified", Log.TYPE_WARNING,
-                    Log.MODE_VERBOSE);
-            return;
-        }
-        this.files = files;
-        this.proc = proc;
-        valid = true;
-    }
+		if (files.isEmpty()) {
+			log.printMsg("No input files specified", Log.TYPE_WARNING,
+					Log.MODE_VERBOSE);
+			return;
+		}
+		this.files = files;
+		this.proc = proc;
+		valid = true;
+	}
 
-    public boolean isValid() {
-        return valid;
-    }
+	public boolean isValid() {
+		return valid;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    @Override
-    public void run() {
-        if (proc == null)
-            return;
+	@Override
+	public void run() {
+		if (proc == null)
+			return;
 
-        else
-            log.printMsg(
-                    "Single run process started with: " + proc.getProcessName(),
-                    Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+		else
+			log.printMsg(
+					"Single run process started with: " + proc.getProcessName(),
+					Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
-        proc.processFile(files);
+		proc.processFile(files);
 
-    }
+	}
 
 }

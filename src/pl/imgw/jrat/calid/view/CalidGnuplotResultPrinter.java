@@ -26,116 +26,121 @@ import pl.imgw.util.LogManager;
  */
 public class CalidGnuplotResultPrinter extends CalidPeriodsResultsPrinter {
 
-    private static Log log = LogManager.getLogger();
+	private static Log log = LogManager.getLogger();
 
-    private File output;
-    private SimpleDateFormat shortDateFormat = new SimpleDateFormat("yyyyMMdd");
+	private File output;
 
-    /**
-     * @param params
-     * @param detParams
-     * @throws IOException
-     */
-    public CalidGnuplotResultPrinter(String[] args, File output) throws CalidException{
-        super(args, 1);
-        if(pair.hasOnlyOneSource()) {
-            throw new CalidException("Must provide both sources");
-        }
-        if (output == null) {
-            this.output = new File(pair.getSource1() + pair.getSource2()
-                    + shortDateFormat.format(params.getStartRangeDate()) + ".png");
-        }else if(output.isDirectory()) {
-            this.output = new File(output, pair.getSource1() + pair.getSource2()
-                    + shortDateFormat.format(params.getStartRangeDate()) + ".png");
-        } else
-            this.output = output;
+	private SimpleDateFormat shortDateFormat = new SimpleDateFormat("yyyyMMdd");
 
-    }
+	/**
+	 * @param params
+	 * @param detParams
+	 * @throws IOException
+	 */
 
-    public void generateMeanDifferencePlots() throws IOException {
+	public CalidGnuplotResultPrinter(String[] args, File output)
+			throws CalidException {
+		super(args, 1);
+		if (pair.hasOnlyOneSource()) {
+			throw new CalidException("Must provide both sources");
+		}
+		if (output == null) {
+			this.output = new File(pair.getSource1() + pair.getSource2()
+					+ shortDateFormat.format(params.getStartRangeDate())
+					+ ".png");
+		} else if (output.isDirectory()) {
+			this.output = new File(output, pair.getSource1()
+					+ pair.getSource2()
+					+ shortDateFormat.format(params.getStartRangeDate())
+					+ ".png");
+		} else
+			this.output = output;
 
-        Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
+	}
 
-        if (files.isEmpty()) {
-            log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
-            return;
-        }
+	public void generateMeanDifferencePlots() throws IOException {
 
-        log.printMsg("# Results between "
-                + sdf.format(params.getStartRangeDate()) + " and "
-                + sdf.format(params.getEndRangeDate()) + " for freq >="
-                + params.getFrequency(), Log.TYPE_NORMAL,
-                Log.MODE_NORMAL);
-        
-        // ConsoleProgressBar.getProgressBar().initialize(20, 5,
-        // log.getVerbose() == SPARE, "Plot generating");
+		Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
 
-        File data1day = new File(AplicationConstans.TMP, "tmp1");
-        File data5day = new File(AplicationConstans.TMP, "tmp2");
-        File data10day = new File(AplicationConstans.TMP, "tmp3");
+		if (files.isEmpty()) {
+			log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
+					Log.MODE_NORMAL);
+			return;
+		}
 
-        ResultPrinter pr = new FileResultPrinter(data1day);
-        ResultPrinterManager.getManager().setPrinter(pr);
+		log.printMsg(
+				"# Results between " + sdf.format(params.getStartRangeDate())
+						+ " and " + sdf.format(params.getEndRangeDate())
+						+ " for freq >=" + params.getFrequency(),
+				Log.TYPE_NORMAL, Log.MODE_NORMAL);
 
-        setPeriod(1);
-        if (!printResults(files)) {
-            log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
-            return;
-        }
+		// ConsoleProgressBar.getProgressBar().initialize(20, 5,
+		// log.getVerbose() == SPARE, "Plot generating");
 
-        Double median = getMedianResult();
-        
-        // ConsoleProgressBar.getProgressBar().evaluate();
+		File data1day = new File(AplicationConstans.TMP, "tmp1");
+		File data5day = new File(AplicationConstans.TMP, "tmp2");
+		File data10day = new File(AplicationConstans.TMP, "tmp3");
 
-        ((FileResultPrinter) pr).setFile(data5day);
-        setPeriod(5);
-        if (!printResults(files)) {
-            log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
-            return;
-        }
+		ResultPrinter pr = new FileResultPrinter(data1day);
+		ResultPrinterManager.getManager().setPrinter(pr);
 
-        // ConsoleProgressBar.getProgressBar().evaluate();
+		setPeriod(1);
+		if (!printResults(files)) {
+			log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
+					Log.MODE_NORMAL);
+			return;
+		}
 
-        ((FileResultPrinter) pr).setFile(data10day);
-        setPeriod(10);
-        if (!printResults(files)) {
-            log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
-            return;
-        }
+		Double median = getMedianResult();
 
-        // ConsoleProgressBar.getProgressBar().evaluate();
+		// ConsoleProgressBar.getProgressBar().evaluate();
 
-        CalidMeanDifferencePlot plot = new CalidMeanDifferencePlot(data1day,
-                data5day, data10day);
+		((FileResultPrinter) pr).setFile(data5day);
+		setPeriod(5);
+		if (!printResults(files)) {
+			log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
+					Log.MODE_NORMAL);
+			return;
+		}
 
-        plot.setPairsName(pair.getSource1(), pair.getSource2());
-        plot.setTimePeriod(params.getStartRangeDate(), params.getEndRangeDate());
-        plot.setYmin(-20);
-        plot.setYmax(20);
-        plot.setOutput(output);
-        plot.setMedian(median);
+		// ConsoleProgressBar.getProgressBar().evaluate();
 
+		((FileResultPrinter) pr).setFile(data10day);
+		setPeriod(10);
+		if (!printResults(files)) {
+			log.printMsg("No data to generate this plot", Log.TYPE_WARNING,
+					Log.MODE_NORMAL);
+			return;
+		}
 
-        if (plot.plot())
-            ;
+		// ConsoleProgressBar.getProgressBar().evaluate();
 
-        data1day.delete();
-        data5day.delete();
-        data10day.delete();
+		CalidMeanDifferencePlot plot = new CalidMeanDifferencePlot(data1day,
+				data5day, data10day);
 
-        // ConsoleProgressBar.getProgressBar().printDoneMsg();
+		plot.setPairsName(pair.getSource1(), pair.getSource2());
+		plot.setTimePeriod(params.getStartRangeDate(), params.getEndRangeDate());
+		plot.setYmin(-20);
+		plot.setYmax(20);
+		plot.setOutput(output);
+		plot.setMedian(median);
 
-        if(output.exists())
-            log.printMsg("New plot generated: " + output, Log.TYPE_NORMAL,
-                Log.MODE_NORMAL);
-        else
-            log.printMsg("Fail to generate plot: " + output, Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
+		if (plot.plot())
+			;
 
-    }
+		data1day.delete();
+		data5day.delete();
+		data10day.delete();
+
+		// ConsoleProgressBar.getProgressBar().printDoneMsg();
+
+		if (output.exists())
+			log.printMsg("New plot generated: " + output, Log.TYPE_NORMAL,
+					Log.MODE_NORMAL);
+		else
+			log.printMsg("Fail to generate plot: " + output, Log.TYPE_WARNING,
+					Log.MODE_NORMAL);
+
+	}
 
 }

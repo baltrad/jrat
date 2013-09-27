@@ -34,203 +34,203 @@ import pl.imgw.util.LogManager;
  */
 public class CalidPeriodsResultsPrinter extends CalidResultsPrinter {
 
-    public static final String MEDIAN = "median";
-    public static final String MEAN = "mean";
-    private Integer period = null;
-    private List<Double> median;
+	public static final String MEDIAN = "median";
+	public static final String MEAN = "mean";
+	private Integer period = null;
+	private List<Double> median;
 
-    public CalidPeriodsResultsPrinter(String[] calidargs, int period) throws CalidException{
-        super(calidargs);
-        this.period = period;
-    }
+	public CalidPeriodsResultsPrinter(String[] calidargs, int period)
+			throws CalidException {
+		super(calidargs);
+		this.period = period;
+	}
 
-    /**
-     * Print results for all results file that matches Calid Parsed Parameters
-     * 
-     * @return
-     */
-    public boolean printResults() {
-//        if (!areParametersSet()) {
-//            log.printMsg("Set all params for CALID", Log.TYPE_WARNING,
-//                    Log.MODE_VERBOSE);
-//            return false;
-//        }
-        Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
-        return printResults(files);
-    }
+	/**
+	 * Print results for all results file that matches Calid Parsed Parameters
+	 * 
+	 * @return
+	 */
+	public boolean printResults() {
+		// if (!areParametersSet()) {
+		// log.printMsg("Set all params for CALID", Log.TYPE_WARNING,
+		// Log.MODE_VERBOSE);
+		// return false;
+		// }
+		Set<File> files = CalidResultFileGetter.getResultFiles(pair, params);
+		return printResults(files);
+	}
 
-    /**
-     * Print results for given result files
-     * 
-     * @param files
-     * @return returns true if printed results are not empty
-     * @throws IllegalArgumentException
-     */
-    protected boolean printResults(Set<File> files) {
+	/**
+	 * Print results for given result files
+	 * 
+	 * @param files
+	 * @return returns true if printed results are not empty
+	 * @throws IllegalArgumentException
+	 */
+	protected boolean printResults(Set<File> files) {
 
-//        log.printMsg("Printing results by " + period + "-day period",
-//                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
-        
-        boolean notEmpty = false;
+		// log.printMsg("Printing results by " + period + "-day period",
+		// Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
-        ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
-        
-        headers = new HashSet<String>();
+		boolean notEmpty = false;
 
-        List<Double> meanRes = null;
-        List<Double> rmsRes = null;
-        median = new ArrayList<Double>();
-        Calendar endOfThePeriod = null;
-        boolean printHeader = true;
-        
-        for (File f : files) {
+		ResultPrinter printer = ResultPrinterManager.getManager().getPrinter();
+		headers = new HashSet<String>();
 
-            if(printResultsHeader(f)) {
-                meanRes = new ArrayList<Double>();
-                rmsRes = new ArrayList<Double>();
-                endOfThePeriod = Calendar.getInstance();
-                endOfThePeriod.setTime(params.getStartRangeDate());
-                endOfThePeriod.add(Calendar.DATE, period);;
-                printHeader = true;
-            }
-            
-            StringBuilder header = new StringBuilder();
+		List<Double> meanRes = null;
+		List<Double> rmsRes = null;
 
-//          header.append("#");
+		median = new ArrayList<Double>();
+		Calendar endOfThePeriod = null;
+		boolean printHeader = true;
 
+		for (File f : files) {
 
-            header.append("# results by " + period + "-day period\n");
-            header.append("#\tdate \t\tmean\trms\n");
-          
-            try {
+			if (printResultsHeader(f)) {
+				meanRes = new ArrayList<Double>();
+				rmsRes = new ArrayList<Double>();
+				endOfThePeriod = Calendar.getInstance();
+				endOfThePeriod.setTime(params.getStartRangeDate());
+				endOfThePeriod.add(Calendar.DATE, period);
+				;
+				printHeader = true;
+			}
 
-                Date fileDate = fsdf.parse(f.getName());
-                String date1 = fsdf.format(params.getStartRangeDate());
+			StringBuilder header = new StringBuilder();
 
-                if (fileDate.before(fsdf.parse(date1))
-                        || fileDate.after(params.getEndRangeDate())) {
-                    continue;
-                }
+			// header.append("#");
 
-            } catch (ParseException e) {
+			header.append("# results by " + period + "-day period\n");
+			header.append("#\tdate \t\tmean\trms\n");
 
-            }
+			try {
 
-            try {
-                Scanner scan = new Scanner(f);
-                while (scan.hasNext()) {
-                    String line = scan.nextLine();
-                    if (line.startsWith("#")) {
-                        continue;
-                    }
-                    
-                    CalidSingleResultContainer results;
-                    results = CalidResultLoader.loadResultsFromLine(line,
-                            params, pair);
+				Date fileDate = fsdf.parse(f.getName());
+				String date1 = fsdf.format(params.getStartRangeDate());
 
-                    if(results == null)
-                        continue;
+				if (fileDate.before(fsdf.parse(date1))
+						|| fileDate.after(params.getEndRangeDate())) {
+					continue;
+				}
 
-                    /*
-                     * if pair data date is after period end time, quit the
-                     * loop
-                     */
-                    if (results.getResultDate()
-                            .after(params.getEndRangeDate())) {
-                        break;
-                    }
+			} catch (ParseException e) {
 
-                    boolean periodChanged = false;
+			}
 
-                    /*
-                     * updating period window time
-                     */
-                    while (results.getResultDate().after(
-                            endOfThePeriod.getTime())) {
-                        endOfThePeriod.add(Calendar.DATE, period);
-                        periodChanged = true;
-                    }
+			try {
+				Scanner scan = new Scanner(f);
+				while (scan.hasNext()) {
+					String line = scan.nextLine();
+					if (line.startsWith("#")) {
+						continue;
+					}
 
-                    /*
-                     * if period window time has been changed, print results
-                     */
-                    if (periodChanged && !meanRes.isEmpty()) {
-                        if (meanRes.size() == 0)
-                            continue;
+					CalidSingleResultContainer results;
+					results = CalidResultLoader.loadResultsFromLine(line,
+							params, pair);
 
-                        
-                        if (printHeader) {
-                            printer.print(header.toString());
-                            printHeader = false;
-                        }
-                        printer.println(sdf.format(results.getResultDate())
-                                + "\t" + getMeanResult(meanRes) + "\t"
-                                + getMeanResult(rmsRes));
+					if (results == null)
+						continue;
 
-                        meanRes.clear();
-                        rmsRes.clear();
-                        notEmpty = true;
-                    }
+					/*
+					 * if pair data date is after period end time, quit the loop
+					 */
+					if (results.getResultDate().after(params.getEndRangeDate())) {
+						break;
+					}
 
-                    int freq = params.getFrequency();
-                    Double mean = CalidStatistics.getMean(results, freq);
-                    Double rms = CalidStatistics.getRMS(results, freq);
+					boolean periodChanged = false;
 
-                    if (mean != null) {
-                        median.add(mean);
-                        meanRes.add(mean);
-                    }
-                    if (rms != null)
-                        rmsRes.add(rms);
+					/*
+					 * updating period window time
+					 */
+					while (results.getResultDate().after(
+							endOfThePeriod.getTime())) {
+						endOfThePeriod.add(Calendar.DATE, period);
+						periodChanged = true;
+					}
 
-                }
-                scan.close();
-            } catch (FileNotFoundException e) {
-                log.printMsg("CALID: Results file not found: " + f,
-                        Log.TYPE_WARNING, Log.MODE_VERBOSE);
-            }
-        }
+					/*
+					 * if period window time has been changed, print results
+					 */
+					if (periodChanged && !meanRes.isEmpty()) {
+						if (meanRes.size() == 0)
+							continue;
 
-        return notEmpty;
+						if (printHeader) {
+							printer.print(header.toString());
+							printHeader = false;
+						}
 
-    }
+						printer.println(sdf.format(results.getResultDate())
+								+ "\t" + getMeanResult(meanRes) + "\t"
+								+ getMeanResult(rmsRes));
 
-    public Double getMedianResult() {
-        
-        if (median  == null || median.size() == 0) {
-            return null;
-        }
+						meanRes.clear();
+						rmsRes.clear();
+						notEmpty = true;
+					}
 
-        if (median.size() == 1) {
-            return median.get(0);
-        }
+					int freq = params.getFrequency();
+					Double mean = CalidStatistics.getMean(results, freq);
+					Double rms = CalidStatistics.getRMS(results, freq);
 
-        Collections.sort(median);
-        int middle = median.size() / 2;
+					if (mean != null) {
+						median.add(mean);
+						meanRes.add(mean);
+					}
 
-        if (median.size() % 2 == 1) {
-            return median.get(middle);
-            // return array.get(middle);
-        } else {
-            return round((median.get(middle - 1) + median.get(middle)) / 2.0, 3);
-        }
-    }
+					if (rms != null)
+						rmsRes.add(rms);
 
-    private Double getMeanResult(List<Double> list) {
+				}
+				scan.close();
+			} catch (FileNotFoundException e) {
+				log.printMsg("CALID: Results file not found: " + f,
+						Log.TYPE_WARNING, Log.MODE_VERBOSE);
+			}
+		}
 
-        if (list.size() == 0) {
-            return 0.0;
-        }
+		return notEmpty;
 
-        double mean = 0;
-        for (double d : list) {
-            mean += d;
-        }
-        return round(mean / list.size(), 2);
-    }
+	}
 
-    protected void setPeriod(int per) {
-        this.period = per;
-    }
+	public Double getMedianResult() {
+
+		if (median == null || median.size() == 0) {
+			return null;
+		}
+
+		if (median.size() == 1) {
+			return median.get(0);
+		}
+
+		Collections.sort(median);
+		int middle = median.size() / 2;
+
+		if (median.size() % 2 == 1) {
+			return median.get(middle);
+			// return array.get(middle);
+		} else {
+			return round((median.get(middle - 1) + median.get(middle)) / 2.0, 3);
+		}
+	}
+
+	private Double getMeanResult(List<Double> list) {
+
+		if (list.size() == 0) {
+			return 0.0;
+		}
+
+		double mean = 0;
+		for (double d : list) {
+			mean += d;
+		}
+		return round(mean / list.size(), 2);
+	}
+
+	protected void setPeriod(int per) {
+		this.period = per;
+	}
 
 }

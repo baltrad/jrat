@@ -32,173 +32,164 @@ import pl.imgw.util.Log;
  */
 public class CalidDataSaver extends CalidDataHandler {
 
-    private static final String SOURCE = "src=";
-    private static final String ELEVATION = "ele=";
-    private static final String REFLECTIVITY = "ref=";
-    private static final String DISTANCE = "dis=";
+	private static final String SOURCE = "src=";
+	private static final String ELEVATION = "ele=";
+	private static final String REFLECTIVITY = "ref=";
+	private static final String DISTANCE = "dis=";
 
-    /**
-     * 
-     * @param results
-     */
-    public static void saveResults(CalidSingleResultContainer results) {
-        saveResults(
-                results,
-                getResultsPath(results.getParams(), results
-                        .getPolarVolumePair().getDate(), results.getPair()));
-    }
-    
-    /**
-     * 
-     * @param results
-     */
-    protected static void saveResults(CalidSingleResultContainer results, File file) {
-        
-        if (results.getPairedPointsList().isEmpty())
-            throw new CalidException("Nothing to save, result list is empty.");
-            
+	/**
+	 * 
+	 * @param results
+	 */
+	public static void saveResults(CalidSingleResultContainer results) {
+		saveResults(
+				results,
+				getResultsPath(results.getParams(), results
+						.getPolarVolumePair().getDate(), results.getPair()));
+	}
 
-        CalidParameters params = results.getParams();
+	/**
+	 * 
+	 * @param results
+	 */
+	protected static void saveResults(CalidSingleResultContainer results,
+			File file) {
 
-        PrintWriter pw = null;
-        boolean newfile = false;
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-                newfile = true;
-            }
-            pw = new PrintWriter(new FileOutputStream(file, true), true);
+		if (results.getPairedPointsList().isEmpty())
+			throw new CalidException("Nothing to save, result list is empty.");
 
-            /*
-             * Creating header
-             */ 
-            if (newfile) {
-                pw.println(COMMENTS + " " + SOURCE
-                        + results.getPair().getBothSources() + " " + ELEVATION
-                        + params.getElevation() + " " + DISTANCE
-                        + params.getDistance() + " " + REFLECTIVITY
-                        + params.getReflectivity());
-            }
+		CalidParameters params = results.getParams();
 
-            pw.print(CALID_DATE_TIME_FORMAT.format(results.getPolarVolumePair()
-                    .getDate()));
+		PrintWriter pw = null;
+		boolean newfile = false;
+		try {
+			if (!file.exists()) {
+				file.createNewFile();
+				newfile = true;
+			}
+			pw = new PrintWriter(new FileOutputStream(file, true), true);
 
-            Iterator<PairedPoint> itr = results.getPairedPointsList().iterator();
-            while (itr.hasNext()) {
-                pw.print(" ");
-                PairedPoint p = itr.next();
-                String v = ((p.getDifference() == null) ? NULL : Double
-                        .toString(p.getDifference()));
-                pw.print(v);
-            }
-            pw.print(" " + results.getR1understate() + " " + results.getR2understate());
-            pw.print("\n");
-            log.printMsg("CALID: Saving results complete", Log.TYPE_NORMAL,
-                    Log.MODE_VERBOSE);
-        } catch (FileNotFoundException e) {
-            log.printMsg(
-                    "CALID: Cannot create result file in path "
-                            + file.getAbsolutePath() + "\n" + e.getMessage(),
-                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
-        } catch (IOException e) {
-            log.printMsg(
-                    "CALID: Cannot create result file in path "
-                            + file.getAbsolutePath() + "\n" + e.getMessage(),
-                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
+			/*
+			 * Creating header
+			 */
+			if (newfile) {
+				pw.println(COMMENTS + " " + SOURCE
+						+ results.getPair().getBothSources() + " " + ELEVATION
+						+ params.getElevation() + " " + DISTANCE
+						+ params.getDistance() + " " + REFLECTIVITY
+						+ params.getReflectivity());
+			}
 
-        } finally {
-            if (pw != null)
-                pw.close();
-        }
-    }
+			pw.print(CALID_DATE_TIME_FORMAT.format(results.getPolarVolumePair()
+					.getDate()));
 
-    
-    public static void saveCoords(CalidSingleResultContainer results) throws CalidException{
-        saveCoords(getCoordsPath(results.getParams(), results.getPair()), results);
-    }
+			Iterator<PairedPoint> itr = results.getPairedPointsList()
+					.iterator();
+			while (itr.hasNext()) {
+				pw.print(" ");
+				PairedPoint p = itr.next();
+				String v = ((p.getDifference() == null) ? NULL : Double
+						.toString(p.getDifference()));
+				pw.print(v);
+			}
+			pw.print(" " + results.getR1understate() + " "
+					+ results.getR2understate());
+			pw.print("\n");
+			log.printMsg("CALID: Saving results complete", Log.TYPE_NORMAL,
+					Log.MODE_VERBOSE);
+		} catch (FileNotFoundException e) {
+			log.printMsg(
+					"CALID: Cannot create result file in path "
+							+ file.getAbsolutePath() + "\n" + e.getMessage(),
+					Log.TYPE_ERROR, Log.MODE_VERBOSE);
+		} catch (IOException e) {
+			log.printMsg(
+					"CALID: Cannot create result file in path "
+							+ file.getAbsolutePath() + "\n" + e.getMessage(),
+					Log.TYPE_ERROR, Log.MODE_VERBOSE);
 
-    protected static void saveCoords(File file, CalidSingleResultContainer results) {
-         
-        List<PairedPoint> points = results.getPairedPointsList();
-        
-        if (points.isEmpty()) {
-            throw new CalidException("Nothing to save, result list is empty.");
-        }
-        
-        PolarVolumesPair volumes = results.getPolarVolumePair();
-//        CalidParameters params = results.getParams();
-        double ele = results.getParams().getElevation();
+		} finally {
+			if (pw != null)
+				pw.close();
+		}
+	}
 
-        Document doc = null;
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
+	public static void saveCoords(CalidSingleResultContainer results)
+			throws CalidException {
+		saveCoords(getCoordsPath(results.getParams(), results.getPair()),
+				results);
+	}
 
-            DocumentBuilder builder = factory.newDocumentBuilder();
+	protected static void saveCoords(File file,
+			CalidSingleResultContainer results) {
 
-            doc = builder.newDocument();
-            // System.out.println("tutaj");
+		List<PairedPoint> points = results.getPairedPointsList();
 
-        } catch (ParserConfigurationException e) {
-            log.printMsg("CALID: Error while creating XML document object",
-                    Log.TYPE_ERROR, Log.MODE_VERBOSE);
-            throw new CalidException(e.getMessage());
-        }
+		if (points.isEmpty()) {
+			throw new CalidException("Nothing to save, result list is empty.");
+		}
 
-        Element pair = doc.createElement(PAIR);
+		PolarVolumesPair volumes = results.getPolarVolumePair();
+		// CalidParameters params = results.getParams();
+		double ele = results.getParams().getElevation();
 
-        pair.setAttribute(R1LON,
-                String.valueOf(volumes.getVol1().getLon()));
-        pair.setAttribute(R1LAT,
-                String.valueOf(volumes.getVol1().getLat()));
+		Document doc = null;
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
 
-        pair.setAttribute(
-                R1BINS,
-                String.valueOf(volumes.getVol1()
-                        .getScan(ele).getNBins()));
-        pair.setAttribute(
-                R1SCALE,
-                String.valueOf(volumes.getVol1()
-                        .getScan(ele).getRScale()));
+			DocumentBuilder builder = factory.newDocumentBuilder();
 
-        pair.setAttribute(R2LON,
-                String.valueOf(volumes.getVol2().getLon()));
-        pair.setAttribute(R2LAT,
-                String.valueOf(volumes.getVol2().getLat()));
-        pair.setAttribute(
-                R2BINS,
-                String.valueOf(volumes.getVol2()
-                        .getScan(ele).getNBins()));
-        pair.setAttribute(
-                R2SCALE,
-                String.valueOf(volumes.getVol2()
-                        .getScan(ele).getRScale()));
-        pair.setAttribute(SIZE,
-                String.valueOf(points.size()));
+			doc = builder.newDocument();
+			// System.out.println("tutaj");
 
-        /* ----------- */
+		} catch (ParserConfigurationException e) {
+			log.printMsg("CALID: Error while creating XML document object",
+					Log.TYPE_ERROR, Log.MODE_VERBOSE);
+			throw new CalidException(e.getMessage());
+		}
 
-        Iterator<PairedPoint> itr = points.iterator();
-        while (itr.hasNext()) {
-            PairedPoint pairPoint = itr.next();
-            Element point = doc.createElement(POINT);
-            point.setAttribute(R1LON, String.valueOf(pairPoint.getCoord1().x));
-            point.setAttribute(R1LAT, String.valueOf(pairPoint.getCoord1().y));
-            point.setAttribute(R1BIN, String.valueOf(pairPoint.getBin1()));
-            point.setAttribute(R1RAY, String.valueOf(pairPoint.getRay1()));
-            point.setAttribute(R2LAT, String.valueOf(pairPoint.getCoord2().y));
-            point.setAttribute(R2LON, String.valueOf(pairPoint.getCoord2().x));
-            point.setAttribute(R2BIN, String.valueOf(pairPoint.getBin2()));
-            point.setAttribute(R2RAY, String.valueOf(pairPoint.getRay2()));
-            pair.appendChild(point);
-        }
+		Element pair = doc.createElement(PAIR);
 
-        // root.appendChild(pairElement);
+		pair.setAttribute(R1LON, String.valueOf(volumes.getVol1().getLon()));
+		pair.setAttribute(R1LAT, String.valueOf(volumes.getVol1().getLat()));
 
-        doc.appendChild(pair);
+		pair.setAttribute(R1BINS,
+				String.valueOf(volumes.getVol1().getScan(ele).getNBins()));
+		pair.setAttribute(R1SCALE,
+				String.valueOf(volumes.getVol1().getScan(ele).getRScale()));
 
-        XMLHandler.saveXMLFile(doc, file.getPath());
-        
-    }
+		pair.setAttribute(R2LON, String.valueOf(volumes.getVol2().getLon()));
+		pair.setAttribute(R2LAT, String.valueOf(volumes.getVol2().getLat()));
+		pair.setAttribute(R2BINS,
+				String.valueOf(volumes.getVol2().getScan(ele).getNBins()));
+		pair.setAttribute(R2SCALE,
+				String.valueOf(volumes.getVol2().getScan(ele).getRScale()));
+		pair.setAttribute(SIZE, String.valueOf(points.size()));
+
+		/* ----------- */
+
+		Iterator<PairedPoint> itr = points.iterator();
+		while (itr.hasNext()) {
+			PairedPoint pairPoint = itr.next();
+			Element point = doc.createElement(POINT);
+			point.setAttribute(R1LON, String.valueOf(pairPoint.getCoord1().x));
+			point.setAttribute(R1LAT, String.valueOf(pairPoint.getCoord1().y));
+			point.setAttribute(R1BIN, String.valueOf(pairPoint.getBin1()));
+			point.setAttribute(R1RAY, String.valueOf(pairPoint.getRay1()));
+			point.setAttribute(R2LAT, String.valueOf(pairPoint.getCoord2().y));
+			point.setAttribute(R2LON, String.valueOf(pairPoint.getCoord2().x));
+			point.setAttribute(R2BIN, String.valueOf(pairPoint.getBin2()));
+			point.setAttribute(R2RAY, String.valueOf(pairPoint.getRay2()));
+			pair.appendChild(point);
+		}
+
+		// root.appendChild(pairElement);
+
+		doc.appendChild(pair);
+
+		XMLHandler.saveXMLFile(doc, file.getPath());
+
+	}
 
 }

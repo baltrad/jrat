@@ -32,7 +32,7 @@ public class CommandLineArgsParser {
 	public final static String CALID_LIST = "calid-list";
 	public final static String CALID_HELP = "calid-help";
 	public final static String CALID_OPT = "calid-opt";
-//	public final static String CALID_RESULT_DETAIL = "calid-detail";
+	// public final static String CALID_RESULT_DETAIL = "calid-detail";
 	public final static String CALID_PLOT = "calid-plot";
 
 	// public final static String D = "d";
@@ -59,8 +59,9 @@ public class CommandLineArgsParser {
 
 	public final static String SCANSUN = "scansun";
 	public final static String SCANSUN_RESULT = "scansun-result";
-	public final static String SCANSUN_RESULT_GNUPLOT = "scansun-gnuplot";
+	public final static String SCANSUN_PLOT = "scansun-plot";
 	public final static String SCANSUN_OPT = "scansun-opt";
+	public final static String SCANSUN_DRAO = "scansun-drao";
 	public final static String SCANSUN_HELP = "scansun-help";
 
 	public final static String SEQ = "seq";
@@ -122,21 +123,22 @@ public class CommandLineArgsParser {
 
 	private final static String CALID_RESULT_DESCR = "handle CALID results\n<arg>";
 	private final static String CALID_LIST_DESCR = "print list of available CALID results\n<arg>";
-//	private static final String CALID_RESULT_DETAIL_DESCR = "CALID detailed result, "
-//			+ "for more help use --calid-help option";
-	
+	// private static final String CALID_RESULT_DETAIL_DESCR =
+	// "CALID detailed result, "
+	// + "for more help use --calid-help option";
+
 	private static final String CALID_PLOT_DESCR = "CALID plot result, "
 			+ "for more help use --calid-help option";
-	
-	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter, " +
-			"must be use with --calid\n<file> XML file path";
 
-	private final static String SCANSUN_DESCR = "find solar rays in radar obseravtions\n"
-			+ "<args> [hmin=] [rmin=] [tf=] [ad=] [tw=] [awe=] [awa=]";
+	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter, "
+			+ "must be use with --calid\n<file> XML file path";
+
+	private final static String SCANSUN_DESCR = "finds solar rays in radar obseravtions\n"
+			+ "<args> [hmin=] [rmin=] [tf=] [ad=] [tw=] [mpw=]";
 	private final static String SCANSUN_RESULT_DESCR = "print list of available SCANSUN results\n<arg>";
-	private final static String SCANSUN_RESULT_GNUPLOT_DESCR = "SCANSUN gnuplot results, "
-			+ "for more help use --scansun-help option";
-	private static final String SCANSUN_OPT_DESCR = "SCANSUN option file with parameters\n<arg> XML file path";
+	private final static String SCANSUN_PLOT_DESCR = "creates plots with results";
+	private static final String SCANSUN_OPT_DESCR = "option file with radar parameters (used for power calibraton)\n<arg> XML file path";
+	private static final String SCANSUN_DRAO_DESCR = "plain text file with solar flux observations form DRAO";
 	private final static String SCANSUN_HELP_DESCR = "print an information of SCANSUN usage";
 
 	// private final static String FORMAT_DESCR =
@@ -195,13 +197,13 @@ public class CommandLineArgsParser {
 
 		options.addOption(null, CALID_HELP, false, CALID_HELP_DESCR);
 
-//		calidResults = OptionBuilder.withDescription(CALID_RESULT_DETAIL_DESCR)
-//				.hasArgs().withLongOpt(CALID_RESULT_DETAIL).create();
-//		options.addOption(calidResults);
+		// calidResults =
+		// OptionBuilder.withDescription(CALID_RESULT_DETAIL_DESCR)
+		// .hasArgs().withLongOpt(CALID_RESULT_DETAIL).create();
+		// options.addOption(calidResults);
 
-		calidResults = OptionBuilder
-				.withDescription(CALID_PLOT_DESCR).hasArgs()
-				.withLongOpt(CALID_PLOT).create();
+		calidResults = OptionBuilder.withDescription(CALID_PLOT_DESCR)
+				.hasArgs().withLongOpt(CALID_PLOT).create();
 		options.addOption(calidResults);
 
 		Option calidOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()
@@ -214,7 +216,7 @@ public class CommandLineArgsParser {
 		options.addOption(scansun);
 
 		Option scansunResults = OptionBuilder.withLongOpt(SCANSUN_RESULT)
-				.hasOptionalArgs().withDescription(SCANSUN_RESULT_DESCR)
+				.hasOptionalArg().withDescription(SCANSUN_RESULT_DESCR)
 				.create();
 		options.addOption(scansunResults);
 
@@ -223,11 +225,15 @@ public class CommandLineArgsParser {
 				.create();
 		options.addOption(scansunOpt);
 
+		Option scansunDRAO = OptionBuilder.withArgName(FILE_ARG).hasArg()
+				.withDescription(SCANSUN_DRAO_DESCR).withLongOpt(SCANSUN_DRAO)
+				.create();
+		options.addOption(scansunDRAO);
+
 		options.addOption(null, SCANSUN_HELP, false, SCANSUN_HELP_DESCR);
 
-		scansunResults = OptionBuilder
-				.withDescription(SCANSUN_RESULT_GNUPLOT_DESCR)
-				.hasOptionalArgs().withLongOpt(SCANSUN_RESULT_GNUPLOT).create();
+		scansunResults = OptionBuilder.withDescription(SCANSUN_PLOT_DESCR)
+				.hasOptionalArgs().withLongOpt(SCANSUN_PLOT).create();
 		options.addOption(scansunResults);
 
 		options.addOption(print_img);

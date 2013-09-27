@@ -34,185 +34,157 @@ import pl.imgw.util.LogManager;
  */
 public class CalidController {
 
-    private static Log log = LogManager.getLogger();
+	private static Log log = LogManager.getLogger();
 
-    public static void processPlot(CommandLine cmd, File output) {
-        processPlot(cmd.getOptionValues(CALID_PLOT), output);
-    }
-    
-    protected static void processPlot(String[] args, File output) {
-        
-        try {
-            new CalidGnuplotResultPrinter(args, output)
-                    .generateMeanDifferencePlots();
-        } catch (CalidException e) {
-            log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_SILENT);
-        } catch (IllegalArgumentException e) {
-            log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_SILENT);
-        } catch (IOException e) {
-            log.printMsg("Plotting error", Log.TYPE_ERROR, Log.MODE_SILENT);
-        }
-    }
-    
-    public static void processResult(CommandLine cmd) {
-        if(cmd.getOptionValues(CALID_RESULT) == null) {
-            CalidParametersParser.printHelp();
-            return;
-        }
-        processResult(cmd.getOptionValues(CALID_RESULT));
-    }
-    
-    protected static void processResult(String[] args) {
+	public static void processPlot(CommandLine cmd, File output) {
+		processPlot(cmd.getOptionValues(CALID_PLOT), output);
+	}
 
-        Integer period = getPeriod(args);
-        try {
-            if (period == null)
-                new CalidSingleResultPrinter(args).printResults();
-            else
-                new CalidPeriodsResultsPrinter(args, period).printResults();
-        } catch (CalidException e) {
-            log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
-            CalidParametersParser.printHelp();
-        }
+	protected static void processPlot(String[] args, File output) {
 
-    }
-    
-    public static void processList(CommandLine cmd) {
-        processList(cmd.getOptionValues(CALID_LIST));
-    }
-    
-    protected static void processList(String[] args) {
-        CalidResultsPrinter printer = new CalidResultsPrinter(args);
-        printer.printList();
-//        if(args != null)
-//        else
-//            printer.printListOfAllPairs();
-    }
-    
-    
-    private static Integer getPeriod(String[] args) {
-        Integer period = null;
-        for (String s : args) {
-            if (s.startsWith(PERIOD)) {
+		try {
+			new CalidGnuplotResultPrinter(args, output)
+					.generateMeanDifferencePlots();
+		} catch (CalidException e) {
+			log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_SILENT);
+		} catch (IllegalArgumentException e) {
+			log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_SILENT);
+		} catch (IOException e) {
+			log.printMsg("Plotting error", Log.TYPE_ERROR, Log.MODE_SILENT);
+		}
+	}
 
-                try {
+	public static void processResult(CommandLine cmd) {
 
-                    period = Integer.parseInt(s.substring(PERIOD.length(),
-                            s.length()));
-                    if (period > 0)
-                        return period;
-                    else
-                        throw new CalidException("period must be bigger then 0");
-                } catch (NumberFormatException e) {
-                    throw new CalidException(s + " is not a valid period value");
-                }
-            }
-        }
-        return null;
-    }
-    
-    /*
-    private static boolean processCalidResult(CommandLine cmd) {
-        CalidPairAndParameters calid = null;
+		if (cmd.getOptionValues(CALID_RESULT) == null) {
+			CalidParametersParser.printHelp();
+			return;
+		}
+		processResult(cmd.getOptionValues(CALID_RESULT));
+	}
 
-        try {
-            calid = CalidParametersParser.getParser().parsePairAndParameters(
-                    cmd.getOptionValues(CALID_RESULT));
-        } catch (CalidException e1) {
-            CalidParametersParser.printHelp();
-            return false;
-        }
+	protected static void processResult(String[] args) {
 
-        if (hasOnlySourceName(calid.getParameters(), calid.getPair())) {
-            try {
-                new CalidGnuplotResultPrinter(
-                        cmd.getOptionValues(CALID_RESULT), "")
-                        .generateMeanDifferencePlots();
-            } catch (IOException e) {
-                log.printMsg("Plotting error", Log.TYPE_ERROR, Log.MODE_VERBOSE);
-            } catch (IllegalArgumentException e) {
-                log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
-            }
-        } else if (cmd.hasOption(CALID_RESULT_DETAIL)) {
-            try {
-                new CalidPeriodsResultsPrinter(
-                        cmd.getOptionValues(CALID_RESULT_DETAIL), 1)
-                        .printResults();
-            } catch (IllegalArgumentException e) {
-                log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
-            }
-        } else if (cmd.hasOption(CALID_RESULT_PLOT)) {
-            String output = cmd.getOptionValue(CALID_RESULT_PLOT);
-            try {
-                new CalidGnuplotResultPrinter(
-                        cmd.getOptionValues(CALID_RESULT), output)
-                        .generateMeanDifferencePlots();
-            } catch (IllegalArgumentException e) {
-                log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
-            } catch (IOException e) {
-                log.printMsg("Plotting error", Log.TYPE_ERROR, Log.MODE_VERBOSE);
-            }
-        } else {
-//            new CalidResultsPrinter(cmd.getOptionValues(CALID_RESULT))
-//                    .printResults();
-        }
-        return true;
+		Integer period = getPeriod(args);
+		try {
+			if (period == null)
+				new CalidSingleResultPrinter(args).printResults();
+			else
+				new CalidPeriodsResultsPrinter(args, period).printResults();
+		} catch (CalidException e) {
+			log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE);
+			CalidParametersParser.printHelp();
+		}
 
-    }
-*/
-    /*
-    private static boolean hasOnlySourceName(CalidParameters params,
-            RadarsPair pair) {
-        if (pair.getSource1().isEmpty() || pair.getSource2().isEmpty())
-            return false;
+	}
 
-        return (params.isDistanceDefault() && params.isElevationDefault()
-                && params.isEndDateDefault() && params.isFrequencyDefault()
-                && params.isReflectivityDefault() && params
-                    .isStartDateDefault());
-    }
+	public static void processList(CommandLine cmd) {
+		processList(cmd.getOptionValues(CALID_LIST));
+	}
 
-    private static boolean processCalidList(CommandLine cmd) {
+	protected static void processList(String[] args) {
+		CalidResultsPrinter printer = new CalidResultsPrinter(args);
+		printer.printList();
+		// if(args != null)
+		// else
+		// printer.printListOfAllPairs();
+	}
 
-        CalidPairAndParameters calid = null;
+	private static Integer getPeriod(String[] args) {
+		Integer period = null;
+		for (String s : args) {
+			if (s.startsWith(PERIOD)) {
 
-        try {
-            CalidParametersParser.getParser().parsePairAndParameters(
-                    cmd.getOptionValues(CALID_LIST));
-        } catch (CalidException e) {
-            CalidParametersParser.printHelp();
-            return false;
-        }
+				try {
+					period = Integer.parseInt(s.substring(PERIOD.length(),
+							s.length()));
+					if (period > 0)
+						return period;
+					else
+						throw new CalidException("period must be bigger then 0");
+				} catch (NumberFormatException e) {
+					throw new CalidException(s + " is not a valid period value");
+				}
+			}
+		}
+		return null;
+	}
 
-        new CalidResultsPrinter(calid).printList();
-        return true;
+	/*
+	 * private static boolean processCalidResult(CommandLine cmd) {
+	 * CalidPairAndParameters calid = null;
+	 * 
+	 * try { calid = CalidParametersParser.getParser().parsePairAndParameters(
+	 * cmd.getOptionValues(CALID_RESULT)); } catch (CalidException e1) {
+	 * CalidParametersParser.printHelp(); return false; }
+	 * 
+	 * if (hasOnlySourceName(calid.getParameters(), calid.getPair())) { try {
+	 * new CalidGnuplotResultPrinter( cmd.getOptionValues(CALID_RESULT), "")
+	 * .generateMeanDifferencePlots(); } catch (IOException e) {
+	 * log.printMsg("Plotting error", Log.TYPE_ERROR, Log.MODE_VERBOSE); } catch
+	 * (IllegalArgumentException e) { log.printMsg(e.getMessage(),
+	 * Log.TYPE_WARNING, Log.MODE_VERBOSE); } } else if
+	 * (cmd.hasOption(CALID_RESULT_DETAIL)) { try { new
+	 * CalidPeriodsResultsPrinter( cmd.getOptionValues(CALID_RESULT_DETAIL), 1)
+	 * .printResults(); } catch (IllegalArgumentException e) {
+	 * log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE); } }
+	 * else if (cmd.hasOption(CALID_RESULT_PLOT)) { String output =
+	 * cmd.getOptionValue(CALID_RESULT_PLOT); try { new
+	 * CalidGnuplotResultPrinter( cmd.getOptionValues(CALID_RESULT), output)
+	 * .generateMeanDifferencePlots(); } catch (IllegalArgumentException e) {
+	 * log.printMsg(e.getMessage(), Log.TYPE_WARNING, Log.MODE_VERBOSE); } catch
+	 * (IOException e) { log.printMsg("Plotting error", Log.TYPE_ERROR,
+	 * Log.MODE_VERBOSE); } } else { // new
+	 * CalidResultsPrinter(cmd.getOptionValues(CALID_RESULT)) //
+	 * .printResults(); } return true;
+	 * 
+	 * }
+	 */
+	/*
+	 * private static boolean hasOnlySourceName(CalidParameters params,
+	 * RadarsPair pair) { if (pair.getSource1().isEmpty() ||
+	 * pair.getSource2().isEmpty()) return false;
+	 * 
+	 * return (params.isDistanceDefault() && params.isElevationDefault() &&
+	 * params.isEndDateDefault() && params.isFrequencyDefault() &&
+	 * params.isReflectivityDefault() && params .isStartDateDefault()); }
+	 * 
+	 * private static boolean processCalidList(CommandLine cmd) {
+	 * 
+	 * CalidPairAndParameters calid = null;
+	 * 
+	 * try { CalidParametersParser.getParser().parsePairAndParameters(
+	 * cmd.getOptionValues(CALID_LIST)); } catch (CalidException e) {
+	 * CalidParametersParser.printHelp(); return false; }
+	 * 
+	 * new CalidResultsPrinter(calid).printList(); return true;
+	 * 
+	 * }
+	 */
 
-    }
-     */
+	public static FilesProcessor setCalidProcessor(CommandLine cmd) {
+		FilesProcessor proc;
+		// if (cmd.hasOption(CALID_OPT)) {
+		// CalidOptionsHandler.getOptions().setOptionFile(
+		// cmd.getOptionValue(CALID_OPT));
+		// }
+		try {
+			proc = new CalidProcessor(cmd.getOptionValues(CALID));
+		} catch (CalidException e) {
+			log.printMsg(e.getMessage(), Log.TYPE_ERROR, Log.MODE_VERBOSE);
+			return null;
+		}
 
-    public static FilesProcessor setCalidProcessor(CommandLine cmd) {
-        FilesProcessor proc;
-        // if (cmd.hasOption(CALID_OPT)) {
-        // CalidOptionsHandler.getOptions().setOptionFile(
-        // cmd.getOptionValue(CALID_OPT));
-        // }
-        try {
-            proc = new CalidProcessor(cmd.getOptionValues(CALID));
-        } catch (CalidException e) {
-            log.printMsg(e.getMessage(), Log.TYPE_ERROR, Log.MODE_VERBOSE);
-            return null;
-        }
+		// String par = "";
+		// if (cmd.getOptionValue(CALID) == null)
+		// par = "default settings";
+		// else
+		// for (String s : cmd.getOptionValues(CALID)) {
+		// par += s + " ";
+		// }
+		// log.printMsg("Starting CALID with " + par, Log.TYPE_NORMAL,
+		// Log.MODE_VERBOSE);
 
-//        String par = "";
-//        if (cmd.getOptionValue(CALID) == null)
-//            par = "default settings";
-//        else
-//            for (String s : cmd.getOptionValues(CALID)) {
-//                par += s + " ";
-//            }
-//        log.printMsg("Starting CALID with " + par, Log.TYPE_NORMAL,
-//                Log.MODE_VERBOSE);
-
-        return proc;
-    }
+		return proc;
+	}
 }
