@@ -5,12 +5,9 @@ package pl.imgw.jrat.scansun.proc;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.joda.time.LocalDate;
 
 import pl.imgw.jrat.scansun.ScansunException;
@@ -139,6 +136,11 @@ public class ScansunSolarFluxFileHandler {
 		for (ScansunSolarFluxObservation sfo : solarFluxObservationsFinder(day)) {
 			solarFlux += sfo.getFluxobsflux();
 			n++;
+		}
+
+		if (!(solarFlux > 0)) {
+			log.printMsg("SCANSUN: no DRAO solar flux data for date " + day,
+					Log.TYPE_WARNING, Log.MODE_VERBOSE);
 		}
 
 		return solarFlux /= n;

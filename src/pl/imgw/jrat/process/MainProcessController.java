@@ -7,7 +7,6 @@ import static pl.imgw.jrat.AplicationConstans.APS_DESC;
 import static pl.imgw.jrat.AplicationConstans.DATE;
 import static pl.imgw.jrat.AplicationConstans.REL_DATE;
 import static pl.imgw.jrat.process.CommandLineArgsParser.*;
-import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
 
 import java.io.File;
 import java.util.LinkedList;

@@ -130,7 +130,7 @@ public class ScansunSolarFluxPlot extends ScansunPlot {
 					GnuplotColors.GRAY);
 		}
 
-		plot.pushGraph(new Graph(datafile.getPath(), "2:21",
+		plot.pushGraph(new Graph(datafile.getAbsolutePath(), "2:21",
 				Axes.NOT_SPECIFIED, "observed", Style.LINESPOINTS,
 				LineType.SCREEN_BLACK_SOLID_BOLD,
 				PointType.SCREEN_SQUARE_FILLED));
