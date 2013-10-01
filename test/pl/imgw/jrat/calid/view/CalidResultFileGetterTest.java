@@ -60,6 +60,9 @@ public class CalidResultFileGetterTest {
     public void shouldGetResultFilesByOneSrcName() {
         RadarsPair pair = new RadarsPair("", "Poznan");
         CalidParameters params = new CalidParameters(null, null, null, null);
+        Date startRangeDate = new Date(113, 0, 1);
+        Date endRangeDate = new Date(113, 11, 30);
+        params.setRangeDates(startRangeDate, endRangeDate);
         Set<File> set = CalidResultFileGetter.getResultFiles(pair, params, folder);
         assertEquals(8, set.size());
         
@@ -93,6 +96,9 @@ public class CalidResultFileGetterTest {
     @Test
     public void shouldGetResultFilesDistance() {
         CalidParameters params = new CalidParameters(null, 500, null, null);
+        Date startRangeDate = new Date(113, 0, 1);
+        Date endRangeDate = new Date(113, 11, 30);
+        params.setRangeDates(startRangeDate, endRangeDate);
         Set<File> set = CalidResultFileGetter.getResultFiles(null, params, folder);
         assertEquals(4, set.size());
         
@@ -101,6 +107,9 @@ public class CalidResultFileGetterTest {
     @Test
     public void shouldGetResultFilesElevationAndReflectivity() {
         CalidParameters params = new CalidParameters(0.5, null, null, 3.0);
+        Date startRangeDate = new Date(113, 0, 1);
+        Date endRangeDate = new Date(113, 11, 30);
+        params.setRangeDates(startRangeDate, endRangeDate);
         Set<File> set = CalidResultFileGetter.getResultFiles(null, params, folder);
         assertEquals(8, set.size());
         

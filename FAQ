@@ -14,11 +14,11 @@ Copyright (C) 2011-2013 Institute of Meteorology and Water Management, IMGW
 
 The given folders are /home/me/input/RAD1 and /home/me/input/RAD2, we want to compare
 the lowest elevation which is 0.5 degree, minimal reflectivity is 3.0dBZ and precision
- of overlapping pixel is 500m.
+ of overlapping pixel (distance between overlapping pixels from each radars) is 500m.
 
 $ jrat -i /home/me/input/RAD1 /home/me/input/RAD2 --calid ele=0.5 dis=500 ref=3.0 --seq 5
 
-If folders are not empty during start, aplication will ask for confirmation to delete
+If folders are not empty, aplication will ask for confirmation to delete
 all files after processing them. It will ask only once. Aplication will activate every
 5 minutes (in rounded time e.g. 00, 05, 10, 15 etc.), first run will start imedietly.
 
@@ -27,4 +27,5 @@ all files after processing them. It will ask only once. Aplication will activate
 Using --calid-opt and valid xml file. You can define setting for each radar separately.
 
 $ jrat --calid-opt file.xml --calid --seq 10
+
 
