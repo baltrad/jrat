@@ -57,11 +57,12 @@ public class CommandLineArgsParser {
 
 	// public final static String
 
-	public final static String SCANSUN = "scansun";
-	public final static String SCANSUN_RESULT = "scansun-result";
-	public final static String SCANSUN_RESULT_GNUPLOT = "scansun-gnuplot";
-	public final static String SCANSUN_OPT = "scansun-opt";
-	public final static String SCANSUN_HELP = "scansun-help";
+    public final static String SCANSUN = "scansun";
+    public final static String SCANSUN_RESULT = "scansun-result";
+    public final static String SCANSUN_PLOT = "scansun-plot";
+    public final static String SCANSUN_OPT = "scansun-opt";
+    public final static String SCANSUN_DRAO = "scansun-drao";
+    public final static String SCANSUN_HELP = "scansun-help";
 
 	public final static String SEQ = "seq";
 
