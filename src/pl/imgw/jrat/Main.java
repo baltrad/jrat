@@ -20,31 +20,31 @@ import pl.imgw.util.LogManager;
  */
 public class Main {
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
 
-        // File genFile = new File(LOG, "log_gen");
-        // File recFile = new File(LOG, "log_rec");
-        // File errFile = new File(LOG, "log_err");
+		// File genFile = new File(LOG, "log_gen");
+		// File recFile = new File(LOG, "log_rec");
+		// File errFile = new File(LOG, "log_err");
 
-        LogManager.getInstance().setLogFile(new File(LOG));
+		LogManager.getInstance().setLogFile(new File(LOG));
 
-        // LogHandler.getLogs().setGeneralLogs(genFile, 0);
-        // LogHandler.getLogs().setErrorLogs(errFile, 0);
-        // LogHandler.getLogs().setRecentFileLogs(recFile, 0);
-        //
-        MainProcessController pc = new MainProcessController(args);
-        try {
-            if (!pc.start()) {
-                System.out.println("JRAT: failed");
-            }
-        } catch (Exception e) {
-            LogManager.getFileLogger().saveErrorLogs(e.getCause().toString(),
-                    e.getMessage());
-        }
-        LogManager.getInstance();
-    }
+		// LogHandler.getLogs().setGeneralLogs(genFile, 0);
+		// LogHandler.getLogs().setErrorLogs(errFile, 0);
+		// LogHandler.getLogs().setRecentFileLogs(recFile, 0);
+		//
+		MainProcessController pc = new MainProcessController(args);
+		try {
+			if (!pc.start()) {
+				System.out.println("JRAT: failed");
+			}
+		} catch (Exception e) {
+			LogManager.getFileLogger().saveErrorLogs(e.getCause().toString(),
+					e.getMessage());
+		}
+		LogManager.getInstance();
+	}
 
 }

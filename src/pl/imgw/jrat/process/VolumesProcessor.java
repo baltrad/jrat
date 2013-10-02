@@ -8,15 +8,15 @@ import java.util.List;
 import pl.imgw.jrat.data.PolarData;
 
 /**
- *
- *  /Class description/
- *
- *
+ * 
+ * /Class description/
+ * 
+ * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
  */
-public interface VolumesProcessor extends FilesProcessor{
+public interface VolumesProcessor extends FilesProcessor {
 
-    void processVolumes(List<PolarData> vol);
-    
+	void processVolumes(List<PolarData> vol);
+
 }

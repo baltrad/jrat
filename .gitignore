@@ -8,3 +8,9 @@ dist/*
 etc/*
 test-data/log*
 install.sh
+/bin
+src/pl/imgw/jrat/AplicationConstans.java
+jrat/tmp*
+jrat/etc/scansun/*.results
+jrat/etc/scansun/*.png
+data/scansun/DRAO-solar-flux-table.data

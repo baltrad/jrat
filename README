@@ -2,7 +2,7 @@ Java Radar data Analizing Tool
   
 	j r a t
 
-Łukasz Wojtas
+Łukasz Wojtas, Przemyslaw Jacewicz
 
 Copyright (C) 2011-2013 Institute of Meteorology and Water Management, IMGW
 
@@ -14,7 +14,7 @@ processing. It operates on ODIM HDF5 and Rainbow5 format.
 Implemented algorithms:
 * CALID: The algorithm compares reflectivity of two radars in overlapping
 areas.
-* SCANSUN
+* SCANSUN: The algorithm finds solar flares in raw radar volumes.
 
 The Latest Version
 ------------------

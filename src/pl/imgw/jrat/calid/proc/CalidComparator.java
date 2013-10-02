@@ -28,82 +28,84 @@ import pl.imgw.util.LogManager;
  */
 public class CalidComparator {
 
-    private static Log log = LogManager.getLogger();
+	private static Log log = LogManager.getLogger();
 
-    private static void calculateResult(CalidSingleResultContainer results) {
+	private static void calculateResult(CalidSingleResultContainer results) {
 
-        results.resetDifferences();
-        List<PairedPoint> points = results.getPairedPointsList();
-        PolarVolumesPair pair = results.getPolarVolumePair();
-        CalidParameters params = results.getParams();
-        
-        ScanContainer scan1;
-        try {
-            scan1 = pair.getVol1().getScan(params.getElevation());
-        } catch (NullPointerException e) {
-            throw new CalidException(pair.getVol1().getSiteName()
-                    + " does not have " + params.getElevation() + " elevation");
-        }
+		results.resetDifferences();
+		List<PairedPoint> points = results.getPairedPointsList();
+		PolarVolumesPair pair = results.getPolarVolumePair();
+		CalidParameters params = results.getParams();
 
-        ScanContainer scan2;
-        try {
-            scan2 = pair.getVol2().getScan(params.getElevation());
-        } catch (NullPointerException e) {
-            throw new CalidException(pair.getVol2().getSiteName()
-                    + " does not have " + params.getElevation() + " elevation");
-        }
+		ScanContainer scan1;
+		try {
+			scan1 = pair.getVol1().getScan(params.getElevation());
+		} catch (NullPointerException e) {
+			throw new CalidException(pair.getVol1().getSiteName()
+					+ " does not have " + params.getElevation() + " elevation");
+		}
 
-        log.printMsg("CALID: Comparing data for " + pair, Log.TYPE_NORMAL,
-                Log.MODE_VERBOSE);
-        
-//        CalidSingleResultContainer container = new CalidSingleResultContainer();
-        
-        Iterator<PairedPoint> itr = points.iterator();
-        while (itr.hasNext()) {
-            PairedPoint coords = itr.next();
-            double val1 = 0, val2 = 0;
-            try {
-                val1 = scan1.getArray().getPoint(coords.getBin1(),
-                        coords.getRay1());
-                val2 = scan2.getArray().getPoint(coords.getBin2(),
-                        coords.getRay2());
-            } catch (OutOfBoundsException e) {
-                continue;
-            }
-            if (val1 == scan1.getOffset() || val2 == scan2.getOffset()) {
-                if (val1 >= params.getReflectivity()) {
-                    results.r2understated();
-                } else if (val2 >= params.getReflectivity()) {
-                    results.r1understated();
-                }
-            } else if (val1 >= params.getReflectivity()
-                    && val2 >= params.getReflectivity()) {
-                coords.setDifference(val1 - val2);
-            }
-        }
-    }
+		ScanContainer scan2;
+		try {
+			scan2 = pair.getVol2().getScan(params.getElevation());
+		} catch (NullPointerException e) {
+			throw new CalidException(pair.getVol2().getSiteName()
+					+ " does not have " + params.getElevation() + " elevation");
+		}
 
-    /**
-     * Loads from archive file or calculates results of comparison for given pair with given parameters.
-     * 
-     * @param pair
-     * @param params
-     * @return
-     */
-    public static void putResult(CalidSingleResultContainer results) {
+		log.printMsg("CALID: Comparing data for " + pair, Log.TYPE_NORMAL,
+				Log.MODE_VERBOSE);
 
-        if(!results.hasCoords())
-            results.setCoords();
-        
-        if (!CalidResultLoader.loadSingleResult(results)) {
-            
-            calculateResult(results);
-            CalidDataSaver.saveResults(results);
-        }
-        
-        log.printMsg("CALID: Comparison completed", Log.TYPE_NORMAL,
-                Log.MODE_VERBOSE);
-        
-    }
-    
+		// CalidSingleResultContainer container = new
+		// CalidSingleResultContainer();
+
+		Iterator<PairedPoint> itr = points.iterator();
+		while (itr.hasNext()) {
+			PairedPoint coords = itr.next();
+			double val1 = 0, val2 = 0;
+			try {
+				val1 = scan1.getArray().getPoint(coords.getBin1(),
+						coords.getRay1());
+				val2 = scan2.getArray().getPoint(coords.getBin2(),
+						coords.getRay2());
+			} catch (OutOfBoundsException e) {
+				continue;
+			}
+			if (val1 == scan1.getOffset() || val2 == scan2.getOffset()) {
+				if (val1 >= params.getReflectivity()) {
+					results.r2understated();
+				} else if (val2 >= params.getReflectivity()) {
+					results.r1understated();
+				}
+			} else if (val1 >= params.getReflectivity()
+					&& val2 >= params.getReflectivity()) {
+				coords.setDifference(val1 - val2);
+			}
+		}
+	}
+
+	/**
+	 * Loads from archive file or calculates results of comparison for given
+	 * pair with given parameters.
+	 * 
+	 * @param pair
+	 * @param params
+	 * @return
+	 */
+	public static void putResult(CalidSingleResultContainer results) {
+
+		if (!results.hasCoords())
+			results.setCoords();
+
+		if (!CalidResultLoader.loadSingleResult(results)) {
+
+			calculateResult(results);
+			CalidDataSaver.saveResults(results);
+		}
+
+		log.printMsg("CALID: Comparison completed", Log.TYPE_NORMAL,
+				Log.MODE_VERBOSE);
+
+	}
+
 }

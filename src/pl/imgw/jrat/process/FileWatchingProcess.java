@@ -32,157 +32,157 @@ import name.pachler.nio.file.WatchService;
  */
 public class FileWatchingProcess implements Runnable {
 
-    private static Log log = LogManager.getLogger();
+	private static Log log = LogManager.getLogger();
 
-    private WatchService watchSvc = FileSystems.getDefault().newWatchService();
-    private HashMap<String, Long> fileTimeMap = new HashMap<String, Long>();
-    private HashMap<WatchKey, String> pathMap = new HashMap<WatchKey, String>();
+	private WatchService watchSvc = FileSystems.getDefault().newWatchService();
+	private HashMap<String, Long> fileTimeMap = new HashMap<String, Long>();
+	private HashMap<WatchKey, String> pathMap = new HashMap<WatchKey, String>();
 
-    private FilesProcessor proc = null;
-    private List<File> files = new LinkedList<File>();
-    // private File[] watchedPath = null;
+	private FilesProcessor proc = null;
+	private List<File> files = new LinkedList<File>();
+	// private File[] watchedPath = null;
 
-    private static int counter = 0;
-    private static final int CYCLE_LENGHT = 50;
-    
-    private boolean valid = false;
+	private static int counter = 0;
+	private static final int CYCLE_LENGHT = 50;
 
-    public FileWatchingProcess(FilesProcessor proc, List<File> watchedPathList) {
-        if (watchedPathList == null || watchedPathList.isEmpty()) {
-            log.printMsg("No valid folders to watch.", Log.TYPE_WARNING,
-                    Log.MODE_VERBOSE);
-            return;
-        }
-        this.proc = proc;
-        // this.watchedPath = watchedPath;
-        Path path = null;
-        try {
-            for (File file : watchedPathList) {
-                if (!file.isDirectory())
-                    continue;
-                path = Paths.get(file.getPath());
-                WatchKey key = path.register(watchSvc,
-                        StandardWatchEventKind.ENTRY_CREATE,
-                        StandardWatchEventKind.ENTRY_MODIFY);
-                pathMap.put(key, file.getPath());
-            }
-        } catch (UnsupportedOperationException uox) {
-            log.printMsg("file watching not supported!", Log.TYPE_ERROR,
-                    Log.MODE_VERBOSE);
+	private boolean valid = false;
 
-        } catch (IOException iox) {
-            log.printMsg("I/O errors while watching " + path, Log.TYPE_ERROR,
-                    Log.MODE_VERBOSE);
+	public FileWatchingProcess(FilesProcessor proc, List<File> watchedPathList) {
+		if (watchedPathList == null || watchedPathList.isEmpty()) {
+			log.printMsg("No valid folders to watch.", Log.TYPE_WARNING,
+					Log.MODE_VERBOSE);
+			return;
+		}
+		this.proc = proc;
+		// this.watchedPath = watchedPath;
+		Path path = null;
+		try {
+			for (File file : watchedPathList) {
+				if (!file.isDirectory())
+					continue;
+				path = Paths.get(file.getPath());
+				WatchKey key = path.register(watchSvc,
+						StandardWatchEventKind.ENTRY_CREATE,
+						StandardWatchEventKind.ENTRY_MODIFY);
+				pathMap.put(key, file.getPath());
+			}
+		} catch (UnsupportedOperationException uox) {
+			log.printMsg("file watching not supported!", Log.TYPE_ERROR,
+					Log.MODE_VERBOSE);
 
-        }
+		} catch (IOException iox) {
+			log.printMsg("I/O errors while watching " + path, Log.TYPE_ERROR,
+					Log.MODE_VERBOSE);
 
-        valid = true;
+		}
 
-    }
+		valid = true;
 
-    public boolean isValid() {
-        return valid;
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    @Override
-    public void run() {
-        if (proc == null || pathMap.isEmpty()) {
-            return;
-        }
+	public boolean isValid() {
+		return valid;
+	}
 
-        log.printMsg("Watching process started with: " + proc.getProcessName(),
-                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		if (proc == null || pathMap.isEmpty()) {
+			return;
+		}
 
-        for (String path : pathMap.values()) {
-            log.printMsg("Start watching " + path, Log.TYPE_NORMAL,
-                    Log.MODE_VERBOSE);
-        }
-        while (true) {
+		log.printMsg("Watching process started with: " + proc.getProcessName(),
+				Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
-            // take() will block until a file has been created/deleted
-            WatchKey signalledKey;
-            try {
-                signalledKey = watchSvc.poll(2,
-                        java.util.concurrent.TimeUnit.SECONDS);
-            } catch (InterruptedException ix) {
-                // we'll ignore being interrupted
-                continue;
-            } catch (ClosedWatchServiceException cwse) {
-                // other thread closed watch service
-                log.printMsg("watch service closed, terminating",
-                        Log.TYPE_ERROR, Log.MODE_VERBOSE);
-                break;
-            }
+		for (String path : pathMap.values()) {
+			log.printMsg("Start watching " + path, Log.TYPE_NORMAL,
+					Log.MODE_VERBOSE);
+		}
+		while (true) {
 
-            if (signalledKey == null) {
-                long time;
-                long timeNow = System.currentTimeMillis();
-                Iterator<String> itr = fileTimeMap.keySet().iterator();
-                while (itr.hasNext()) {
-                    String key = itr.next();
-                    time = fileTimeMap.get(key);
-                    /* start processing 1sec after last file modification */
-                    if ((timeNow - time) > 1000) {
-                        fileTimeMap.remove(key);
-                        itr = fileTimeMap.keySet().iterator();
-                        File input = new File(key);
+			// take() will block until a file has been created/deleted
+			WatchKey signalledKey;
+			try {
+				signalledKey = watchSvc.poll(2,
+						java.util.concurrent.TimeUnit.SECONDS);
+			} catch (InterruptedException ix) {
+				// we'll ignore being interrupted
+				continue;
+			} catch (ClosedWatchServiceException cwse) {
+				// other thread closed watch service
+				log.printMsg("watch service closed, terminating",
+						Log.TYPE_ERROR, Log.MODE_VERBOSE);
+				break;
+			}
 
-                        log.printMsg("New file: " + input.getName(),
-                                Log.TYPE_NORMAL, Log.MODE_VERBOSE);
-                        files.add(input);
-                        proc.processFile(files);
-                        files.clear();
-                        if (input.delete())
-                            log.printMsg(input.getName() + " deleted.",
-                                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
-                        counter++;
-                        if(counter == CYCLE_LENGHT)
-                            System.gc();
+			if (signalledKey == null) {
+				long time;
+				long timeNow = System.currentTimeMillis();
+				Iterator<String> itr = fileTimeMap.keySet().iterator();
+				while (itr.hasNext()) {
+					String key = itr.next();
+					time = fileTimeMap.get(key);
+					/* start processing 1sec after last file modification */
+					if ((timeNow - time) > 1000) {
+						fileTimeMap.remove(key);
+						itr = fileTimeMap.keySet().iterator();
+						File input = new File(key);
 
-                    }
-                }
-                if (fileTimeMap.isEmpty()) {
-                    try {
-                        signalledKey = watchSvc.take();
-                    } catch (ClosedWatchServiceException e1) {
-                        log.printMsg("watch service closed, terminating",
-                                Log.TYPE_ERROR, Log.MODE_VERBOSE);
-                    } catch (InterruptedException e1) {
-                        log.printMsg("watch service interrupted",
-                                Log.TYPE_ERROR, Log.MODE_VERBOSE);
-                    }
-                } else {
-                    continue;
-                }
-            }
-            List<WatchEvent<?>> list = signalledKey.pollEvents();
-            String incomingFile = pathMap.get(signalledKey);
-            // VERY IMPORTANT! call reset() AFTER pollEvents() to allow the
-            // key to be reported again by the watch service
-            signalledKey.reset();
+						log.printMsg("New file: " + input.getName(),
+								Log.TYPE_NORMAL, Log.MODE_VERBOSE);
+						files.add(input);
+						proc.processFile(files);
+						files.clear();
+						if (input.delete())
+							log.printMsg(input.getName() + " deleted.",
+									Log.TYPE_WARNING, Log.MODE_VERBOSE);
+						counter++;
+						if (counter == CYCLE_LENGHT)
+							System.gc();
 
-            for (WatchEvent<?> e : list) {
-                if (e.kind() == StandardWatchEventKind.ENTRY_CREATE) {
-                    Path context = (Path) e.context();
-                    fileTimeMap.put(incomingFile + "/" + context.toString(),
-                            System.currentTimeMillis());
-                } else if (e.kind() == StandardWatchEventKind.ENTRY_MODIFY) {
-                    Path context = (Path) e.context();
-                    fileTimeMap.put(incomingFile + "/" + context.toString(),
-                            System.currentTimeMillis());
-                } else if (e.kind() == StandardWatchEventKind.OVERFLOW) {
-                    System.out
-                            .println("OVERFLOW: more changes happened than we could retreive");
-                }
-            }
+					}
+				}
+				if (fileTimeMap.isEmpty()) {
+					try {
+						signalledKey = watchSvc.take();
+					} catch (ClosedWatchServiceException e1) {
+						log.printMsg("watch service closed, terminating",
+								Log.TYPE_ERROR, Log.MODE_VERBOSE);
+					} catch (InterruptedException e1) {
+						log.printMsg("watch service interrupted",
+								Log.TYPE_ERROR, Log.MODE_VERBOSE);
+					}
+				} else {
+					continue;
+				}
+			}
+			List<WatchEvent<?>> list = signalledKey.pollEvents();
+			String incomingFile = pathMap.get(signalledKey);
+			// VERY IMPORTANT! call reset() AFTER pollEvents() to allow the
+			// key to be reported again by the watch service
+			signalledKey.reset();
 
-        }
+			for (WatchEvent<?> e : list) {
+				if (e.kind() == StandardWatchEventKind.ENTRY_CREATE) {
+					Path context = (Path) e.context();
+					fileTimeMap.put(incomingFile + "/" + context.toString(),
+							System.currentTimeMillis());
+				} else if (e.kind() == StandardWatchEventKind.ENTRY_MODIFY) {
+					Path context = (Path) e.context();
+					fileTimeMap.put(incomingFile + "/" + context.toString(),
+							System.currentTimeMillis());
+				} else if (e.kind() == StandardWatchEventKind.OVERFLOW) {
+					System.out
+							.println("OVERFLOW: more changes happened than we could retreive");
+				}
+			}
 
-    }
+		}
+
+	}
 
 }

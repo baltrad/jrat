@@ -30,103 +30,106 @@ import pl.imgw.util.LogManager;
  */
 public class CalidProcessor implements FilesProcessor, VolumesProcessor {
 
-    /**
+	/**
      * 
      */
-    private static final String CALID_PROCESS_NAME = "CALID Process";
+	private static final String CALID_PROCESS_NAME = "CALID Process";
 
-    private static Log log = LogManager.getLogger();
-    private static LogFile logFile = LogManager.getFileLogger();
+	private static Log log = LogManager.getLogger();
+	private static LogFile logFile = LogManager.getFileLogger();
 
-    private CalidComparatorManager manager;
-    
-    private PairsContainer pairs;
+	private CalidComparatorManager manager;
 
-    public CalidProcessor(String args[]) throws CalidException {
-        manager = new CalidComparatorManager();
-        try {
-            // cc = new CalidSingleResultContainer();
+	private PairsContainer pairs;
 
-            CalidParameters params = CalidParametersParser.getParser()
-                    .parseParameters(args);
-            manager.setParsedParameters(params);
+	public CalidProcessor(String args[]) throws CalidException {
+		manager = new CalidComparatorManager();
+		try {
+			// cc = new CalidSingleResultContainer();
 
-            Map<String, CalidParameters> optionFileParams = CalidParametersFileHandler
-                    .getOptions().getParametersForAllPairs();
-            manager.setOptionFileParameters(optionFileParams);
+			CalidParameters params = CalidParametersParser.getParser()
+					.parseParameters(args);
+			manager.setParsedParameters(params);
 
-        } catch (CalidException e) {
-            throw e;
-        }
+			Map<String, CalidParameters> optionFileParams = CalidParametersFileHandler
+					.getOptions().getParametersForAllPairs();
+			manager.setOptionFileParameters(optionFileParams);
 
-    }
+		} catch (CalidException e) {
+			throw e;
+		}
 
-    /* (non-Javadoc)
-     * @see pl.imgw.jrat.process.VolumesProcessor#processVolumes(java.util.List)
-     */
-    @Override
-    public void processVolumes(List<PolarData> vol) {
-        if(vol.size() < 2) {
-            log.printMsg("Need at least two volumes for a pair to start CALID", Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
-            return;
-        }
-        pairs = new PairsContainer();
-        pairs.setVolumes(vol);
-        process();
-        
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see pl.imgw.jrat.process.FilesProcessor#processFile(java.util.List)
-     */
-    @Override
-    public void processFile(List<File> files) {
-        if(files.size() < 2) {
-            log.printMsg("Need at least two files for a pair to start CALID", Log.TYPE_WARNING,
-                    Log.MODE_NORMAL);
-            return;
-        }
-        pairs = new PairsContainer();
-        pairs.setFiles(files);
-        process();
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see pl.imgw.jrat.process.VolumesProcessor#processVolumes(java.util.List)
+	 */
+	@Override
+	public void processVolumes(List<PolarData> vol) {
+		if (vol.size() < 2) {
+			log.printMsg("Need at least two volumes for a pair to start CALID",
+					Log.TYPE_WARNING, Log.MODE_NORMAL);
+			return;
+		}
+		pairs = new PairsContainer();
+		pairs.setVolumes(vol);
+		process();
 
-    private void process() {
-        PolarVolumesPair pair = null;
+	}
 
-        while (pairs.hasNext()) {
-            pair = pairs.next();
-            // LogManager.getProgBar().evaluate();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see pl.imgw.jrat.process.FilesProcessor#processFile(java.util.List)
+	 */
+	@Override
+	public void processFile(List<File> files) {
+		if (files.size() < 2) {
+			log.printMsg("Need at least two files for a pair to start CALID",
+					Log.TYPE_WARNING, Log.MODE_NORMAL);
+			return;
+		}
+		pairs = new PairsContainer();
+		pairs.setFiles(files);
+		process();
 
-            log.printMsg("CALID: process: " + pair, Log.TYPE_NORMAL,
-                    Log.MODE_VERBOSE);
+	}
 
-            try {
-                manager.compare(pair);
-            } catch (CalidException e) {
-                logFile.saveErrorLogs(CalidProcessor.class.getName(),
-                        e.getMessage());
-            } catch (Exception e) {
-                logFile.saveErrorLogs(CalidProcessor.class.getName(),
-                        e.getMessage());
-            }
-        }
-        pairs = null;
+	private void process() {
+		PolarVolumesPair pair = null;
 
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see pl.imgw.jrat.process.FilesProcessor#getProcessName()
-     */
-    @Override
-    public String getProcessName() {
-        return CALID_PROCESS_NAME;
-    }
+		while (pairs.hasNext()) {
+			pair = pairs.next();
+
+			// LogManager.getProgBar().evaluate();
+
+			log.printMsg("CALID: process: " + pair, Log.TYPE_NORMAL,
+					Log.MODE_VERBOSE);
+
+			try {
+				manager.compare(pair);
+			} catch (CalidException e) {
+				logFile.saveErrorLogs(CalidProcessor.class.getName(),
+						e.getMessage());
+			} catch (Exception e) {
+				logFile.saveErrorLogs(CalidProcessor.class.getName(),
+						e.getMessage());
+			}
+		}
+		pairs = null;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see pl.imgw.jrat.process.FilesProcessor#getProcessName()
+	 */
+	@Override
+	public String getProcessName() {
+		return CALID_PROCESS_NAME;
+	}
 
 }

@@ -29,105 +29,105 @@ import pl.imgw.util.LogManager;
  */
 public abstract class TimeSeriesPlot {
 
-    private static Log log = LogManager.getLogger();
+	private static Log log = LogManager.getLogger();
 
-    static {
-        Plot.setGnuplotExecutable("gnuplot");
-        File f = new File(AplicationConstans.TMP);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+	static {
+		Plot.setGnuplotExecutable("gnuplot");
+		File f = new File(AplicationConstans.TMP);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
 
-        Plot.setPlotDirectory(AplicationConstans.TMP);
-    }
+		Plot.setPlotDirectory(AplicationConstans.TMP);
+	}
 
-    private SimpleDateFormat gnudate = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat gnudate = new SimpleDateFormat("yyyy-MM-dd");
 
-    protected int ymin;
-    protected int ymax;
-    protected String output = "newplot";
-    protected StringBuilder title = new StringBuilder();
-    protected StringBuilder period = new StringBuilder();
-    Double median = null;
+	protected int ymin;
+	protected int ymax;
+	protected String output = "newplot";
+	protected StringBuilder title = new StringBuilder();
+	protected StringBuilder period = new StringBuilder();
+	Double median = null;
 
-    protected Plot plot;
+	protected Plot plot;
 
-    public abstract void setPlot() throws InvalidAttributesException;
+	public abstract void setPlot() throws InvalidAttributesException;
 
-    private String xformat = "%d.%m";
+	private String xformat = "%d.%m";
 
-    public boolean plot() {
+	public boolean plot() {
 
-        plot = new Plot();
+		plot = new Plot();
 
-        plot.setTitle(title.append("\\n").append(period).toString());
-        plot.setYRange(ymin, ymax);
-        plot.setXData("time");
-        plot.setTimeFormat("%Y-%m-%d");
-        plot.setFormatX(xformat);
-        if(median != null)
-            plot.setKey("title \"Median = " + median + "\";");
+		plot.setTitle(title.append("\\n").append(period).toString());
+		plot.setYRange(ymin, ymax);
+		plot.setXData("time");
+		plot.setTimeFormat("%Y-%m-%d");
+		plot.setFormatX(xformat);
+		if (median != null)
+			plot.setKey("title \"Median = " + median + "\";");
 
-        try {
-            setPlot();
-            plot.plot();
-            return true;
-        } catch (IOException e) {
-            log.printMsg(e.getMessage() + " \nInstall gnuplot first",
-                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
-        } catch (InterruptedException e) {
-            log.printMsg("gnuplot failed to run: " + e.getMessage(),
-                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
-        } catch (InvalidAttributesException e) {
-            log.printMsg("PLOT: Invalid attribute: " + e.getExplanation(),
-                    Log.TYPE_WARNING, Log.MODE_VERBOSE);
-        }
-        return false;
-    }
+		try {
+			setPlot();
+			plot.plot();
+			return true;
+		} catch (IOException e) {
+			log.printMsg(e.getMessage() + " \nInstall gnuplot first",
+					Log.TYPE_WARNING, Log.MODE_VERBOSE);
+		} catch (InterruptedException e) {
+			log.printMsg("gnuplot failed to run: " + e.getMessage(),
+					Log.TYPE_WARNING, Log.MODE_VERBOSE);
+		} catch (InvalidAttributesException e) {
+			log.printMsg("PLOT: Invalid attribute: " + e.getExplanation(),
+					Log.TYPE_WARNING, Log.MODE_VERBOSE);
+		}
+		return false;
+	}
 
-    /**
-     * @param ymin
-     *            the ymin to set
-     */
-    public void setYmin(int ymin) {
-        this.ymin = ymin;
-    }
+	/**
+	 * @param ymin
+	 *            the ymin to set
+	 */
+	public void setYmin(int ymin) {
+		this.ymin = ymin;
+	}
 
-    /**
-     * @param ymax
-     *            the ymax to set
-     */
-    public void setYmax(int ymax) {
-        this.ymax = ymax;
-    }
+	/**
+	 * @param ymax
+	 *            the ymax to set
+	 */
+	public void setYmax(int ymax) {
+		this.ymax = ymax;
+	}
 
-    /**
-     * @param output
-     *            the output to set
-     */
-    public void setOutput(File output) {
-        if (output != null)
-            this.output = output.getAbsolutePath();
-    }
-    
-    public void setMedian(Double median) {
-        this.median = median;
-    }
+	/**
+	 * @param output
+	 *            the output to set
+	 */
+	public void setOutput(File output) {
+		if (output != null)
+			this.output = output.getAbsolutePath();
+	}
 
-    /**
-     * @param title
-     *            the title to set
-     */
-    public void setTitle(String title) {
-        this.title.append(title);
-    }
+	public void setMedian(Double median) {
+		this.median = median;
+	}
 
-    public void setTimePeriod(Date from, Date to) {
-        period.append("From ").append(gnudate.format(from)).append(" to ")
-                .append(gnudate.format(to));
-        if (to.getTime() - from.getTime() > 10368000000l)
-            xformat = "%b";
+	/**
+	 * @param title
+	 *            the title to set
+	 */
+	public void setTitle(String title) {
+		this.title.append(title);
+	}
 
-    }
+	public void setTimePeriod(Date from, Date to) {
+		period.append("From ").append(gnudate.format(from)).append(" to ")
+				.append(gnudate.format(to));
+		if (to.getTime() - from.getTime() > 10368000000l)
+			xformat = "%b";
+
+	}
 
 }
