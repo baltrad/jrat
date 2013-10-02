@@ -210,26 +210,31 @@ public class CommandLineArgsParser {
 				.create();
 		options.addOption(calidOpt);
 
-		Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasArgs()
-				.withDescription(SCANSUN_DESCR).create();
-		options.addOption(scansun);
+		
+        Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasArgs()
+                .withDescription(SCANSUN_DESCR).create();
+        options.addOption(scansun);
 
-		Option scansunResults = OptionBuilder.withLongOpt(SCANSUN_RESULT)
-				.hasOptionalArgs().withDescription(SCANSUN_RESULT_DESCR)
-				.create();
-		options.addOption(scansunResults);
+        Option scansunResults = OptionBuilder.withLongOpt(SCANSUN_RESULT)
+                .hasOptionalArg().withDescription(SCANSUN_RESULT_DESCR)
+                .create();
+        options.addOption(scansunResults);
 
-		Option scansunOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()
-				.withDescription(SCANSUN_OPT_DESCR).withLongOpt(SCANSUN_OPT)
-				.create();
-		options.addOption(scansunOpt);
+        Option scansunOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()
+                .withDescription(SCANSUN_OPT_DESCR).withLongOpt(SCANSUN_OPT)
+                .create();
+        options.addOption(scansunOpt);
 
-		options.addOption(null, SCANSUN_HELP, false, SCANSUN_HELP_DESCR);
+        Option scansunDRAO = OptionBuilder.withArgName(FILE_ARG).hasArg()
+                .withDescription(SCANSUN_DRAO_DESCR).withLongOpt(SCANSUN_DRAO)
+                .create();
+        options.addOption(scansunDRAO);
 
-		scansunResults = OptionBuilder
-				.withDescription(SCANSUN_RESULT_GNUPLOT_DESCR)
-				.hasOptionalArgs().withLongOpt(SCANSUN_RESULT_GNUPLOT).create();
-		options.addOption(scansunResults);
+        options.addOption(null, SCANSUN_HELP, false, SCANSUN_HELP_DESCR);
+
+        scansunResults = OptionBuilder.withDescription(SCANSUN_PLOT_DESCR)
+                .hasOptionalArgs().withLongOpt(SCANSUN_PLOT).create();
+        options.addOption(scansunResults);
 
 		options.addOption(print_img);
 		options.addOption(W, WATCH, false, WATCH_DESCR);
