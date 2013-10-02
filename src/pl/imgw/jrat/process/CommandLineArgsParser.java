@@ -132,13 +132,13 @@ public class CommandLineArgsParser {
 	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter, " +
 			"must be use with --calid\n<file> XML file path";
 
-	private final static String SCANSUN_DESCR = "find solar rays in radar obseravtions\n"
-			+ "<args> [hmin=] [rmin=] [tf=] [ad=] [tw=] [awe=] [awa=]";
-	private final static String SCANSUN_RESULT_DESCR = "print list of available SCANSUN results\n<arg>";
-	private final static String SCANSUN_RESULT_GNUPLOT_DESCR = "SCANSUN gnuplot results, "
-			+ "for more help use --scansun-help option";
-	private static final String SCANSUN_OPT_DESCR = "SCANSUN option file with parameters\n<arg> XML file path";
-	private final static String SCANSUN_HELP_DESCR = "print an information of SCANSUN usage";
+    private final static String SCANSUN_DESCR = "finds solar rays in radar obseravtions\n"
+            + "<args> [hmin=] [rmin=] [tf=] [ad=] [tw=] [mpw=]";
+    private final static String SCANSUN_RESULT_DESCR = "print list of available SCANSUN results\n<arg>";
+    private final static String SCANSUN_PLOT_DESCR = "creates plots with results";
+    private static final String SCANSUN_OPT_DESCR = "option file with radar parameters (used for power calibraton)\n<arg> XML file path";
+    private static final String SCANSUN_DRAO_DESCR = "plain text file with solar flux observations form DRAO";
+    private final static String SCANSUN_HELP_DESCR = "print an information of SCANSUN usage";
 
 	// private final static String FORMAT_DESCR =
 	// "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
