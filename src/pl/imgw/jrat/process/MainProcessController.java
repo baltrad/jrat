@@ -6,7 +6,29 @@ package pl.imgw.jrat.process;
 import static pl.imgw.jrat.AplicationConstans.APS_DESC;
 import static pl.imgw.jrat.AplicationConstans.DATE;
 import static pl.imgw.jrat.AplicationConstans.REL_DATE;
-import static pl.imgw.jrat.process.CommandLineArgsParser.*;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_HELP;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_LIST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_OPT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_PLOT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.CALID_RESULT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.F;
+import static pl.imgw.jrat.process.CommandLineArgsParser.FORMAT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.H;
+import static pl.imgw.jrat.process.CommandLineArgsParser.I;
+import static pl.imgw.jrat.process.CommandLineArgsParser.O;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.PRINTIMAGE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.QUIET;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN_HELP;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN_OPT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN_RESULT;
+import static pl.imgw.jrat.process.CommandLineArgsParser.SEQ;
+import static pl.imgw.jrat.process.CommandLineArgsParser.TEST;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERBOSE;
+import static pl.imgw.jrat.process.CommandLineArgsParser.VERSION;
+import static pl.imgw.jrat.process.CommandLineArgsParser.WATCH;
 import static pl.imgw.jrat.process.CommandLineArgsParser.printHelp;
 
 import java.io.File;
@@ -20,7 +42,11 @@ import pl.imgw.jrat.calid.data.CalidParametersFileHandler;
 import pl.imgw.jrat.calid.data.CalidParametersParser;
 import pl.imgw.jrat.calid.proc.CalidController;
 import pl.imgw.jrat.data.parsers.GlobalParser;
-import pl.imgw.jrat.scansun.ScansunProcessor;
+import pl.imgw.jrat.scansun.proc.ScansunController;
+import pl.imgw.jrat.scansun.proc.ScansunParametersParser;
+import pl.imgw.jrat.scansun.proc.ScansunProcessor;
+import pl.imgw.jrat.scansun.proc.ScansunRadarParametersFileHandler;
+import pl.imgw.jrat.scansun.proc.ScansunSolarFluxFileHandler;
 import pl.imgw.jrat.tools.out.ProductInfoPrinter;
 import pl.imgw.util.Log;
 import pl.imgw.util.LogManager;
@@ -161,6 +187,34 @@ public class MainProcessController {
             volProc.addProcess((VolumesProcessor) proc);
         }
 
+        /* display SCANSUN help message */
+        if (cmd.hasOption(SCANSUN_HELP)) {
+            ScansunParametersParser.printHelp();
+            return true;
+        }
+        /* set SCANSUN option file */
+        if (cmd.hasOption(SCANSUN_OPT)) {
+            ScansunRadarParametersFileHandler.getHandler().setOptionFile(
+                    cmd.getOptionValue(SCANSUN_OPT));
+        }
+
+        /* set SCANSUN DRAO results file */
+        if (cmd.hasOption(SCANSUN_DRAO)) {
+            ScansunSolarFluxFileHandler.getHandler().setDatafile(
+                    cmd.getOptionValue(SCANSUN_DRAO));
+        }
+
+        /* print SCANSUN results */
+        if (cmd.hasOption(SCANSUN_RESULT)) {
+            ScansunController.processResult(cmd);
+            return true;
+        }
+
+        if (cmd.hasOption(SCANSUN_PLOT)) {
+            ScansunController.processPlots(cmd);
+            return true;
+        }
+        
         /* SCANSUN */
         if (cmd.hasOption(SCANSUN)) {
             proc = new ScansunProcessor(cmd.getOptionValues(SCANSUN));
