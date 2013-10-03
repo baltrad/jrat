@@ -57,14 +57,12 @@ public class CommandLineArgsParser {
 
 	// public final static String
 
-
-    public final static String SCANSUN = "scansun";
-    public final static String SCANSUN_RESULT = "scansun-result";
-    public final static String SCANSUN_PLOT = "scansun-plot";
-    public final static String SCANSUN_OPT = "scansun-opt";
-    public final static String SCANSUN_DRAO = "scansun-drao";
-    public final static String SCANSUN_HELP = "scansun-help";
-
+	public final static String SCANSUN = "scansun";
+	public final static String SCANSUN_RESULT = "scansun-result";
+	public final static String SCANSUN_PLOT = "scansun-plot";
+	public final static String SCANSUN_OPT = "scansun-opt";
+	public final static String SCANSUN_DRAO = "scansun-drao";
+	public final static String SCANSUN_HELP = "scansun-help";
 
 	public final static String SEQ = "seq";
 
@@ -132,7 +130,6 @@ public class CommandLineArgsParser {
 	private static final String CALID_PLOT_DESCR = "CALID plot result, "
 			+ "for more help use --calid-help option";
 
-
 	private static final String CALID_OPT_DESCR = "CALID option file sets each pair parameter, "
 			+ "must be use with --calid\n<file> XML file path";
 
@@ -143,7 +140,6 @@ public class CommandLineArgsParser {
 	private static final String SCANSUN_OPT_DESCR = "option file with radar parameters (used for power calibraton)\n<arg> XML file path";
 	private static final String SCANSUN_DRAO_DESCR = "plain text file with solar flux observations form DRAO";
 	private final static String SCANSUN_HELP_DESCR = "print an information of SCANSUN usage";
-
 
 	// private final static String FORMAT_DESCR =
 	// "format of the file(s) to precess\n<arg> h5, hdf, rainbow, rb";
@@ -215,35 +211,30 @@ public class CommandLineArgsParser {
 				.create();
 		options.addOption(calidOpt);
 
-		
-        Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasArgs()
-                .withDescription(SCANSUN_DESCR).create();
-        options.addOption(scansun);
-
+		Option scansun = OptionBuilder.withLongOpt(SCANSUN).hasArgs()
+				.withDescription(SCANSUN_DESCR).create();
+		options.addOption(scansun);
 
 		Option scansunResults = OptionBuilder.withLongOpt(SCANSUN_RESULT)
 				.hasOptionalArg().withDescription(SCANSUN_RESULT_DESCR)
 				.create();
 		options.addOption(scansunResults);
 
+		Option scansunOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()
+				.withDescription(SCANSUN_OPT_DESCR).withLongOpt(SCANSUN_OPT)
+				.create();
+		options.addOption(scansunOpt);
 
-        Option scansunOpt = OptionBuilder.withArgName(FILE_ARG).hasArg()
-                .withDescription(SCANSUN_OPT_DESCR).withLongOpt(SCANSUN_OPT)
-                .create();
-        options.addOption(scansunOpt);
-
-        Option scansunDRAO = OptionBuilder.withArgName(FILE_ARG).hasArg()
-                .withDescription(SCANSUN_DRAO_DESCR).withLongOpt(SCANSUN_DRAO)
-                .create();
-        options.addOption(scansunDRAO);
-
+		Option scansunDRAO = OptionBuilder.withArgName(FILE_ARG).hasArg()
+				.withDescription(SCANSUN_DRAO_DESCR).withLongOpt(SCANSUN_DRAO)
+				.create();
+		options.addOption(scansunDRAO);
 
 		options.addOption(null, SCANSUN_HELP, false, SCANSUN_HELP_DESCR);
 
 		scansunResults = OptionBuilder.withDescription(SCANSUN_PLOT_DESCR)
 				.hasOptionalArgs().withLongOpt(SCANSUN_PLOT).create();
 		options.addOption(scansunResults);
-
 
 		options.addOption(print_img);
 		options.addOption(W, WATCH, false, WATCH_DESCR);
