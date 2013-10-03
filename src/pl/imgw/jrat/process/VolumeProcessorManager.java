@@ -50,6 +50,10 @@ public class VolumeProcessorManager implements FilesProcessor {
 	@Override
 	public void processFile(List<File> files) {
 		volumes.clear();
+		
+		if(files.isEmpty()) {
+		    return;
+		}
 
 		Collections.sort(files, fileWithDate);
 
