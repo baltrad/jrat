@@ -66,11 +66,11 @@ public class CalidResultFileGetter {
 			if (!pairname.isDirectory())
 				continue;
 
-			// pair name
+			// pair siteName
 			String name = pairname.getName();
 
 			/*
-			 * skip pairs which does not contains source name if they are set
+			 * skip pairs which does not contains source siteName if they are set
 			 */
 			if (pair != null && !name.isEmpty() && !pair.getSource1().isEmpty()) {
 				if (!pair.getSource2().isEmpty()) {

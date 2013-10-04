@@ -118,7 +118,7 @@ public class ScansunRadarParametersFileHandler extends Options {
 					BANDWIDTH));
 
 			result.put(
-					ScansunSite.forName(handler.getValueByName(
+					new ScansunSite(handler.getValueByName(
 							radarNodeList.item(i), RADAR, NAME)), params);
 		}
 

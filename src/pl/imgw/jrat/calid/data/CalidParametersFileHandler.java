@@ -31,7 +31,7 @@ public class CalidParametersFileHandler extends Options {
 //    private static final String CALID = "calid";
     private static final String RADAR = "radar";
     private static final String INPUT = "input";
-//    private static final String NAME = "name";
+//    private static final String NAME = "siteName";
 
     private static final String PAIR = "pair";
     private static final String SRC1 = "src1";
@@ -166,7 +166,7 @@ public class CalidParametersFileHandler extends Options {
             String src2 = getValueByName(pairList.item(i), null, SRC2);
 
             if (src1 == null || src2 == null) {
-                log.printMsg("Source(s) name in calid.opt is missing ("
+                log.printMsg("Source(s) siteName in calid.opt is missing ("
                         + (i + 1) + ". pair)", Log.TYPE_ERROR, Log.MODE_VERBOSE);
                 continue;
             }

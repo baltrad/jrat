@@ -113,14 +113,14 @@ public class XMLHandler {
 
     /**
      * Method retrieves attribute's value of RAINBOW metadata header. Attribute
-     * is identified by its parent Element and its name.
+     * is identified by its parent Element and its siteName.
      * 
      * @param node
      *            List of top level nodes in XML document
      * @param elemName
-     *            name of the parent Element
+     *            siteName of the parent Element
      * @param atrName
-     *            name of the attribute
+     *            siteName of the attribute
      * @return attribute value
      */
     public static String getValueByName(Node node, String elemName,
@@ -193,7 +193,7 @@ public class XMLHandler {
      * @param doc
      *            XML document
      * @param fileName
-     *            Output file name
+     *            Output file siteName
      */
     public static void saveXMLFile(Document doc, String fileName) {
 

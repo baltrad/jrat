@@ -23,7 +23,7 @@ public class PolarVolumesPair extends RadarsPair {
     protected PolarData vol2;
     
     /**
-     * Volumes are sorted by site name in alphabetic order. Method
+     * Volumes are sorted by site siteName in alphabetic order. Method
      * <code>getVol1()</code> will return the first volume and
      * <code>getVol2()</code> will return the other volume, and it will be
      * always the same order for the same pair.

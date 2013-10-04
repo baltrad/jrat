@@ -4,7 +4,6 @@
 package pl.imgw.jrat.scansun.proc;
 
 import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN;
-import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN_RESULT;
 import static pl.imgw.jrat.process.CommandLineArgsParser.SCANSUN_PLOT;
 
 import java.io.IOException;

@@ -74,8 +74,8 @@ public class ScansunProcessor implements FilesProcessor, VolumesProcessor {
 			volume = volumes.next();
 			// LogManager.getProgBar().evaluate();
 
-			log.printMsg("SCANSUN: process: " + volume, Log.TYPE_NORMAL,
-					Log.MODE_VERBOSE);
+			log.printMsg("SCANSUN: process: " + volume.getVolId(),
+					Log.TYPE_NORMAL, Log.MODE_VERBOSE);
 
 			ScansunScanResult result = manager.scan(volume);
 

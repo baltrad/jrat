@@ -65,7 +65,7 @@ public class ScansunResultContainer extends AbstractSet<ScansunEvent> {
 		ScansunResultContainer container = new ScansunResultContainer();
 
 		for (ScansunEvent event : events) {
-			if (event.getSite() == site) {
+			if (event.getSite().equals(site)) {
 				container.addEvent(event);
 			}
 		}

@@ -439,7 +439,8 @@ public class ScansunResultsPrinter {
 		}
 
 		if (noResults) {
-			System.out.println("# No results matching selected parameters");
+			log.printMsg("SCANSUN: no results matching selected parameters",
+					Log.TYPE_WARNING, Log.MODE_VERBOSE);
 		}
 		printer.print(NEWLINE);
 	}

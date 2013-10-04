@@ -130,7 +130,7 @@ public class VolumeProcessorManager implements FilesProcessor {
 			// System.out.println(matcher.group());
 			return sdf.parse(matcher.group().substring(0, 12));
 		}
-		throw new ParseException("This is not a date file name", 0);
+		throw new ParseException("This is not a date file siteName", 0);
 	}
 
 	Comparator<File> fileWithDate = new Comparator<File>() {

@@ -91,7 +91,7 @@ public class CalidDataHandler {
     /**
      * 
      * @param params
-     * @return calid results folder name
+     * @return calid results folder siteName
      */
     public static String getFolderName(CalidParameters params) {
         double reflectivity = params.getReflectivity();
@@ -107,7 +107,7 @@ public class CalidDataHandler {
      * @param elevation
      * @param reflectivity
      * @param range
-     * @return calid results folder name
+     * @return calid results folder siteName
      */
     public static String getFolderName(int distance, double elevation,
             double reflectivity, int range) {
@@ -146,7 +146,7 @@ public class CalidDataHandler {
     }
 
     /**
-     * Receives path name to CALID root folder
+     * Receives path siteName to CALID root folder
      * 
      * @return
      */

@@ -81,14 +81,14 @@ public abstract class Options {
     
     /**
      * Method retrieves attribute's value. Attribute is identified by its parent
-     * Element and its name.
+     * Element and its siteName.
      * 
      * @param node
      *            root element
      * @param elemName
-     *            name of the parent Element
+     *            siteName of the parent Element
      * @param atrName
-     *            name of the attribute
+     *            siteName of the attribute
      * @return attribute value
      */
     protected String getValueByName(Node node, String elemName,

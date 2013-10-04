@@ -22,15 +22,15 @@ public interface FilePatternFilter {
      * pattern given as a string <code>expression</code>. 
      * 
      * <p>
-     * If name of the file contains date written as "yyyyMMddHHmm", then this
+     * If siteName of the file contains date written as "yyyyMMddHHmm", then this
      * date will be saved to <code>FileDate</code> object, otherwise last
      * modification date will be saved.
      * 
      * @param expression
-     *            should point the path and pattern of expected file's name
+     *            should point the path and pattern of expected file's siteName
      * 
      * @return list of files with date, it can be either date parsed from the
-     *         file name or if not exists date of last file modification. List
+     *         file siteName or if not exists date of last file modification. List
      *         should be sorted by date.
      */
     public List<File> getFileList(String expression);

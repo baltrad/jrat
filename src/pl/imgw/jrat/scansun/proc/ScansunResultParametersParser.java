@@ -7,7 +7,6 @@ import java.io.File;
 
 import pl.imgw.jrat.scansun.ScansunException;
 import pl.imgw.jrat.scansun.data.ScansunResultParameters;
-import pl.imgw.jrat.scansun.data.ScansunSite;
 import pl.imgw.util.Log;
 import pl.imgw.util.LogManager;
 
@@ -72,10 +71,6 @@ public class ScansunResultParametersParser {
 			throws ScansunException {
 
 		String siteName = word;
-
-		if (siteName == null || !ScansunSite.getSiteNames().contains(siteName)) {
-			throw new ScansunException(siteName + " is ont a valid siteName");
-		}
 
 		params.setSite(siteName);
 	}

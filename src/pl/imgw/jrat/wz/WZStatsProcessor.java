@@ -92,7 +92,7 @@ public class WZStatsProcessor implements FilesProcessor {
                     if (array.getRawIntPoint(x, y) != nodata
                             && array.getRawIntPoint(x, y) != belowth) {
                         increaseResults(name, x, y, xmax, ymax);
-//                        results.get(name)[x][y] = array.getRawBytePoint(x, y);
+//                        results.get(siteName)[x][y] = array.getRawBytePoint(x, y);
                     }
                 }
             }

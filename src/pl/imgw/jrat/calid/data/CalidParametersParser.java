@@ -56,7 +56,7 @@ public class CalidParametersParser {
 	/**
 	 * 
 	 * Sets all parameters from String array, valid format for each String is
-	 * <tt>name=value</tt>
+	 * <tt>siteName=value</tt>
 	 * 
 	 * <p>
 	 * <tt>ele=</tt> elevation of the scan, in degrees, the proper format for
@@ -472,7 +472,7 @@ public class CalidParametersParser {
 		msg.append(" [freq=Z]\n\t");
 		msg.append("date: sets range of time, if only starting date is selected then only ");
 		msg.append("this date data is taken, valid format is yyyyMMdd/HHmm, but HHmm is optional,\n\t");
-		msg.append("src: source name\n\n");
+		msg.append("src: source siteName\n\n");
 
 		msg.append(
 				"jrat --calid-plot [<args>] Source1,Source2\n\tlist all available pairs")

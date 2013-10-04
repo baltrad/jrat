@@ -28,7 +28,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
  * Will include all files from "/home/user/archive" directory that end with
  * ".doc"
  * 
- * Only files with date in file name will be included.
+ * Only files with date in file siteName will be included.
  * 
  * @author <a href="mailto:lukasz.wojtas@imgw.pl">Lukasz Wojtas</a>
  * 
@@ -74,7 +74,7 @@ public class RegexFileFilter implements FilePatternFilter {
 
     /**
      * 
-     * Helping method. Receives date from file name, or if not available,
+     * Helping method. Receives date from file siteName, or if not available,
      * returns date of last file modification.
      * 
      * @param file

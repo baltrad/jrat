@@ -44,7 +44,8 @@ public class ScansunScanner {
 			Map<ScansunSite, ScansunRadarParameters> radarParams) {
 		ScansunScanResult result = new ScansunScanResult();
 
-		ScansunSite site = ScansunSite.forName(volume.getSiteName());
+		ScansunSite site = new ScansunSite(volume.getSiteName(),
+				volume.getLon(), volume.getLat(), volume.getHeight());
 		DateTime volumeDateTime = new DateTime(volume.getTimeSec());
 		DateTimeFormatter fmt = ScansunUtils
 				.forPattern(SCANSUN_DATETIME_PATTERN);

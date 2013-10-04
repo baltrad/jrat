@@ -50,7 +50,7 @@ public class PairsContainer {
 
 
     /**
-     * @param name
+     * @param siteName
      * @return
      */
     private Date parseDateFromFileName(String name) {

@@ -27,21 +27,17 @@ public class ScansunResultParameters {
 
 	}
 
-	public ScansunResultParameters(ScansunSite site) {
-		this.site = site;
+	public ScansunResultParameters(String siteName) {
+		this.site = new ScansunSite(siteName);
 	}
 
 	public ScansunSite getSite() {
 		return site;
 	}
 
-	public void setSite(ScansunSite site) {
-		this.site = site;
-	}
-
 	public void setSite(String siteName) {
 		this.allAvailableSites = false;
-		this.site = ScansunSite.forName(siteName);
+		this.site = new ScansunSite(siteName);
 	}
 
 	public boolean allAvailableSites() {

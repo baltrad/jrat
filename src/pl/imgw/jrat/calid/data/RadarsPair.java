@@ -36,7 +36,7 @@ public class RadarsPair {
     public RadarsPair(String source1, String source2) throws CalidException {
         if (source1 == null || source2 == null)
             throw new CalidException(
-                    "Pair constructor failed. Source name cannot be null");
+                    "Pair constructor failed. Source siteName cannot be null");
         if (source1.isEmpty() && source2.isEmpty()) {
             throw new CalidException(
                     "Pair constructor failed. Both source names cannot be empty");

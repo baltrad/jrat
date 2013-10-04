@@ -103,7 +103,7 @@ public class CommandLineArgsParser {
 			+ "<arg> one of the product format availabe: ";
 
 	private final static String PRINT_IMAGE_DESCR = "print dataset as an image\n"
-			+ "<arg> must specify dataset number, nodata value, color scale name and"
+			+ "<arg> must specify dataset number, nodata value, color scale siteName and"
 			+ " additionally but not necessarily format\n"
 			+ "supported scales at the moment are rb and gray\n"
 			+ "example use: --print-image dataset=dataset1 nodata=0 scale=rb format=png";

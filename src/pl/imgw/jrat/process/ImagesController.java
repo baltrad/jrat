@@ -34,7 +34,7 @@ public class ImagesController {
      * are not provided default value are set
      * 
      * @param args
-     *            list of fields name and values for <code>ImageBuilder</code>,
+     *            list of fields siteName and values for <code>ImageBuilder</code>,
      *            names and values must be separated by '=' e.g. "format=png".
      *            </br> Supported fields are: format, scale, dataset and nodata
      */

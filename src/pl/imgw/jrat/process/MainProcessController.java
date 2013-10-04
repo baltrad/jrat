@@ -22,7 +22,6 @@ import pl.imgw.jrat.data.parsers.GlobalParser;
 
 import pl.imgw.jrat.scansun.proc.ScansunController;
 import pl.imgw.jrat.scansun.proc.ScansunParametersParser;
-import pl.imgw.jrat.scansun.proc.ScansunProcessor;
 import pl.imgw.jrat.scansun.proc.ScansunRadarParametersFileHandler;
 import pl.imgw.jrat.scansun.proc.ScansunSolarFluxFileHandler;
 
@@ -199,7 +198,7 @@ public class MainProcessController {
 			volProc.addProcess((VolumesProcessor) proc);
 		}
 
-		// test process, prints files name
+		// test process, prints files siteName
 		if (cmd.hasOption(TEST)) {
 			proc = new FilesProcessor() {
 				@Override
