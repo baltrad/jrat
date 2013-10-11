@@ -50,7 +50,7 @@ public class ScansunGnuplotResultPrinter extends ScansunResultsPrinter {
 		String plotBaseFilename = BASE_FILENAME + SEPARATOR
 				+ plot.getPlotname();
 
-		Set<ScansunSite> sites = new HashSet<>();
+		Set<ScansunSite> sites = new HashSet<ScansunSite>();
 		if (params.allAvailableSites()) {
 			sites.addAll(eventsContainer.getSites());
 		} else {

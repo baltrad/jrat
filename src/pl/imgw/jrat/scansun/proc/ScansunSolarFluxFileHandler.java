@@ -97,7 +97,7 @@ public class ScansunSolarFluxFileHandler {
 
 	private Set<ScansunSolarFluxObservation> solarFluxObservationsFinder(
 			LocalDate day) {
-		Set<ScansunSolarFluxObservation> sfos = new HashSet<>();
+		Set<ScansunSolarFluxObservation> sfos = new HashSet<ScansunSolarFluxObservation>();
 
 		Scanner scanner;
 		try {

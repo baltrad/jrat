@@ -39,8 +39,8 @@ public class ScansunResultContainer extends AbstractSet<ScansunEvent> {
 	private Set<ScansunSite> sites;
 
 	public ScansunResultContainer() {
-		this.events = new HashSet<>();
-		this.sites = new HashSet<>();
+		this.events = new HashSet<ScansunEvent>();
+		this.sites = new HashSet<ScansunSite>();
 	}
 
 	public Set<ScansunSite> getSites() {
@@ -145,7 +145,7 @@ public class ScansunResultContainer extends AbstractSet<ScansunEvent> {
 	 */
 
 	public Map<ScansunSite, Map<LocalDate, Set<ScansunEvent>>> asMap() {
-		Map<ScansunSite, Map<LocalDate, Set<ScansunEvent>>> result = new HashMap<>();
+		Map<ScansunSite, Map<LocalDate, Set<ScansunEvent>>> result = new HashMap<ScansunSite, Map<LocalDate, Set<ScansunEvent>>>();
 
 		for (ScansunEvent event : events) {
 
@@ -165,7 +165,7 @@ public class ScansunResultContainer extends AbstractSet<ScansunEvent> {
 	}
 
 	public Map<ScansunSite, SortedSet<LocalDate>> getSitedays() {
-		Map<ScansunSite, SortedSet<LocalDate>> result = new HashMap<>();
+		Map<ScansunSite, SortedSet<LocalDate>> result = new HashMap<ScansunSite, SortedSet<LocalDate>>();
 
 		for (ScansunSite site : sites) {
 			SortedSet<LocalDate> days = new TreeSet<LocalDate>(this

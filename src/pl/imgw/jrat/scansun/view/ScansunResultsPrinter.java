@@ -267,7 +267,7 @@ public class ScansunResultsPrinter {
 	public Map<LocalDate, Double> getSunDaytimesByDay(ScansunSite site,
 			SuntimeIndicator suntimeIndicator) {
 
-		Map<LocalDate, Double> suntimes = new HashMap<>();
+		Map<LocalDate, Double> suntimes = new HashMap<LocalDate, Double>();
 
 		ScansunSolarPositionCalculator solarPositionCalculator = new ScansunSolarPositionCalculator(
 				site);
@@ -287,7 +287,7 @@ public class ScansunResultsPrinter {
 	public Map<LocalDate, Double> getSunAzimuthsByDay(ScansunSite site,
 			SuntimeIndicator suntimeIndicator) {
 
-		Map<LocalDate, Double> sunazimuths = new HashMap<>();
+		Map<LocalDate, Double> sunazimuths = new HashMap<LocalDate, Double>();
 
 		ScansunSolarPositionCalculator solarPositionCalculator = new ScansunSolarPositionCalculator(
 				site);
@@ -307,7 +307,7 @@ public class ScansunResultsPrinter {
 	public Map<LocalDate, ScansunPowerFitSolution> getFitCoefficientsByDay(
 			ScansunSite site) {
 
-		Map<LocalDate, ScansunPowerFitSolution> fitCoefficients = new HashMap<>();
+		Map<LocalDate, ScansunPowerFitSolution> fitCoefficients = new HashMap<LocalDate, ScansunPowerFitSolution>();
 
 		ScansunMeanPowerCalibrationMode meanPowerCalibrationMode = ScansunRadarParametersFileHandler
 				.getHandler().getRadarParameters().get(site)
@@ -338,7 +338,7 @@ public class ScansunResultsPrinter {
 	public Map<LocalDate, Double> getSiteSolarFluxByDay(ScansunSite site,
 			Map<LocalDate, ScansunPowerFitSolution> fitCoefficientsByDay) {
 
-		Map<LocalDate, Double> solarFlux = new HashMap<>();
+		Map<LocalDate, Double> solarFlux = new HashMap<LocalDate, Double>();
 
 		for (LocalDate day : sitedays.get(site)) {
 			double La = ScansunRadarParametersFileHandler.getHandler()
@@ -354,7 +354,7 @@ public class ScansunResultsPrinter {
 	}
 
 	public Map<LocalDate, Double> getDRAOSolarFluxObservedByDay(ScansunSite site) {
-		Map<LocalDate, Double> solarFluxMap = new HashMap<>();
+		Map<LocalDate, Double> solarFluxMap = new HashMap<LocalDate, Double>();
 
 		for (LocalDate day : sitedays.get(site)) {
 			solarFluxMap.put(day, ScansunSolarFluxFileHandler.getHandler()
@@ -365,7 +365,7 @@ public class ScansunResultsPrinter {
 	}
 
 	public Map<LocalDate, Double> getDRAOSolarFluxAdjustedByDay(ScansunSite site) {
-		Map<LocalDate, Double> solarFluxMap = new HashMap<>();
+		Map<LocalDate, Double> solarFluxMap = new HashMap<LocalDate, Double>();
 
 		for (LocalDate day : sitedays.get(site)) {
 			solarFluxMap.put(day, ScansunSolarFluxFileHandler.getHandler()

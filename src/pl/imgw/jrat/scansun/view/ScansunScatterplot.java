@@ -141,12 +141,17 @@ public class ScansunScatterplot extends ScansunPlot {
 
 		try {
 			plot.plot();
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			log.printMsg(PLOT_NAME + " for " + site.getSiteName()
 					+ "not generated!", Log.TYPE_ERROR, Log.MODE_VERBOSE);
 			return;
-		}
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
+            log.printMsg(PLOT_NAME + " for " + site.getSiteName()
+                    + "not generated!", Log.TYPE_ERROR, Log.MODE_VERBOSE);
+            return;
+        }
 
 		datafile.delete();
 

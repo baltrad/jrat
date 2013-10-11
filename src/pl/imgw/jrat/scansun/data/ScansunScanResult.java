@@ -21,7 +21,7 @@ public class ScansunScanResult extends AbstractSet<ScansunEvent> {
 	private Set<ScansunEvent> events;
 
 	public ScansunScanResult() {
-		events = new HashSet<>();
+		events = new HashSet<ScansunEvent>();
 	}
 
 	@Override

@@ -81,7 +81,7 @@ public class ScansunRadarParametersFileHandler extends Options {
 	}
 
 	private Map<ScansunSite, ScansunRadarParameters> loadScansunRadarParameters() {
-		Map<ScansunSite, ScansunRadarParameters> result = new HashMap<>();
+		Map<ScansunSite, ScansunRadarParameters> result = new HashMap<ScansunSite, ScansunRadarParameters>();
 
 		if (handler.doc == null) {
 			return null;
